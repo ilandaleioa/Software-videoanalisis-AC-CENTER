@@ -163,8 +163,8 @@ kbd{border:1px solid var(--line);border-radius:3px;padding:0 4px;font-size:11px}
 .edtrack .head::before{content:"";position:absolute;top:-7px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-top:8px solid var(--red)}
 .markLine{position:absolute;top:-6px;bottom:-6px;width:2px;pointer-events:none;z-index:4;display:none}
 #mlP1,#vmlP1{background:#1f6fd1}#mlP1E,#vmlP1E{background:#e08a00}#mlP2,#vmlP2{background:#2f8a4a}#mlEnd,#vmlEnd{background:#1c2420}
-.markLbl{top:auto;bottom:2px;font-weight:600;display:none;padding:1px 3px;font-size:9px}
-[id^="vml"].markLbl{top:-18px;bottom:auto}
+.hdlTime.markLbl{top:auto;bottom:2px;height:auto;font-weight:600;display:none;padding:1px 3px;font-size:9px}
+.hdlTime.markLbl[id^="vml"]{top:-18px;bottom:auto}
 #mlP1Lbl,#vmlP1Lbl{background:#1f6fd1}#mlP1ELbl,#vmlP1ELbl{background:#e08a00}#mlP2Lbl,#vmlP2Lbl{background:#2f8a4a}#mlEndLbl,#vmlEndLbl{background:#1c2420}
 .halfBand{position:absolute;top:0;bottom:0;display:none;pointer-events:none;z-index:1}
 .halfBand span{position:absolute;top:-20px;left:50%;transform:translateX(-50%);font-family:var(--f-disp);font-size:13px;font-weight:700;letter-spacing:.5px;color:var(--ink);background:transparent;border-radius:4px;padding:1px 8px;white-space:nowrap}
@@ -643,6 +643,7 @@ kbd{border-radius:0;font-family:var(--f-body)}
       </div>
       <input id="edName" value="corte_editado" maxlength="60" aria-label="Nombre del archivo" style="padding:6px;border:1px solid var(--line);border-radius:5px;background:var(--bg)">
       <button class="btn primary" id="edExport">Exportar y descargar</button>
+      <button class="btn" id="edExportSep" title="Descarga cada tramo como un archivo de vídeo independiente">Descargar uno a uno</button>
       <button class="btn" id="edReset">Empezar de nuevo</button>
       <div class="row" style="justify-content:flex-end;margin:0">
         <button class="btn primary" id="edSaveProj" title="Descarga un archivo con los tramos, recortes y marcas de esta edición para continuar más tarde o en otro ordenador">💾 Guardar proyecto</button>
@@ -2615,9 +2616,9 @@ window.renderHalfBands = function(b1,b2,mk,d){
     sources.forEach((s,i)=>{
       const active=i===curSrc;
       const row=document.createElement("div");
-      row.style.cssText="display:grid;grid-template-columns:1fr auto;gap:6px;align-items:center;padding:6px 8px;border-radius:5px;cursor:pointer;border-left:5px solid "+srcColor(i)+";background:"+(active?"var(--bg)":"transparent")+";"+(active?"box-shadow:inset 0 0 0 2px var(--ink);":"");
-      const info=document.createElement("div");
-      const b=document.createElement("b"); b.textContent=(i+1)+". "+s.name; b.style.cssText="font-size:13px;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap";
+      row.style.cssText="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px;align-items:center;padding:6px 8px;box-sizing:border-box;max-width:100%;min-width:0;border-radius:5px;cursor:pointer;border-left:5px solid "+srcColor(i)+";background:"+(active?"var(--bg)":"transparent")+";"+(active?"box-shadow:inset 0 0 0 2px var(--ink);":"");
+      const info=document.createElement("div"); info.style.minWidth="0";
+      const b=document.createElement("b"); b.textContent=(i+1)+". "+s.name; b.title=s.name; b.style.cssText="font-size:13px;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden;overflow-wrap:anywhere;line-height:1.25";
       const sm=document.createElement("small"); sm.style.cssText="color:var(--muted);font-size:11px";
       sm.textContent=s.dur?(fmt(keptOfSource(s).reduce((a,r)=>a+r.e-r.s,0))+" de "+fmt(s.dur)):"cargando…";
       info.append(b,sm);
@@ -2674,7 +2675,9 @@ window.renderHalfBands = function(b1,b2,mk,d){
       sm.textContent=(sources.length>1?(s?s.name:"?")+" · ":"")+(half?half+" · ":"")+fmt(it.e-it.s);
       tx.append(r,sm);
       const b=document.createElement("button"); b.textContent="Quitar"; b.onclick=ev=>{ev.stopPropagation(); removeAdded(idx);};
-      el.append(num,tx,b); el.onclick=()=>gotoAdded(idx);
+      const dl=document.createElement("button"); dl.textContent="Bajar"; dl.title="Descargar solo este tramo"; dl.onclick=ev=>{ev.stopPropagation(); exportSeparate([idx]);};
+      const acts=document.createElement("div"); acts.style.cssText="display:flex;gap:4px"; acts.append(dl,b);
+      el.append(num,tx,acts); el.onclick=()=>gotoAdded(idx);
       el.onkeydown=k=>{ if(k.key==="Enter") el.click(); }; L.append(el);
     });
   }
@@ -2814,13 +2817,35 @@ window.renderHalfBands = function(b1,b2,mk,d){
   // ---------- exportación ----------
   VidExport.mimes.forEach(m=>{ const o=document.createElement("option"); o.value=m[0]; o.textContent=m[1]; $("edFmt").append(o); });
   { const edMp4Opt=VidExport.mimes.find(m=>m[1]==="MP4"); if(edMp4Opt) $("edFmt").value=edMp4Opt[0]; }
-  if(!VidExport.mimes.length){ $("edExport").disabled=true; $("edExport").textContent="Tu navegador no permite exportar vídeo"; }
+  if(!VidExport.mimes.length){ $("edExport").disabled=true; $("edExportSep").disabled=true; $("edExport").textContent="Tu navegador no permite exportar vídeo"; }
   $("edCancel").onclick=()=>VidExport.cancel();
   function buildGroups(){ const out=[]; let cur=null;
     added.forEach(it=>{ const s=sources.find(x=>x.id===it.srcId); if(!s) return;
       if(!cur||cur.srcId!==it.srcId){ cur={srcId:it.srcId,src:s.url,name:s.name,ranges:[]}; out.push(cur); }
       cur.ranges.push({s:it.s,e:it.e}); });
     return out; }
+  // Descarga cada tramo indicado (por defecto todos) como un archivo de vídeo independiente.
+  async function exportSeparate(idxs){
+    syncCur(); if(!added.length) return note("Añade al menos un tramo con «+ Añadir» antes de exportar.");
+    if(VidExport.running||exporting) return;
+    idxs=(idxs||added.map((_,i)=>i)).filter(i=>added[i]);
+    const base=($("edName").value||"corte").replace(/[\\/:*?"<>|]/g,"").trim()||"corte";
+    const pad=String(added.length).length;
+    exporting=true; V.pause();
+    try{
+      for(const i of idxs){
+        const it=added[i], s=sources.find(x=>x.id===it.srcId); if(!s) continue;
+        if((V.currentSrc||V.src)!==s.url){ const ready=new Promise(r=>V.addEventListener("loadedmetadata",r,{once:true})); V.src=s.url; V.load(); await ready; }
+        const name=base+"_"+String(i+1).padStart(pad,"0")+"_"+fmt(it.s).replace(":","m").replace(".","s");
+        const ok=await VidExport.run({video:V, ranges:[{s:it.s,e:it.e}], name, mime:$("edFmt").value, target:+$("edRes").value, fps:+$("edFps").value, ui:{busy:$("edBusy"),bar:$("edBar"),txt:$("edBusyTxt")}, silent:true});
+        if(!ok) break;
+      }
+    } finally {
+      exporting=false;
+      const cur=sources[curSrc]; if(cur&&(V.currentSrc||V.src)!==cur.url){ V.src=cur.url; V.load(); }
+    }
+  }
+  $("edExportSep").onclick=()=>exportSeparate();
   $("edExport").onclick=async()=>{
     syncCur(); if(!added.length) return note("Añade al menos un tramo con «+ Añadir» antes de exportar.");
     const groups=buildGroups(); if(!groups.length) return;
