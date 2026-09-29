@@ -44,7 +44,9 @@ video{width:100%;height:100%;display:block;background:#000}
 .overlay .min{background:#1c2420;color:#fff;font-family:"Barlow Condensed",sans-serif;font-size:20px;padding:8px 12px;display:flex;align-items:center}
 .stageControls{position:absolute;left:0;right:0;bottom:0;display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:10px 12px;background:linear-gradient(to top,rgba(0,0,0,.65),rgba(0,0,0,0));z-index:2}
 .stageControls .btn{background:rgba(255,255,255,.92)}
-.fsBar{display:none;flex:1 0 100%;align-items:center;gap:10px;color:#fff;font-size:14px;font-variant-numeric:tabular-nums}
+.stageControls.fsOnly{display:none}
+.stage:fullscreen .stageControls.fsOnly,.stage:-webkit-full-screen .stageControls.fsOnly{display:flex}
+.fsBar{display:flex;flex:1 0 100%;align-items:center;gap:10px;color:#fff;font-size:14px;font-variant-numeric:tabular-nums}
 .fsBar input[type=range]{flex:1;min-width:0;accent-color:var(--red);cursor:pointer}
 .fsBar .fsMatch{color:#fff;font-weight:700}
 .stage:fullscreen .fsBar,.stage:-webkit-full-screen .fsBar{display:flex}
@@ -402,6 +404,20 @@ kbd{border:1px solid var(--line);border-radius:3px;padding:0 4px;font-size:11px}
         <div class="bar"><i id="edBar"></i></div>
         <span>Mantén esta pestaña visible: el vídeo se graba en tiempo real.</span>
         <button class="btn" id="edCancel">Cancelar</button>
+      </div>
+      <div class="stageControls fsOnly">
+        <div class="fsBar">
+          <span id="edFsClock">0:00 / 0:00</span>
+          <input type="range" id="edFsSeek" min="0" max="1000" value="0" step="1" aria-label="Barra de reproducción">
+          <span class="fsMatch" id="edFsMatch"></span>
+        </div>
+        <button class="btn primary" id="edFsPlay">Reproducir</button>
+        <button class="btn" id="edFsBack20" title="Retroceder 20 segundos">-20 seg</button>
+        <button class="btn" id="edFsBack4" title="Retroceder 4 segundos">-4 seg</button>
+        <button class="btn" id="edFsFwd5" title="Avanzar 5 segundos">+5 seg</button>
+        <button class="btn" id="edFsFwd20" title="Avanzar 20 segundos">+20 seg</button>
+        <button class="btn" id="edFsFwd45" title="Avanzar 45 minutos">+45 min</button>
+        <button class="btn" id="edFsExit" title="Salir de pantalla completa (F)">⛶ Salir de pantalla completa</button>
       </div>
     </div>
     <input type="file" id="edFile" accept="video/*" multiple hidden>
@@ -1147,6 +1163,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     const a=Math.max(0,t-pre), b=Math.max(a+0.2,Math.min(d,t+post)); return {a,b,segs:[{s:a,e:b,off:false}]}; }
   function keptOf(e){ const c=clipOf(e); return c.segs.filter(g=>!g.off).map(g=>({s:Math.max(g.s,c.a),e:Math.min(g.e,c.b)})).filter(r=>r.e-r.s>0.05); }
   const clipLen=e=>keptOf(e).reduce((x,r)=>x+r.e-r.s,0);
+  const fmtMS=s=>{ const t=Math.round(s); return Math.floor(t/60)+":"+String(t%60).padStart(2,"0"); };
   function clipMargins(e){ const c=clipOf(e), t=timeOf(e); return {pre:t-c.a, post:c.b-t}; }
   function clipEnsure(e){ if(!e.clip) e.clip=structuredClone(clipOf(e)); return e.clip; }
   const pct=(t,a,b)=>Math.max(0,Math.min(100,(t-a)/(b-a)*100))+"%";
@@ -1320,7 +1337,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
       chk.onchange=()=>{ toggleSel(e.id,chk.checked); row.classList.toggle("sel",chk.checked); };
       row.append(chk);
       row.append(
-        el("div",{className:"m"},[el("div",{textContent:e.min}),el("div",{className:"cl",textContent:clipLen(e).toFixed(0)})]),
+        el("div",{className:"m"},[el("div",{textContent:e.min}),el("div",{className:"cl",textContent:fmtMS(clipLen(e))})]),
         el("div",{className:"t"},[el("b",{textContent:e.cat}),el("div",{textContent:e.det+(e.jug?" · "+e.jug:"")}),...(e.coment?[el("div",{textContent:e.coment,style:"font-style:italic"})]:[])])
       );
       const acts=el("div",{className:"acts"});
@@ -2495,8 +2512,17 @@ window.renderHalfBands = function(b1,b2,mk,d){
     if(marks.p2==null||t<marks.p2) return fmtHM(t-marks.p1);
     return fmtHM(2700+(t-marks.p2));
   }
+  let edFsSeeking=false;
+  { const s=$("edFsSeek");
+    s.addEventListener("pointerdown",()=>{ edFsSeeking=true; });
+    s.addEventListener("pointerup",()=>{ edFsSeeking=false; });
+    s.addEventListener("input",()=>{ const d=dur(); if(d){ V.currentTime=s.value/1000*d; tick(); } });
+    s.addEventListener("keydown",e=>e.stopPropagation()); }
   function tick(){ const d=dur(), t=V.currentTime||0; $("edClock").textContent=fmt(t).replace(/\.\d$/,"")+" / "+fmt(d).replace(/\.\d$/,"");
-    const mc=matchClockText(t); $("edMatchClock").textContent=mc?("⏱ "+mc):""; $("edHead").style.left=(d?Math.min(100,t/d*100):0)+"%"; }
+    const mc=matchClockText(t); $("edMatchClock").textContent=mc?("⏱ "+mc):"";
+    $("edFsClock").textContent=$("edClock").textContent; $("edFsMatch").textContent=mc?("⏱ "+mc):"";
+    if(!edFsSeeking) $("edFsSeek").value=d?Math.round(t/d*1000):0;
+    $("edHead").style.left=(d?Math.min(100,t/d*100):0)+"%"; }
   function setMark(k){ if(!dur()) return; marks[k]=V.currentTime; syncCur(); render(); }
   function renderMarks(d){
     Object.keys(MARK_IDS).forEach(k=>{
@@ -2516,8 +2542,15 @@ window.renderHalfBands = function(b1,b2,mk,d){
 
   // ---------- reproducción ----------
   $("edPlay").onclick=()=>{ if(!dur()) return; if(V.paused){ const k=kept(); if($("edPrev").checked&&k.length&&V.currentTime>=k[k.length-1].e-0.05) V.currentTime=k[0].s; V.play(); } else V.pause(); };
-  V.addEventListener("play",()=>$("edPlay").textContent="Pausa");
-  V.addEventListener("pause",()=>$("edPlay").textContent="Reproducir");
+  V.addEventListener("play",()=>$("edFsPlay").textContent=$("edPlay").textContent="Pausa");
+  V.addEventListener("pause",()=>$("edFsPlay").textContent=$("edPlay").textContent="Reproducir");
+  $("edFsPlay").onclick=()=>$("edPlay").click();
+  $("edFsBack20").onclick=()=>$("edBack20").click();
+  $("edFsBack4").onclick=()=>$("edBack4").click();
+  $("edFsFwd5").onclick=()=>$("edFwd5").click();
+  $("edFsFwd20").onclick=()=>$("edFwd20").click();
+  $("edFsFwd45").onclick=()=>$("edFwd45").click();
+  $("edFsExit").onclick=()=>$("edFull").click();
   (function loop(){
     if(!V.paused&&!exporting){
       if($("edPrev").checked){ const t=V.currentTime, k=kept();
