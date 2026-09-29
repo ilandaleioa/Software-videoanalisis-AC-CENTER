@@ -3,23 +3,34 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Visor de eventos · cortes3</title>
+<title>Videoanálisis · Lezama Talks | AC Football Center</title>
+<meta name="description" content="Herramienta de videoanálisis de Lezama Talks: registra acciones, crea clips y listas de reproducción y edita el vídeo del partido. Athletic Club Football Center.">
+<meta name="theme-color" content="#15181D">
+<link rel="icon" href="https://acfootballcenter.eus/wp-content/uploads/2023/05/cropped-ACFC-32x32.webp" sizes="32x32">
+<link rel="icon" href="https://acfootballcenter.eus/wp-content/uploads/2023/05/cropped-ACFC-192x192.webp" sizes="192x192">
+<link rel="apple-touch-icon" href="https://acfootballcenter.eus/wp-content/uploads/2023/05/cropped-ACFC-180x180.webp">
+<meta property="og:title" content="Videoanálisis · Lezama Talks | AC Football Center">
+<meta property="og:description" content="Herramienta de videoanálisis de Lezama Talks, Athletic Club Football Center.">
+<meta property="og:image" content="https://acfootballcenter.eus/wp-content/uploads/2022/11/Perfil-Twitter.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#eef0ec; --panel:#ffffff; --ink:#1c2420; --muted:#66706a; --line:#d6dbd5;
-  --red:#c8102e; --pitch:#2f6b3c;
+  /* ACFC · paleta de acfootballcenter.eus */
+  --bg:#F6F5F2; --panel:#ffffff; --ink:#15181D; --muted:#6E747B; --line:#E7E5E1;
+  --red:#D3291E; --red-2:#B6170D; --pitch:#2f6b3c; --acfc-ink:#15181D; --acfc-ink-2:#1B2026;
+  --f-disp:"DIN PRO","Barlow Condensed",Barlow,"Helvetica Neue",Arial,sans-serif;
+  --f-body:"DIN PRO",Barlow,-apple-system,"Helvetica Neue",Arial,sans-serif;
   --c-gol:#c8102e; --c-oca:#e08a00; --c-tra:#7a3fb5; --c-sal:#1f6fd1; --c-pre:#2f8a4a; --c-otr:#6b7280;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#151a17; --panel:#1f2622; --ink:#e8ece9; --muted:#9aa49e; --line:#333d37;
+  --bg:#0B0D10; --panel:#15181D; --ink:#EDEDEB; --muted:#9AA0A6; --line:#2C3338;
 }}
-:root[data-theme="dark"]{--bg:#151a17; --panel:#1f2622; --ink:#e8ece9; --muted:#9aa49e; --line:#333d37;}
+:root[data-theme="dark"]{--bg:#0B0D10; --panel:#15181D; --ink:#EDEDEB; --muted:#9AA0A6; --line:#2C3338;}
 *{box-sizing:border-box}
-html,body{margin:0;} :root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)} html,body{background:var(--bg);color:var(--ink);font-family:Barlow,system-ui,sans-serif;font-size:15px}
+html,body{margin:0;} :root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)} html,body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px}
 header{display:flex;align-items:center;gap:14px;padding:14px 22px;border-bottom:3px solid var(--red);background:var(--panel)}
-header h1{font-family:"Barlow Condensed",Barlow,sans-serif;font-weight:700;font-size:26px;margin:0;letter-spacing:.3px;flex:none}
+header h1{font-family:var(--f-disp);font-weight:700;font-size:26px;margin:0;letter-spacing:.3px;flex:none}
 header .sub{color:var(--muted);font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:none}
 header .tabs{flex:none}
 #vidName{max-width:22vw}
@@ -38,10 +49,10 @@ video{width:100%;height:100%;display:block;background:#000}
 .empty[hidden]{display:none}
 .overlay{position:absolute;right:18px;top:18px;display:flex;align-items:stretch;border-radius:6px;overflow:hidden;box-shadow:0 4px 18px rgba(0,0,0,.45);opacity:0;transform:translateY(8px);transition:.25s;pointer-events:none}
 .overlay.on{opacity:1;transform:none}
-.overlay .cat{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:22px;color:#fff;padding:8px 14px;display:flex;align-items:center}
+.overlay .cat{font-family:var(--f-disp);font-weight:700;font-size:22px;color:#fff;padding:8px 14px;display:flex;align-items:center}
 .overlay .det{background:rgba(255,255,255,.95);color:#1c2420;padding:6px 14px;display:flex;flex-direction:column;justify-content:center}
 .overlay .det b{font-size:17px}.overlay .det span{font-size:13px;color:#4b554f}
-.overlay .min{background:#1c2420;color:#fff;font-family:"Barlow Condensed",sans-serif;font-size:20px;padding:8px 12px;display:flex;align-items:center}
+.overlay .min{background:#1c2420;color:#fff;font-family:var(--f-disp);font-size:20px;padding:8px 12px;display:flex;align-items:center}
 .stageControls{position:absolute;left:0;right:0;bottom:0;display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:10px 12px;background:linear-gradient(to top,rgba(0,0,0,.65),rgba(0,0,0,0));z-index:2}
 .stageControls .btn{background:rgba(255,255,255,.92)}
 .stageControls.fsOnly{display:none}
@@ -54,7 +65,7 @@ video{width:100%;height:100%;display:block;background:#000}
 .stage:fullscreen video,.stage:-webkit-full-screen video{width:100%;height:100%;object-fit:contain}
 .stageControls .btn.primary{background:var(--red);border-color:var(--red);color:#fff}
 .controls{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:12px}
-.time{font-family:"Barlow Condensed",sans-serif;font-size:20px;min-width:110px}
+.time{font-family:var(--f-disp);font-size:20px;min-width:110px}
 .track{position:relative;height:46px;margin-top:10px;background:var(--panel);border:1px solid var(--line);border-radius:6px;cursor:pointer}
 .track .prog{position:absolute;left:0;top:0;bottom:0;background:color-mix(in srgb,var(--pitch) 24%,transparent);border-right:2px solid color-mix(in srgb,var(--red) 55%,transparent);pointer-events:none}
 .track .head{position:absolute;top:-8px;bottom:-4px;width:3px;background:var(--red);pointer-events:none;box-shadow:0 0 6px rgba(200,16,46,.7);z-index:6}
@@ -74,7 +85,7 @@ video{width:100%;height:100%;display:block;background:#000}
 .catRows{position:relative}
 .catRow{position:relative;height:40px;border-bottom:1px solid var(--line)}
 .catRow:last-child{border-bottom:0}
-.chip{position:absolute;top:6px;height:28px;border-radius:6px;display:flex;align-items:center;gap:5px;padding:0 8px;font-family:"Barlow Condensed",sans-serif;font-size:13px;font-weight:600;color:#fff;white-space:nowrap;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.3);z-index:1}
+.chip{position:absolute;top:6px;height:28px;border-radius:6px;display:flex;align-items:center;gap:5px;padding:0 8px;font-family:var(--f-disp);font-size:13px;font-weight:600;color:#fff;white-space:nowrap;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.3);z-index:1}
 .chip:hover{filter:brightness(1.12)}
 .chip.sel{outline:2px solid var(--ink);outline-offset:1px}
 .chip .av{width:18px;height:18px;border-radius:50%;background:rgba(255,255,255,.9);color:var(--ink);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex:none}
@@ -88,7 +99,7 @@ video{width:100%;height:100%;display:block;background:#000}
 .chipHdl:hover{background:rgba(255,255,255,.4)}
 aside{background:var(--panel);border:1px solid var(--line);border-radius:8px;display:flex;flex-direction:column;max-height:calc(100vh - 110px);min-height:420px}
 aside .top{padding:14px 14px 10px;border-bottom:1px solid var(--line);display:grid;gap:8px}
-aside h2{font-family:"Barlow Condensed",sans-serif;font-size:21px;margin:0}
+aside h2{font-family:var(--f-disp);font-size:21px;margin:0}
 .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .row[hidden]{display:none}
 .row label{font-size:13px;color:var(--muted)}
@@ -102,9 +113,9 @@ select{padding:6px;border:1px solid var(--line);border-radius:5px;background:var
 .bulkbar.on{display:flex}
 .ev:hover{background:var(--bg)}
 .ev.now{background:color-mix(in srgb,var(--c) 14%,transparent)}
-.ev .m{font-family:"Barlow Condensed",sans-serif;font-size:19px}
-.ev .m .cl{font-size:12px;color:var(--muted);font-family:Barlow,system-ui,sans-serif}
-.ev .m small{display:block;font-family:Barlow,sans-serif;font-size:11px;color:var(--muted)}
+.ev .m{font-family:var(--f-disp);font-size:19px}
+.ev .m .cl{font-size:12px;color:var(--muted);font-family:var(--f-body)}
+.ev .m small{display:block;font-family:var(--f-body);font-size:11px;color:var(--muted)}
 .ev .t b{font-size:14px}.ev .t div{font-size:13px;color:var(--muted)}
 .ev .acts{display:flex;gap:4px}
 .ev .acts button{border:1px solid var(--line);background:transparent;border-radius:5px;padding:3px 7px;cursor:pointer;font-size:12px}
@@ -119,12 +130,12 @@ dialog form{display:grid;gap:10px}
 .stage[hidden]{display:none}
 dialog input,dialog select{width:100%;padding:7px;border:1px solid var(--line);border-radius:5px;background:var(--bg)}
 .catbtns{display:flex;flex-wrap:wrap;gap:6px}
-.catbtn{border:2px solid transparent;border-radius:6px;padding:6px 11px;cursor:pointer;font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:14px;letter-spacing:.2px;color:#fff}
+.catbtn{border:2px solid transparent;border-radius:6px;padding:6px 11px;cursor:pointer;font-family:var(--f-disp);font-weight:600;font-size:14px;letter-spacing:.2px;color:#fff}
 .catbtn:hover{filter:brightness(1.08)}
 .catbtn.active{border-color:var(--ink);box-shadow:0 0 0 2px var(--panel) inset}
 .catbtn.add{background:var(--panel);color:var(--ink);border:2px dashed var(--line)}
 .catbtn.add.active{border-color:var(--ink)}
-.optbtn{border:2px solid var(--line);border-radius:6px;padding:6px 11px;cursor:pointer;font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:14px;letter-spacing:.2px;color:var(--ink);background:var(--panel)}
+.optbtn{border:2px solid var(--line);border-radius:6px;padding:6px 11px;cursor:pointer;font-family:var(--f-disp);font-weight:600;font-size:14px;letter-spacing:.2px;color:var(--ink);background:var(--panel)}
 .optbtn:hover{border-color:var(--ink)}
 .optbtn.active{border-color:var(--red);background:var(--red);color:#fff}
 .optbtn.add{background:var(--panel);color:var(--ink);border:2px dashed var(--line)}
@@ -136,7 +147,7 @@ dialog input,dialog select{width:100%;padding:7px;border:1px solid var(--line);b
 kbd{border:1px solid var(--line);border-radius:3px;padding:0 4px;font-size:11px}
 @media (prefers-reduced-motion:reduce){.overlay{transition:none}}
 .tabs{display:flex;gap:4px;margin-left:10px}
-.tab{background:transparent;border:0;border-bottom:3px solid transparent;padding:8px 12px;font-family:"Barlow Condensed",sans-serif;font-size:19px;font-weight:600;color:var(--muted);cursor:pointer;margin-bottom:-17px}
+.tab{background:transparent;border:0;border-bottom:3px solid transparent;padding:8px 12px;font-family:var(--f-disp);font-size:19px;font-weight:600;color:var(--muted);cursor:pointer;margin-bottom:-17px}
 .tab[aria-selected="true"]{color:var(--ink);border-color:var(--red)}
 .edgrid{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:18px;padding:18px 22px;max-width:1700px;margin:auto}
 @media (max-width:1250px){.edgrid{grid-template-columns:1fr}}
@@ -156,7 +167,7 @@ kbd{border:1px solid var(--line);border-radius:3px;padding:0 4px;font-size:11px}
 [id^="vml"].markLbl{top:-18px;bottom:auto}
 #mlP1Lbl,#vmlP1Lbl{background:#1f6fd1}#mlP1ELbl,#vmlP1ELbl{background:#e08a00}#mlP2Lbl,#vmlP2Lbl{background:#2f8a4a}#mlEndLbl,#vmlEndLbl{background:#1c2420}
 .halfBand{position:absolute;top:0;bottom:0;display:none;pointer-events:none;z-index:1}
-.halfBand span{position:absolute;top:-20px;left:50%;transform:translateX(-50%);font-family:"Barlow Condensed",sans-serif;font-size:13px;font-weight:700;letter-spacing:.5px;color:var(--ink);background:transparent;border-radius:4px;padding:1px 8px;white-space:nowrap}
+.halfBand span{position:absolute;top:-20px;left:50%;transform:translateX(-50%);font-family:var(--f-disp);font-size:13px;font-weight:700;letter-spacing:.5px;color:var(--ink);background:transparent;border-radius:4px;padding:1px 8px;white-space:nowrap}
 #edBandP1,#vBandP1{background:color-mix(in srgb,#1f6fd1 16%,transparent)}
 #edBandP2,#vBandP2{background:color-mix(in srgb,#2f8a4a 16%,transparent)}
 .hdlTime{position:absolute;top:2px;transform:translateX(-50%);font-size:10px;line-height:1;color:#fff;background:rgba(0,0,0,.65);border-radius:3px;padding:2px 4px;white-space:nowrap;pointer-events:none;z-index:5}
@@ -167,7 +178,7 @@ kbd{border:1px solid var(--line);border-radius:3px;padding:0 4px;font-size:11px}
 .edItem.sel{background:var(--bg)}
 .edItem.flash{animation:edFlash 1s ease}
 @keyframes edFlash{0%,100%{box-shadow:none}30%{box-shadow:0 0 0 3px var(--red)}}
-.edItem .n{font-family:"Barlow Condensed",sans-serif;font-size:18px;color:var(--muted)}
+.edItem .n{font-family:var(--f-disp);font-size:18px;color:var(--muted)}
 .edItem .rng{font-size:14px}.edItem small{display:block;color:var(--muted);font-size:12px}
 .edItem button{border:1px solid var(--line);background:transparent;border-radius:5px;padding:3px 8px;cursor:pointer;font-size:12px}
 .edBusy{position:absolute;inset:0;background:rgba(10,14,12,.82);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;padding:20px;z-index:5}
@@ -197,11 +208,146 @@ kbd{border:1px solid var(--line);border-radius:3px;padding:0 4px;font-size:11px}
 #vxPrev{width:100%;max-width:100%;display:block}
 #vxInfo{overflow-wrap:anywhere;line-height:1.45}
 #vxX{position:absolute;top:8px;right:8px;width:32px;height:32px;padding:0;line-height:1;font-size:18px;display:flex;align-items:center;justify-content:center}
+/* =====================================================================
+   ACFC · CAPA VISUAL ATHLETIC CLUB FOOTBALL CENTER
+   Línea visual de acfootballcenter.eus/ia-aplicada-gestion-deportiva/
+   Solo estilo: no cambia IDs, clases ni comportamiento de la herramienta.
+   ===================================================================== */
+@font-face{font-family:"DIN PRO";font-style:normal;font-weight:400;font-display:swap;src:url("https://acfootballcenter.eus/wp-content/uploads/2022/11/DINPro.woff2") format("woff2"),url("https://acfootballcenter.eus/wp-content/uploads/2022/11/DINPro.woff") format("woff")}
+@font-face{font-family:"DIN PRO";font-style:normal;font-weight:700;font-display:swap;src:url("https://acfootballcenter.eus/wp-content/uploads/2022/11/DINPro-Bold.woff2") format("woff2"),url("https://acfootballcenter.eus/wp-content/uploads/2022/11/DINPro-Bold.woff") format("woff")}
+html,body{font-family:var(--f-body);-webkit-font-smoothing:antialiased}
+/* títulos incrustados desde el JS con Barlow Condensed en línea */
+dialog h2,#vxDlg h2{font-family:var(--f-disp)!important;text-transform:uppercase;letter-spacing:.2px}
+
+/* --- Barra superior (utilidades) --- */
+.acfcUtil{background:var(--panel);color:var(--ink);border-bottom:1px solid var(--line);font-family:var(--f-body);font-size:10.5px;font-weight:700;letter-spacing:1.1px;text-transform:uppercase}
+.acfcUtil__in{display:flex;align-items:center;gap:0;min-height:34px;padding:0 22px;max-width:1700px;margin:auto;overflow-x:auto;scrollbar-width:none;white-space:nowrap}
+.acfcUtil__in::-webkit-scrollbar{display:none}
+.acfcUtil a{color:var(--muted);text-decoration:none;padding:0 12px;border-left:1px solid var(--line);line-height:14px;transition:color .2s}
+.acfcUtil a:hover,.acfcUtil a:focus-visible{color:#D3291E}
+.acfcUtil a b{color:var(--ink);font-weight:700}
+.acfcUtil a:hover b{color:#D3291E}
+.acfcUtil__live{display:inline-flex;align-items:center;gap:7px;color:var(--ink);padding-right:12px}
+.acfcUtil__live i{width:6px;height:6px;background:#D3291E;display:inline-block}
+.acfcUtil__lbl{color:var(--muted);padding:0 12px;border-left:1px solid var(--line)}
+.acfcUtil__sp{flex:1;min-width:12px}
+.acfcUtil a.acfcUtil__site{border-left:0;color:var(--ink)}
+
+/* --- Cabecera: franja oscura con brillo rojo, como el hero del curso --- */
+header{position:relative;flex-wrap:wrap;min-height:64px;padding:0 22px;gap:16px;border-bottom:3px solid var(--red);
+  background:radial-gradient(90% 180% at 88% -40%,rgba(211,41,30,.42) 0%,rgba(211,41,30,0) 55%),linear-gradient(90deg,#0B0D10 0%,#15181D 55%,#1B2026 100%);color:#fff}
+header h1.acfcBrand{display:flex;align-items:center;gap:14px;font-size:inherit;margin:0;flex:none}
+.acfcBrand a{display:flex;align-items:center;line-height:0}
+.acfcBrand img{height:32px;width:auto;display:block}
+.acfcBrandTxt{display:flex;flex-direction:column;justify-content:center;padding-left:14px;border-left:1px solid rgba(255,255,255,.28);font-family:var(--f-disp);font-weight:700;font-size:17px;line-height:1;letter-spacing:.6px;text-transform:uppercase;color:#fff}
+.acfcBrandTxt small{font-size:10px;font-weight:700;letter-spacing:1.6px;color:#E9564C;margin-top:4px}
+header .tabs{align-self:stretch;margin-left:6px}
+header .tab{display:flex;align-items:center;margin-bottom:-3px;padding:0 14px;font-size:13px;font-weight:700;letter-spacing:1.1px;text-transform:uppercase;color:rgba(255,255,255,.62);transition:color .2s}
+header .tab:hover{color:#fff}
+header .tab[aria-selected="true"]{color:#fff;border-color:var(--red)}
+header .sub{color:rgba(255,255,255,.55)}
+header #vidNote{color:#F1A39D}
+header .btn.primary{align-self:center}
+
+/* --- Botones: cantos rectos y mayúsculas en las acciones principales --- */
+.btn{border-radius:0;transition:border-color .15s,background-color .15s,color .15s}
+.btn.primary{background:var(--red);border-color:var(--red);color:#fff;font-weight:700;font-size:12.5px;letter-spacing:1px;text-transform:uppercase}
+.btn.primary:hover{background:var(--red-2);border-color:var(--red-2)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.stageControls .btn{border-radius:0;border-color:transparent;color:#15181D}
+.stageControls .btn.primary{color:#fff}
+.catbtn,.optbtn{border-radius:2px}
+.btnX{border-radius:0 1px 0 2px}
+.ev .acts button,.edItem button{border-radius:0}
+select,input[type=number],dialog input,dialog select,#edName,#plSel{border-radius:0!important}
+
+/* --- Paneles --- */
+.stage{border-radius:0}
+aside{border-radius:0;border-top:3px solid var(--ink)}
+aside h2{font-weight:700;font-size:18px;letter-spacing:.3px;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+aside h2::before{content:"";width:6px;height:6px;background:var(--red);flex:none}
+.track,.edtrack,.catTimelineWrap,.clipEd{border-radius:0}
+.clipEd{border-top:3px solid var(--ink)}
+dialog{border-radius:0;border-top:3px solid var(--red)}
+.overlay{border-radius:0}
+.overlay .min{background:#15181D}
+.overlay .det{color:#15181D}
+.time{font-weight:700}
+.legend{font-size:12px;letter-spacing:.2px}
+.legend i{border-radius:0}
+.hint{letter-spacing:.1px}
+kbd{border-radius:0;font-family:var(--f-body)}
+.ev{border-radius:0}
+.edItem{border-radius:0}
+
+/* --- Pie con promoción de cursos ACFC --- */
+.acfcFoot{margin-top:28px;color:#fff;font-family:var(--f-body);
+  background:radial-gradient(70% 120% at 100% 0%,rgba(211,41,30,.30) 0%,rgba(211,41,30,0) 60%),#15181D}
+.acfcFoot a{color:inherit}
+.acfcFoot__in{max-width:1700px;margin:auto;padding:44px 22px 36px;display:grid;grid-template-columns:minmax(240px,340px) 1fr;gap:36px;align-items:start}
+@media (max-width:1050px){.acfcFoot__in{grid-template-columns:1fr;gap:24px}}
+.acfcEyebrow{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.28);padding:7px 11px;font-size:10.5px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase}
+.acfcEyebrow i{width:6px;height:6px;background:#D3291E;display:inline-block}
+.acfcPromoHead h2{font-family:var(--f-disp);font-weight:700;font-size:32px;line-height:1.02;text-transform:uppercase;margin:16px 0 12px;letter-spacing:.2px}
+.acfcPromoHead p{margin:0 0 18px;color:rgba(255,255,255,.72);font-size:14px;line-height:1.55}
+.acfcMore{display:grid;gap:0;border-top:1px solid rgba(255,255,255,.14)}
+.acfcMore a{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.14);text-decoration:none;font-size:13px;color:rgba(255,255,255,.85);transition:color .2s}
+.acfcMore a span{color:rgba(255,255,255,.5);font-size:11px;letter-spacing:.8px;text-transform:uppercase;white-space:nowrap}
+.acfcMore a:hover{color:#fff}.acfcMore a:hover span{color:#E9564C}
+.acfcCards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+@media (max-width:720px){.acfcCards{grid-template-columns:1fr}}
+.acfcCard{display:grid;grid-template-columns:minmax(0,42%) 1fr;background:#1B2026;border:1px solid rgba(255,255,255,.08);text-decoration:none;color:#fff;min-height:230px;transition:transform .25s cubic-bezier(.2,.6,.2,1),border-color .25s}
+.acfcCard:hover{transform:translateY(-3px);border-color:rgba(211,41,30,.7)}
+.acfcCard:focus-visible{outline:2px solid #D3291E;outline-offset:3px}
+@media (max-width:480px){.acfcCard{grid-template-columns:1fr}.acfcCard__img{height:150px}}
+.acfcCard__img{position:relative;overflow:hidden;background:#0B0D10}
+.acfcCard__img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:saturate(.9);transition:transform .6s cubic-bezier(.2,.6,.2,1)}
+.acfcCard:hover .acfcCard__img img{transform:scale(1.04)}
+.acfcCard__img::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(21,24,29,0) 55%,rgba(27,32,38,.85) 100%)}
+.acfcCard__body{display:flex;flex-direction:column;gap:9px;padding:20px 20px 18px}
+.acfcState{align-self:flex-start;font-size:10px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;padding:5px 8px;background:rgba(255,255,255,.1);color:#fff}
+.acfcState--hot{background:#D3291E}
+.acfcCard h3{margin:0;font-family:var(--f-disp);font-weight:700;font-size:21px;line-height:1.05;text-transform:uppercase;letter-spacing:.2px}
+.acfcMeta{font-size:13px;line-height:1.5;color:rgba(255,255,255,.7)}
+.acfcMeta b{color:#fff;font-weight:700}
+.acfcPlus{font-size:12px;line-height:1.45;color:rgba(255,255,255,.8);border-left:2px solid #D3291E;padding-left:9px}
+.acfcCta{margin-top:auto;display:inline-flex;align-items:center;gap:9px;font-size:11.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:#fff}
+.acfcCta svg{transition:transform .25s}
+.acfcCard:hover .acfcCta svg{transform:translateX(4px)}
+.acfcCta em{font-style:normal;background:#D3291E;padding:9px 13px}
+.acfcBottom{border-top:1px solid rgba(255,255,255,.12);background:#0B0D10}
+.acfcBottom__in{max-width:1700px;margin:auto;padding:18px 22px;display:flex;flex-wrap:wrap;align-items:center;gap:14px 26px;font-size:12px;color:rgba(255,255,255,.55)}
+.acfcBottom__in img{height:26px;width:auto;display:block}
+.acfcBottom__in a{text-decoration:none;color:rgba(255,255,255,.7)}
+.acfcBottom__in a:hover{color:#fff}
+.acfcBottom__sp{flex:1}
+.acfcBottom__links{display:flex;flex-wrap:wrap;gap:6px 16px}
+@media (max-width:760px){
+  .acfcUtil__lbl,.acfcUtil__site{display:none}
+  header{padding:10px 16px;gap:10px}
+  header .tabs{margin-left:0;order:3;flex:1 0 100%}
+  header .tab{padding:10px 12px 10px 0}
+  .acfcBrandTxt{font-size:15px}
+  .acfcFoot__in{padding:32px 16px 28px}
+  .acfcPromoHead h2{font-size:26px}
+  .acfcBottom__in{padding:16px}
+}
+@media (prefers-reduced-motion:reduce){.acfcCard,.acfcCard__img img,.acfcCta svg{transition:none}}
+/* ===================== fin capa ACFC ===================== */
 </style>
 </head>
 <body>
+<!-- ACFC · barra superior con próximas formaciones (actualizar fechas cada edición) -->
+<div class="acfcUtil"><div class="acfcUtil__in">
+  <span class="acfcUtil__live"><i></i>Lezama Talks · Taller de videoanálisis</span>
+  <span class="acfcUtil__lbl">Próximas formaciones</span>
+  <a href="https://acfootballcenter.eus/analisis-de-partido-en-directo-vi/?utm_source=lezama-talks&amp;utm_medium=herramienta-videoanalisis&amp;utm_campaign=promo-cursos&amp;utm_content=barra" target="_blank" rel="noopener"><b>Análisis de partido en directo</b> · 20 oct</a>
+  <a href="https://acfootballcenter.eus/ia-aplicada-gestion-deportiva/?utm_source=lezama-talks&amp;utm_medium=herramienta-videoanalisis&amp;utm_campaign=promo-cursos&amp;utm_content=barra" target="_blank" rel="noopener"><b>IA aplicada a la gestión</b> · 3 nov</a>
+  <span class="acfcUtil__sp"></span>
+  <a class="acfcUtil__site" href="https://acfootballcenter.eus/?utm_source=lezama-talks&amp;utm_medium=herramienta-videoanalisis&amp;utm_campaign=promo-cursos&amp;utm_content=barra" target="_blank" rel="noopener">acfootballcenter.eus ↗</a>
+</div></div>
 <header>
-  <h1>AC CENTER</h1><nav class="tabs" role="tablist"><button class="tab" role="tab" id="tabBtnVisor" aria-selected="true">Registro de acciones</button><button class="tab" role="tab" id="tabBtnEditor" aria-selected="false">Edición de vídeo</button></nav><span class="sub" id="vidName">cortes3.mp4</span><span class="sub" id="vidNote" style="font-size:12px"></span>
+  <h1 class="acfcBrand"><a href="https://acfootballcenter.eus/" target="_blank" rel="noopener" title="Athletic Club Football Center"><img src="https://acfootballcenter.eus/wp-content/uploads/2022/11/acfc-logo-white.svg" alt="Athletic Club Football Center" width="118" height="32"></a><span class="acfcBrandTxt">Videoanálisis<small>Lezama Talks</small></span></h1><nav class="tabs" role="tablist"><button class="tab" role="tab" id="tabBtnVisor" aria-selected="true">Registro de acciones</button><button class="tab" role="tab" id="tabBtnEditor" aria-selected="false">Edición de vídeo</button></nav><span class="sub" id="vidName">cortes3.mp4</span><span class="sub" id="vidNote" style="font-size:12px"></span>
   <span class="sp"></span>
   <label class="btn primary" for="file">Cargar vídeo</label>
   <input type="file" id="file" accept="video/*" hidden>
@@ -350,7 +496,7 @@ kbd{border:1px solid var(--line);border-radius:3px;padding:0 4px;font-size:11px}
           <span style="font-size:12px;color:var(--muted)" id="plInfo">vacía</span>
         </div>
         <div class="row" style="justify-content:space-between;margin:0;flex-wrap:nowrap;gap:6px">
-          <select id="plSel" style="flex:1;font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:15px;padding:4px;border:1px solid var(--line);border-radius:5px;background:var(--bg)"></select>
+          <select id="plSel" style="flex:1;font-family:var(--f-disp);font-weight:600;font-size:15px;padding:4px;border:1px solid var(--line);border-radius:5px;background:var(--bg)"></select>
           <button class="btn" id="plRename" title="Renombrar lista">✎</button>
           <button class="btn" id="plDelete" title="Borrar lista">🗑</button>
         </div>
@@ -509,11 +655,59 @@ kbd{border:1px solid var(--line);border-radius:3px;padding:0 4px;font-size:11px}
 <p class="hint">Atajos: <kbd>Espacio</kbd> reproducir · <kbd>I</kbd>/<kbd>O</kbd> inicio/fin · <kbd>D</kbd> dividir · <kbd>Supr</kbd> quitar/recuperar el tramo seleccionado en la lista · <kbd>,</kbd>/<kbd>.</kbd> fotograma · <kbd>←</kbd><kbd>→</kbd> ±1 s · <kbd>Ctrl+Z</kbd> deshacer.</p>
 </section>
 
+<!-- ACFC · promoción de cursos (actualizar textos, fechas e imágenes cada edición) -->
+<footer class="acfcFoot" aria-label="Formación Athletic Club Football Center">
+  <div class="acfcFoot__in">
+    <div class="acfcPromoHead">
+      <span class="acfcEyebrow"><i></i>Inscripciones abiertas</span>
+      <h2>Del taller<br>al banquillo</h2>
+      <p>Lo que has practicado en Lezama Talks, llevado a una formación completa: el conocimiento del Athletic Club en Lezama para profesionales del fútbol.</p>
+      <nav class="acfcMore" aria-label="Más formaciones">
+        <a href="https://acfootballcenter.eus/programa-metodologia-de-entrenamiento/?utm_source=lezama-talks&amp;utm_medium=herramienta-videoanalisis&amp;utm_campaign=promo-cursos&amp;utm_content=pie" target="_blank" rel="noopener">Metodología de entrenamiento <span>19 oct · 125 h</span></a>
+        <a href="https://acfootballcenter.eus/landing-ia-aplicada-al-analisis-y-modelo-de-juego/?utm_source=lezama-talks&amp;utm_medium=herramienta-videoanalisis&amp;utm_campaign=promo-cursos&amp;utm_content=pie" target="_blank" rel="noopener">IA aplicada al análisis y modelo de juego <span>4ª ed.</span></a>
+        <a href="https://acfootballcenter.eus/?utm_source=lezama-talks&amp;utm_medium=herramienta-videoanalisis&amp;utm_campaign=promo-cursos&amp;utm_content=pie" target="_blank" rel="noopener">Ver todas las formaciones <span>↗</span></a>
+      </nav>
+    </div>
+    <div class="acfcCards">
+      <a class="acfcCard" href="https://acfootballcenter.eus/analisis-de-partido-en-directo-vi/?utm_source=lezama-talks&amp;utm_medium=herramienta-videoanalisis&amp;utm_campaign=promo-cursos&amp;utm_content=tarjeta" target="_blank" rel="noopener">
+        <span class="acfcCard__img"><img src="https://acfootballcenter.eus/wp-content/uploads/2025/02/PHOTO-2024-11-28-19-25-22.jpg" alt="" loading="lazy" style="object-position:50% 52%"></span>
+        <span class="acfcCard__body">
+          <span class="acfcState acfcState--hot">Solo 16 plazas</span>
+          <h3>Análisis de partido en directo</h3>
+          <span class="acfcMeta"><b>Semipresencial · 15 h</b><br>20, 22 y 25 de octubre</span>
+          <span class="acfcPlus">Da el salto al análisis del partido en tiempo real, con grupos reducidos.</span>
+          <span class="acfcCta"><em>Reserva tu plaza</em><svg width="14" height="10" viewBox="0 0 16 12" fill="none" aria-hidden="true"><path d="M10 1l5 5-5 5M15 6H0" stroke="currentColor" stroke-width="1.8"/></svg></span>
+        </span>
+      </a>
+      <a class="acfcCard" href="https://acfootballcenter.eus/ia-aplicada-gestion-deportiva/?utm_source=lezama-talks&amp;utm_medium=herramienta-videoanalisis&amp;utm_campaign=promo-cursos&amp;utm_content=tarjeta" target="_blank" rel="noopener">
+        <span class="acfcCard__img"><img src="https://acfootballcenter.eus/wp-content/uploads/2026/09/HERO-WEB-IA-GESTION.webp" alt="" loading="lazy"></span>
+        <span class="acfcCard__body">
+          <span class="acfcState">Empieza el 3 de noviembre</span>
+          <h3>IA aplicada a la gestión de clubes y equipos</h3>
+          <span class="acfcMeta"><b>100 % online en directo · 12 h</b><br>3, 10, 17 y 24 de noviembre</span>
+          <span class="acfcPlus">Incluye un mes de plan Claude Team Standard para aplicarlo desde el primer día.</span>
+          <span class="acfcCta"><em>Ver el curso</em><svg width="14" height="10" viewBox="0 0 16 12" fill="none" aria-hidden="true"><path d="M10 1l5 5-5 5M15 6H0" stroke="currentColor" stroke-width="1.8"/></svg></span>
+        </span>
+      </a>
+    </div>
+  </div>
+  <div class="acfcBottom"><div class="acfcBottom__in">
+    <a href="https://acfootballcenter.eus/?utm_source=lezama-talks&amp;utm_medium=herramienta-videoanalisis&amp;utm_campaign=promo-cursos&amp;utm_content=pie" target="_blank" rel="noopener"><img src="https://acfootballcenter.eus/wp-content/uploads/2022/11/acfc-logo-white.svg" alt="Athletic Club Football Center" width="96" height="26" loading="lazy"></a>
+    <span>Herramienta desarrollada por <b style="color:#fff">Ibon Landa</b> para Lezama Talks</span>
+    <span class="acfcBottom__sp"></span>
+    <span class="acfcBottom__links">
+      <span>© 2026 Athletic Club Football Center · Lezama, Bizkaia</span>
+      <a href="https://acfootballcenter.eus/aviso-legal/" target="_blank" rel="noopener">Aviso legal</a>
+      <a href="https://acfootballcenter.eus/politica-de-privacidad/" target="_blank" rel="noopener">Privacidad</a>
+    </span>
+  </div></div>
+</footer>
+
 
 <dialog id="dlg">
   <form method="dialog" id="dlgForm">
     <div class="row" style="justify-content:space-between;align-items:center;flex-wrap:nowrap">
-      <h2 style="margin:0;font-family:'Barlow Condensed',sans-serif">Evento</h2>
+      <h2 style="margin:0;font-family:var(--f-disp)">Evento</h2>
       <button type="button" class="btn" id="popOutDlg" title="Abrir esta botonera en otra ventana, para moverla a un segundo monitor">🖥️ EMERGENTE</button>
       <button type="button" class="btn" id="closeBotDlg" title="Cerrar">❌ Cerrar</button>
     </div>
@@ -555,7 +749,7 @@ kbd{border:1px solid var(--line);border-radius:3px;padding:0 4px;font-size:11px}
 
 <dialog id="dlgPl">
   <form method="dialog" id="dlgPlForm">
-    <h2 style="margin:0;font-family:'Barlow Condensed',sans-serif">Añadir a lista de reproducción</h2>
+    <h2 style="margin:0;font-family:var(--f-disp)">Añadir a lista de reproducción</h2>
     <div id="plChecks" style="display:grid;gap:6px;max-height:220px;overflow:auto"></div>
     <div class="row" style="flex-wrap:nowrap">
       <input id="plNewName" maxlength="40" placeholder="Nombre de la nueva lista" aria-label="Nombre de la nueva lista" style="flex:1">
@@ -568,7 +762,7 @@ kbd{border:1px solid var(--line);border-radius:3px;padding:0 4px;font-size:11px}
 
 <dialog id="dlgImport">
   <form method="dialog" id="dlgImportForm">
-    <h2 style="margin:0;font-family:'Barlow Condensed',sans-serif">Importar eventos</h2>
+    <h2 style="margin:0;font-family:var(--f-disp)">Importar eventos</h2>
     <div style="font-size:12px;color:var(--muted)">Cabeceras esperadas en la primera fila (en cualquier orden): <b>MINUTO&nbsp;·&nbsp;CATEGORIA&nbsp;·&nbsp;DETALLE&nbsp;·&nbsp;JUGADOR</b> (opcional: <b>COMENTARIO</b>)<br>También se admite el formato <b>Timecode&nbsp;·&nbsp;Evento&nbsp;·&nbsp;Nombre Jugador</b>.</div>
     <div class="row" style="flex-wrap:nowrap">
       <label class="btn primary" for="impXlsx" style="flex:1;text-align:center">Importar desde Excel (.xlsx)</label>
@@ -601,7 +795,7 @@ kbd{border:1px solid var(--line);border-radius:3px;padding:0 4px;font-size:11px}
 
 <dialog id="dlgImportImg" style="width:min(820px,95vw)">
   <form method="dialog" id="dlgImportImgForm">
-    <h2 style="margin:0;font-family:'Barlow Condensed',sans-serif">Transcribir registros de la imagen</h2>
+    <h2 style="margin:0;font-family:var(--f-disp)">Transcribir registros de la imagen</h2>
     <div class="row" style="align-items:flex-start;gap:14px;flex-wrap:wrap">
       <div style="flex:1 1 260px;min-width:220px">
         <img id="impImgPreview" style="width:100%;max-height:520px;object-fit:contain;border:1px solid var(--line);border-radius:6px;background:var(--bg)" alt="Imagen de los registros a mano">
