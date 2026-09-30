@@ -379,7 +379,7 @@ kbd{border-radius:0;font-family:var(--f-body)}
 #plListToggle,#plListSection,#plExport,#plExportSep,#plClear,#bulkPl,.plBtn{display:none!important}
 #edTutorial,#regTutorial{background:#1d5fbf;border-color:#1d5fbf;color:#fff;font-weight:700}
 #edTutorial:hover,#regTutorial:hover{background:#174b98;border-color:#174b98;color:#fff}
-#edUseVisor{color:#000}
+#edUseVisor,#regUseEditor{color:#000}
 /* ===== Tutorial animado del editor (prefijo tut) ===== */
 :is(#tutDlg,#tutDlgR){width:min(980px,96vw);padding:14px;font-family:var(--f-body)}
 :is(#tutDlg,#tutDlgR) [hidden]{display:none!important}
@@ -519,6 +519,7 @@ kbd{border-radius:0;font-family:var(--f-body)}
         <div id="emptyMsg">Carga <b>cortes3.mp4</b> para vincularlo con los eventos, o arrástralo aquí.</div>
         <div class="row" style="justify-content:center">
           <label class="btn primary" for="file">Elegir vídeo</label>
+          <button class="btn" id="regUseEditor">Usar el vídeo del editor</button>
           <button class="btn" id="regTutorial" title="Mira paso a paso cómo se usa el registro de acciones">▶ Ver tutorial</button>
         </div>
       </div>
@@ -2376,6 +2377,12 @@ window.renderHalfBands = function(b1,b2,mk,d){
     showMsg("Abriendo "+f.name.replace(/[<>&"]/g,"")+"…");
     v.src=url; v.load(); $("vidName").textContent=f.name;
     persist(f); }
+  $("regUseEditor").onclick=()=>{
+    const ev=$("edV"), u=ev&&(ev.currentSrc||ev.getAttribute("src"));
+    if(!u){ showMsg("El editor no tiene vídeo cargado. Súbelo primero en la pestaña «Editor de vídeo»."); return; }
+    v.dataset.user="1"; showMsg("Abriendo el vídeo del editor…");
+    v.src=u; v.load(); $("vidName").textContent="Vídeo del editor";
+  };
   async function persist(f){
     try{
       const assets=await claude.use("assets"); if(!assets) return;
