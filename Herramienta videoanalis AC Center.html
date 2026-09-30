@@ -601,9 +601,12 @@ kbd{border-radius:0;font-family:var(--f-body)}
     </div>
     <div class="controls">
       <button class="btn primary" id="edPlay">Reproducir</button>
-      <span class="time" id="edClock" style="color:var(--muted);font-size:15px" title="Instante del cabezal">0:00</span>
+      <div style="display:flex;flex-direction:column;gap:2px">
+        <span class="time" id="edClock" style="color:var(--muted);font-size:15px" title="Instante del cabezal">0:00</span>
+        <span class="time" id="edVidDur" style="color:var(--muted);font-size:15px" title="Duración total del vídeo"></span>
+      </div>
       <span class="time" id="edMatchClock" style="color:var(--red);font-size:23px;font-weight:700" title="Minuto de partido, calculado a partir de las marcas de inicio de cada parte"></span>
-      <span class="time" id="edTrimInfo" style="color:var(--muted);font-size:15px;flex:1 1 120px;min-width:0" title="Inicio, fin y duración del recorte"></span>
+      <span class="time" id="edTrimInfo" style="color:var(--muted);font-size:15px;flex:1 1 120px;min-width:0;white-space:pre" title="Inicio, fin y duración del recorte"></span>
       <button class="btn" id="edBack20" title="Retroceder 20 segundos">-20 seg</button>
       <button class="btn" id="edBack4" title="Retroceder 5 segundos">-5 seg</button>
       <button class="btn" id="edFwd5" title="Avanzar 5 segundos">+5 seg</button>
@@ -2773,7 +2776,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     $("hInTime").style.left=(inP/d*100)+"%"; $("hInTime").textContent=fmt(inP);
     $("hOutTime").style.left=(outP/d*100)+"%"; $("hOutTime").textContent=fmt(outP);
     $("trimDur").style.left=((inP+outP)/2/d*100)+"%"; $("trimDur").textContent=fmt(outP-inP);
-    $("edTrimInfo").textContent="· Inicio "+fmt(inP)+" · Fin "+fmt(outP)+" · DURACION TOTAL VIDEO "+fmt(outP-inP);
+    $("edTrimInfo").textContent="· Inicio "+fmt(inP)+" · Fin "+fmt(outP)+"\n· Duración "+fmt(outP-inP);
     $("edUndo").disabled=!hist.length; $("edAddSel").hidden=!kept().length; renderMarks(d); tick();
   }
   function fmtHM(sec){ sec=Math.max(0,Math.round(sec)); return Math.floor(sec/60)+":"+String(sec%60).padStart(2,"0"); }
@@ -2789,7 +2792,8 @@ window.renderHalfBands = function(b1,b2,mk,d){
     s.addEventListener("pointerup",()=>{ edFsSeeking=false; });
     s.addEventListener("input",()=>{ const d=dur(); if(d){ V.currentTime=s.value/1000*d; tick(); } });
     s.addEventListener("keydown",e=>e.stopPropagation()); }
-  function tick(){ const d=dur(), t=V.currentTime||0; $("edClock").textContent="Momento actual "+fmt(t).replace(/\.\d$/,"");    const mc=matchClockText(t); $("edMatchClock").textContent=mc?("⏱ "+mc):"";
+  function tick(){ const d=dur(), t=V.currentTime||0; $("edClock").textContent="Momento actual "+fmt(t).replace(/\.\d$/,""); $("edVidDur").textContent="Duración video "+fmt(d||0).replace(/\.\d$/,"");
+    const mc=matchClockText(t); $("edMatchClock").textContent=mc?("⏱ "+mc):"";
     $("edFsClock").textContent=fmt(t).replace(/\.\d$/,"")+" / "+fmt(d).replace(/\.\d$/,""); $("edFsMatch").textContent=mc?("⏱ "+mc):"";
     if(!edFsSeeking) $("edFsSeek").value=d?Math.round(t/d*1000):0;
     $("edHead").style.left=(d?Math.min(100,t/d*100):0)+"%"; }
