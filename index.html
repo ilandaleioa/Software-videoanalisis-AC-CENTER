@@ -227,6 +227,9 @@ body.markBtnsHidden .hdlTime.markLbl{display:none!important}
 .ceDot{width:12px;height:36px;border-radius:3px;flex:none}
 .ceSub{font-size:13px;color:var(--muted)}
 .ceScale{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:4px}
+.ceLbl{position:absolute;top:50%;transform:translateY(-50%);font-family:var(--f-disp);font-size:13px;font-weight:600;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.6);white-space:nowrap;pointer-events:none;z-index:3}
+#ceLblD{transform:translate(-50%,-50%)}
+#ceLblB{transform:translate(-100%,-50%)}
 .clipEd .seg{background:var(--c,var(--pitch))}
 .clipEd .seg.off{background:repeating-linear-gradient(45deg,color-mix(in srgb,var(--red) 55%,transparent) 0 6px,transparent 6px 12px)}
 .ev .m small .clip{color:var(--ink)}
@@ -484,6 +487,7 @@ kbd{border-radius:0;font-family:var(--f-body)}
 /* Equipo: propio verde, rival rojo; «Sin detalle» negro. El seleccionado lleva borde oscuro */
 .optbtn[data-eq="propio"]{background:#2e8b4a;border-color:#2e8b4a;color:#fff}
 .optbtn[data-eq="rival"]{background:#d42a20;border-color:#d42a20;color:#fff}
+.optbtn[data-eq="ambos"]{background:#6b6b6b;border-color:#6b6b6b;color:#fff}
 .optbtn[data-eq].active{border-color:#111;box-shadow:0 0 0 2px #fff,0 0 0 4px #111}
 .optbtn.nodet{background:#000;border-color:#000;color:#fff}
 .optbtn.nodet.active{border-color:var(--red);background:#000;box-shadow:0 0 0 2px #fff,0 0 0 4px #000}
@@ -603,6 +607,7 @@ kbd{border-radius:0;font-family:var(--f-body)}
         <div class="shade" id="ceShA"></div><div class="shade" id="ceShB"></div>
         <div class="hdl" id="ceHA" title="Arrastra para acortar el inicio"></div>
         <div class="hdl" id="ceHB" title="Arrastra para acortar el final"></div>
+        <div class="ceLbl" id="ceLblA"></div><div class="ceLbl" id="ceLblD"></div><div class="ceLbl" id="ceLblB"></div>
         <div class="head" id="ceHeadLine"></div>
       </div>
       <div class="ceScale"><span id="ceV0"></span><span id="ceV1"></span></div>
@@ -644,6 +649,7 @@ kbd{border-radius:0;font-family:var(--f-body)}
           <div class="row" style="margin:0">
             <label>Equipo</label>
             <div id="fltEqBtns" class="catbtns" role="group" aria-label="Filtrar por equipo">
+              <button type="button" class="optbtn fltEq active" data-eq="ambos" aria-pressed="true" style="padding-right:11px">Ambos</button>
               <button type="button" class="optbtn fltEq" data-eq="propio" aria-pressed="false" style="padding-right:11px">Mi equipo</button>
               <button type="button" class="optbtn fltEq" data-eq="rival" aria-pressed="false" style="padding-right:11px">Rival</button>
             </div>
@@ -661,7 +667,7 @@ kbd{border-radius:0;font-family:var(--f-body)}
         <button class="btn" id="delAllEv" title="Borrar todos los eventos del registro">Borrar todos los eventos</button>
       </div>
       <div class="row">
-        <button class="btn primary" id="tagNow" title="Etiquetar en el instante actual (T)" style="flex:1">Registrar evento</button>
+        <button class="btn primary" id="tagNow" title="Etiquetar en el instante actual (T)" style="flex:1">Registrar gol</button>
       </div>
       <div class="row bulkbar" id="bulkBar">
         <span style="font-size:13px;color:var(--muted)" id="bulkCount"></span>
@@ -1143,7 +1149,7 @@ kbd{border-radius:0;font-family:var(--f-body)}
     </div>
     <div class="tutR">
       <h3>Registro del partido</h3>
-      <span class="tutB red" data-k="reg" style="text-align:center">Registrar evento</span>
+      <span class="tutB red" data-k="reg" style="text-align:center">Registrar gol</span>
       <div class="tutList"></div>
       <div class="tutExp">
         <span class="tutInp" data-k="flt">Ver: Todas ▾</span>
@@ -1854,8 +1860,8 @@ window.renderHalfBands = function(b1,b2,mk,d){
   const passEq=e=>!fltEq||eqOk(e.eq)===fltEq;
   document.querySelectorAll("#fltEqBtns .fltEq").forEach(b=>{
     b.onclick=()=>{
-      fltEq=fltEq===b.dataset.eq?"":b.dataset.eq;
-      document.querySelectorAll("#fltEqBtns .fltEq").forEach(x=>{ const on=x.dataset.eq===fltEq; x.classList.toggle("active",on); x.setAttribute("aria-pressed",on); });
+      fltEq=b.dataset.eq==="ambos"||fltEq===b.dataset.eq?"":b.dataset.eq;
+      document.querySelectorAll("#fltEqBtns .fltEq").forEach(x=>{ const on=(x.dataset.eq==="ambos"?"":x.dataset.eq)===fltEq; x.classList.toggle("active",on); x.setAttribute("aria-pressed",on); });
       refresh();
     };
   });
@@ -2066,7 +2072,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
         const bar=el("div",{className:"evBar"+(selEv===e.id?" sel":""),title:`${e.min} · ${clipLen(e).toFixed(1)} s`});
         bar.style.left=pct(c.a,0,d); bar.style.width=Math.max(0.25,(c.b-c.a)/d*100)+"%"; bar.style.background=CATS[cat].c; bar.style.pointerEvents="none";
         const chip=el("div",{className:"chip"+(selEv===e.id?" sel":""),title:`${e.min} · ${e.cat} · ${e.det}${e.jug?" · "+e.jug:""} · ${clipLen(e).toFixed(1)} s · arrastra el centro para mover, o los bordes para acortar/alargar`});
-        chip.style.left=pct(c.a,0,d); chip.style.background=CATS[cat].c;
+        chip.style.left=pct(c.a,0,d); chip.style.minWidth=Math.max(0.25,(c.b-c.a)/d*100)+"%"; chip.style.background=CATS[cat].c;
         chip.append(el("span",{textContent:e.min+"'"}));
         chip.append(el("span",{className:"cdur",textContent:clipLen(e).toFixed(1)+"s"}));
         if(e.jug) chip.append(el("span",{className:"av",textContent:e.jug.trim().charAt(0).toUpperCase()}));
@@ -2092,7 +2098,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
       try{ handle.setPointerCapture(ev.pointerId); }catch(err){}
       chip.classList.add("dragging"); bar.classList.add("dragging");
       function place(c){
-        chip.style.left=pct(c.a,0,d); bar.style.left=pct(c.a,0,d); bar.style.width=Math.max(0.25,(c.b-c.a)/d*100)+"%";
+        chip.style.left=pct(c.a,0,d); chip.style.minWidth=Math.max(0.25,(c.b-c.a)/d*100)+"%"; bar.style.left=pct(c.a,0,d); bar.style.width=Math.max(0.25,(c.b-c.a)/d*100)+"%";
         const cd=chip.querySelector(".cdur"); if(cd) cd.textContent=keptOf(e).reduce((x,r)=>x+r.e-r.s,0).toFixed(1)+"s";
       }
       function onMove(mv){
@@ -2948,6 +2954,10 @@ window.renderHalfBands = function(b1,b2,mk,d){
       n.style.left=pct(gs,va,vb); n.style.width=((ge-gs)/(vb-va)*100)+"%"; n.dataset.i=i; wrap.append(n); });
     $("ceShA").style.left="0"; $("ceShA").style.width=pct(c.a,va,vb); $("ceShB").style.left=pct(c.b,va,vb); $("ceShB").style.right="0";
     $("ceHA").style.left=pct(c.a,va,vb); $("ceHB").style.left=pct(c.b,va,vb);
+    const lA=$("ceLblA"), lB=$("ceLblB"), lD=$("ceLblD"), wide=($("ceTrack").clientWidth*(c.b-c.a)/(vb-va))>230;
+    lA.textContent=matchClockText(c.a)||fmt(c.a); lB.textContent=matchClockText(c.b)||fmt(c.b); lD.textContent=clipLen(e).toFixed(1)+" s";
+    lA.style.left="calc("+pct(c.a,va,vb)+" + 12px)"; lB.style.left="calc("+pct(c.b,va,vb)+" - 12px)"; lD.style.left=pct((c.a+c.b)/2,va,vb);
+    lA.style.display=lB.style.display=wide?"":"none";
     const tEv=timeOf(e), rel=n=>(n>=0?"+":"-")+Math.abs(n).toFixed(1);
     $("ceV0").textContent=rel(va-tEv); $("ceV1").textContent=rel(vb-tEv); $("ceUndo").disabled=!ceHist.length; $("ceReset").disabled=!e.clip;
     renderCeAll(e);
@@ -3828,7 +3838,7 @@ window.tutVoz=(()=>{
     for(let i=1;i<=text.length;i++){ S.form.com=text.slice(0,i); draw(); await W(55); } await p; await W(500); }
   async function register(W,p){
     await go(W,q(".tutTrack"),p/100,.5,900,"Muevo el cabezal rojo hasta el momento de la jugada"); S.head=p; draw(); await W(600);
-    await pressK(W,"reg","Pulso «Registrar evento»"); S.form={p,cat:"",eq:"Mi equipo",det:"",jug:"",com:""}; draw(); await wait(W,700,"Se abre la botonera del evento"); }
+    await pressK(W,"reg","Pulso «Registrar gol»"); S.form={p,cat:"",eq:"Mi equipo",det:"",jug:"",com:""}; draw(); await wait(W,700,"Se abre la botonera del evento"); }
   async function save(W,ev){ await pressF(W,"save","Pulso «Guardar»"); S.ev.push({...ev,fresh:true}); S.form=null; draw(); await wait(W,1000,"El evento aparece en la lista y en la línea de tiempo"); }
   async function dragClip(W,key,pct){ const h=q('.tutCh[data-c="'+key+'"]'); await go(W,h,.5,.5,800,key==="b"?"Agarro el tirador derecho":"Agarro el tirador izquierdo");
     S.clip[key]=pct; draw(); const [x,y]=at(q(".tutClip"),pct/100,.5); place(x,y); await wait(W,1100,key==="b"?"y lo arrastro para que el corte termine más tarde":"y lo arrastro para que el corte empiece antes"); }
@@ -3851,8 +3861,8 @@ window.tutVoz=(()=>{
      async run(W){ const L={p1:["el inicio de la primera parte","Inicio primera parte"],p1e:["el final de la primera parte","Fin primera parte"],p2:["el inicio de la segunda parte","Inicio segunda parte"],end:["el final del partido","Fin partido"]};
        for(const [k,p] of Object.entries(MARKS)){ await go(W,q(".tutTrack"),p/100,.5,800,"Hago clic en la línea de tiempo, en "+L[k][0]+", para mover el cabezal rojo"); S.head=p; draw(); await W(600);
          await pressK(W,k,"Y pulso «"+L[k][1]+"»"); S.marks[k]=p; draw(); await W(500); } await W(900); }},
-    {s:"Registrar",t:"Sitúate y pulsa «Registrar evento»",
-     d:"Mueve el cabezal al momento de la jugada (clic en la barra o con el reproductor) y pulsa «Registrar evento» (atajo T). Se abre la botonera del evento.",
+    {s:"Registrar",t:"Sitúate y pulsa «Registrar gol»",
+     d:"Mueve el cabezal al momento de la jugada (clic en la barra o con el reproductor) y pulsa «Registrar gol» (atajo T). Se abre la botonera del evento.",
      pre(){ S.head=22; S.form={p:22,cat:"",eq:"Mi equipo",det:"",jug:"",com:""}; },
      async run(W){ await register(W,22); await W(900); }},
     {s:"Gol",t:"Gol · tiro fuera del área · jugador 1",
