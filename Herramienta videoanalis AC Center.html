@@ -49,8 +49,6 @@ video{width:100%;height:100%;display:block;background:#000}
 .empty[hidden]{display:none}
 .overlay{position:absolute;right:3%;top:4%;max-width:94%;display:flex;align-items:stretch;border-radius:6px;overflow:hidden;box-shadow:0 4px 18px rgba(0,0,0,.45);opacity:0;transform:translate(0,-8px);transition:.25s;pointer-events:none}
 .overlay.on{opacity:1;transform:translate(0,0)}
-#edOv{left:14px;top:auto;bottom:14px;transform:translateY(8px)}
-#edOv.on{transform:none}
 .overlay .cat{font-family:var(--f-disp);font-weight:700;font-size:22px;color:#fff;padding:8px 14px;display:flex;align-items:center}
 .overlay .det{background:rgba(255,255,255,.95);color:#1c2420;padding:6px 14px;display:flex;flex-direction:column;justify-content:center}
 .overlay .det b{font-size:17px}.overlay .det span{font-size:13px;color:#4b554f}
@@ -177,7 +175,7 @@ kbd{border:1px solid var(--line);border-radius:3px;padding:0 4px;font-size:11px}
 .seg{position:absolute;top:0;bottom:0;background:color-mix(in srgb,var(--pitch) 70%,transparent);border-right:2px solid var(--panel);border-radius:3px;cursor:grab}
 .seg.off{background:repeating-linear-gradient(45deg,color-mix(in srgb,var(--red) 55%,transparent) 0 6px,transparent 6px 12px)}
 .seg.sel{outline:3px solid var(--ink);outline-offset:-3px;z-index:1}
-.doneCut{--dc:var(--c-otr);position:absolute;top:0;bottom:0;cursor:pointer;z-index:3;background:color-mix(in srgb,var(--dc) 65%,transparent);border:1px solid var(--dc);border-bottom:3px solid var(--dc);box-sizing:border-box}
+.doneCut{--dc:var(--c-otr);position:absolute;top:0;bottom:0;cursor:grab;z-index:3;background:color-mix(in srgb,var(--dc) 65%,transparent);border:1px solid var(--dc);border-bottom:3px solid var(--dc);box-sizing:border-box}
 .doneCut:hover{background:color-mix(in srgb,var(--dc) 85%,transparent)}
 .shade{position:absolute;top:0;bottom:0;background:color-mix(in srgb,var(--bg) 70%,transparent);pointer-events:none;z-index:2}
 .hdl{position:absolute;top:-4px;bottom:-4px;width:12px;margin-left:-6px;background:var(--ink);border-radius:3px;cursor:ew-resize;z-index:4}
@@ -325,11 +323,11 @@ select,input[type=number],dialog input,dialog select,#edName,#plSel{border-radiu
 
 /* --- Paneles --- */
 .stage{border-radius:0}
-aside{border-radius:0;border-top:3px solid var(--ink)}
+aside{border-radius:0;border-top:2px solid var(--ink)}
 aside h2{font-weight:700;font-size:18px;letter-spacing:.3px;text-transform:uppercase;display:flex;align-items:center;gap:8px}
 aside h2::before{content:"";width:6px;height:6px;background:var(--red);flex:none}
 .track,.edtrack,.catTimelineWrap,.clipEd{border-radius:0}
-.clipEd{border-top:3px solid var(--ink)}
+.clipEd{border-top:2px solid var(--ink)}
 dialog{border-radius:0;border-top:3px solid var(--red)}
 .overlay{border-radius:0}
 .overlay .min{background:#15181D}
@@ -420,6 +418,13 @@ kbd{border-radius:0;font-family:var(--f-body)}
   /* Vídeo arriba, mandos debajo (ya no tapan la imagen) */
   #tabEditor:not(:fullscreen) #edStage:not(:fullscreen){background:transparent;overflow:visible;aspect-ratio:auto;display:flex;flex-direction:column}
   #tabEditor:not(:fullscreen) #edStage:not(:fullscreen) video{height:auto;aspect-ratio:16/9}
+  /* Rótulo arriba a la derecha del vídeo (el escenario incluye los mandos, así que se fija con px y más pequeño) */
+  #tabEditor:not(:fullscreen) #edStage:not(:fullscreen) .overlay{top:6px;right:6px;max-width:calc(100% - 12px)}
+  #edOv .min{font-size:14px;padding:4px 8px}
+  #edOv .cat{font-size:15px;padding:4px 8px}
+  #edOv .det{padding:3px 8px}
+  #edOv .det b{font-size:13px}
+  #edOv .det span{font-size:11px}
   #tabEditor:not(:fullscreen) #edStage:not(:fullscreen) .empty{inset:0 0 auto 0;aspect-ratio:16/9;background:#000;padding:12px;gap:8px;font-size:13px}
   #tabEditor:not(:fullscreen) #edStage:not(:fullscreen) .empty .row{gap:6px}
   #tabEditor:not(:fullscreen) #edStage:not(:fullscreen) .stageControls{position:static;display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:8px 0 0;background:none}
@@ -519,7 +524,7 @@ kbd{border-radius:0;font-family:var(--f-body)}
 :is(#tutDlg,#tutDlgR) .tutCur::after{content:"";position:absolute;left:-10px;top:-10px;width:26px;height:26px;border-radius:50%;background:var(--red);opacity:0}
 :is(#tutDlg,#tutDlgR) .tutCur.tap::after{animation:tutTap calc(.4s*var(--tut-k,1)) ease-out}
 @keyframes tutTap{0%{opacity:.7;transform:scale(.3)}100%{opacity:0;transform:scale(1.5)}}
-:is(#tutDlg,#tutDlgR) .tutCap{margin-top:10px;padding:10px 12px;border:1px solid var(--line);border-top:3px solid var(--ink);background:var(--panel);min-height:84px}
+:is(#tutDlg,#tutDlgR) .tutCap{margin-top:10px;padding:10px 12px;border:1px solid var(--line);border-top:2px solid var(--ink);background:var(--panel);min-height:84px}
 :is(#tutDlg,#tutDlgR) .tutCapT{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 :is(#tutDlg,#tutDlgR) .tutCapT b{font-family:var(--f-disp);font-size:19px;text-transform:uppercase;letter-spacing:.3px}
 :is(#tutDlg,#tutDlgR) .tutTag{font-size:11px;font-weight:700;color:#fff;background:var(--red);padding:2px 6px;letter-spacing:.6px}
@@ -734,8 +739,9 @@ kbd{border-radius:0;font-family:var(--f-body)}
         </div>
         <div style="display:grid;gap:4px">
           <div class="row" style="margin:0">
-            <label for="flt">Ver</label>
+            <label for="flt">Filtros</label>
             <select id="flt"><option value="">Todas</option></select>
+            <button type="button" class="btn" id="fltClear" title="Quitar todos los filtros">Limpiar</button>
           </div>
         </div>
       </div>
@@ -794,9 +800,9 @@ kbd{border-radius:0;font-family:var(--f-body)}
           <button class="btn edGreen" id="plExportSep" disabled title="Descarga cada clip de la lista como un archivo de vídeo independiente">Descargar lista (vídeos separados)</button>
           <button class="btn" id="plClear">Vaciar lista</button>
         </div>
-        <div class="row">
-          <button class="btn edGreen" id="fltExport" disabled title="Descarga en orden los eventos que se ven ahora en el registro (según el filtro «Ver»), unidos en un solo vídeo">Descargar filtrados (1 vídeo)</button>
-          <button class="btn edGreen" id="fltExportSep" disabled title="Descarga cada evento que se ve ahora en el registro (según el filtro «Ver») como un archivo de vídeo independiente">Descargar filtrados (vídeos separados)</button>
+        <div class="row" style="flex-wrap:nowrap">
+          <button class="btn edGreen" style="flex:1 1 0;white-space:nowrap;padding-left:6px;padding-right:6px" id="fltExport" disabled title="Descarga en orden los eventos que se ven ahora en el registro (según el filtro «Ver»), unidos en un solo vídeo">Descargar filtrados (1 vídeo)</button>
+          <button class="btn edGreen" style="flex:1 1 0;white-space:nowrap;padding-left:6px;padding-right:6px" id="fltExportSep" disabled title="Descarga cada evento que se ve ahora en el registro (según el filtro «Ver») como un archivo de vídeo independiente">Descargar filtrados (vídeos separados)</button>
         </div>
         <div class="row">
           <button class="btn edGreen" id="expCsv">Exportar CSV</button>
@@ -868,6 +874,9 @@ kbd{border-radius:0;font-family:var(--f-body)}
     <div class="controls">
         <button class="btn primary" id="edUndo2" title="Deshacer (Ctrl+Z)" aria-label="Deshacer" disabled>↶</button>
         <button class="btn primary" id="edRedo" title="Rehacer (Ctrl+Y)" aria-label="Rehacer" disabled>↷</button>
+        <button class="btn primary" id="edSetA" title="Fija el punto A (inicio del corte) en el cabezal actual (A)">📍 Punto A · inicio</button>
+        <button class="btn primary" id="edSetB" title="Fija el punto B (fin del corte) en el cabezal actual (B)">📍 Punto B · fin</button>
+        <span class="time" id="edABInfo" style="color:var(--muted);font-size:12px"></span>
         <span style="flex:1"></span>
         <label class="row" style="gap:6px"><span style="font-size:13px;color:var(--muted)">Velocidad</span>
           <select id="edRate"><option>0.5</option><option>0.75</option><option selected>1</option><option>1.5</option><option>2</option></select></label>
@@ -2001,6 +2010,12 @@ window.renderHalfBands = function(b1,b2,mk,d){
       refresh();
     };
   });
+  $("fltClear").onclick=()=>{
+    $("flt").value="";
+    fltEq="";
+    document.querySelectorAll("#fltEqBtns .fltEq").forEach(x=>{ const on=x.dataset.eq==="ambos"; x.classList.toggle("active",on); x.setAttribute("aria-pressed",on); });
+    refresh();
+  };
   function syncEqBtns(){
     const cur=$("fEq").value;
     $("fEqBtns").querySelectorAll(".optbtn").forEach(b=>b.classList.toggle("active",b.dataset.eq===cur));
@@ -2217,8 +2232,8 @@ window.renderHalfBands = function(b1,b2,mk,d){
     const nFlt=sorted().filter(x=>(!flt||x.e.cat===flt)&&passEq(x.e)).length;
     const filtered=flt||fltEq;
     if(!VidExport.running){ $("fltExport").disabled=!nFlt; $("fltExportSep").disabled=!nFlt; }
-    $("fltExport").textContent="Descargar "+(filtered?"filtrados":"todos")+" ("+nFlt+") en 1 vídeo";
-    $("fltExportSep").textContent="Descargar "+(filtered?"filtrados":"todos")+" ("+nFlt+") por separado";
+    $("fltExport").textContent="Descargar ("+nFlt+") en 1 vídeo";
+    $("fltExportSep").textContent="Descargar ("+nFlt+") por separado";
     sorted().filter(x=>(!flt||x.e.cat===flt)&&passEq(x.e)).forEach(({e,t})=>{
       const out = dur && (t<0||t>dur);
       const isSel=selectedIds.has(e.id);
@@ -2299,7 +2314,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
         const bar=el("div",{className:"evBar"+(selEv===e.id?" sel":""),title:`${e.min} · ${clipLen(e).toFixed(1)} s`});
         bar.style.left=pct(c.a,0,d); bar.style.width=Math.max(0.25,(c.b-c.a)/d*100)+"%"; bar.style.background=CATS[cat].c; bar.style.pointerEvents="none";
         const chip=el("div",{className:"chip"+(selEv===e.id?" sel":""),title:`${e.min} · ${e.cat} · ${e.det}${e.jug?" · "+e.jug:""} · ${clipLen(e).toFixed(1)} s · arrastra el centro para mover, o los bordes para acortar/alargar`});
-        chip.style.left=pct(c.a,0,d); chip.style.minWidth=Math.max(0.25,(c.b-c.a)/d*100)+"%"; chip.style.background=CATS[cat].c;
+        chip.style.left=pct(c.a,0,d); chip.style.minWidth="max("+Math.max(0.25,(c.b-c.a)/d*100)+"%, 30px)"; chip.style.background=CATS[cat].c;
         const hdlL=el("div",{className:"chipHdl l",title:"Arrastra para acortar o alargar el inicio del clip"});
         const hdlR=el("div",{className:"chipHdl r",title:"Arrastra para acortar o alargar el final del clip"});
         chip.append(hdlL,hdlR);
@@ -2322,7 +2337,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
       try{ handle.setPointerCapture(ev.pointerId); }catch(err){}
       chip.classList.add("dragging"); bar.classList.add("dragging");
       function place(c){
-        chip.style.left=pct(c.a,0,d); chip.style.minWidth=Math.max(0.25,(c.b-c.a)/d*100)+"%"; bar.style.left=pct(c.a,0,d); bar.style.width=Math.max(0.25,(c.b-c.a)/d*100)+"%";
+        chip.style.left=pct(c.a,0,d); chip.style.minWidth="max("+Math.max(0.25,(c.b-c.a)/d*100)+"%, 30px)"; bar.style.left=pct(c.a,0,d); bar.style.width=Math.max(0.25,(c.b-c.a)/d*100)+"%";
       }
       function onMove(mv){
         const dx=mv.clientX-startX; if(Math.abs(dx)>3) moved=true;
@@ -3660,7 +3675,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     added.forEach((it,i)=>{ if(it.srcId!==curId) return;
       const b=document.createElement("div"); b.className="doneCut"; b.style.setProperty("--dc",evColor(it.name));
       b.style.left=(it.s/d*100)+"%"; b.style.width=((it.e-it.s)/d*100)+"%";
-      b.dataset.add=i; b.title=`Corte añadido${it.name?": "+it.name:" #"+(i+1)} · ${fmt(it.s)}–${fmt(it.e)} (clic para seleccionarlo)`; wrap.append(b);
+      b.dataset.add=i; b.title=`Corte añadido${it.name?": "+it.name:" #"+(i+1)} · ${fmt(it.s)}–${fmt(it.e)} (clic para seleccionarlo, arrastra para moverlo)`; wrap.append(b);
     });
     segs.forEach((g,i)=>{
       const n=document.createElement("div"); n.className="seg"+(g.off?" off":"")+(i===sel?" sel":"");
@@ -3675,6 +3690,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     $("trimDur").style.left=((inP+outP)/2/d*100)+"%"; $("trimDur").textContent=fmt(outP-inP);
     { const pl=[marks.p1,marks.p1e,marks.p2,marks.end]; const jug=pl.every(x=>typeof x==="number")?(marks.p1e-marks.p1)+(marks.end-marks.p2):null;
       $("edTrimInfo").textContent="· Inicio "+fmt(inP)+" · Fin "+fmt(outP)+"\n· Duración "+fmt(outP-inP);
+      $("edABInfo").textContent="A "+fmt(inP)+" → B "+fmt(outP);
       $("edJug").textContent=jug!=null&&jug>=0?"Tiempo jugado "+fmt(jug):""; }
     $("edUndo").disabled=$("edUndo2").disabled=!hist.length; $("edRedo").disabled=!redoOf().length; $("edAddSel").hidden=!kept().length; renderMarks(d); tick();
   }
@@ -3749,7 +3765,8 @@ window.renderHalfBands = function(b1,b2,mk,d){
       if(it&&it!==activeAdded&&t>inP&&t<outP){ const si=segAt(t);
         mv={x0:e.clientX,t0:t,in0:inP,out0:outP,moved:false,addIdx:ai};
         drag="seg"; if(si>=0) sel=si; V.currentTime=t; render(); return; }
-      gotoAdded(ai); return; }
+      // clic: lo selecciona; arrastrar: mueve el tramo entero (sus marcadores A y B lo siguen)
+      gotoAdded(ai); mv={x0:e.clientX,t0:t,in0:inP,out0:outP,moved:false}; drag="seg"; return; }
     if(e.target.classList.contains("seg")&&t>inP&&t<outP){
       const i=+e.target.dataset.i; sel=i;
       mv={x0:e.clientX,t0:t,in0:inP,out0:outP,moved:false};
@@ -3785,6 +3802,8 @@ window.renderHalfBands = function(b1,b2,mk,d){
   $("visFullEditor").onclick=()=>{ const el=$("tabVisor"); if(document.fullscreenElement){ document.exitFullscreen(); } else { (el.requestFullscreen||el.webkitRequestFullscreen).call(el); } };
   document.addEventListener("fullscreenchange",()=>{ $("visFullEditor").textContent=document.fullscreenElement===$("tabVisor")?"⛶ Salir de pantalla completa":"⛶ Registro a pantalla completa";$("edFull").textContent=document.fullscreenElement===$("edStage")?"⛶ Salir de pantalla completa":"⛶ Pantalla completa"; $("edFullEditor").textContent=document.fullscreenElement===$("tabEditor")?"⛶ Salir del editor a pantalla completa":"⛶ Editor a pantalla completa"; });
   $("edFull").onclick=()=>{ const el=$("edStage"); if(document.fullscreenElement){ document.exitFullscreen(); } else { (el.requestFullscreen||el.webkitRequestFullscreen).call(el); } };
+  $("edSetA").onclick=()=>dur()&&setIn(V.currentTime);
+  $("edSetB").onclick=()=>dur()&&setOut(V.currentTime);
   $("edSplit").onclick=()=>dur()&&split();
   $("edDel").onclick=()=>toggle(sel>=0?sel:segAt(V.currentTime));
   $("edAddSel").onclick=()=>{ const s=sources[curSrc]; if(!s) return; const ranges=kept();
@@ -3808,7 +3827,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     else if((k.ctrlKey||k.metaKey)&&K==="z"&&k.shiftKey){k.preventDefault(); redo();}
     else if((k.ctrlKey||k.metaKey)&&K==="z"){k.preventDefault(); undo();}
     else if((k.ctrlKey||k.metaKey)&&K==="y"){k.preventDefault(); redo();}
-    else if(K==="d") split(); else if(K==="i") setIn(V.currentTime); else if(K==="o") setOut(V.currentTime);
+    else if(K==="d") split(); else if(K==="i"||K==="a") setIn(V.currentTime); else if(K==="o"||K==="b") setOut(V.currentTime);
     else if(k.key==="Delete"||k.key==="Backspace"){k.preventDefault(); $("edDel").click();}
     else if(k.key==="ArrowRight") V.currentTime+=1; else if(k.key==="ArrowLeft") V.currentTime-=1;
     else if(k.key===".") {V.pause(); V.currentTime+=1/30;} else if(k.key===",") {V.pause(); V.currentTime-=1/30;}
