@@ -178,12 +178,12 @@ kbd{border:1px solid var(--line);border-radius:3px;padding:0 4px;font-size:11px}
 .doneCut{--dc:var(--c-otr);position:absolute;top:0;bottom:0;cursor:grab;z-index:3;background:color-mix(in srgb,var(--dc) 65%,transparent);border:1px solid var(--dc);border-bottom:3px solid var(--dc);box-sizing:border-box}
 .doneCut:hover{background:color-mix(in srgb,var(--dc) 85%,transparent)}
 .shade{position:absolute;top:0;bottom:0;background:color-mix(in srgb,var(--bg) 70%,transparent);pointer-events:none;z-index:2}
-.hdl{position:absolute;top:-4px;bottom:-4px;width:12px;margin-left:-6px;background:var(--ink);border-radius:3px;cursor:ew-resize;z-index:4}
-.hdl::after{content:"";position:absolute;left:5px;top:14px;width:2px;height:20px;background:var(--panel)}
+.hdl{position:absolute;top:-4px;bottom:-4px;width:6px;margin-left:-3px;background:var(--ink);border-radius:2px;cursor:ew-resize;z-index:4}
+.hdl::after{content:"";position:absolute;left:2px;top:14px;width:2px;height:20px;background:var(--panel)}
 /* los tiradores abrazan la selección por fuera: no tapan la franja verde */
 #hIn{margin-left:-12px}
 #hOut{margin-left:0}
-.edtrack .head{position:absolute;top:-10px;bottom:-6px;width:3px;background:var(--red);pointer-events:none;box-shadow:0 0 6px rgba(200,16,46,.7);z-index:6}
+.edtrack .head{position:absolute;top:-10px;bottom:-6px;width:2px;background:var(--red);pointer-events:none;box-shadow:0 0 6px rgba(200,16,46,.7);z-index:6}
 .edtrack .head::before{content:"";position:absolute;top:-7px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-top:8px solid var(--red)}
 #vSeekTrack{margin-top:34px}
 .headClock{position:absolute;top:-19px;transform:translate(-50%,-100%);font-family:var(--f-disp);font-size:16px;font-weight:700;line-height:1;color:var(--red);background:var(--panel);border:1px solid var(--red);padding:2px 6px;white-space:nowrap;pointer-events:none;z-index:7}
@@ -317,6 +317,10 @@ header .btn.primary{align-self:center}
 .stageControls .btn{border-radius:0;border-color:transparent;color:#15181D}
 .stageControls .btn.primary{color:#fff}
 .stageControls #vMute,.stageControls #edMute,.stageControls #vFull,.stageControls #visFullEditor,.stageControls #edFull,.stageControls #edFullEditor{background:var(--acfc-ink);color:#fff}
+@media (min-width:761px){
+  .stageControls #vMute,.stageControls #vFull,.stageControls #edMute,.stageControls #edFull{padding:4px 8px;min-width:0;font-size:15px;line-height:1.2}
+  .stageControls #vMute .lbl,.stageControls #vFull .lbl,.stageControls #edMute .lbl,.stageControls #edFull .lbl{display:none}
+}
 .stageControls #vMute:hover,.stageControls #edMute:hover,.stageControls #vFull:hover,.stageControls #visFullEditor:hover,.stageControls #edFull:hover,.stageControls #edFullEditor:hover{background:var(--red)}
 .catbtn,.optbtn{border-radius:2px}
 .btnX{border-radius:0 1px 0 2px}
@@ -412,8 +416,14 @@ kbd{border-radius:0;font-family:var(--f-body)}
 .histBtn:hover:not(:disabled){background:#333;border-color:#333;color:#fff}
 .histBtn:disabled{opacity:.35;cursor:default}
 
+#edPlay .pi{display:none}
 /* ===== Móvil limpio (editor) · solo pantallas ≤640px ===== */
 @media (max-width:640px){
+  #edPlay .pi{display:inline;font-size:16px;line-height:1}
+  #edSetA .abL,#edSetB .abL{display:none}
+  #edSetA,#edSetB{min-width:64px}
+  #edPlay .pl{display:none}
+  #edBack20,#edFwd20,#vBack20,#vFwd20{display:none}
   .acfcUtil{display:none}
   header{min-height:0;padding:8px 14px 0;gap:6px 12px}
   header #vidName{display:none}
@@ -432,32 +442,43 @@ kbd{border-radius:0;font-family:var(--f-body)}
   #edOv .det span{font-size:11px}
   #tabEditor:not(:fullscreen) #edStage:not(:fullscreen) .empty{inset:0 0 auto 0;aspect-ratio:16/9;background:#000;padding:12px;gap:8px;font-size:13px}
   #tabEditor:not(:fullscreen) #edStage:not(:fullscreen) .empty .row{gap:6px}
-  #tabEditor:not(:fullscreen) #edStage:not(:fullscreen) .stageControls{position:static;display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:8px 0 0;background:none}
-  #edStage:not(:fullscreen) .stageControls .btn{min-height:42px;padding:6px 4px;font-size:13px;background:var(--panel);border:1px solid var(--line);color:var(--ink)}
+  #tabEditor:not(:fullscreen) #edStage:not(:fullscreen) .stageControls{position:static;display:grid;grid-template-columns:repeat(5,1fr);gap:4px;padding:6px 0 0;background:none}
+  #edStage:not(:fullscreen) .stageControls .btn{min-height:34px;padding:4px 2px;font-size:12px;background:var(--panel);border:1px solid var(--line);color:var(--ink)}
   #edStage:not(:fullscreen) .stageControls .btn.primary{background:var(--red);border-color:var(--red);color:#fff}
-  #edStage:not(:fullscreen) .stageControls #edPlay{grid-column:span 2;order:1}
-  #edStage:not(:fullscreen) .stageControls #edBack4{order:2}
-  #edStage:not(:fullscreen) .stageControls #edFwd5{order:3}
-  #edStage:not(:fullscreen) .stageControls #edBack20{order:4}
-  #edStage:not(:fullscreen) .stageControls #edFwd20{order:5}
-  #edStage:not(:fullscreen) .stageControls #edFull{order:6;grid-column:span 2;background:var(--ink);color:var(--bg);border-color:var(--ink)}
+  #edStage:not(:fullscreen) .stageControls #edPlay{order:3}
+  #edStage:not(:fullscreen) .stageControls #edBack4{order:4}
+  #edStage:not(:fullscreen) .stageControls #edFwd5{order:5}
+  #edStage:not(:fullscreen) .stageControls #edBack20{order:1}
+  #edStage:not(:fullscreen) .stageControls #edFwd20{order:2}
+  #edStage:not(:fullscreen) .stageControls #edFull{order:6;grid-column:span 3;background:var(--ink);color:var(--bg);border-color:var(--ink)}
   #edStage:not(:fullscreen) .stageControls #edMute{order:7;grid-column:span 2}
   #edStage:not(:fullscreen) .stageControls #edFwd45,
   #edStage:not(:fullscreen) .stageControls #edFullEditor{display:none}
+  /* pantalla completa en móvil vertical: gira 90° para verse en horizontal */
+  .fsRot:fullscreen{position:fixed!important;top:0!important;left:100%!important;width:100vh!important;height:100vw!important;
+    max-width:none!important;transform:rotate(90deg);transform-origin:top left;overflow:auto}
   /* Deshacer, rehacer, velocidad */
-  #tabEditor:not(:fullscreen) .controls{gap:6px;margin-top:10px}
+  #tabEditor:not(:fullscreen) .controls{gap:4px;margin-top:8px}
   #tabEditor .controls label.row span{display:none}
-  #tabEditor .controls .btn{min-height:40px}
+  #tabEditor .controls .btn{min-height:32px;padding:4px 8px;font-size:12px}
   /* Línea de tiempo más fácil de tocar */
-  #tabEditor .edtrack{height:64px;margin-top:12px}
+  #tabEditor .edtrack{height:44px;margin:16px 0 4px}
+  #tabEditor .edtrack .edsegs{inset:14px 0}
+  #tabEditor .edtrack .hdl::after{top:12px;height:16px}
+  #edStage:fullscreen .edtrack{display:none}
+  /* sonido y pantalla completa: solo icono */
+  .stageControls .lbl{display:none}
+  .stageControls #vMute,.stageControls #vFull,.stageControls #edMute,.stageControls #edFull{font-size:18px;line-height:1}
+  /* en móvil solo un vídeo en el editor */
+  #edAddFile,.edSrcHead,#edSrcList{display:none!important}
   /* Reloj y datos del evento */
   #tabEditor .controls:has(#edClock){display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:center}
   #tabEditor .controls:has(#edClock) #edJug{display:none}
   #tabEditor .controls:has(#edClock)>span:has(#edTrimInfo){grid-column:1/-1;min-width:0;flex:none}
   #tabEditor .controls:has(#edClock) #edAddSel{grid-column:1/-1;min-height:44px;width:100%}
   /* Marcas de partido en cuadrícula 2×2 */
-  #tabEditor #edMarkBtns{grid-column:1/-1;display:grid!important;grid-template-columns:1fr 1fr;gap:6px}
-  #tabEditor #edMarkBtns .btn{min-height:44px;padding:6px 4px;font-size:13px;white-space:normal;line-height:1.15}
+  #tabEditor #edMarkBtns{grid-column:1/-1;display:grid!important;grid-template-columns:1fr 1fr;gap:4px}
+  #tabEditor #edMarkBtns .btn{min-height:34px;padding:4px 2px;font-size:12px;white-space:normal;line-height:1.15}
   /* Listas */
   #tabEditor aside{padding:12px}
   #tabEditor aside .btn{min-height:40px}
@@ -629,10 +650,10 @@ kbd{border-radius:0;font-family:var(--f-body)}
         <button class="btn" id="vBack20" title="Retroceder 20 segundos">-20 seg</button>
         <button class="btn" id="vBack4" title="Retroceder 4 segundos">-4 seg</button>
         <button class="btn" id="vFwd5" title="Avanzar 5 segundos">+5 seg</button>
+        <button class="btn" id="vMute" title="Silenciar / activar sonido" aria-label="Silenciar / activar sonido">🔊<span class="lbl"> Silenciar</span></button>
+        <button class="btn" id="vFull" title="Pantalla completa (F)" aria-label="Pantalla completa">⛶<span class="lbl"> Pantalla completa</span></button>
         <button class="btn" id="vFwd20" title="Avanzar 20 segundos">+20 seg</button>
         <button class="btn" id="vFwd45" title="Avanzar 45 minutos">+45 min</button>
-        <button class="btn" id="vMute" title="Silenciar / activar sonido">🔊 Silenciar</button>
-        <button class="btn" id="vFull" title="Pantalla completa (F)">⛶ Pantalla completa</button>
         <button class="btn" id="visFullEditor" title="Pone todo el registro de acciones (vídeo, botonera y listas) a pantalla completa">⛶ Registro a pantalla completa</button>
       </div>
 
@@ -643,10 +664,10 @@ kbd{border-radius:0;font-family:var(--f-body)}
         <button class="btn histBtn" id="vUndo" title="Deshacer (Ctrl+Z)" aria-label="Deshacer" disabled>↶</button>
         <button class="btn histBtn" id="vRedo" title="Rehacer (Ctrl+Y)" aria-label="Rehacer" disabled>↷</button>
       <span id="vMarkBtns" style="display:contents">
-        <button class="btn" id="vMarkP1" title="Fija el inicio de la 1ª parte en el instante actual">▶️ Inicio 1ª parte</button>
-        <button class="btn" id="vMarkP1E" title="Fija el fin de la 1ª parte en el instante actual">⏸️ Fin 1ª parte</button>
-        <button class="btn" id="vMarkP2" title="Fija el inicio de la 2ª parte en el instante actual">▶️ Inicio 2ª parte</button>
-        <button class="btn" id="vMarkEnd" title="Fija el fin del partido en el instante actual">⏹️ Fin partido</button>
+        <button class="btn" id="vMarkP1" title="Fija el inicio de la 1ª parte en el instante actual">▶️ Inicio 1</button>
+        <button class="btn" id="vMarkP1E" title="Fija el fin de la 1ª parte en el instante actual">⏸️ Fin 1</button>
+        <button class="btn" id="vMarkP2" title="Fija el inicio de la 2ª parte en el instante actual">▶️ Inicio 2</button>
+        <button class="btn" id="vMarkEnd" title="Fija el fin del partido en el instante actual">⏹️ Fin Partido</button>
       </span>
         <span style="flex:1"></span>
         <label class="row" style="gap:6px"><span style="font-size:13px;color:var(--muted)">Velocidad</span>
@@ -838,7 +859,6 @@ kbd{border-radius:0;font-family:var(--f-body)}
     </div>
   </aside>
 </main>
-<p class="hint">Atajos: <kbd>Espacio</kbd> reproducir · <kbd>←</kbd><kbd>→</kbd> ±2 s · <kbd>N</kbd>/<kbd>P</kbd> siguiente/anterior evento · <kbd>T</kbd> nuevo evento · <kbd>S</kbd> fijar el evento activo al instante actual · <kbd>F</kbd> pantalla completa. Con un clip abierto: <kbd>I</kbd>/<kbd>O</kbd> inicio/fin · <kbd>D</kbd> dividir · <kbd>Supr</kbd> quitar tramo · <kbd>,</kbd>/<kbd>.</kbd> fotograma · <kbd>Ctrl+Z</kbd> deshacer · <kbd>Esc</kbd> cerrar.</p>
 </div>
 <section id="tabEditor" hidden>
 <div class="edgrid">
@@ -867,14 +887,14 @@ kbd{border-radius:0;font-family:var(--f-body)}
           <input type="range" id="edFsSeek" min="0" max="1000" value="0" step="1" aria-label="Barra de reproducción">
           <span class="fsMatch" id="edFsMatch"></span>
         </div>
-        <button class="btn primary" id="edPlay">Reproducir</button>
+        <button class="btn primary" id="edPlay" aria-label="Reproducir / pausa"><span class="pi">▶</span><span class="pl">Reproducir</span></button>
         <button class="btn" id="edBack20" title="Retroceder 20 segundos">-20 seg</button>
         <button class="btn" id="edBack4" title="Retroceder 5 segundos">-5 seg</button>
         <button class="btn" id="edFwd5" title="Avanzar 5 segundos">+5 seg</button>
+        <button class="btn" id="edMute" title="Silenciar / activar sonido" aria-label="Silenciar / activar sonido">🔊<span class="lbl"> Silenciar</span></button>
+        <button class="btn" id="edFull" title="Pantalla completa (F)" aria-label="Pantalla completa">⛶<span class="lbl"> Pantalla completa</span></button>
         <button class="btn" id="edFwd20" title="Avanzar 20 segundos">+20 seg</button>
         <button class="btn" id="edFwd45" title="Avanzar 45 minutos">+45 min</button>
-        <button class="btn" id="edMute" title="Silenciar / activar sonido">🔊 Silenciar</button>
-        <button class="btn" id="edFull" title="Pantalla completa (F)">⛶ Pantalla completa</button>
         <button class="btn" id="edFullEditor" title="Pone todo el editor (vídeo, línea de tiempo, listas y exportación) a pantalla completa">⛶ Editor a pantalla completa</button>
       </div>
     </div>
@@ -882,14 +902,14 @@ kbd{border-radius:0;font-family:var(--f-body)}
     <div class="controls">
         <button class="btn histBtn" id="edUndo2" title="Deshacer (Ctrl+Z)" aria-label="Deshacer" disabled>↶</button>
         <button class="btn histBtn" id="edRedo" title="Rehacer (Ctrl+Y)" aria-label="Rehacer" disabled>↷</button>
-        <button class="btn primary" id="edSetA" title="Fija el punto A (inicio del corte) en el cabezal actual (A)">📍 Punto A · inicio</button>
-        <button class="btn primary" id="edSetB" title="Fija el punto B (fin del corte) en el cabezal actual (B)">📍 Punto B · fin</button>
+        <button class="btn primary" id="edSetA" title="Fija el punto A (inicio del corte) en el cabezal actual (A)">📍 <span class="abL">Punto </span>A<span class="abL"> · inicio</span></button>
+        <button class="btn primary" id="edSetB" title="Fija el punto B (fin del corte) en el cabezal actual (B)">📍 <span class="abL">Punto </span>B<span class="abL"> · fin</span></button>
         <span class="time" id="edABInfo" style="color:var(--muted);font-size:12px"></span>
         <span id="edMarkBtns" style="display:contents">
-          <button class="btn" id="edMarkP1" title="Fija el inicio de la 1ª parte en el cabezal actual">▶️ Inicio 1ª parte</button>
-          <button class="btn" id="edMarkP1E" title="Fija el fin de la 1ª parte en el cabezal actual">⏸️ Fin 1ª parte</button>
-          <button class="btn" id="edMarkP2" title="Fija el inicio de la 2ª parte en el cabezal actual">▶️ Inicio 2ª parte</button>
-          <button class="btn" id="edMarkEnd" title="Fija el fin del partido en el cabezal actual">⏹️ Fin partido</button>
+          <button class="btn" id="edMarkP1" title="Fija el inicio de la 1ª parte en el cabezal actual">▶️ Inicio 1</button>
+          <button class="btn" id="edMarkP1E" title="Fija el fin de la 1ª parte en el cabezal actual">⏸️ Fin 1</button>
+          <button class="btn" id="edMarkP2" title="Fija el inicio de la 2ª parte en el cabezal actual">▶️ Inicio 2</button>
+          <button class="btn" id="edMarkEnd" title="Fija el fin del partido en el cabezal actual">⏹️ Fin Partido</button>
         </span>
         <span style="flex:1"></span>
         <label class="row" style="gap:6px"><span style="font-size:13px;color:var(--muted)">Velocidad</span>
@@ -938,7 +958,7 @@ kbd{border-radius:0;font-family:var(--f-body)}
   </section>
   <aside>
     <div class="top">
-      <div class="row" style="justify-content:space-between;margin:0">
+      <div class="row edSrcHead" style="justify-content:space-between;margin:0">
         <h2 style="margin:0">Vídeos</h2>
         <span style="display:none" id="edSrcInfo"></span>
         <button class="btn" id="edSrcToggle" style="font-size:12px" title="Ocultar/mostrar la lista de vídeos">🙈 Ocultar</button>
@@ -1238,10 +1258,10 @@ kbd{border-radius:0;font-family:var(--f-body)}
         <span class="tutB pt" data-k="a">📍 Punto A · inicio</span>
         <span class="tutB pt" data-k="b">📍 Punto B · fin</span>
         <span class="tutAB" id="tutAB"></span>
-        <span class="tutB" data-k="p1">▶️ Inicio 1ª parte</span>
-        <span class="tutB" data-k="p1e">⏸️ Fin 1ª parte</span>
-        <span class="tutB" data-k="p2">▶️ Inicio 2ª parte</span>
-        <span class="tutB" data-k="end">⏹️ Fin partido</span>
+        <span class="tutB" data-k="p1">▶️ Inicio 1</span>
+        <span class="tutB" data-k="p1e">⏸️ Fin 1</span>
+        <span class="tutB" data-k="p2">▶️ Inicio 2</span>
+        <span class="tutB" data-k="end">⏹️ Fin Partido</span>
         <span class="tutB" data-k="add">+ Añadir</span>
       </div>
     </div>
@@ -1303,10 +1323,10 @@ kbd{border-radius:0;font-family:var(--f-body)}
         <div class="tutCh" data-c="b"></div>
       </div>
       <div class="tutBtns">
-        <span class="tutB" data-k="p1">▶️ Inicio 1ª parte</span>
-        <span class="tutB" data-k="p1e">⏸️ Fin 1ª parte</span>
-        <span class="tutB" data-k="p2">▶️ Inicio 2ª parte</span>
-        <span class="tutB" data-k="end">⏹️ Fin partido</span>
+        <span class="tutB" data-k="p1">▶️ Inicio 1</span>
+        <span class="tutB" data-k="p1e">⏸️ Fin 1</span>
+        <span class="tutB" data-k="p2">▶️ Inicio 2</span>
+        <span class="tutB" data-k="end">⏹️ Fin Partido</span>
       </div>
     </div>
     <div class="tutR">
@@ -2385,7 +2405,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   }
   // ---------- marcas de referencia del partido (inicio 1ª/2ª parte, fin) ----------
   const HALF_MARK_KEY="visor_marks_v1"; const HALF_MARK_IDS={p1:"P1",p1e:"P1E",p2:"P2",end:"End"};
-  const HALF_MARK_LABELS={p1:"▶️ Inicio 1ª parte",p1e:"⏸️ Fin 1ª parte",p2:"▶️ Inicio 2ª parte",end:"⏹️ Fin partido"};
+  const HALF_MARK_LABELS={p1:"▶️ Inicio 1",p1e:"⏸️ Fin 1",p2:"▶️ Inicio 2",end:"⏹️ Fin Partido"};
   const HALF_MARK_SHORT={p1:"Inicio 1ª",p1e:"Fin 1ª",p2:"Inicio 2ª",end:"Fin partido"};
   let halfMarks={p1:null,p1e:null,p2:null,end:null};
   (function loadHalfMarks(){ try{ const x=JSON.parse(localStorage.getItem(HALF_MARK_KEY));
@@ -2635,8 +2655,10 @@ window.renderHalfBands = function(b1,b2,mk,d){
     if(d&&typeof d.id==="string"&&/^[0-9a-f]{32}$/.test(d.id)){ v.src="/_blob/"+d.id; $("vidName").textContent=String(d.name||"vídeo").slice(0,80); }
   }catch(e){} })();
 
-  function openFile(f){ if(!f) return;
+  function openFile(f,fromEditor){ if(!f) return;
     if(!(f.type.startsWith("video/")||/\.(mp4|m4v|mov|webm)$/i.test(f.name))){ showMsg("Ese archivo no es un vídeo."); return; }
+    // el mismo vídeo se carga también en el editor (si aún no está allí)
+    if(!fromEditor&&window.__edAddFileIfNew) try{ window.__edAddFileIfNew(f); }catch(e){}
     if(v.dataset.url) URL.revokeObjectURL(v.dataset.url);
     const url=URL.createObjectURL(f); (window.__fileByUrl=window.__fileByUrl||{})[url]=f; v.dataset.user="1"; v.dataset.url=url;
     showMsg("Abriendo "+f.name.replace(/[<>&"]/g,"")+"…");
@@ -2660,6 +2682,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     }catch(e){ note("Vídeo abierto solo en esta sesión."); }
   }
   function note(t){ $("vidNote").textContent=t; }
+  window.__visorOpenFile=f=>openFile(f,true);
   $("file").onchange=ev=>{ openFile(ev.target.files[0]); ev.target.value=""; };
   const stage=document.querySelector(".stage");
   stage.addEventListener("dragover",e=>{e.preventDefault();});
@@ -2673,9 +2696,29 @@ window.renderHalfBands = function(b1,b2,mk,d){
   $("vFwd5").onclick=()=>vSeek(5);
   $("vFwd20").onclick=()=>vSeek(20);
   $("vFwd45").onclick=()=>vSeek(45*60);
-  function toggleFullscreen(el){ if(document.fullscreenElement){ document.exitFullscreen(); } else { (el.requestFullscreen||el.webkitRequestFullscreen).call(el); } }
+  function toggleFullscreen(el){
+    if(document.fullscreenElement){ document.exitFullscreen(); return; }
+    const p=(el.requestFullscreen||el.webkitRequestFullscreen).call(el);
+    // En móvil, la pantalla completa se abre en horizontal (si el navegador lo permite)
+    // Si el navegador no puede bloquear la orientación (iOS, emulación...), se gira por CSS
+    if(matchMedia("(max-width:900px)").matches){
+      const rot=()=>{ if(document.fullscreenElement===el||document.webkitFullscreenElement===el) fsAutoRotate(el); };
+      if(screen.orientation && screen.orientation.lock) Promise.resolve(p).then(()=>screen.orientation.lock("landscape")).catch(rot);
+      else Promise.resolve(p).then(rot).catch(()=>{});
+    }
+  }
+  // Gira el elemento 90° mientras el móvil siga en vertical; deja de girarlo al poner el móvil en horizontal
+  function fsAutoRotate(el){
+    const sync=()=>{ const fs=document.fullscreenElement||document.webkitFullscreenElement;
+      el.classList.toggle("fsRot", fs===el && innerHeight>innerWidth); };
+    sync(); window.addEventListener("resize",sync);
+    const off=()=>{ if((document.fullscreenElement||document.webkitFullscreenElement)!==el){ el.classList.remove("fsRot"); window.removeEventListener("resize",sync); document.removeEventListener("fullscreenchange",off); } };
+    document.addEventListener("fullscreenchange",off);
+  }
+  window.toggleFullscreen=toggleFullscreen;
+  document.addEventListener("fullscreenchange",()=>{ if(!document.fullscreenElement && screen.orientation && screen.orientation.unlock){ try{screen.orientation.unlock();}catch(e){} } });
   $("vFull").onclick=()=>toggleFullscreen(stage);
-  const vMute=$("vMute"); function syncVMute(){ vMute.textContent=v.muted?"🔇 Activar sonido":"🔊 Silenciar"; }
+  const vMute=$("vMute"); function syncVMute(){ vMute.innerHTML=v.muted?'🔇<span class="lbl"> Activar sonido</span>':'🔊<span class="lbl"> Silenciar</span>'; }
   vMute.onclick=()=>{ v.muted=!v.muted; syncVMute(); };
   v.addEventListener("volumechange",syncVMute);
   $("rate").onchange=e=>v.playbackRate=+e.target.value;
@@ -3419,7 +3462,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   const emptyMarks=()=>({p1:null,p1e:null,p2:null,end:null});
   let marks=emptyMarks(); // marcas de referencia del partido (no afectan al corte/exportación)
   const MARK_IDS={p1:"P1",p1e:"P1E",p2:"P2",end:"End"};
-  const MARK_LABELS={p1:"▶️ Inicio 1ª parte",p1e:"⏸️ Fin 1ª parte",p2:"▶️ Inicio 2ª parte",end:"⏹️ Fin partido"};
+  const MARK_LABELS={p1:"▶️ Inicio 1",p1e:"⏸️ Fin 1",p2:"▶️ Inicio 2",end:"⏹️ Fin Partido"};
   const MARK_SHORT={p1:"Inicio 1ª",p1e:"Fin 1ª",p2:"Inicio 2ª",end:"Fin partido"};
   let activeAdded=null; // tramo de la lista vinculado a los marcadores (se actualiza al editar)
   let sources=[], curSrc=-1, pendingFile=null, pendingSeek=null; // varios vídeos, unidos en orden para exportar
@@ -3471,8 +3514,12 @@ window.renderHalfBands = function(b1,b2,mk,d){
     catch(e){ msg("No se pudo abrir el vídeo ("+(e&&e.code||"error")+")."); }
   }
   const newSrcId=()=>"s"+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+  // En móvil el editor trabaja con un solo vídeo
+  const edOneOnly=()=>matchMedia("(max-width:640px)").matches&&sources.length>=1;
+  const ONE_MSG="En el móvil solo se puede usar un vídeo. Quita el actual (✕) para cargar otro.";
   function addSourceFromFile(f){
     if(!f) return;
+    if(edOneOnly()){ msg(ONE_MSG); return; }
     if(!(f.type.startsWith("video/")||/\.(mp4|m4v|mov|webm)$/i.test(f.name))){ msg(f.name+" no es un vídeo."); return; }
     const name=f.name.replace(/\.[^.]+$/,"").replace(/[^\w\-áéíóúñÁÉÍÓÚÑ ]/g,"").slice(0,50)||"video";
     const url=URL.createObjectURL(f); (window.__fileByUrl=window.__fileByUrl||{})[url]=f;
@@ -3480,6 +3527,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     if(sources.length===1) switchSource(sources.length-1); else renderSources();
   }
   function addSourceFromVisor(){
+    if(edOneOnly()){ msg(ONE_MSG); return; }
     const vv=$("v"); const u=vv.currentSrc||vv.src; if(!u){ msg("El visor no tiene vídeo cargado."); return; }
     const name=($("vidName").textContent||"video").replace(/\.[^.]+$/,"").slice(0,50)||"video";
     sources.push({id:newSrcId(), name, url:u, file:null, dur:0, segs:null, inP:0, outP:0, hist:[], marks:emptyMarks()});
@@ -3588,7 +3636,18 @@ window.renderHalfBands = function(b1,b2,mk,d){
       L.append(row);
     });
   }
-  $("edFile").onchange=e=>{ Array.from(e.target.files).forEach(addSourceFromFile); e.target.value=""; };
+  // En móvil la línea de tiempo va encima de los botones -5/+5 (dentro del bloque del vídeo)
+  (function placeEdTrack(){
+    const mq=matchMedia("(max-width:640px)"), st=$("edStage"), tr=$("edTrack"), ctl=st.querySelector(".stageControls"), home=tr.nextElementSibling;
+    function place(){ if(mq.matches) st.insertBefore(tr,ctl); else if(tr.parentNode===st) home.parentNode.insertBefore(tr,home); }
+    place(); (mq.addEventListener?mq.addEventListener("change",place):mq.addListener(place));
+  })();
+  window.__edAddFileIfNew=f=>{ if(!sources.some(s=>s.file&&s.file.name===f.name&&s.file.size===f.size)) addSourceFromFile(f); };
+  $("edFile").onchange=e=>{ const fl=Array.from(e.target.files), first=!sources.length;
+    fl.forEach(addSourceFromFile);
+    // el primer vídeo del editor se abre también en el registro de acciones
+    if(first&&fl[0]&&window.__visorOpenFile) try{ window.__visorOpenFile(fl[0]); }catch(err){}
+    e.target.value=""; };
   $("edStage").addEventListener("dragover",e=>e.preventDefault());
   $("edStage").addEventListener("drop",e=>{ e.preventDefault(); Array.from(e.dataTransfer.files).forEach(addSourceFromFile); });
   $("edUseVisor").onclick=addSourceFromVisor;
@@ -3796,10 +3855,11 @@ window.renderHalfBands = function(b1,b2,mk,d){
   $("edMarkEnd").onclick=()=>setMark("end");
 
   // ---------- reproducción ----------
+  function setPlay(b,on){ b.innerHTML='<span class="pi">'+(on?"⏸":"▶")+'</span><span class="pl">'+(on?"Pausa":"Reproducir")+'</span>'; }
   $("edPlay").onclick=()=>{ if(!dur()) return; if(V.paused){ const k=kept(); if($("edPrev").checked&&k.length&&V.currentTime>=k[k.length-1].e-0.05) V.currentTime=k[0].s; V.play(); } else V.pause(); };
   $("edRate").onchange=e=>V.playbackRate=+e.target.value;
-  V.addEventListener("play",()=>$("edPlay").textContent="Pausa");
-  V.addEventListener("pause",()=>$("edPlay").textContent="Reproducir");
+  V.addEventListener("play",()=>setPlay($("edPlay"),1));
+  V.addEventListener("pause",()=>setPlay($("edPlay"),0));
   (function loop(){
     if(!V.paused&&!exporting){
       if($("edPrev").checked){ const t=V.currentTime, k=kept();
@@ -3852,13 +3912,13 @@ window.renderHalfBands = function(b1,b2,mk,d){
   $("edFwd5").onclick=()=>edSeek(5);
   $("edFwd20").onclick=()=>edSeek(20);
   $("edFwd45").onclick=()=>edSeek(45*60);
-  $("edFullEditor").onclick=()=>{ const el=$("tabEditor"); if(document.fullscreenElement){ document.exitFullscreen(); } else { (el.requestFullscreen||el.webkitRequestFullscreen).call(el); } };
-  $("visFullEditor").onclick=()=>{ const el=$("tabVisor"); if(document.fullscreenElement){ document.exitFullscreen(); } else { (el.requestFullscreen||el.webkitRequestFullscreen).call(el); } };
-  document.addEventListener("fullscreenchange",()=>{ $("visFullEditor").textContent=document.fullscreenElement===$("tabVisor")?"⛶ Salir de pantalla completa":"⛶ Registro a pantalla completa";$("edFull").textContent=document.fullscreenElement===$("edStage")?"⛶ Salir de pantalla completa":"⛶ Pantalla completa"; $("edFullEditor").textContent=document.fullscreenElement===$("tabEditor")?"⛶ Salir del editor a pantalla completa":"⛶ Editor a pantalla completa"; });
-  const edMute=$("edMute"); function syncEdMute(){ edMute.textContent=V.muted?"🔇 Activar sonido":"🔊 Silenciar"; }
+  $("edFullEditor").onclick=()=>toggleFullscreen($("tabEditor"));
+  $("visFullEditor").onclick=()=>toggleFullscreen($("tabVisor"));
+  document.addEventListener("fullscreenchange",()=>{ $("visFullEditor").textContent=document.fullscreenElement===$("tabVisor")?"⛶ Salir de pantalla completa":"⛶ Registro a pantalla completa";$("edFull").innerHTML='⛶<span class="lbl"> '+(document.fullscreenElement===$("edStage")?"Salir de pantalla completa":"Pantalla completa")+'</span>'; $("edFullEditor").textContent=document.fullscreenElement===$("tabEditor")?"⛶ Salir del editor a pantalla completa":"⛶ Editor a pantalla completa"; });
+  const edMute=$("edMute"); function syncEdMute(){ edMute.innerHTML=V.muted?'🔇<span class="lbl"> Activar sonido</span>':'🔊<span class="lbl"> Silenciar</span>'; }
   edMute.onclick=()=>{ V.muted=!V.muted; syncEdMute(); };
   V.addEventListener("volumechange",syncEdMute);
-  $("edFull").onclick=()=>{ const el=$("edStage"); if(document.fullscreenElement){ document.exitFullscreen(); } else { (el.requestFullscreen||el.webkitRequestFullscreen).call(el); } };
+  $("edFull").onclick=()=>toggleFullscreen($("edStage"));
   $("edSetA").onclick=()=>dur()&&setIn(V.currentTime);
   $("edSetB").onclick=()=>dur()&&setOut(V.currentTime);
   $("edSplit").onclick=()=>dur()&&split();
@@ -4058,9 +4118,9 @@ window.tutVoz=(()=>{
   // ---------- pasos ----------
   const STEPS=[
     {t:"Sube uno o varios vídeos",opt:false,
-     d:"Pulsa «Subir vídeo».",
+     d:"Pulsa «Subir vídeo»: puedes subir uno o varios vídeos.",
      pre(){ S.vid=true; },
-     async run(W){ await go(W,q('.tutB[data-k="up"]'),.5,.5,900,"Subir vídeo"); S.hot="up"; draw(); await tap(W); S.hot=null; S.vid=true; draw(); await wait(W,1600,"Vídeo cargado"); }},
+     async run(W){ await go(W,q('.tutB[data-k="up"]'),.5,.5,900,"Subir vídeo: puedes subir uno o varios vídeos"); S.hot="up"; draw(); await tap(W); S.hot=null; S.vid=true; draw(); await wait(W,1600,"Vídeo cargado"); }},
     {t:"Marca las partes",opt:true,
      d:"Inicio y fin de cada parte.",
      pre(){ S.marks={p1:4,p1e:46,p2:54,end:97}; S.head=97; },
