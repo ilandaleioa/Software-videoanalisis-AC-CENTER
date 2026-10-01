@@ -406,6 +406,9 @@ kbd{border-radius:0;font-family:var(--f-body)}
   #play,#edPlay,#cePlay{border-color:#555}
 }
 /* ===================== fin capa ACFC ===================== */
+.histBtn{background:#111;border-color:#111;color:#fff;border-radius:0}
+.histBtn:hover:not(:disabled){background:#333;border-color:#333;color:#fff}
+.histBtn:disabled{opacity:.35;cursor:default}
 
 /* ===== Móvil limpio (editor) · solo pantallas ≤640px ===== */
 @media (max-width:640px){
@@ -450,8 +453,7 @@ kbd{border-radius:0;font-family:var(--f-body)}
   #tabEditor .controls:has(#edClock)>span:has(#edTrimInfo){grid-column:1/-1;min-width:0;flex:none}
   #tabEditor .controls:has(#edClock) #edAddSel{grid-column:1/-1;min-height:44px;width:100%}
   /* Marcas de partido en cuadrícula 2×2 */
-  #tabEditor .controls:has(#edMarkBtns){display:grid;grid-template-columns:1fr 1fr;gap:6px}
-  #tabEditor #edMarkToggle{grid-column:1/-1;min-height:30px;padding:2px}
+  #tabEditor #edMarkBtns{grid-column:1/-1;display:grid!important;grid-template-columns:1fr 1fr;gap:6px}
   #tabEditor #edMarkBtns .btn{min-height:44px;padding:6px 4px;font-size:13px;white-space:normal;line-height:1.15}
   /* Listas */
   #tabEditor aside{padding:12px}
@@ -635,8 +637,8 @@ kbd{border-radius:0;font-family:var(--f-body)}
     </div>
     <div id="belowStageWrap">
     <div class="controls">
-        <button class="btn primary" id="vUndo" title="Deshacer (Ctrl+Z)" aria-label="Deshacer" disabled>↶</button>
-        <button class="btn primary" id="vRedo" title="Rehacer (Ctrl+Y)" aria-label="Rehacer" disabled>↷</button>
+        <button class="btn histBtn" id="vUndo" title="Deshacer (Ctrl+Z)" aria-label="Deshacer" disabled>↶</button>
+        <button class="btn histBtn" id="vRedo" title="Rehacer (Ctrl+Y)" aria-label="Rehacer" disabled>↷</button>
       <span id="vMarkBtns" style="display:contents">
         <button class="btn" id="vMarkP1" title="Fija el inicio de la 1ª parte en el instante actual">▶️ Inicio 1ª parte</button>
         <button class="btn" id="vMarkP1E" title="Fija el fin de la 1ª parte en el instante actual">⏸️ Fin 1ª parte</button>
@@ -872,11 +874,17 @@ kbd{border-radius:0;font-family:var(--f-body)}
     </div>
     <input type="file" id="edFile" accept="video/*" multiple hidden>
     <div class="controls">
-        <button class="btn primary" id="edUndo2" title="Deshacer (Ctrl+Z)" aria-label="Deshacer" disabled>↶</button>
-        <button class="btn primary" id="edRedo" title="Rehacer (Ctrl+Y)" aria-label="Rehacer" disabled>↷</button>
+        <button class="btn histBtn" id="edUndo2" title="Deshacer (Ctrl+Z)" aria-label="Deshacer" disabled>↶</button>
+        <button class="btn histBtn" id="edRedo" title="Rehacer (Ctrl+Y)" aria-label="Rehacer" disabled>↷</button>
         <button class="btn primary" id="edSetA" title="Fija el punto A (inicio del corte) en el cabezal actual (A)">📍 Punto A · inicio</button>
         <button class="btn primary" id="edSetB" title="Fija el punto B (fin del corte) en el cabezal actual (B)">📍 Punto B · fin</button>
         <span class="time" id="edABInfo" style="color:var(--muted);font-size:12px"></span>
+        <span id="edMarkBtns" style="display:contents">
+          <button class="btn" id="edMarkP1" title="Fija el inicio de la 1ª parte en el cabezal actual">▶️ Inicio 1ª parte</button>
+          <button class="btn" id="edMarkP1E" title="Fija el fin de la 1ª parte en el cabezal actual">⏸️ Fin 1ª parte</button>
+          <button class="btn" id="edMarkP2" title="Fija el inicio de la 2ª parte en el cabezal actual">▶️ Inicio 2ª parte</button>
+          <button class="btn" id="edMarkEnd" title="Fija el fin del partido en el cabezal actual">⏹️ Fin partido</button>
+        </span>
         <span style="flex:1"></span>
         <label class="row" style="gap:6px"><span style="font-size:13px;color:var(--muted)">Velocidad</span>
           <select id="edRate"><option>0.5</option><option>0.75</option><option selected>1</option><option>1.5</option><option>2</option></select></label>
@@ -918,15 +926,6 @@ kbd{border-radius:0;font-family:var(--f-body)}
       <button class="btn primary" id="edAddSel" hidden title="Muestra este tramo en la lista de la derecha">+ Añadir</button>
       <button class="btn" id="edUndo" style="display:none" title="Deshacer (Ctrl+Z)">Deshacer</button>
       <label class="row" style="display:none;gap:6px;font-size:13px;color:var(--muted)"><input type="checkbox" id="edPrev"> Saltar lo quitado</label>
-    </div>
-    <div class="controls">
-      <button class="btn iconBtn" id="edMarkToggle" title="Ocultar/mostrar estos botones">👁</button>
-      <span id="edMarkBtns" style="display:contents">
-        <button class="btn" id="edMarkP1" title="Fija el inicio de la 1ª parte en el cabezal actual">▶️ Inicio 1ª parte</button>
-        <button class="btn" id="edMarkP1E" title="Fija el fin de la 1ª parte en el cabezal actual">⏸️ Fin 1ª parte</button>
-        <button class="btn" id="edMarkP2" title="Fija el inicio de la 2ª parte en el cabezal actual">▶️ Inicio 2ª parte</button>
-        <button class="btn" id="edMarkEnd" title="Fija el fin del partido en el cabezal actual">⏹️ Fin partido</button>
-      </span>
     </div>
     <div class="edNote" id="edNote"></div>
     <div class="legend" style="display:none"><span><i style="background:var(--pitch)"></i>Se conserva</span><span><i class="off"></i>Quitado</span><span><i style="background:var(--muted);opacity:.5"></i>Recortado por los extremos</span></div>
@@ -2424,8 +2423,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     ln.addEventListener("mouseenter",()=>lb.classList.add("show")); ln.addEventListener("mouseleave",()=>lb.classList.remove("show")); });
   const MARK_BTNS_HIDE_KEY="markBtnsHidden";
   function setMarkBtnsHidden(hidden){
-    ["vMarkBtns","edMarkBtns"].forEach(id=>{ $(id).style.display=hidden?"none":"contents"; });
-    ["edMarkToggle"].forEach(id=>{ $(id).textContent=hidden?"👁‍🗨":"👁"; $(id).title=hidden?"Mostrar estos botones":"Ocultar estos botones"; });
+    ["vMarkBtns"].forEach(id=>{ $(id).style.display=hidden?"none":"contents"; });
     document.body.classList.toggle("markBtnsHidden",hidden);
     try{ localStorage.setItem(MARK_BTNS_HIDE_KEY, hidden?"1":"0"); }catch(e){}
   }
@@ -2433,7 +2431,6 @@ window.renderHalfBands = function(b1,b2,mk,d){
     let hidden=false;
     try{ hidden=localStorage.getItem(MARK_BTNS_HIDE_KEY)==="1"; }catch(e){}
     setMarkBtnsHidden(hidden);
-    $("edMarkToggle").onclick=()=>setMarkBtnsHidden($("edMarkBtns").style.display!=="none");
   })();
 
   const ED_SRC_HIDE_KEY="edSrcHidden";
