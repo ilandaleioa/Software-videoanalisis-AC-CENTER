@@ -74,6 +74,7 @@ video{width:100%;height:100%;display:block;background:#000}
 .stage:fullscreen video,.stage:-webkit-full-screen video{width:100%;height:100%;object-fit:contain}
 .stageControls .btn.primary{background:var(--red);border-color:var(--red);color:#fff}
 .controls{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:12px}
+.controls[hidden]{display:none!important}
 .time{font-family:var(--f-disp);font-size:20px;min-width:110px}
 .track{position:relative;height:46px;margin-top:10px;background:var(--panel);border:1px solid var(--line);border-radius:6px;cursor:pointer}
 .track .prog{position:absolute;left:0;top:0;bottom:0;background:color-mix(in srgb,var(--pitch) 24%,transparent);border-right:2px solid color-mix(in srgb,var(--red) 55%,transparent);pointer-events:none}
@@ -170,7 +171,7 @@ kbd{border:1px solid var(--line);border-radius:3px;padding:0 4px;font-size:11px}
 .tab[aria-selected="true"]{color:var(--ink);border-color:var(--red)}
 .edgrid{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:18px;padding:18px 22px;max-width:none;margin:0}
 @media (max-width:1250px){.edgrid{grid-template-columns:1fr}}
-.edtrack{position:relative;height:52px;margin-top:10px;background:var(--panel);border:1px solid var(--line);border-radius:6px;cursor:pointer;touch-action:none;user-select:none}
+.edtrack{position:relative;height:52px;margin-top:40px;background:var(--panel);border:1px solid var(--line);border-radius:6px;cursor:pointer;touch-action:none;user-select:none}
 .edsegs{position:absolute;inset:8px 0}
 .seg{position:absolute;top:0;bottom:0;background:color-mix(in srgb,var(--pitch) 70%,transparent);border-right:2px solid var(--panel);border-radius:3px;cursor:grab}
 .seg.off{background:repeating-linear-gradient(45deg,color-mix(in srgb,var(--red) 55%,transparent) 0 6px,transparent 6px 12px)}
@@ -184,8 +185,11 @@ kbd{border:1px solid var(--line);border-radius:3px;padding:0 4px;font-size:11px}
 #hIn{margin-left:-12px}
 #hOut{margin-left:0}
 .edtrack .head{position:absolute;top:-10px;bottom:-6px;width:2px;background:var(--red);pointer-events:none;box-shadow:0 0 6px rgba(200,16,46,.7);z-index:6}
+#edMatchClock{position:absolute;left:50%;bottom:calc(100% + 9px);transform:translateX(-50%);color:var(--red);font-size:17px;font-weight:700;line-height:1;white-space:nowrap;background:var(--panel);border:1px solid var(--line);padding:3px 6px}
+#edMatchClock:empty{display:none}
 .edtrack .head::before{content:"";position:absolute;top:-7px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-top:8px solid var(--red)}
 #vSeekTrack{margin-top:34px}
+#vTimelineToggle .tgl{display:none}
 .headClock{position:absolute;top:-19px;transform:translate(-50%,-100%);font-family:var(--f-disp);font-size:16px;font-weight:700;line-height:1;color:var(--red);background:var(--panel);border:1px solid var(--red);padding:2px 6px;white-space:nowrap;pointer-events:none;z-index:7}
 .headClock:empty{display:none}
 .markLine{position:absolute;top:-6px;bottom:-6px;width:2px;pointer-events:auto;cursor:help;z-index:4;display:none}
@@ -416,10 +420,11 @@ kbd{border-radius:0;font-family:var(--f-body)}
 .histBtn:hover:not(:disabled){background:#333;border-color:#333;color:#fff}
 .histBtn:disabled{opacity:.35;cursor:default}
 
-#edPlay .pi{display:none}
+#edPlay .pi,#play .pi{display:none}
 /* ===== Móvil limpio (editor) · solo pantallas ≤640px ===== */
 @media (max-width:640px){
-  #edPlay .pi{display:inline;font-size:16px;line-height:1}
+  #edPlay .pi,#play .pi{display:inline;font-size:16px;line-height:1}
+  #play .pl{display:none}
   #edSetA .abL,#edSetB .abL{display:none}
   #edSetA,#edSetB{min-width:64px}
   #edPlay .pl{display:none}
@@ -442,7 +447,7 @@ kbd{border-radius:0;font-family:var(--f-body)}
   #edOv .det span{font-size:11px}
   #tabEditor:not(:fullscreen) #edStage:not(:fullscreen) .empty{inset:0 0 auto 0;aspect-ratio:16/9;background:#000;padding:12px;gap:8px;font-size:13px}
   #tabEditor:not(:fullscreen) #edStage:not(:fullscreen) .empty .row{gap:6px}
-  #tabEditor:not(:fullscreen) #edStage:not(:fullscreen) .stageControls{position:static;display:grid;grid-template-columns:repeat(5,1fr);gap:4px;padding:6px 0 0;background:none}
+  #tabEditor:not(:fullscreen) #edStage:not(:fullscreen) .stageControls{position:static;display:grid;grid-template-columns:1.3fr 1fr 1fr 30px 30px;gap:4px;padding:6px 0 0;background:none}
   #edStage:not(:fullscreen) .stageControls .btn{min-height:34px;padding:4px 2px;font-size:12px;background:var(--panel);border:1px solid var(--line);color:var(--ink)}
   #edStage:not(:fullscreen) .stageControls .btn.primary{background:var(--red);border-color:var(--red);color:#fff}
   #edStage:not(:fullscreen) .stageControls #edPlay{order:3}
@@ -450,10 +455,40 @@ kbd{border-radius:0;font-family:var(--f-body)}
   #edStage:not(:fullscreen) .stageControls #edFwd5{order:5}
   #edStage:not(:fullscreen) .stageControls #edBack20{order:1}
   #edStage:not(:fullscreen) .stageControls #edFwd20{order:2}
-  #edStage:not(:fullscreen) .stageControls #edFull{order:6;grid-column:span 3;background:var(--ink);color:var(--bg);border-color:var(--ink)}
-  #edStage:not(:fullscreen) .stageControls #edMute{order:7;grid-column:span 2}
+  #edStage:not(:fullscreen) .stageControls #edFull{order:7;background:var(--ink);color:var(--bg);border-color:var(--ink)}
+  #edStage:not(:fullscreen) .stageControls #edMute{order:6}
+  #edStage:not(:fullscreen) .stageControls #edMute,#edStage:not(:fullscreen) .stageControls #edFull{padding:0;min-width:0;font-size:13px;line-height:1}
   #edStage:not(:fullscreen) .stageControls #edFwd45,
   #edStage:not(:fullscreen) .stageControls #edFullEditor{display:none}
+  /* Registro: mismo reproductor que el editor (vídeo, línea de tiempo y mandos debajo) */
+  #tabVisor:not(:fullscreen) .stage:not(:fullscreen){background:transparent;overflow:visible;aspect-ratio:auto;display:flex;flex-direction:column}
+  #tabVisor:not(:fullscreen) .stage:not(:fullscreen) video{height:auto;aspect-ratio:16/9}
+  #tabVisor:not(:fullscreen) .stage:not(:fullscreen) .empty{inset:0 0 auto 0;aspect-ratio:16/9;background:#000;padding:12px;gap:8px;font-size:13px}
+  #tabVisor:not(:fullscreen) .stage:not(:fullscreen) .empty .row{gap:6px}
+  #tabVisor:not(:fullscreen) .stage:not(:fullscreen) .stageControls{position:static;display:grid;grid-template-columns:1.3fr 1fr 1fr 30px 30px;gap:4px;padding:6px 0 0;background:none}
+  .stage:not(:fullscreen) .stageControls #play{order:3}
+  .stage:not(:fullscreen) .stageControls #vBack4{order:4}
+  .stage:not(:fullscreen) .stageControls #vFwd5{order:5}
+  .stage:not(:fullscreen) .stageControls #vMute{order:6}
+  .stage:not(:fullscreen) .stageControls #vFull{order:7;background:var(--ink);color:var(--bg);border-color:var(--ink)}
+  .stage:not(:fullscreen) .stageControls #vMute,.stage:not(:fullscreen) .stageControls #vFull{padding:0;min-width:0;font-size:13px;line-height:1}
+  #tabVisor .stage:not(:fullscreen) .stageControls .btn{min-height:34px;padding:4px 2px;font-size:12px;background:var(--panel);border:1px solid var(--line);color:var(--ink)}
+  #tabVisor .stage:not(:fullscreen) .stageControls .btn.primary{background:var(--red);border-color:var(--red);color:#fff}
+  #tabVisor .stage:not(:fullscreen) .stageControls #vFull{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+  #tabVisor .stage:not(:fullscreen) .stageControls #vFwd45,
+  #tabVisor .stage:not(:fullscreen) .stageControls #visFullEditor{display:none}
+  /* Botones de abajo como en el editor: «Ocultar controles» en su fila, luego deshacer/rehacer, marcas, velocidad y tutorial */
+  #vTimelineToggle{order:-1;margin-right:100%;font-size:14px;min-height:32px;padding:4px 14px}
+  #tabVisor:not(:fullscreen) .controls{gap:4px;margin-top:8px}
+  #tabVisor .controls label.row span{display:none}
+  #tabVisor .controls .btn{min-height:32px;padding:4px 8px;font-size:12px}
+  #tabVisor .edtrack{height:44px;margin:40px 0 4px}
+  #tabVisor .edtrack .edsegs{inset:14px 0}
+  /* sin la línea de tiempo por categorías en móvil */
+  #tabVisor .catTimelineWrap{display:none!important}
+  .stage:fullscreen #vSeekTrack,.stage:fullscreen #tagRow{display:none}
+  #tagRow{margin-top:4px;gap:4px}
+  #tagRow .btn{min-height:34px;padding:4px 2px;font-size:12px}
   /* pantalla completa en móvil vertical: gira 90° para verse en horizontal */
   .fsRot:fullscreen{position:fixed!important;top:0!important;left:100%!important;width:100vh!important;height:100vw!important;
     max-width:none!important;transform:rotate(90deg);transform-origin:top left;overflow:auto}
@@ -462,7 +497,7 @@ kbd{border-radius:0;font-family:var(--f-body)}
   #tabEditor .controls label.row span{display:none}
   #tabEditor .controls .btn{min-height:32px;padding:4px 8px;font-size:12px}
   /* Línea de tiempo más fácil de tocar */
-  #tabEditor .edtrack{height:44px;margin:16px 0 4px}
+  #tabEditor .edtrack{height:44px;margin:40px 0 4px}
   #tabEditor .edtrack .edsegs{inset:14px 0}
   #tabEditor .edtrack .hdl::after{top:12px;height:16px}
   #edStage:fullscreen .edtrack{display:none}
@@ -471,10 +506,12 @@ kbd{border-radius:0;font-family:var(--f-body)}
   .stageControls #vMute,.stageControls #vFull,.stageControls #edMute,.stageControls #edFull{font-size:18px;line-height:1}
   /* en móvil solo un vídeo en el editor */
   #edAddFile,.edSrcHead,#edSrcList{display:none!important}
+  /* sin rótulos sobre el vídeo ni leyenda de categorías (salvo en pantalla completa) */
+  .stage:not(:fullscreen) .overlay,#edStage:not(:fullscreen) .overlay,#legend{display:none!important}
   /* Reloj y datos del evento */
   #tabEditor .controls:has(#edClock){display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:center}
   #tabEditor .controls:has(#edClock) #edJug{display:none}
-  #tabEditor .controls:has(#edClock)>span:has(#edTrimInfo){grid-column:1/-1;min-width:0;flex:none}
+  #tabEditor .controls:has(#edClock)>span:has(#edTrimInfo),#tabEditor .controls:has(#edClock)>span:has(#edClock){display:none!important}
   #tabEditor .controls:has(#edClock) #edAddSel{grid-column:1/-1;min-height:44px;width:100%}
   /* Marcas de partido en cuadrícula 2×2 */
   #tabEditor #edMarkBtns{grid-column:1/-1;display:grid!important;grid-template-columns:1fr 1fr;gap:4px}
@@ -590,10 +627,10 @@ kbd{border-radius:0;font-family:var(--f-body)}
 #vMarkToggle,#edMarkToggle{background:var(--c-sal);border-color:var(--c-sal);color:#fff}
 #vMarkToggle:hover,#edMarkToggle:hover{background:var(--ink);border-color:var(--ink);color:var(--bg)}
 /* Colores funcionales: Ocultar = azul, Añadir = rosa, Limpiar = rojo */
-#vTimelineToggle,#plListToggle,#evListToggle,#expOptsToggle,#edSrcToggle,#edExpToggle{background:var(--c-sal);border-color:var(--c-sal);color:#fff}
+#vTimelineToggle,#plListToggle,#evListToggle,#expOptsToggle,#edSrcToggle,#edExpToggle,#edCtlToggle{background:var(--c-sal);border-color:var(--c-sal);color:#fff}
 #edAddSel,#edAddFile,#newCatAdd,#newDetAdd,#newJugAdd,.optbtn.add{background:#e6559a;border:2px solid #e6559a;color:#fff}
 #edClearAdded{background:var(--red);border-color:var(--red);color:#fff}
-#vTimelineToggle:hover,#plListToggle:hover,#evListToggle:hover,#expOptsToggle:hover,#edSrcToggle:hover,#edExpToggle:hover,
+#vTimelineToggle:hover,#plListToggle:hover,#evListToggle:hover,#expOptsToggle:hover,#edSrcToggle:hover,#edExpToggle:hover,#edCtlToggle:hover,
 #edAddSel:hover,#edAddFile:hover,#newCatAdd:hover,#newDetAdd:hover,#newJugAdd:hover,.optbtn.add:hover,#edClearAdded:hover{filter:brightness(.88);color:#fff}
 /* Equipo: propio verde, rival rojo; «Sin detalle» negro. El seleccionado lleva borde oscuro */
 .optbtn[data-eq="propio"]{background:#2e8b4a;border-color:#2e8b4a;color:#fff}
@@ -646,9 +683,9 @@ kbd{border-radius:0;font-family:var(--f-body)}
           <input type="range" id="fsSeek" min="0" max="1000" value="0" step="1" aria-label="Barra de reproducción">
           <span class="fsMatch" id="fsMatch"></span>
         </div>
-        <button class="btn primary" id="play">Reproducir</button>
+        <button class="btn primary" id="play" aria-label="Reproducir / pausa"><span class="pi">▶</span><span class="pl">Reproducir</span></button>
         <button class="btn" id="vBack20" title="Retroceder 20 segundos">-20 seg</button>
-        <button class="btn" id="vBack4" title="Retroceder 4 segundos">-4 seg</button>
+        <button class="btn" id="vBack4" title="Retroceder 5 segundos">-5 seg</button>
         <button class="btn" id="vFwd5" title="Avanzar 5 segundos">+5 seg</button>
         <button class="btn" id="vMute" title="Silenciar / activar sonido" aria-label="Silenciar / activar sonido">🔊<span class="lbl"> Silenciar</span></button>
         <button class="btn" id="vFull" title="Pantalla completa (F)" aria-label="Pantalla completa">⛶<span class="lbl"> Pantalla completa</span></button>
@@ -777,7 +814,7 @@ kbd{border-radius:0;font-family:var(--f-body)}
         <button class="btn" id="evListToggle" style="font-size:12px" title="Ocultar/mostrar la lista de eventos">🙈 Ocultar eventos</button>
         <button class="btn" id="delAllEv" title="Borrar todos los eventos del registro">Borrar todos los eventos</button>
       </div>
-      <div class="row">
+      <div class="row" id="tagRow">
         <button class="btn primary" id="tagNow" title="Etiquetar en el instante actual (T)" style="flex:1">REGISTRO AUTO</button>
         <button class="btn primary" id="tagManual" title="Registro manual: tú marcas el inicio (REC) y el final (PAUSE) del corte" style="flex:1">REGISTRO MANUAL</button>
       </div>
@@ -899,12 +936,13 @@ kbd{border-radius:0;font-family:var(--f-body)}
       </div>
     </div>
     <input type="file" id="edFile" accept="video/*" multiple hidden>
-    <div class="controls">
+    <div class="row" style="margin:6px 0"><button class="btn" id="edCtlToggle" style="font-size:12px" title="Ocultar/mostrar los botones de corte, marcas y datos de este bloque">🙈 Ocultar controles</button></div>
+    <div class="controls" id="edCtl1">
         <button class="btn histBtn" id="edUndo2" title="Deshacer (Ctrl+Z)" aria-label="Deshacer" disabled>↶</button>
         <button class="btn histBtn" id="edRedo" title="Rehacer (Ctrl+Y)" aria-label="Rehacer" disabled>↷</button>
         <button class="btn primary" id="edSetA" title="Fija el punto A (inicio del corte) en el cabezal actual (A)">📍 <span class="abL">Punto </span>A<span class="abL"> · inicio</span></button>
         <button class="btn primary" id="edSetB" title="Fija el punto B (fin del corte) en el cabezal actual (B)">📍 <span class="abL">Punto </span>B<span class="abL"> · fin</span></button>
-        <span class="time" id="edABInfo" style="color:var(--muted);font-size:12px"></span>
+        <button class="btn primary" id="edAddSel" hidden title="Muestra este tramo en la lista de la derecha">+ Añadir</button>
         <span id="edMarkBtns" style="display:contents">
           <button class="btn" id="edMarkP1" title="Fija el inicio de la 1ª parte en el cabezal actual">▶️ Inicio 1</button>
           <button class="btn" id="edMarkP1E" title="Fija el fin de la 1ª parte en el cabezal actual">⏸️ Fin 1</button>
@@ -934,22 +972,20 @@ kbd{border-radius:0;font-family:var(--f-body)}
       <div class="hdlTime markLbl" id="mlP1ELbl"></div>
       <div class="hdlTime markLbl" id="mlP2Lbl"></div>
       <div class="hdlTime markLbl" id="mlEndLbl"></div>
-      <div class="head" id="edHead"></div>
+      <div class="head" id="edHead"><span class="time" id="edMatchClock" title="Minuto de partido, calculado a partir de las marcas de inicio de cada parte"></span></div>
     </div>
-    <div class="controls">
+    <div class="controls" id="edCtl2">
       <span style="display:flex;flex-direction:column;gap:2px">
         <span class="time" id="edClock" style="color:var(--muted);font-size:15px" title="Instante del cabezal / duración total del vídeo">0:00.0 / 0:00</span>
         <span class="time" id="edJug" style="color:var(--muted);font-size:12px;white-space:nowrap" title="Tiempo efectivo de juego según las marcas de las partes"></span>
       </span>
       <span class="time" id="edVidDur" hidden></span>
-      <span class="time" id="edMatchClock" style="color:var(--red);font-size:23px;font-weight:700" title="Minuto de partido, calculado a partir de las marcas de inicio de cada parte"></span>
       <span style="display:flex;flex-direction:column;gap:2px;flex:1 1 120px;min-width:0">
         <span style="color:var(--ink);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em">Datos del evento</span>
         <span class="time" id="edTrimInfo" style="color:var(--muted);font-size:12px;min-width:0;white-space:pre" title="Inicio, fin y duración del recorte"></span>
       </span>
       <button class="btn" id="edSplit" style="display:none" title="Dividir en el cabezal (D)">✂ Dividir aquí</button>
       <button class="btn" id="edDel" style="display:none" title="Quitar o recuperar el tramo seleccionado (Supr)">Quitar tramo</button>
-      <button class="btn primary" id="edAddSel" hidden title="Muestra este tramo en la lista de la derecha">+ Añadir</button>
       <button class="btn" id="edUndo" style="display:none" title="Deshacer (Ctrl+Z)">Deshacer</button>
       <label class="row" style="display:none;gap:6px;font-size:13px;color:var(--muted)"><input type="checkbox" id="edPrev"> Saltar lo quitado</label>
     </div>
@@ -2469,6 +2505,19 @@ window.renderHalfBands = function(b1,b2,mk,d){
     setMarkBtnsHidden(hidden);
   })();
 
+  const ED_CTL_HIDE_KEY="edCtlHidden";
+  function setEdCtlHidden(hidden){
+    $("edCtl1").hidden=$("edCtl2").hidden=hidden;
+    $("edCtlToggle").textContent=hidden?"👁 Mostrar controles":"🙈 Ocultar controles";
+    try{ localStorage.setItem(ED_CTL_HIDE_KEY, hidden?"1":"0"); }catch(e){}
+  }
+  (function initEdCtlToggle(){
+    let hidden=false;
+    try{ hidden=localStorage.getItem(ED_CTL_HIDE_KEY)==="1"; }catch(e){}
+    setEdCtlHidden(hidden);
+    $("edCtlToggle").onclick=()=>setEdCtlHidden(!$("edCtl1").hidden);
+  })();
+
   const ED_SRC_HIDE_KEY="edSrcHidden";
   function setEdSrcHidden(hidden){
     $("edSrcList").style.display=hidden?"none":"grid";
@@ -2548,7 +2597,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   const TIMELINE_HIDE_KEY="timelineHidden";
   function setTimelineHidden(hidden){
     $("belowStageWrap").classList.toggle("hiddenBlock",hidden);
-    $("vTimelineToggle").textContent=hidden?"👁‍🗨":"👁";
+    $("vTimelineToggle").innerHTML=hidden?'👁‍🗨<span class="tgl"> Mostrar controles</span>':'👁<span class="tgl"> Ocultar controles</span>';
     $("vTimelineToggle").title=hidden?"Mostrar la línea de tiempo y el editor de abajo":"Ocultar la línea de tiempo y el editor de abajo";
     try{ localStorage.setItem(TIMELINE_HIDE_KEY, hidden?"1":"0"); }catch(e){}
   }
@@ -2625,8 +2674,9 @@ window.renderHalfBands = function(b1,b2,mk,d){
     V.currentTime=1e10;
   }
   v.addEventListener("loadedmetadata",()=>{$("empty").hidden=true; fixBrokenDuration(v); refresh();});
-  v.addEventListener("play",()=>$("play").textContent="Pausa");
-  v.addEventListener("pause",()=>$("play").textContent="Reproducir");
+  const setVPlay=on=>{ $("play").innerHTML='<span class="pi">'+(on?"⏸":"▶")+'</span><span class="pl">'+(on?"Pausa":"Reproducir")+'</span>'; };
+  v.addEventListener("play",()=>setVPlay(true));
+  v.addEventListener("pause",()=>setVPlay(false));
   v.addEventListener("loadedmetadata",()=>{ ceView=null; });
   v.addEventListener("seeked",()=>renderClip());
   const MSG={1:"la carga se interrumpió",2:"error de red al leer el archivo",3:"el navegador no puede decodificar este vídeo (prueba con Chrome o Edge)",4:"el navegador ha bloqueado el vídeo o el formato no es compatible"};
@@ -2692,7 +2742,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   
   function vSeek(delta){ if(!v.duration) return; playing=null; v.currentTime=Math.max(0,Math.min(v.duration,v.currentTime+delta)); tick(); }
   $("vBack20").onclick=()=>vSeek(-20);
-  $("vBack4").onclick=()=>vSeek(-4);
+  $("vBack4").onclick=()=>vSeek(-5);
   $("vFwd5").onclick=()=>vSeek(5);
   $("vFwd20").onclick=()=>vSeek(20);
   $("vFwd45").onclick=()=>vSeek(45*60);
@@ -3642,6 +3692,16 @@ window.renderHalfBands = function(b1,b2,mk,d){
     function place(){ if(mq.matches) st.insertBefore(tr,ctl); else if(tr.parentNode===st) home.parentNode.insertBefore(tr,home); }
     place(); (mq.addEventListener?mq.addEventListener("change",place):mq.addListener(place));
   })();
+  // Lo mismo en el registro: la línea de tiempo va justo debajo del vídeo
+  (function placeVisorTrack(){
+    const mq=matchMedia("(max-width:640px)"), st=document.querySelector("#tabVisor .stage"), tr=$("vSeekTrack"), ctl=st.querySelector(".stageControls"), home=tr.nextElementSibling, par=tr.parentNode;
+    const tag=$("tagRow"), tagHome=tag.nextElementSibling, tagPar=tag.parentNode;
+    function place(){
+      if(mq.matches){ st.insertBefore(tr,ctl); st.insertBefore(tag,ctl.nextSibling); }
+      else{ if(tr.parentNode===st) par.insertBefore(tr,home); if(tag.parentNode===st) tagPar.insertBefore(tag,tagHome); }
+    }
+    place(); (mq.addEventListener?mq.addEventListener("change",place):mq.addListener(place));
+  })();
   window.__edAddFileIfNew=f=>{ if(!sources.some(s=>s.file&&s.file.name===f.name&&s.file.size===f.size)) addSourceFromFile(f); };
   $("edFile").onchange=e=>{ const fl=Array.from(e.target.files), first=!sources.length;
     fl.forEach(addSourceFromFile);
@@ -3803,7 +3863,6 @@ window.renderHalfBands = function(b1,b2,mk,d){
     { const pl=[marks.p1,marks.p1e,marks.p2,marks.end]; const jug=pl.every(x=>typeof x==="number")?(marks.p1e-marks.p1)+(marks.end-marks.p2):null;
       const fmtS=t=>{ const s=Math.round(Math.max(0,t||0)); return Math.floor(s/60)+":"+String(s%60).padStart(2,"0"); };
       $("edTrimInfo").textContent="· Inicio "+fmtS(inP)+" · Fin "+fmtS(outP)+"\n· Duración "+fmtS(outP-inP);
-      $("edABInfo").textContent="A "+fmt(inP)+" → B "+fmt(outP);
       $("edJug").textContent=jug!=null&&jug>=0?"Tiempo jugado "+fmt(jug):""; }
     $("edUndo").disabled=$("edUndo2").disabled=!hist.length; $("edRedo").disabled=!redoOf().length; $("edAddSel").hidden=!kept().length; renderMarks(d); tick();
   }
