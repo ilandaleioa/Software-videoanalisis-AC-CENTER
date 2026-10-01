@@ -47,8 +47,8 @@ main{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:18px;padding:18p
 video{width:100%;height:100%;display:block;background:#000}
 .empty{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:#cfd6d1;text-align:center;padding:20px}
 .empty[hidden]{display:none}
-.overlay{position:absolute;right:18px;top:18px;display:flex;align-items:stretch;border-radius:6px;overflow:hidden;box-shadow:0 4px 18px rgba(0,0,0,.45);opacity:0;transform:translateY(8px);transition:.25s;pointer-events:none}
-.overlay.on{opacity:1;transform:none}
+.overlay{position:absolute;left:50%;top:50%;max-width:94%;display:flex;align-items:stretch;border-radius:6px;overflow:hidden;box-shadow:0 4px 18px rgba(0,0,0,.45);opacity:0;transform:translate(-50%,-42%);transition:.25s;pointer-events:none}
+.overlay.on{opacity:1;transform:translate(-50%,-50%)}
 .overlay .cat{font-family:var(--f-disp);font-weight:700;font-size:22px;color:#fff;padding:8px 14px;display:flex;align-items:center}
 .overlay .det{background:rgba(255,255,255,.95);color:#1c2420;padding:6px 14px;display:flex;flex-direction:column;justify-content:center}
 .overlay .det b{font-size:17px}.overlay .det span{font-size:13px;color:#4b554f}
@@ -94,7 +94,7 @@ video{width:100%;height:100%;display:block;background:#000}
 .catRows{position:relative}
 .catRow{position:relative;height:40px;border-bottom:1px solid var(--line)}
 .catRow:last-child{border-bottom:0}
-.chip{position:absolute;top:6px;height:28px;border-radius:6px;display:flex;align-items:center;gap:5px;padding:0 8px;font-family:var(--f-disp);font-size:13px;font-weight:600;color:#fff;white-space:nowrap;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.3);z-index:1}
+.chip{position:absolute;top:6px;height:28px;border-radius:6px;display:flex;align-items:center;gap:0;padding:0;overflow:hidden;font-family:var(--f-disp);font-size:13px;font-weight:600;color:#fff;white-space:nowrap;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.3);z-index:1}
 .chip:hover{filter:brightness(1.12)}
 .chip.sel{outline:2px solid var(--ink);outline-offset:1px}
 .chip .cdur{font-size:11px;font-weight:500;opacity:.85}
@@ -116,21 +116,21 @@ aside h2{font-family:var(--f-disp);font-size:21px;margin:0}
 .row input[type=number]{width:70px;padding:5px;border:1px solid var(--line);border-radius:5px;background:var(--bg)}
 select{padding:6px;border:1px solid var(--line);border-radius:5px;background:var(--bg)}
 .list{overflow:auto;flex:1;padding:6px}
-.ev{display:grid;grid-template-columns:18px 74px 1fr auto;gap:10px;align-items:center;padding:9px 8px;border-radius:6px;border-left:5px solid var(--c);cursor:pointer;margin-bottom:4px}
+.ev{display:grid;grid-template-columns:16px 58px 1fr auto;gap:8px;align-items:center;padding:6px 6px;border-radius:6px;border-left:5px solid var(--c);cursor:pointer;margin-bottom:4px}
 .ev .chk{margin:0;cursor:pointer}
 .ev.sel{background:color-mix(in srgb,var(--ink) 8%,transparent)}
 .bulkbar{display:none;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
 .bulkbar.on{display:flex}
 .ev:hover{background:var(--bg)}
 .ev.now{background:color-mix(in srgb,var(--c) 14%,transparent)}
-.ev .m{font-family:var(--f-disp);font-size:19px}
-.ev .m .cl{font-size:12px;color:var(--muted);font-family:var(--f-body)}
-.ev .m small{display:block;font-family:var(--f-body);font-size:11px;color:var(--muted)}
+.ev .m{font-family:var(--f-disp);font-size:15px}
+.ev .m .cl{font-size:10px;color:var(--muted);font-family:var(--f-body)}
+.ev .m small{display:block;font-family:var(--f-body);font-size:9.5px;color:var(--muted)}
 .eqDot{flex:none;width:10px;height:10px;border-radius:50%}
 .eqDot.propio{background:#2e9e4f}.eqDot.rival{background:#d42a20}
-.ev .t b{font-size:14px}.ev .t div{font-size:13px;color:var(--muted)}
+.ev .t b{font-size:12px}.ev .t div{font-size:11px;color:var(--muted)}
 .ev .acts{display:flex;gap:4px}
-.ev .acts button{border:1px solid var(--line);background:transparent;border-radius:5px;padding:3px 7px;cursor:pointer;font-size:12px}
+.ev .acts button{border:1px solid var(--line);background:transparent;border-radius:5px;padding:2px 5px;cursor:pointer;font-size:10.5px}
 .ev .acts button:hover{border-color:var(--ink)}
 .foot{padding:10px 14px;border-top:1px solid var(--line);display:flex;gap:8px;flex-wrap:wrap}
 .pbGroup{flex:1 1 100%;border-top:1px solid var(--line);margin-top:4px;padding-top:8px}
@@ -182,9 +182,14 @@ kbd{border:1px solid var(--line);border-radius:3px;padding:0 4px;font-size:11px}
 .hdl::after{content:"";position:absolute;left:5px;top:14px;width:2px;height:20px;background:var(--panel)}
 .edtrack .head{position:absolute;top:-10px;bottom:-6px;width:3px;background:var(--red);pointer-events:none;box-shadow:0 0 6px rgba(200,16,46,.7);z-index:6}
 .edtrack .head::before{content:"";position:absolute;top:-7px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-top:8px solid var(--red)}
-.markLine{position:absolute;top:-6px;bottom:-6px;width:2px;pointer-events:none;z-index:4;display:none}
+#vSeekTrack{margin-top:34px}
+.headClock{position:absolute;top:-19px;transform:translate(-50%,-100%);font-family:var(--f-disp);font-size:16px;font-weight:700;line-height:1;color:var(--red);background:var(--panel);border:1px solid var(--red);padding:2px 6px;white-space:nowrap;pointer-events:none;z-index:7}
+.headClock:empty{display:none}
+.markLine{position:absolute;top:-6px;bottom:-6px;width:2px;pointer-events:auto;cursor:help;z-index:4;display:none}
 #mlP1,#vmlP1,#mlP1E,#vmlP1E,#mlP2,#vmlP2,#mlEnd,#vmlEnd{background:#1c2420;box-shadow:0 0 0 1px rgba(255,255,255,.35)}
 .hdlTime.markLbl{top:auto;bottom:2px;height:auto;font-weight:700;display:none;padding:2px 5px;font-size:12px;line-height:1.15;text-align:center;white-space:pre}
+.markLine::before{content:"";position:absolute;top:0;bottom:0;left:-6px;right:-6px}
+.hdlTime.markLbl.on.show{display:block}
 body.markBtnsHidden .hdlTime.markLbl{display:none!important}
 #mlP1Lbl,#vmlP1Lbl,#mlP1ELbl,#vmlP1ELbl,#mlP2Lbl,#vmlP2Lbl,#mlEndLbl,#vmlEndLbl{background:#1c2420}
 .evTicks{position:absolute;inset:8px 0;pointer-events:none;z-index:3}
@@ -223,6 +228,8 @@ body.markBtnsHidden .hdlTime.markLbl{display:none!important}
 #belowStageWrap.hiddenBlock{display:none}
 .clipEd{margin-top:14px;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px 14px}
 .clipEd[hidden]{display:none}
+/* el panel de edición inferior ya no se muestra: los cortes se editan arrastrando sobre la línea de tiempo */
+.clipEd{display:none!important}
 .ceHead{display:flex;align-items:center;gap:10px}
 .ceDot{width:12px;height:36px;border-radius:3px;flex:none}
 .ceSub{font-size:13px;color:var(--muted)}
@@ -368,6 +375,9 @@ kbd{border-radius:0;font-family:var(--f-body)}
 .edGreen{background:var(--panel)!important;color:var(--c-pre)!important;border:2px solid var(--c-pre)!important}
 .edGreen:hover:not(:disabled){background:var(--c-pre)!important;color:#fff!important}
 .edGreen.on{background:var(--c-pre)!important;color:#fff!important}
+#expOptsA .btn,#expOptsB .btn,#expOptsToggle,#pbToggle{font-size:11px!important;padding:5px 9px!important}
+#expOptsA span,#expOptsA select{font-size:11px!important}
+#expOptsB .pbTitle{font-size:12px!important}
 /* Botón Reproducir (registro de acciones y editor): fondo negro */
 #play,#edPlay,#cePlay{background:#000;border-color:#000;color:#fff}
 #play:hover,#edPlay:hover,#cePlay:hover{background:#222;border-color:#222;color:#fff}
@@ -479,10 +489,10 @@ kbd{border-radius:0;font-family:var(--f-body)}
 #vMarkToggle,#edMarkToggle{background:var(--c-sal);border-color:var(--c-sal);color:#fff}
 #vMarkToggle:hover,#edMarkToggle:hover{background:var(--ink);border-color:var(--ink);color:var(--bg)}
 /* Colores funcionales: Ocultar = azul, Añadir = rosa, Limpiar = rojo */
-#vTimelineToggle,#plListToggle,#expOptsToggle,#edSrcToggle,#edExpToggle{background:var(--c-sal);border-color:var(--c-sal);color:#fff}
+#vTimelineToggle,#plListToggle,#evListToggle,#expOptsToggle,#edSrcToggle,#edExpToggle{background:var(--c-sal);border-color:var(--c-sal);color:#fff}
 #edAddSel,#edAddFile,#newCatAdd,#newDetAdd,#newJugAdd,.optbtn.add{background:#e6559a;border:2px solid #e6559a;color:#fff}
 #edClearAdded{background:var(--red);border-color:var(--red);color:#fff}
-#vTimelineToggle:hover,#plListToggle:hover,#expOptsToggle:hover,#edSrcToggle:hover,#edExpToggle:hover,
+#vTimelineToggle:hover,#plListToggle:hover,#evListToggle:hover,#expOptsToggle:hover,#edSrcToggle:hover,#edExpToggle:hover,
 #edAddSel:hover,#edAddFile:hover,#newCatAdd:hover,#newDetAdd:hover,#newJugAdd:hover,.optbtn.add:hover,#edClearAdded:hover{filter:brightness(.88);color:#fff}
 /* Equipo: propio verde, rival rojo; «Sin detalle» negro. El seleccionado lleva borde oscuro */
 .optbtn[data-eq="propio"]{background:#2e8b4a;border-color:#2e8b4a;color:#fff}
@@ -545,12 +555,29 @@ kbd{border-radius:0;font-family:var(--f-body)}
         <button class="btn" id="vFwd45" title="Avanzar 45 minutos">+45 min</button>
         <button class="btn" id="vFull" title="Pantalla completa (F)">⛶ Pantalla completa</button>
         <button class="btn" id="visFullEditor" title="Pone todo el registro de acciones (vídeo, botonera y listas) a pantalla completa">⛶ Registro a pantalla completa</button>
-        <button class="btn iconBtn" id="vTimelineToggle" title="Ocultar/mostrar la línea de tiempo y el editor de abajo">👁</button>
       </div>
 
     </div>
     <div class="legend" id="legend"></div>
+    <div style="display:flex;justify-content:flex-end;margin:6px 0 0">
+      <button class="btn iconBtn" id="vTimelineToggle" title="Ocultar/mostrar la línea de tiempo y el editor de abajo">👁</button>
+    </div>
     <div id="belowStageWrap">
+    <div class="controls">
+        <button class="btn primary" id="vUndo" title="Deshacer (Ctrl+Z)" aria-label="Deshacer" disabled>↶</button>
+        <button class="btn primary" id="vRedo" title="Rehacer (Ctrl+Y)" aria-label="Rehacer" disabled>↷</button>
+      <button class="btn iconBtn" id="vMarkToggle" title="Ocultar/mostrar estos botones">👁</button>
+      <span id="vMarkBtns" style="display:contents">
+        <button class="btn" id="vMarkP1" title="Fija el inicio de la 1ª parte en el instante actual">▶️ Inicio 1ª parte</button>
+        <button class="btn" id="vMarkP1E" title="Fija el fin de la 1ª parte en el instante actual">⏸️ Fin 1ª parte</button>
+        <button class="btn" id="vMarkP2" title="Fija el inicio de la 2ª parte en el instante actual">▶️ Inicio 2ª parte</button>
+        <button class="btn" id="vMarkEnd" title="Fija el fin del partido en el instante actual">⏹️ Fin partido</button>
+      </span>
+        <span style="flex:1"></span>
+        <label class="row" style="gap:6px"><span style="font-size:13px;color:var(--muted)">Velocidad</span>
+          <select id="rate"><option>0.5</option><option>0.75</option><option selected>1</option><option>1.5</option><option>2</option></select></label>
+        <button class="btn" id="regTutorialB" title="Mira paso a paso cómo se usa el registro de acciones">❓ Tutorial</button>
+    </div>
     <div class="edtrack" id="vSeekTrack" title="Haz clic o arrastra para moverte por el vídeo">
       <div class="edsegs"><div class="seg" style="left:0;right:0;cursor:pointer"></div></div>
       <div class="evTicks" id="vEvTicks"></div>
@@ -567,6 +594,7 @@ kbd{border-radius:0;font-family:var(--f-body)}
       <div class="hdl" style="left:0;pointer-events:none"></div>
       <div class="hdl" style="left:100%;pointer-events:none"></div>
       <div class="head" id="vSeekHead"></div>
+      <div class="headClock" id="vHeadClock" title="Tiempo real de juego"></div>
     </div>
     <div class="catTimelineWrap">
       <div class="catLabels" id="catLabels"></div>
@@ -580,21 +608,6 @@ kbd{border-radius:0;font-family:var(--f-body)}
       <span class="time" id="clock" style="color:var(--muted);font-size:15px">0:00.0 / 0:00</span>
       <span class="time" id="matchClock" style="color:var(--red);font-size:23px;font-weight:700" title="Minuto de partido, calculado a partir de las marcas de inicio de cada parte"></span>
       <span class="time" id="vTrimInfo" style="color:var(--muted);font-size:12px;flex:1 1 120px;min-width:0;white-space:pre" title="Inicio, fin y duración del vídeo"></span>
-      <button class="btn primary" id="vUndo" title="Deshacer (Ctrl+Z)" aria-label="Deshacer" disabled>↶</button>
-      <button class="btn primary" id="vRedo" title="Rehacer (Ctrl+Y)" aria-label="Rehacer" disabled>↷</button>
-      <span style="flex:1"></span>
-      <label class="row" style="gap:6px"><span style="font-size:13px;color:var(--muted)">Velocidad</span>
-        <select id="rate"><option>0.5</option><option>0.75</option><option selected>1</option><option>1.5</option><option>2</option></select></label>
-      <button class="btn" id="regTutorialB" title="Mira paso a paso cómo se usa el registro de acciones">❓ Tutorial</button>
-    </div>
-    <div class="controls">
-      <button class="btn iconBtn" id="vMarkToggle" title="Ocultar/mostrar estos botones">👁</button>
-      <span id="vMarkBtns" style="display:contents">
-        <button class="btn" id="vMarkP1" title="Fija el inicio de la 1ª parte en el instante actual">▶️ Inicio 1ª parte</button>
-        <button class="btn" id="vMarkP1E" title="Fija el fin de la 1ª parte en el instante actual">⏸️ Fin 1ª parte</button>
-        <button class="btn" id="vMarkP2" title="Fija el inicio de la 2ª parte en el instante actual">▶️ Inicio 2ª parte</button>
-        <button class="btn" id="vMarkEnd" title="Fija el fin del partido en el instante actual">⏹️ Fin partido</button>
-      </span>
     </div>
     <div class="clipEd" id="clipEd" hidden>
       <div class="ceHead">
@@ -664,11 +677,12 @@ kbd{border-radius:0;font-family:var(--f-body)}
         </div>
       </div>
       </div>
-      <div class="row" style="justify-content:flex-end">
+      <div class="row" style="justify-content:space-between">
+        <button class="btn" id="evListToggle" style="font-size:12px" title="Ocultar/mostrar la lista de eventos">🙈 Ocultar eventos</button>
         <button class="btn" id="delAllEv" title="Borrar todos los eventos del registro">Borrar todos los eventos</button>
       </div>
       <div class="row">
-        <button class="btn primary" id="tagNow" title="Etiquetar en el instante actual (T)" style="flex:1">Registrar gol</button>
+        <button class="btn primary" id="tagNow" title="Etiquetar en el instante actual (T)" style="flex:1">REGISTRO DE EVENTOS</button>
       </div>
       <div class="row bulkbar" id="bulkBar">
         <span style="font-size:13px;color:var(--muted)" id="bulkCount"></span>
@@ -784,6 +798,14 @@ kbd{border-radius:0;font-family:var(--f-body)}
       </div>
     </div>
     <input type="file" id="edFile" accept="video/*" multiple hidden>
+    <div class="controls">
+        <button class="btn primary" id="edUndo2" title="Deshacer (Ctrl+Z)" aria-label="Deshacer" disabled>↶</button>
+        <button class="btn primary" id="edRedo" title="Rehacer (Ctrl+Y)" aria-label="Rehacer" disabled>↷</button>
+        <span style="flex:1"></span>
+        <label class="row" style="gap:6px"><span style="font-size:13px;color:var(--muted)">Velocidad</span>
+          <select id="edRate"><option>0.5</option><option>0.75</option><option selected>1</option><option>1.5</option><option>2</option></select></label>
+        <button class="btn" id="edTutorialB" title="Mira paso a paso cómo se usa el editor">❓ Tutorial</button>
+    </div>
     <div class="edtrack" id="edTrack">
       <div class="edsegs" id="edSegs"></div>
       <div class="shade" id="shIn"></div><div class="shade" id="shOut"></div>
@@ -817,13 +839,7 @@ kbd{border-radius:0;font-family:var(--f-body)}
       </span>
       <button class="btn" id="edSplit" style="display:none" title="Dividir en el cabezal (D)">✂ Dividir aquí</button>
       <button class="btn" id="edDel" style="display:none" title="Quitar o recuperar el tramo seleccionado (Supr)">Quitar tramo</button>
-      <button class="btn primary" id="edUndo2" title="Deshacer (Ctrl+Z)" aria-label="Deshacer" disabled>↶</button>
-      <button class="btn primary" id="edRedo" title="Rehacer (Ctrl+Y)" aria-label="Rehacer" disabled>↷</button>
       <button class="btn primary" id="edAddSel" hidden title="Muestra este tramo en la lista de la derecha">+ Añadir</button>
-      <span style="flex:1"></span>
-      <label class="row" style="gap:6px"><span style="font-size:13px;color:var(--muted)">Velocidad</span>
-        <select id="edRate"><option>0.5</option><option>0.75</option><option selected>1</option><option>1.5</option><option>2</option></select></label>
-      <button class="btn" id="edTutorialB" title="Mira paso a paso cómo se usa el editor">❓ Tutorial</button>
       <button class="btn" id="edUndo" style="display:none" title="Deshacer (Ctrl+Z)">Deshacer</button>
       <label class="row" style="display:none;gap:6px;font-size:13px;color:var(--muted)"><input type="checkbox" id="edPrev"> Saltar lo quitado</label>
     </div>
@@ -1255,7 +1271,7 @@ window.VidExport=(()=>{
     const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=name; document.body.append(a); a.click(); a.remove(); return true; }
   // Rotula el nombre del tramo dentro del vídeo (abajo a la izquierda). Sin nombre, no dibuja nada.
   let curLabel="", curOv=null;
-  // Rótulo del evento (arriba a la derecha), igual que el que se ve sobre el visor:
+  // Rótulo del evento (centrado en el vídeo), igual que el que se ve sobre el visor:
   // minuto | categoría (con su color) | detalle y jugador. ov={min,cat,color,det,jug}
   function drawOverlay(cx,W,H,ov){
     if(!ov) return;
@@ -1267,7 +1283,7 @@ window.VidExport=(()=>{
     const wOf=(t,fs,wt)=>{ cx.font=wt+" "+fs+"px "+fam; return cx.measureText(t).width; };
     const wM=wOf(min,fsC*0.9,"700")+padX*2, wC=wOf(cat,fsC,"700")+padX*2;
     const wD=Math.max(wOf(det,fsD,"700"),jug?wOf(jug,fsJ,"400"):0)+padX*2;
-    const total=wM+wC+wD; let x=W-m-total; const y=m;
+    const total=wM+wC+wD; let x=Math.round((W-total)/2); const y=Math.round((H-h)/2);
     if(x<m){ x=m; }
     cx.globalAlpha=.97;
     cx.fillStyle="#15181D"; cx.fillRect(x,y,wM,h);
@@ -1771,7 +1787,6 @@ window.renderHalfBands = function(b1,b2,mk,d){
   };
   $("plDelete").onclick=()=>{
     if(playlists.length<=1) return; const pl=curPl(); if(!pl) return;
-    if(!confirm("¿Borrar la lista «"+pl.name+"»?")) return;
     playlists=playlists.filter(p=>p!==pl); curPlId=playlists[0].id; savePlaylists(); renderPlaylist(); renderList();
   };
   function load(){ try{const s=JSON.parse(localStorage.getItem(KEY)); if(Array.isArray(s)) return sanitize(s);}catch(e){} return structuredClone(SEED); }
@@ -1813,7 +1828,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   function el(tag,props={},kids=[]){ const n=document.createElement(tag); Object.assign(n,props); kids.forEach(k=>n.append(k)); return n; }
   function addDelX(btn,label,onDelete){
     const x=el("span",{className:"btnX",textContent:"×",title:"Borrar «"+label+"»"});
-    x.onclick=ev=>{ ev.stopPropagation(); if(confirm("¿Borrar «"+label+"»?")) onDelete(); };
+    x.onclick=ev=>{ ev.stopPropagation(); onDelete(); };
     btn.append(x);
   }
   function renderLegend(){
@@ -1998,7 +2013,6 @@ window.renderHalfBands = function(b1,b2,mk,d){
   function clearSel(){ selectedIds.clear(); renderList(); }
   function deleteSelected(){
     if(!selectedIds.size) return;
-    if(!confirm("¿Borrar "+selectedIds.size+" evento(s) seleccionado(s)? Esta acción no se puede deshacer.")) return;
     events=events.filter(x=>!selectedIds.has(x.id));
     selectedIds.forEach(id=>removeEventFromAllPlaylists(id));
     if(selEv&&selectedIds.has(selEv)) closeClip();
@@ -2023,7 +2037,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
       chk.onchange=()=>{ toggleSel(e.id,chk.checked); row.classList.toggle("sel",chk.checked); };
       row.append(chk);
       row.append(
-        el("div",{className:"m"},[el("div",{textContent:e.min}),el("div",{className:"cl",textContent:clipLen(e).toFixed(1)+" s"})]),
+        el("div",{className:"m"},[el("div",{textContent:e.min}),el("div",{className:"cl",textContent:(s=>s>=60?Math.floor(s/60)+" min "+String(s%60).padStart(2,"0")+" s":s+" s")(Math.round(clipLen(e)))})]),
         el("div",{className:"t"},[el("div",{style:"display:flex;align-items:center;gap:6px"},[el("span",{className:"eqDot "+(e.eq==="rival"?"rival":"propio"),title:e.eq==="rival"?"Rival":"Mi equipo"}),el("b",{textContent:e.cat})]),el("div",{textContent:e.det+(e.jug?" · "+e.jug:"")}),...(e.coment?[el("div",{textContent:e.coment,style:"font-style:italic"})]:[])])
       );
       const acts=el("div",{className:"acts"});
@@ -2035,7 +2049,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
       bDl.onclick=ev=>{ev.stopPropagation(); downloadEvent(e);};
       bPl.onclick=ev=>{ev.stopPropagation(); openPlDlg(selectedIds.has(e.id)&&selectedIds.size>1?[...selectedIds]:[e.id]);};
       bEd.onclick=ev=>{ev.stopPropagation(); openDlg(e);};
-      bDel.onclick=ev=>{ev.stopPropagation(); if(confirm("¿Borrar el evento "+e.min+" "+e.cat+"?")){events=events.filter(x=>x!==e); removeEventFromAllPlaylists(e.id); selectedIds.delete(e.id); if(selEv===e.id) closeClip(); save(); refresh();}};
+      bDel.onclick=ev=>{ev.stopPropagation(); {events=events.filter(x=>x!==e); removeEventFromAllPlaylists(e.id); selectedIds.delete(e.id); if(selEv===e.id) closeClip(); save(); refresh();}};
       acts.append(bEd,bDl,bPl,bDel);
       row.append(acts);
       row.onclick=()=>go(e); row.onkeydown=k=>{if(k.key==="Enter")go(e);};
@@ -2074,9 +2088,6 @@ window.renderHalfBands = function(b1,b2,mk,d){
         bar.style.left=pct(c.a,0,d); bar.style.width=Math.max(0.25,(c.b-c.a)/d*100)+"%"; bar.style.background=CATS[cat].c; bar.style.pointerEvents="none";
         const chip=el("div",{className:"chip"+(selEv===e.id?" sel":""),title:`${e.min} · ${e.cat} · ${e.det}${e.jug?" · "+e.jug:""} · ${clipLen(e).toFixed(1)} s · arrastra el centro para mover, o los bordes para acortar/alargar`});
         chip.style.left=pct(c.a,0,d); chip.style.minWidth=Math.max(0.25,(c.b-c.a)/d*100)+"%"; chip.style.background=CATS[cat].c;
-        chip.append(el("span",{textContent:e.min+"'"}));
-        chip.append(el("span",{className:"cdur",textContent:clipLen(e).toFixed(1)+"s"}));
-        if(e.jug) chip.append(el("span",{className:"av",textContent:e.jug.trim().charAt(0).toUpperCase()}));
         const hdlL=el("div",{className:"chipHdl l",title:"Arrastra para acortar o alargar el inicio del clip"});
         const hdlR=el("div",{className:"chipHdl r",title:"Arrastra para acortar o alargar el final del clip"});
         chip.append(hdlL,hdlR);
@@ -2100,7 +2111,6 @@ window.renderHalfBands = function(b1,b2,mk,d){
       chip.classList.add("dragging"); bar.classList.add("dragging");
       function place(c){
         chip.style.left=pct(c.a,0,d); chip.style.minWidth=Math.max(0.25,(c.b-c.a)/d*100)+"%"; bar.style.left=pct(c.a,0,d); bar.style.width=Math.max(0.25,(c.b-c.a)/d*100)+"%";
-        const cd=chip.querySelector(".cdur"); if(cd) cd.textContent=keptOf(e).reduce((x,r)=>x+r.e-r.s,0).toFixed(1)+"s";
       }
       function onMove(mv){
         const dx=mv.clientX-startX; if(Math.abs(dx)>3) moved=true;
@@ -2175,14 +2185,16 @@ window.renderHalfBands = function(b1,b2,mk,d){
       const id=HALF_MARK_IDS[k], t=halfMarks[k];
       const ln=$("vml"+id), lb=$("vml"+id+"Lbl"), btn=$("vMark"+id);
       const label=HALF_MARK_LABELS[k];
-      if(t==null||!d){ ln.style.display="none"; lb.style.display="none"; btn.textContent=label; }
+      if(t==null||!d){ ln.style.display="none"; lb.classList.remove("on"); btn.textContent=label; }
       else{ const p=t/d*100; ln.style.display="block"; ln.style.left=p+"%";
-        lb.style.display="block"; lb.style.left=p+"%"; lb.textContent=HALF_MARK_SHORT[k]+"\n"+fmt(t);
+        lb.classList.add("on"); lb.style.left=p+"%"; lb.textContent=HALF_MARK_SHORT[k]+"\n"+fmt(t);
         btn.textContent=label+" · "+fmt(t); }
     });
     window.renderHalfBands($("vBandP1"),$("vBandP2"),halfMarks,d);
   }
 
+  document.querySelectorAll(".markLine").forEach(ln=>{ const lb=$(ln.id+"Lbl"); if(!lb) return;
+    ln.addEventListener("mouseenter",()=>lb.classList.add("show")); ln.addEventListener("mouseleave",()=>lb.classList.remove("show")); });
   const MARK_BTNS_HIDE_KEY="markBtnsHidden";
   function setMarkBtnsHidden(hidden){
     ["vMarkBtns","edMarkBtns"].forEach(id=>{ $(id).style.display=hidden?"none":"contents"; });
@@ -2235,6 +2247,19 @@ window.renderHalfBands = function(b1,b2,mk,d){
     try{ hidden=localStorage.getItem(PL_LIST_HIDE_KEY)==="1"; }catch(e){}
     setPlListHidden(hidden);
     $("plListToggle").onclick=()=>setPlListHidden($("plListSection").style.display!=="none");
+  })();
+
+  const EV_LIST_HIDE_KEY="evListHidden";
+  function setEvListHidden(hidden){
+    $("list").style.display=hidden?"none":"";
+    $("evListToggle").textContent=hidden?"👁 Mostrar eventos":"🙈 Ocultar eventos";
+    try{ localStorage.setItem(EV_LIST_HIDE_KEY, hidden?"1":"0"); }catch(e){}
+  }
+  (function initEvListToggle(){
+    let hidden=false;
+    try{ hidden=localStorage.getItem(EV_LIST_HIDE_KEY)==="1"; }catch(e){}
+    setEvListHidden(hidden);
+    $("evListToggle").onclick=()=>setEvListHidden($("list").style.display!=="none");
   })();
 
   const EXP_OPTS_HIDE_KEY="expOptsHidden";
@@ -2318,7 +2343,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     $("clock").textContent=fmt(t).replace(/\.\d$/,"")+" / "+fmt(d).replace(/\.\d$/,"");    const mc=matchClockText(t); $("matchClock").textContent=mc?("⏱ "+mc):"";
     $("fsClock").textContent=$("clock").textContent; $("fsMatch").textContent=mc?("⏱ "+mc):"";
     if(!fsSeeking) $("fsSeek").value=d?Math.round(t/d*1000):0;
-    const p=d?Math.min(100,t/d*100):0; $("prog").style.width=p+"%"; $("head").style.left=p+"%"; $("vSeekHead").style.left=p+"%";
+    const p=d?Math.min(100,t/d*100):0; $("prog").style.width=p+"%"; $("head").style.left=p+"%"; $("vSeekHead").style.left=p+"%"; $("vHeadClock").style.left=p+"%"; $("vHeadClock").textContent=mc?("⏱ "+mc):"";
     { const pl=[halfMarks.p1,halfMarks.p1e,halfMarks.p2,halfMarks.end]; const jug=pl.every(x=>typeof x==="number")?(halfMarks.p1e-halfMarks.p1)+(halfMarks.end-halfMarks.p2):null;
       $("vTrimInfo").textContent="· Inicio "+fmt(0)+" · Fin "+fmt(d)+"\n· Duración "+fmt(d)+(jug!=null&&jug>=0?"\n· Tiempo jugado "+fmt(jug):""); }
     const pe=playing&&events.find(x=>x.id===playing);
@@ -2384,6 +2409,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     v.src=u; v.load(); $("vidName").textContent="Vídeo del editor";
   };
   async function persist(f){
+    if(typeof claude==="undefined"){ note("Vídeo abierto solo en esta sesión."); return; }
     try{
       const assets=await claude.use("assets"); if(!assets) return;
       if(f.size>20*1024*1024){ note("Vídeo abierto solo en esta sesión: pesa más de 20 MB y no se puede guardar en el visor."); return; }
@@ -2391,7 +2417,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
       const r=await assets.upload(f);
       const db=await claude.use("db"); if(db) await db.doc("config/video").set({id:r.id,name:f.name.slice(0,80)});
       note("Vídeo guardado: se abrirá solo la próxima vez.");
-    }catch(e){ note("No se pudo guardar el vídeo ("+(e&&e.code||"error")+"). Se reproduce solo en esta sesión."); }
+    }catch(e){ note("Vídeo abierto solo en esta sesión."); }
   }
   function note(t){ $("vidNote").textContent=t; }
   $("file").onchange=ev=>{ openFile(ev.target.files[0]); ev.target.value=""; };
@@ -2420,6 +2446,9 @@ window.renderHalfBands = function(b1,b2,mk,d){
     if(dlg.ownerDocument!==document){ dlg.style.position=""; dlg.style.top=""; dlg.style.left=""; dlg.style.width="100%"; dlg.style.boxSizing="border-box"; dlg.style.maxHeight="calc(100vh - 32px)"; return; } // en su propia ventana emergente: ocupa toda la ventana (redimensionable)
     dlg.style.boxSizing="";
     const aside=$("list") && $("list").closest("aside");
+    const fsEl=document.fullscreenElement;
+    if(fsEl && !fsEl.contains(aside)){ dlg.style.position="fixed"; dlg.style.top="12px"; dlg.style.left="auto"; dlg.style.right="12px"; dlg.style.width="min(460px,calc(100vw - 24px))"; dlg.style.maxHeight="calc(100vh - 24px)"; return; } // pantalla completa solo del vídeo: la botonera flota a la derecha
+    dlg.style.right="";
     if(!aside){ dlg.style.position=""; dlg.style.top=""; dlg.style.left=""; dlg.style.width=""; dlg.style.maxHeight=""; return; }
     const r=aside.getBoundingClientRect();
     dlg.style.position="fixed";
@@ -2431,6 +2460,19 @@ window.renderHalfBands = function(b1,b2,mk,d){
     dlg.style.maxHeight=Math.max(200,Math.min(Math.round(r.height),window.innerHeight-top-12))+"px";
   }
   window.addEventListener("resize",()=>{ if($("dlg").open) positionDlgOverList(); });
+  // En pantalla completa solo se ve el elemento a pantalla completa: la botonera (un <dialog> del body) debe vivir dentro de él
+  function placeDlgForFullscreen(){
+    const d=$("dlg"); if(!d || d.ownerDocument!==document) return; // en la ventana emergente no hace falta
+    const fs=document.fullscreenElement||document.webkitFullscreenElement;
+    const target=(fs && fs.tagName!=="VIDEO")?fs:document.body;
+    if(d.parentNode===target) return;
+    const wasOpen=d.open; if(wasOpen) d.close("relocate"); // returnValue distinto de "ok": no guarda nada
+    target.appendChild(d);
+    positionDlgOverList();
+    if(wasOpen) d.show();
+  }
+  document.addEventListener("fullscreenchange",placeDlgForFullscreen);
+  document.addEventListener("webkitfullscreenchange",placeDlgForFullscreen);
   function openDlg(e){
     if(popoutWin && popoutWin.closed){ popoutWin=null; }
     if(!popoutWin && dlgEl.ownerDocument!==document){ try{ if(dlgEl.open) dlgEl.close("relocate"); }catch(_){} document.body.appendChild(dlgEl); } // la ventana emergente ya no existe: recuperar la botonera
@@ -2438,7 +2480,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
       if(popoutWin && !popoutWin.closed){ try{ popoutWin.focus(); }catch(_){} }
       if(!e) return;
     }
-    editId=e?e.id:null; const cur=v.currentTime||0;
+    placeDlgForFullscreen(); editId=e?e.id:null; const cur=v.currentTime||0;
     $("fMin").value=e?e.min:(matchClockText(cur)||(Math.floor(cur/60)+":"+String(Math.floor(cur%60)).padStart(2,"0")));
     $("newCatRow").hidden=true; $("newCatErr").textContent=""; $("fCat").value=e&&CATS[e.cat]?e.cat:(CATS[prevCat]?prevCat:"OCASIÓN"); syncCatBtns(); setEq(e?e.eq:prevEq); fillDets(e?e.det:""); fillJugs(e?e.jug:""); setStage(e?2:0); $("fComent").value=e?(e.coment||""):""; positionDlgOverList(); if(!dlgEl.open){ try{ dlgEl.show(); }catch(err){ console.error("No se pudo abrir la botonera:",err); dlgEl.setAttribute("open",""); } } updatePopOutBtn(); }
   // ---------- botonera de eventos en otra ventana (segundo monitor) ----------
@@ -3435,9 +3477,9 @@ window.renderHalfBands = function(b1,b2,mk,d){
     Object.keys(MARK_IDS).forEach(k=>{
       const t=marks[k], id=MARK_IDS[k], ln=$("ml"+id), lb=$("ml"+id+"Lbl"), btn=$("edMark"+id);
       const label=MARK_LABELS[k];
-      if(t==null||!d){ ln.style.display="none"; lb.style.display="none"; btn.textContent=label; }
+      if(t==null||!d){ ln.style.display="none"; lb.classList.remove("on"); btn.textContent=label; }
       else{ const pctv=t/d*100; ln.style.display="block"; ln.style.left=pctv+"%";
-        lb.style.display="block"; lb.style.left=pctv+"%"; lb.textContent=MARK_SHORT[k]+"\n"+fmt(t);
+        lb.classList.add("on"); lb.style.left=pctv+"%"; lb.textContent=MARK_SHORT[k]+"\n"+fmt(t);
         btn.textContent=label+" · "+fmt(t); }
     });
     window.renderHalfBands($("edBandP1"),$("edBandP2"),marks,d);
