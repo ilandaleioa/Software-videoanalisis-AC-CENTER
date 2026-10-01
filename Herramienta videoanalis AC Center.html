@@ -3699,8 +3699,11 @@ window.renderHalfBands = function(b1,b2,mk,d){
     // etiqueta sobre el vídeo (como en el registro de eventos): corte añadido que contiene el cabezal
     const curId=sources[curSrc]&&sources[curSrc].id, ov=$("edOv");
     let hit=-1; added.forEach((it,i)=>{ if(it.srcId===curId&&t>=it.s&&t<=it.e&&(hit<0||it===activeAdded||added[hit]!==activeAdded&&it.s>=added[hit].s)) hit=i; });
-    if(hit>=0){ const it=added[hit];
-      const o=edOvOf(it,hit);
+    // sin corte añadido bajo el cabezal: rótulo del recorte en curso (si no es el vídeo entero)
+    let it=hit>=0?added[hit]:null, oi=hit;
+    if(!it&&d&&outP>inP&&(inP>0.05||outP<d-0.05)&&t>=inP&&t<=outP){ it={srcId:curId,s:inP,e:outP,name:""}; oi=added.length; }
+    if(it){
+      const o=edOvOf(it,oi);
       $("edOvMin").textContent=o.min; $("edOvCat").textContent=o.cat; $("edOvCat").style.background=o.color;
       $("edOvDet").textContent=o.det; $("edOvSub").textContent=o.jug;
       ov.classList.add("on"); }
