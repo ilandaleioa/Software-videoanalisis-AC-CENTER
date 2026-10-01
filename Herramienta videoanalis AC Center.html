@@ -325,11 +325,11 @@ select,input[type=number],dialog input,dialog select,#edName,#plSel{border-radiu
 
 /* --- Paneles --- */
 .stage{border-radius:0}
-aside{border-radius:0;border-top:3px solid var(--ink)}
+aside{border-radius:0;border-top:2px solid var(--ink)}
 aside h2{font-weight:700;font-size:18px;letter-spacing:.3px;text-transform:uppercase;display:flex;align-items:center;gap:8px}
 aside h2::before{content:"";width:6px;height:6px;background:var(--red);flex:none}
 .track,.edtrack,.catTimelineWrap,.clipEd{border-radius:0}
-.clipEd{border-top:3px solid var(--ink)}
+.clipEd{border-top:2px solid var(--ink)}
 dialog{border-radius:0;border-top:3px solid var(--red)}
 .overlay{border-radius:0}
 .overlay .min{background:#15181D}
@@ -519,7 +519,7 @@ kbd{border-radius:0;font-family:var(--f-body)}
 :is(#tutDlg,#tutDlgR) .tutCur::after{content:"";position:absolute;left:-10px;top:-10px;width:26px;height:26px;border-radius:50%;background:var(--red);opacity:0}
 :is(#tutDlg,#tutDlgR) .tutCur.tap::after{animation:tutTap calc(.4s*var(--tut-k,1)) ease-out}
 @keyframes tutTap{0%{opacity:.7;transform:scale(.3)}100%{opacity:0;transform:scale(1.5)}}
-:is(#tutDlg,#tutDlgR) .tutCap{margin-top:10px;padding:10px 12px;border:1px solid var(--line);border-top:3px solid var(--ink);background:var(--panel);min-height:84px}
+:is(#tutDlg,#tutDlgR) .tutCap{margin-top:10px;padding:10px 12px;border:1px solid var(--line);border-top:2px solid var(--ink);background:var(--panel);min-height:84px}
 :is(#tutDlg,#tutDlgR) .tutCapT{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 :is(#tutDlg,#tutDlgR) .tutCapT b{font-family:var(--f-disp);font-size:19px;text-transform:uppercase;letter-spacing:.3px}
 :is(#tutDlg,#tutDlgR) .tutTag{font-size:11px;font-weight:700;color:#fff;background:var(--red);padding:2px 6px;letter-spacing:.6px}
@@ -909,6 +909,11 @@ kbd{border-radius:0;font-family:var(--f-body)}
       <button class="btn primary" id="edAddSel" hidden title="Muestra este tramo en la lista de la derecha">+ Añadir</button>
       <button class="btn" id="edUndo" style="display:none" title="Deshacer (Ctrl+Z)">Deshacer</button>
       <label class="row" style="display:none;gap:6px;font-size:13px;color:var(--muted)"><input type="checkbox" id="edPrev"> Saltar lo quitado</label>
+    </div>
+    <div class="controls">
+      <button class="btn primary" id="edSetA" title="Fija el punto A (inicio del corte) en el cabezal actual (A)">📍 Punto A · inicio</button>
+      <button class="btn primary" id="edSetB" title="Fija el punto B (fin del corte) en el cabezal actual (B)">📍 Punto B · fin</button>
+      <span class="time" id="edABInfo" style="color:var(--muted);font-size:12px"></span>
     </div>
     <div class="controls">
       <button class="btn iconBtn" id="edMarkToggle" title="Ocultar/mostrar estos botones">👁</button>
@@ -3675,6 +3680,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     $("trimDur").style.left=((inP+outP)/2/d*100)+"%"; $("trimDur").textContent=fmt(outP-inP);
     { const pl=[marks.p1,marks.p1e,marks.p2,marks.end]; const jug=pl.every(x=>typeof x==="number")?(marks.p1e-marks.p1)+(marks.end-marks.p2):null;
       $("edTrimInfo").textContent="· Inicio "+fmt(inP)+" · Fin "+fmt(outP)+"\n· Duración "+fmt(outP-inP);
+      $("edABInfo").textContent="A "+fmt(inP)+" → B "+fmt(outP);
       $("edJug").textContent=jug!=null&&jug>=0?"Tiempo jugado "+fmt(jug):""; }
     $("edUndo").disabled=$("edUndo2").disabled=!hist.length; $("edRedo").disabled=!redoOf().length; $("edAddSel").hidden=!kept().length; renderMarks(d); tick();
   }
@@ -3785,6 +3791,8 @@ window.renderHalfBands = function(b1,b2,mk,d){
   $("visFullEditor").onclick=()=>{ const el=$("tabVisor"); if(document.fullscreenElement){ document.exitFullscreen(); } else { (el.requestFullscreen||el.webkitRequestFullscreen).call(el); } };
   document.addEventListener("fullscreenchange",()=>{ $("visFullEditor").textContent=document.fullscreenElement===$("tabVisor")?"⛶ Salir de pantalla completa":"⛶ Registro a pantalla completa";$("edFull").textContent=document.fullscreenElement===$("edStage")?"⛶ Salir de pantalla completa":"⛶ Pantalla completa"; $("edFullEditor").textContent=document.fullscreenElement===$("tabEditor")?"⛶ Salir del editor a pantalla completa":"⛶ Editor a pantalla completa"; });
   $("edFull").onclick=()=>{ const el=$("edStage"); if(document.fullscreenElement){ document.exitFullscreen(); } else { (el.requestFullscreen||el.webkitRequestFullscreen).call(el); } };
+  $("edSetA").onclick=()=>dur()&&setIn(V.currentTime);
+  $("edSetB").onclick=()=>dur()&&setOut(V.currentTime);
   $("edSplit").onclick=()=>dur()&&split();
   $("edDel").onclick=()=>toggle(sel>=0?sel:segAt(V.currentTime));
   $("edAddSel").onclick=()=>{ const s=sources[curSrc]; if(!s) return; const ranges=kept();
@@ -3808,7 +3816,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     else if((k.ctrlKey||k.metaKey)&&K==="z"&&k.shiftKey){k.preventDefault(); redo();}
     else if((k.ctrlKey||k.metaKey)&&K==="z"){k.preventDefault(); undo();}
     else if((k.ctrlKey||k.metaKey)&&K==="y"){k.preventDefault(); redo();}
-    else if(K==="d") split(); else if(K==="i") setIn(V.currentTime); else if(K==="o") setOut(V.currentTime);
+    else if(K==="d") split(); else if(K==="i"||K==="a") setIn(V.currentTime); else if(K==="o"||K==="b") setOut(V.currentTime);
     else if(k.key==="Delete"||k.key==="Backspace"){k.preventDefault(); $("edDel").click();}
     else if(k.key==="ArrowRight") V.currentTime+=1; else if(k.key==="ArrowLeft") V.currentTime-=1;
     else if(k.key===".") {V.pause(); V.currentTime+=1/30;} else if(k.key===",") {V.pause(); V.currentTime-=1/30;}
