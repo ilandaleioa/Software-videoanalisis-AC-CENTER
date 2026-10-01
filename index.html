@@ -47,8 +47,8 @@ main{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:18px;padding:18p
 video{width:100%;height:100%;display:block;background:#000}
 .empty{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:#cfd6d1;text-align:center;padding:20px}
 .empty[hidden]{display:none}
-.overlay{position:absolute;left:50%;top:50%;max-width:94%;display:flex;align-items:stretch;border-radius:6px;overflow:hidden;box-shadow:0 4px 18px rgba(0,0,0,.45);opacity:0;transform:translate(-50%,-42%);transition:.25s;pointer-events:none}
-.overlay.on{opacity:1;transform:translate(-50%,-50%)}
+.overlay{position:absolute;left:3%;top:4%;max-width:94%;display:flex;align-items:stretch;border-radius:6px;overflow:hidden;box-shadow:0 4px 18px rgba(0,0,0,.45);opacity:0;transform:translate(0,-8px);transition:.25s;pointer-events:none}
+.overlay.on{opacity:1;transform:translate(0,0)}
 #edOv{left:14px;top:auto;bottom:14px;transform:translateY(8px)}
 #edOv.on{transform:none}
 .overlay .cat{font-family:var(--f-disp);font-weight:700;font-size:22px;color:#fff;padding:8px 14px;display:flex;align-items:center}
@@ -145,7 +145,7 @@ dialog{border:1px solid var(--line);border-radius:8px;background:var(--panel);co
 dialog#dlg{margin:0;overflow:auto;box-shadow:0 8px 28px rgba(0,0,0,.35)}
 dialog#dlg::backdrop{background:rgba(0,0,0,.1)}
 dialog form{display:grid;gap:10px}
-#stDet:not([hidden]),#stJug:not([hidden]){display:contents}
+#stEq:not([hidden]),#stDet:not([hidden]),#stJug:not([hidden]){display:contents}
 .stage[hidden]{display:none}
 dialog input,dialog select{width:100%;padding:7px;border:1px solid var(--line);border-radius:5px;background:var(--bg)}
 .catbtns{display:flex;flex-wrap:wrap;gap:6px}
@@ -658,8 +658,6 @@ kbd{border-radius:0;font-family:var(--f-body)}
       <div class="hdlTime markLbl" id="vmlP1ELbl"></div>
       <div class="hdlTime markLbl" id="vmlP2Lbl"></div>
       <div class="hdlTime markLbl" id="vmlEndLbl"></div>
-      <div class="hdl" style="left:0;pointer-events:none"></div>
-      <div class="hdl" style="left:100%;pointer-events:none"></div>
       <div class="head" id="vSeekHead"></div>
       <div class="headClock" id="vHeadClock" title="Tiempo real de juego"></div>
     </div>
@@ -812,16 +810,18 @@ kbd{border-radius:0;font-family:var(--f-body)}
       <div class="pbGroup">
         <div class="pbHead">
           <div class="pbTitle">Proyectos y botoneras</div>
-          <button class="btn primary" id="btnBotonera" style="font-size:12px" title="Define las categorías, detalles y jugadores que aparecen como botones al registrar una acción">🎛️ Botonera</button>
           <button class="btn" id="pbToggle" style="font-size:12px" title="Ocultar/mostrar los botones de proyectos y botoneras">🙈 Ocultar proyectos y botoneras</button>
         </div>
-        <div class="pbRow" id="pbRow">
+        <div class="pbRow">
+          <div id="pbRow" style="display:contents">
           <button class="btn edGreen" id="saveProj" title="Descarga un archivo con eventos, categorías, jugadores, listas y marcas para continuar más tarde o en otro ordenador">💾 Guardar proyecto</button>
           <label class="btn" for="imp" title="Carga un archivo de proyecto guardado previamente">📂 Cargar proyecto</label>
           <input type="file" id="imp" accept=".json" hidden>
           <button class="btn edGreen" id="saveBot" title="Descarga solo las categorías, detalles y jugadores (la botonera), sin eventos ni vídeo, para reutilizarlos en otro ordenador o partido">💾 Guardar botonera</button>
           <label class="btn" for="impBot" title="Carga una botonera (categorías, detalles y jugadores) guardada previamente; se añade a la actual">📂 Cargar botonera</label>
           <input type="file" id="impBot" accept=".json" hidden>
+          </div>
+          <button class="btn primary" id="btnBotonera" style="font-size:12px" title="Define las categorías, detalles y jugadores que aparecen como botones al registrar una acción">🎛️ Botonera</button>
         </div>
       </div>
     </div>
@@ -1033,8 +1033,10 @@ kbd{border-radius:0;font-family:var(--f-body)}
       <button type="button" class="btn primary" id="newCatAdd">Añadir</button>
     </div>
     <div id="newCatErr" style="font-size:12px;color:var(--red)"></div>
+    <div id="stEq" hidden>
     <label>Equipo</label>
     <div id="fEqBtns" class="catbtns" role="group" aria-label="Equipo"></div>
+    </div>
     <input id="fEq" type="hidden" value="propio">
     <div class="stage" id="stDet" hidden>
     <label>Detalle</label>
@@ -1058,7 +1060,7 @@ kbd{border-radius:0;font-family:var(--f-body)}
     </div>
     <label for="fComent">Comentario</label>
     <input id="fComent" maxlength="200" placeholder="Comentario libre (opcional)">
-    <div class="row" style="justify-content:flex-end"><button class="btn" value="cancel" formnovalidate>Cancelar</button><button class="btn primary" value="ok">Guardar</button></div>
+    <div class="row" style="justify-content:flex-end"><button class="btn" value="cancel" formnovalidate>Cancelar</button></div>
   </form>
 </dialog>
 
@@ -1403,7 +1405,7 @@ window.VidExport=(()=>{
     const wOf=(t,fs,wt)=>{ cx.font=wt+" "+fs+"px "+fam; return cx.measureText(t).width; };
     const wM=wOf(min,fsC*0.9,"700")+padX*2, wC=wOf(cat,fsC,"700")+padX*2;
     const wD=Math.max(wOf(det,fsD,"700"),jug?wOf(jug,fsJ,"400"):0)+padX*2;
-    const total=wM+wC+wD; let x=Math.round((W-total)/2); const y=Math.round((H-h)/2);
+    const total=wM+wC+wD; let x=m; const y=m;
     if(x<m){ x=m; }
     cx.globalAlpha=.97;
     cx.fillStyle="#15181D"; cx.fillRect(x,y,wM,h);
@@ -2017,7 +2019,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   }
   renderEqBtns();
   // Detalle aparece al elegir categoría; Jugador al elegir detalle (o «Sin detalle»)
-  function setStage(n){ $("stDet").hidden=n<1; $("stJug").hidden=n<2; }
+  function setStage(n){ $("stEq").hidden=n<1; $("stDet").hidden=n<1; $("stJug").hidden=n<2; }
   function syncDetBtns(){
     const cur=$("fDet").value;
     $("fDetBtns").querySelectorAll(".optbtn").forEach(b=>b.classList.toggle("active",b.dataset.det===cur));
@@ -2478,7 +2480,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   }
   const PB_HIDE_KEY="pbHidden";
   function setPbHidden(hidden){
-    $("pbRow").style.display=hidden?"none":"flex";
+    $("pbRow").style.display=hidden?"none":"contents";
     $("pbToggle").textContent=hidden?"👁 Mostrar proyectos y botoneras":"🙈 Ocultar proyectos y botoneras";
     try{ localStorage.setItem(PB_HIDE_KEY, hidden?"1":"0"); }catch(e){}
   }
