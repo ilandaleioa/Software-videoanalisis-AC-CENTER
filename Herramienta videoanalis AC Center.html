@@ -47,7 +47,7 @@ main{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:18px;padding:18p
 video{width:100%;height:100%;display:block;background:#000}
 .empty{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:#cfd6d1;text-align:center;padding:20px}
 .empty[hidden]{display:none}
-.overlay{position:absolute;left:3%;top:4%;max-width:94%;display:flex;align-items:stretch;border-radius:6px;overflow:hidden;box-shadow:0 4px 18px rgba(0,0,0,.45);opacity:0;transform:translate(0,-8px);transition:.25s;pointer-events:none}
+.overlay{position:absolute;right:3%;top:4%;max-width:94%;display:flex;align-items:stretch;border-radius:6px;overflow:hidden;box-shadow:0 4px 18px rgba(0,0,0,.45);opacity:0;transform:translate(0,-8px);transition:.25s;pointer-events:none}
 .overlay.on{opacity:1;transform:translate(0,0)}
 #edOv{left:14px;top:auto;bottom:14px;transform:translateY(8px)}
 #edOv.on{transform:none}
@@ -613,9 +613,7 @@ kbd{border-radius:0;font-family:var(--f-body)}
           <input type="range" id="fsSeek" min="0" max="1000" value="0" step="1" aria-label="Barra de reproducción">
           <span class="fsMatch" id="fsMatch"></span>
         </div>
-        <button class="btn" id="prev" title="Evento anterior (P)">◀ Evento</button>
         <button class="btn primary" id="play">Reproducir</button>
-        <button class="btn" id="next" title="Siguiente evento (N)">Evento ▶</button>
         <button class="btn" id="vBack20" title="Retroceder 20 segundos">-20 seg</button>
         <button class="btn" id="vBack4" title="Retroceder 4 segundos">-4 seg</button>
         <button class="btn" id="vFwd5" title="Avanzar 5 segundos">+5 seg</button>
@@ -1060,7 +1058,7 @@ kbd{border-radius:0;font-family:var(--f-body)}
     </div>
     <label for="fComent">Comentario</label>
     <input id="fComent" maxlength="200" placeholder="Comentario libre (opcional)">
-    <div class="row" style="justify-content:flex-end"><button class="btn" value="cancel" formnovalidate>Cancelar</button></div>
+    <div class="row" style="justify-content:flex-end"><button class="btn" value="cancel" formnovalidate>Cancelar</button><button class="btn primary" value="ok">💾 Guardar</button></div>
   </form>
 </dialog>
 
@@ -1393,7 +1391,7 @@ window.VidExport=(()=>{
     const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=name; document.body.append(a); a.click(); a.remove(); return true; }
   // Rotula el nombre del tramo dentro del vídeo (abajo a la izquierda). Sin nombre, no dibuja nada.
   let curLabel="", curOv=null;
-  // Rótulo del evento (centrado en el vídeo), igual que el que se ve sobre el visor:
+  // Rótulo del evento (arriba a la derecha del vídeo), igual que el que se ve sobre el visor:
   // minuto | categoría (con su color) | detalle y jugador. ov={min,cat,color,det,jug}
   function drawOverlay(cx,W,H,ov){
     if(!ov) return;
@@ -1405,7 +1403,7 @@ window.VidExport=(()=>{
     const wOf=(t,fs,wt)=>{ cx.font=wt+" "+fs+"px "+fam; return cx.measureText(t).width; };
     const wM=wOf(min,fsC*0.9,"700")+padX*2, wC=wOf(cat,fsC,"700")+padX*2;
     const wD=Math.max(wOf(det,fsD,"700"),jug?wOf(jug,fsJ,"400"):0)+padX*2;
-    const total=wM+wC+wD; let x=m; const y=m;
+    const total=wM+wC+wD; let x=W-m-total; const y=m;
     if(x<m){ x=m; }
     cx.globalAlpha=.97;
     cx.fillStyle="#15181D"; cx.fillRect(x,y,wM,h);
@@ -1972,7 +1970,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     Object.entries(CATS).forEach(([k,o])=>{
       const b=el("button",{type:"button",className:"catbtn",textContent:k.charAt(0)+k.slice(1).toLowerCase(),style:"background:"+o.c});
       b.dataset.cat=k;
-      b.onclick=()=>{ fc.value=k; fc.dispatchEvent(new Event("change")); syncCatBtns(); if(k!=="__new__") setStage(1); };
+      b.onclick=()=>{ fc.value=k; fc.dispatchEvent(new Event("change")); syncCatBtns(); if(k!=="__new__"){ eqPicked=false; setStage(1); } };
       if(o.custom) addDelX(b,k,()=>{ removeCat(k); if(fc.value===k){ fc.value="OTRO"; fc.dispatchEvent(new Event("change")); } renderLegend(); });
       wrap.append(b);
     });
@@ -2012,14 +2010,17 @@ window.renderHalfBands = function(b1,b2,mk,d){
     const wrap=$("fEqBtns"); wrap.replaceChildren();
     EQS.forEach(([k,t])=>{
       const b=el("button",{type:"button",className:"optbtn",textContent:t});
-      b.dataset.eq=k; b.onclick=()=>{ setEq(k); prevEq=k; };
+      b.dataset.eq=k; b.onclick=()=>{ setEq(k); prevEq=k; eqPicked=true; setStage(curStage); };
       wrap.append(b);
     });
     syncEqBtns();
   }
   renderEqBtns();
   // Detalle aparece al elegir categoría; Jugador al elegir detalle (o «Sin detalle»)
-  function setStage(n){ $("stEq").hidden=n<1; $("stDet").hidden=n<1; $("stJug").hidden=n<2; }
+  // Detalle además espera a que se pulse una opción de Equipo (salvo al editar un registro: n=2)
+  let curStage=0, eqPicked=false;
+  function setStage(n){ curStage=n; if(n<1) eqPicked=false;
+    $("stEq").hidden=n<1; $("stDet").hidden=!(n>=2||(n>=1&&eqPicked)); $("stJug").hidden=n<2; }
   function syncDetBtns(){
     const cur=$("fDet").value;
     $("fDetBtns").querySelectorAll(".optbtn").forEach(b=>b.classList.toggle("active",b.dataset.det===cur));
@@ -2636,7 +2637,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   stage.addEventListener("drop",e=>{e.preventDefault(); openFile(e.dataTransfer.files[0]);});
   if(false) showMsg("Estás en una vista previa, que puede bloquear vídeos locales.<br>Si no carga, <b>descarga este HTML y ábrelo en Chrome o Edge</b>.");
   $("play").onclick=()=>{ if(!v.src) return; if(v.paused){ playing=null; v.play(); } else v.pause(); };
-  $("prev").onclick=()=>step(-1); $("next").onclick=()=>step(1);
+  
   function vSeek(delta){ if(!v.duration) return; playing=null; v.currentTime=Math.max(0,Math.min(v.duration,v.currentTime+delta)); tick(); }
   $("vBack20").onclick=()=>vSeek(-20);
   $("vBack4").onclick=()=>vSeek(-4);
@@ -3580,6 +3581,16 @@ window.renderHalfBands = function(b1,b2,mk,d){
   const evKey=it=>it.name||"__sin";
   const EV_COL={"Gol a favor":"--c-gol","Gol en contra":"--c-gcn","Ocasión a favor":"--c-oca","Ocasión en contra":"--c-ocn","Salida de balón":"--c-sal","Presión":"--c-pre","Cambio de orientación":"--c-cdo","Duelo":"--c-due"};
   const evColor=n=>"var("+(EV_COL[n]||"--c-otr")+")";
+  // Rótulo del tramo (mismo formato que el del registro): minuto de partido | categoría con su color | nombre y parte/duración
+  function edOvOf(it,idx){
+    const s=sources.find(x=>x.id===it.srcId), m=s&&(s===sources[curSrc]?marks:s.marks);
+    let min=fmt(it.s).replace(/\.\d$/,"");
+    if(m&&m.p1!=null){ const k=it.s; min=k<m.p1?"-"+fmtHM(m.p1-k):(m.p2==null||k<m.p2)?fmtHM(k-m.p1):fmtHM(2700+(k-m.p2)); }
+    const name=(it.name||"").trim(), half=halfLabel(s,it.s);
+    let color=evColor(name); const mm=/^var\((--[\w-]+)\)$/.exec(color);
+    if(mm) color=getComputedStyle(document.documentElement).getPropertyValue(mm[1]).trim()||"#d7261e";
+    return {min, cat:name?name.split(/\s+/)[0].toUpperCase():"CORTE", color, det:name||("Corte "+(idx+1)), jug:(half?half+" · ":"")+fmt(it.e-it.s)};
+  }
   function renderFilter(){
     const F=$("edFilter"), names=[...new Set(added.map(evKey))];
     if(evFilter&&names.indexOf(evFilter)<0) evFilter="";
@@ -3689,10 +3700,9 @@ window.renderHalfBands = function(b1,b2,mk,d){
     const curId=sources[curSrc]&&sources[curSrc].id, ov=$("edOv");
     let hit=-1; added.forEach((it,i)=>{ if(it.srcId===curId&&t>=it.s&&t<=it.e&&(hit<0||it===activeAdded||added[hit]!==activeAdded&&it.s>=added[hit].s)) hit=i; });
     if(hit>=0){ const it=added[hit];
-      $("edOvMin").textContent=mc||fmt(t).replace(/\.\d$/,"");
-      $("edOvCat").textContent=it.name||("Corte "+(hit+1));
-      $("edOvDet").textContent="Inicio "+fmt(it.s)+" · Fin "+fmt(it.e);
-      $("edOvSub").textContent="Duración "+fmt(it.e-it.s);
+      const o=edOvOf(it,hit);
+      $("edOvMin").textContent=o.min; $("edOvCat").textContent=o.cat; $("edOvCat").style.background=o.color;
+      $("edOvDet").textContent=o.det; $("edOvSub").textContent=o.jug;
       ov.classList.add("on"); }
     else ov.classList.remove("on"); }
   function setMark(k){ if(!dur()) return; marks[k]=V.currentTime; syncCur(); render(); }
@@ -3811,7 +3821,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     added.forEach(it=>{ const s=sources.find(x=>x.id===it.srcId); if(!s) return;
       if(evFilter&&evKey(it)!==evFilter) return;
       if(!cur||cur.srcId!==it.srcId){ cur={srcId:it.srcId,src:s.url,name:s.name,ranges:[]}; out.push(cur); }
-      cur.ranges.push({s:it.s,e:it.e,label:it.name||""}); });
+      cur.ranges.push({s:it.s,e:it.e,ov:edOvOf(it,added.indexOf(it))}); });
     return out; }
   // Descarga cada tramo indicado (por defecto todos) como un archivo de vídeo independiente.
   async function exportSeparate(idxs){
@@ -3828,7 +3838,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
         if((V.currentSrc||V.src)!==s.url){ const ready=new Promise(r=>V.addEventListener("loadedmetadata",r,{once:true})); V.src=s.url; V.load(); await ready; }
         const own=(it.name||"").replace(/[\\/:*?"<>|]/g,"").trim();
         const name=own?String(i+1).padStart(pad,"0")+"_"+own:base+"_"+String(i+1).padStart(pad,"0")+"_"+fmt(it.s).replace(":","m").replace(".","s");
-        const ok=await VidExport.run({video:V, ranges:[{s:it.s,e:it.e,label:it.name||""}], name, mime:$("edFmt").value, target:+$("edRes").value, fps:+$("edFps").value, ui:{busy:$("edBusy"),bar:$("edBar"),txt:$("edBusyTxt")}, silent:true});
+        const ok=await VidExport.run({video:V, ranges:[{s:it.s,e:it.e,ov:edOvOf(it,i)}], name, mime:$("edFmt").value, target:+$("edRes").value, fps:+$("edFps").value, ui:{busy:$("edBusy"),bar:$("edBar"),txt:$("edBusyTxt")}, silent:true});
         if(!ok) break;
       }
     } finally {
@@ -3945,7 +3955,7 @@ window.tutVoz=(()=>{
   function at(el,fx=.5,fy=.5){ const r=el.getBoundingClientRect(), m=M.getBoundingClientRect(); return [r.left-m.left+r.width*fx, r.top-m.top+r.height*fy]; }
   function place(x,y){ C.style.transform="translate("+x+"px,"+y+"px)"; }
   async function wait(W,ms,txt){ const p=W.say(txt); await W(ms); await p; await W(0); } // espera, y si la voz está activa, hasta acabar de narrar
-  async function go(W,el,fx,fy,ms=800,txt){ const p=W.say(txt); await p.started; await W(0); const [x,y]=at(el,fx,fy); place(x,y); await W(ms); await p; await W(0); }
+  async function go(W,el,fx,fy,ms=800,txt){ const [x,y]=at(el,fx,fy); place(x,y); const mv=Math.min(ms,800); await W(mv); const p=W.say(txt); await p; await W(Math.max(0,ms-mv)); } // primero el ratón llega al sitio y, al llegar, se dice la frase: voz y movimiento van a la par
   async function tap(W){ C.classList.remove("tap"); void C.offsetWidth; C.classList.add("tap"); await W(380); }
   const trackAt=p=>at(q(".tutTrack"),p/100,.5);
   async function dragTo(W,key,p){ // mueve la barra negra y el cursor a la vez
@@ -4105,7 +4115,7 @@ window.tutVoz=(()=>{
   function at(el,fx=.5,fy=.5){ const r=el.getBoundingClientRect(), mm=M.getBoundingClientRect(); return [r.left-mm.left+r.width*fx, r.top-mm.top+r.height*fy]; }
   function place(x,y){ C.style.transform="translate("+x+"px,"+y+"px)"; }
   async function wait(W,ms,txt){ const p=W.say(txt); await W(ms); await p; await W(0); } // espera, y si la voz está activa, hasta acabar de narrar
-  async function go(W,el,fx,fy,ms=800,txt){ const p=W.say(txt); await p.started; await W(0); const [x,y]=at(el,fx,fy); place(x,y); await W(ms); await p; await W(0); }
+  async function go(W,el,fx,fy,ms=800,txt){ const [x,y]=at(el,fx,fy); place(x,y); const mv=Math.min(ms,800); await W(mv); const p=W.say(txt); await p; await W(Math.max(0,ms-mv)); } // primero el ratón llega al sitio y, al llegar, se dice la frase: voz y movimiento van a la par
   async function tap(W){ C.classList.remove("tap"); void C.offsetWidth; C.classList.add("tap"); await W(380); }
   async function press(W,sel,key,txt){ await go(W,q(sel),.5,.5,800,txt); S.hot=key; draw(); await tap(W); S.hot=null; }
   const pressF=(W,key,txt)=>press(W,'[data-f="'+key+'"]',key,txt);
