@@ -21,7 +21,7 @@
   --red:#D3291E; --red-2:#B6170D; --pitch:#2f6b3c; --acfc-ink:#15181D; --acfc-ink-2:#1B2026;
   --f-disp:"DIN PRO","Barlow Condensed",Barlow,"Helvetica Neue",Arial,sans-serif;
   --f-body:"DIN PRO",Barlow,-apple-system,"Helvetica Neue",Arial,sans-serif;
-  --c-gol:#c8102e; --c-oca:#e08a00; --c-tra:#7a3fb5; --c-trd:#0e8f8f; --c-sal:#1f6fd1; --c-pre:#2f8a4a; --c-otr:#6b7280;
+  --c-gol:#c8102e; --c-oca:#e08a00; --c-tra:#7a3fb5; --c-trd:#0e8f8f; --c-sal:#1f6fd1; --c-pre:#2f8a4a; --c-otr:#6b7280; --c-gcn:#7f0a1d; --c-ocn:#8a5200; --c-cdo:#0e8f8f; --c-due:#c026a3;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#0B0D10; --panel:#15181D; --ink:#EDEDEB; --muted:#9AA0A6; --line:#2C3338;
@@ -49,6 +49,8 @@ video{width:100%;height:100%;display:block;background:#000}
 .empty[hidden]{display:none}
 .overlay{position:absolute;left:50%;top:50%;max-width:94%;display:flex;align-items:stretch;border-radius:6px;overflow:hidden;box-shadow:0 4px 18px rgba(0,0,0,.45);opacity:0;transform:translate(-50%,-42%);transition:.25s;pointer-events:none}
 .overlay.on{opacity:1;transform:translate(-50%,-50%)}
+#edOv{left:14px;top:auto;bottom:14px;transform:translateY(8px)}
+#edOv.on{transform:none}
 .overlay .cat{font-family:var(--f-disp);font-weight:700;font-size:22px;color:#fff;padding:8px 14px;display:flex;align-items:center}
 .overlay .det{background:rgba(255,255,255,.95);color:#1c2420;padding:6px 14px;display:flex;flex-direction:column;justify-content:center}
 .overlay .det b{font-size:17px}.overlay .det span{font-size:13px;color:#4b554f}
@@ -175,11 +177,14 @@ kbd{border:1px solid var(--line);border-radius:3px;padding:0 4px;font-size:11px}
 .seg{position:absolute;top:0;bottom:0;background:color-mix(in srgb,var(--pitch) 70%,transparent);border-right:2px solid var(--panel);border-radius:3px;cursor:grab}
 .seg.off{background:repeating-linear-gradient(45deg,color-mix(in srgb,var(--red) 55%,transparent) 0 6px,transparent 6px 12px)}
 .seg.sel{outline:3px solid var(--ink);outline-offset:-3px;z-index:1}
-.doneCut{position:absolute;top:0;bottom:0;cursor:pointer;z-index:3;background:color-mix(in srgb,#22c55e 65%,transparent);border:1px solid #15803d;border-bottom:3px solid #15803d;box-sizing:border-box}
-.doneCut:hover{background:color-mix(in srgb,#22c55e 85%,transparent)}
+.doneCut{--dc:var(--c-otr);position:absolute;top:0;bottom:0;cursor:pointer;z-index:3;background:color-mix(in srgb,var(--dc) 65%,transparent);border:1px solid var(--dc);border-bottom:3px solid var(--dc);box-sizing:border-box}
+.doneCut:hover{background:color-mix(in srgb,var(--dc) 85%,transparent)}
 .shade{position:absolute;top:0;bottom:0;background:color-mix(in srgb,var(--bg) 70%,transparent);pointer-events:none;z-index:2}
 .hdl{position:absolute;top:-4px;bottom:-4px;width:12px;margin-left:-6px;background:var(--ink);border-radius:3px;cursor:ew-resize;z-index:4}
 .hdl::after{content:"";position:absolute;left:5px;top:14px;width:2px;height:20px;background:var(--panel)}
+/* los tiradores abrazan la selección por fuera: no tapan la franja verde */
+#hIn{margin-left:-12px}
+#hOut{margin-left:0}
 .edtrack .head{position:absolute;top:-10px;bottom:-6px;width:3px;background:var(--red);pointer-events:none;box-shadow:0 0 6px rgba(200,16,46,.7);z-index:6}
 .edtrack .head::before{content:"";position:absolute;top:-7px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-top:8px solid var(--red)}
 #vSeekTrack{margin-top:34px}
@@ -194,6 +199,9 @@ body.markBtnsHidden .hdlTime.markLbl{display:none!important}
 #mlP1Lbl,#vmlP1Lbl,#mlP1ELbl,#vmlP1ELbl,#mlP2Lbl,#vmlP2Lbl,#mlEndLbl,#vmlEndLbl{background:#1c2420}
 .evTicks{position:absolute;inset:8px 0;pointer-events:none;z-index:3}
 .evTick{position:absolute;top:0;bottom:0;min-width:4px;margin-left:-2px;box-shadow:0 0 0 1px rgba(255,255,255,.85),0 0 0 2px rgba(0,0,0,.25)}
+.evH{position:absolute;top:-3px;bottom:-3px;width:7px;pointer-events:auto;cursor:ew-resize;background:var(--ink);border-radius:2px;opacity:0;transition:opacity .12s}
+.evH.a{right:100%;margin-right:1px}.evH.b{left:100%;margin-left:1px}
+#vSeekTrack:hover .evH{opacity:.55}.evH:hover,.evH.drag{opacity:1!important;background:var(--red)}
 .halfBand{position:absolute;top:0;bottom:0;display:none;pointer-events:none;z-index:1}
 .halfBand span{position:absolute;top:3px;left:50%;transform:translateX(-50%);font-family:var(--f-disp);font-size:13px;font-weight:700;letter-spacing:.5px;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:2px;padding:0 8px;line-height:16px;white-space:nowrap;opacity:.92}
 .halfDiscard{position:absolute;top:0;bottom:0;pointer-events:none;z-index:1;background:repeating-linear-gradient(135deg,color-mix(in srgb,var(--muted) 45%,transparent) 0 4px,color-mix(in srgb,var(--panel) 70%,transparent) 4px 9px);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--muted) 40%,transparent)}
@@ -208,7 +216,7 @@ body.markBtnsHidden .hdlTime.markLbl{display:none!important}
 .edItem.act{background:var(--bg);outline:1px solid var(--ink);outline-offset:-1px}
 .edItem.flash{animation:edFlash 1s ease}
 @keyframes edFlash{0%,100%{box-shadow:none}30%{box-shadow:0 0 0 3px var(--red)}}
-.edItem .n{font-family:var(--f-disp);font-size:18px;color:var(--muted)}
+.edItem .n{font-family:var(--f-disp);font-size:18px;color:var(--muted);border-bottom:3px solid var(--dc,transparent)}
 .edItem .nm{width:100%;box-sizing:border-box;font:inherit;font-size:13px;font-weight:600;color:var(--ink);background:transparent;border:0;border-bottom:1px dashed var(--line);border-radius:0;padding:1px 0;margin-bottom:2px;outline:none}
 .edItem select.nm{cursor:pointer}
 .edItem .nm:focus{border-bottom:1px solid var(--red)}
@@ -247,6 +255,19 @@ body.markBtnsHidden .hdlTime.markLbl{display:none!important}
 #vxPrev{width:100%;max-width:100%;display:block}
 #vxInfo{overflow-wrap:anywhere;line-height:1.45}
 #vxX{position:absolute;top:8px;right:8px;width:32px;height:32px;padding:0;line-height:1;font-size:18px;display:flex;align-items:center;justify-content:center}
+dialog#dlgBot{width:min(620px,94vw);max-height:92vh;overflow:auto}
+.botWrap{display:grid;gap:12px}
+.botSec{border-top:1px solid var(--line);padding-top:10px;display:grid;gap:8px}
+.botSec h3{margin:0;font-family:var(--f-disp);font-size:15px;text-transform:uppercase;letter-spacing:.3px}
+.botHelp{font-size:12px;color:var(--muted);margin:0}
+.botErr{font-size:12px;color:var(--red)}
+.botAdd{flex-wrap:nowrap;align-items:center}
+.botAdd input:not([type]){flex:1;min-width:0}
+.botColor{width:46px!important;padding:2px!important;flex:none}
+.botChk{display:flex;align-items:center;gap:4px;font-size:13px;white-space:nowrap}
+.botChk input{width:auto}
+.botEmpty{font-size:13px;color:var(--muted)}
+
 /* =====================================================================
    ACFC · CAPA VISUAL ATHLETIC CLUB FOOTBALL CENTER
    Línea visual de acfootballcenter.eus/ia-aplicada-gestion-deportiva/
@@ -295,6 +316,8 @@ header .btn.primary{align-self:center}
 .btn:disabled{opacity:.45;cursor:not-allowed}
 .stageControls .btn{border-radius:0;border-color:transparent;color:#15181D}
 .stageControls .btn.primary{color:#fff}
+.stageControls #vFull,.stageControls #visFullEditor,.stageControls #edFull,.stageControls #edFullEditor{background:var(--acfc-ink);color:#fff}
+.stageControls #vFull:hover,.stageControls #visFullEditor:hover,.stageControls #edFull:hover,.stageControls #edFullEditor:hover{background:var(--red)}
 .catbtn,.optbtn{border-radius:2px}
 .btnX{border-radius:0 1px 0 2px}
 .ev .acts button,.edItem button{border-radius:0}
@@ -385,6 +408,51 @@ kbd{border-radius:0;font-family:var(--f-body)}
   #play,#edPlay,#cePlay{border-color:#555}
 }
 /* ===================== fin capa ACFC ===================== */
+
+/* ===== Móvil limpio (editor) · solo pantallas ≤640px ===== */
+@media (max-width:640px){
+  .acfcUtil{display:none}
+  header{min-height:0;padding:8px 14px 0;gap:6px 12px}
+  header #vidName{display:none}
+  header .tabs{margin-left:0;order:3;flex:1 0 100%;gap:18px}
+  header .tab{padding:10px 0;font-size:12px}
+  #tabEditor:not(:fullscreen) .edgrid{padding:10px 12px 16px;gap:14px}
+  /* Vídeo arriba, mandos debajo (ya no tapan la imagen) */
+  #tabEditor:not(:fullscreen) #edStage:not(:fullscreen){background:transparent;overflow:visible;aspect-ratio:auto;display:flex;flex-direction:column}
+  #tabEditor:not(:fullscreen) #edStage:not(:fullscreen) video{height:auto;aspect-ratio:16/9}
+  #tabEditor:not(:fullscreen) #edStage:not(:fullscreen) .empty{inset:0 0 auto 0;aspect-ratio:16/9;background:#000;padding:12px;gap:8px;font-size:13px}
+  #tabEditor:not(:fullscreen) #edStage:not(:fullscreen) .empty .row{gap:6px}
+  #tabEditor:not(:fullscreen) #edStage:not(:fullscreen) .stageControls{position:static;display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:8px 0 0;background:none}
+  #edStage:not(:fullscreen) .stageControls .btn{min-height:42px;padding:6px 4px;font-size:13px;background:var(--panel);border:1px solid var(--line);color:var(--ink)}
+  #edStage:not(:fullscreen) .stageControls .btn.primary{background:var(--red);border-color:var(--red);color:#fff}
+  #edStage:not(:fullscreen) .stageControls #edPlay{grid-column:span 2;order:1}
+  #edStage:not(:fullscreen) .stageControls #edBack4{order:2}
+  #edStage:not(:fullscreen) .stageControls #edFwd5{order:3}
+  #edStage:not(:fullscreen) .stageControls #edBack20{order:4}
+  #edStage:not(:fullscreen) .stageControls #edFwd20{order:5}
+  #edStage:not(:fullscreen) .stageControls #edFull{order:6;grid-column:span 2;background:var(--ink);color:var(--bg);border-color:var(--ink)}
+  #edStage:not(:fullscreen) .stageControls #edFwd45,
+  #edStage:not(:fullscreen) .stageControls #edFullEditor{display:none}
+  /* Deshacer, rehacer, velocidad */
+  #tabEditor:not(:fullscreen) .controls{gap:6px;margin-top:10px}
+  #tabEditor .controls label.row span{display:none}
+  #tabEditor .controls .btn{min-height:40px}
+  /* Línea de tiempo más fácil de tocar */
+  #tabEditor .edtrack{height:64px;margin-top:12px}
+  /* Reloj y datos del evento */
+  #tabEditor .controls:has(#edClock){display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:center}
+  #tabEditor .controls:has(#edClock) #edJug{display:none}
+  #tabEditor .controls:has(#edClock)>span:has(#edTrimInfo){grid-column:1/-1;min-width:0;flex:none}
+  #tabEditor .controls:has(#edClock) #edAddSel{grid-column:1/-1;min-height:44px;width:100%}
+  /* Marcas de partido en cuadrícula 2×2 */
+  #tabEditor .controls:has(#edMarkBtns){display:grid;grid-template-columns:1fr 1fr;gap:6px}
+  #tabEditor #edMarkToggle{grid-column:1/-1;min-height:30px;padding:2px}
+  #tabEditor #edMarkBtns .btn{min-height:44px;padding:6px 4px;font-size:13px;white-space:normal;line-height:1.15}
+  /* Listas */
+  #tabEditor aside{padding:12px}
+  #tabEditor aside .btn{min-height:40px}
+  #tabEditor aside #edExport,#tabEditor aside #edExportSep{min-height:46px}
+}
 /* TEMPORAL: oculta todo lo relacionado con listas de reproducción (quitar este bloque para recuperarlo) */
 #plListToggle,#plListSection,#plExport,#plExportSep,#plClear,#bulkPl,.plBtn{display:none!important}
 #edTutorial,#regTutorial{background:#1d5fbf;border-color:#1d5fbf;color:#fff;font-weight:700}
@@ -566,7 +634,6 @@ kbd{border-radius:0;font-family:var(--f-body)}
     <div class="controls">
         <button class="btn primary" id="vUndo" title="Deshacer (Ctrl+Z)" aria-label="Deshacer" disabled>↶</button>
         <button class="btn primary" id="vRedo" title="Rehacer (Ctrl+Y)" aria-label="Rehacer" disabled>↷</button>
-      <button class="btn iconBtn" id="vMarkToggle" title="Ocultar/mostrar estos botones">👁</button>
       <span id="vMarkBtns" style="display:contents">
         <button class="btn" id="vMarkP1" title="Fija el inicio de la 1ª parte en el instante actual">▶️ Inicio 1ª parte</button>
         <button class="btn" id="vMarkP1E" title="Fija el fin de la 1ª parte en el instante actual">⏸️ Fin 1ª parte</button>
@@ -745,6 +812,7 @@ kbd{border-radius:0;font-family:var(--f-body)}
       <div class="pbGroup">
         <div class="pbHead">
           <div class="pbTitle">Proyectos y botoneras</div>
+          <button class="btn primary" id="btnBotonera" style="font-size:12px" title="Define las categorías, detalles y jugadores que aparecen como botones al registrar una acción">🎛️ Botonera</button>
           <button class="btn" id="pbToggle" style="font-size:12px" title="Ocultar/mostrar los botones de proyectos y botoneras">🙈 Ocultar proyectos y botoneras</button>
         </div>
         <div class="pbRow" id="pbRow">
@@ -766,6 +834,7 @@ kbd{border-radius:0;font-family:var(--f-body)}
   <section>
     <div class="stage" id="edStage">
       <video id="edV" playsinline preload="auto"></video>
+      <div class="overlay" id="edOv"><div class="min" id="edOvMin"></div><div class="cat" id="edOvCat" style="background:var(--red)"></div><div class="det"><b id="edOvDet"></b><span id="edOvSub"></span></div></div>
       <div class="empty" id="edEmpty">
         <div id="edMsg">Sube uno o varios vídeos, realiza cortes, asigna el nombre al evento y descárgalos a tu ordenador.</div>
         <div class="row" style="justify-content:center">
@@ -991,6 +1060,57 @@ kbd{border-radius:0;font-family:var(--f-body)}
     <input id="fComent" maxlength="200" placeholder="Comentario libre (opcional)">
     <div class="row" style="justify-content:flex-end"><button class="btn" value="cancel" formnovalidate>Cancelar</button><button class="btn primary" value="ok">Guardar</button></div>
   </form>
+</dialog>
+
+<dialog id="dlgBot" aria-labelledby="botTitle">
+  <div class="botWrap">
+    <div class="row" style="justify-content:space-between;align-items:center;flex-wrap:nowrap">
+      <h2 id="botTitle" style="margin:0;font-family:var(--f-disp)">Botonera</h2>
+      <button type="button" class="btn" id="botClose" title="Cerrar">❌ Cerrar</button>
+    </div>
+    <p class="botHelp">Define aquí los botones que aparecen al registrar una acción. Los cambios se guardan en este navegador; usa «Guardar botonera» para llevarlos a otro ordenador.</p>
+
+    <section class="botSec">
+      <h3>1 · Categorías</h3>
+      <div id="botCats" class="catbtns" role="group" aria-label="Categorías"></div>
+      <div class="row botAdd">
+        <input id="botCatName" maxlength="24" placeholder="Nueva categoría" aria-label="Nombre de la nueva categoría">
+        <input id="botCatColor" type="color" value="#0f8b8d" aria-label="Color de la nueva categoría" class="botColor">
+        <button type="button" class="btn primary" id="botCatAdd">Añadir</button>
+      </div>
+      <div id="botCatErr" class="botErr"></div>
+    </section>
+
+    <section class="botSec">
+      <h3>2 · Detalles de <span id="botDetCat"></span></h3>
+      <div class="botHelp">Pulsa una categoría de arriba para editar sus detalles.</div>
+      <div id="botDets" class="catbtns" role="group" aria-label="Detalles"></div>
+      <div class="row botAdd">
+        <input id="botDetName" maxlength="60" placeholder="Nuevo detalle" aria-label="Nuevo detalle">
+        <label id="botParadoLbl" class="botChk" hidden><input type="checkbox" id="botParado"> Balón parado</label>
+        <button type="button" class="btn primary" id="botDetAdd">Añadir</button>
+      </div>
+      <div id="botDetErr" class="botErr"></div>
+    </section>
+
+    <section class="botSec">
+      <h3>3 · Jugadores</h3>
+      <div id="botJugs" class="catbtns" role="group" aria-label="Jugadores"></div>
+      <div class="row botAdd">
+        <input id="botJugName" maxlength="40" placeholder="Nuevo jugador" aria-label="Nuevo jugador">
+        <button type="button" class="btn primary" id="botJugAdd">Añadir</button>
+      </div>
+      <div id="botJugErr" class="botErr"></div>
+    </section>
+
+    <div class="row" style="justify-content:space-between">
+      <div class="row">
+        <button type="button" class="btn edGreen" id="botSave" title="Descarga la botonera como archivo">💾 Guardar botonera</button>
+        <label class="btn" for="impBot" title="Carga una botonera guardada previamente; se añade a la actual">📂 Cargar botonera</label>
+      </div>
+      <button type="button" class="btn primary" id="botDone">Hecho</button>
+    </div>
+  </div>
 </dialog>
 
 <dialog id="dlgPl">
@@ -2000,6 +2120,75 @@ window.renderHalfBands = function(b1,b2,mk,d){
   }
   $("newCatAdd").onclick=addCat;
   $("newCatName").addEventListener("keydown",k=>{ if(k.key==="Enter"){ k.preventDefault(); addCat(); } });
+  // ---------- apartado Botonera: define las categorías, detalles y jugadores de los registros ----------
+  const dlgBot=document.getElementById("dlgBot");
+  let botCat="OCASIÓN"; // categoría cuyos detalles se están editando
+  function botSync(){ // refleja los cambios en la leyenda, los filtros y, si está abierto, en el registro de una acción
+    renderLegend();
+    if(dlgEl.open && $("fCat").value!=="__new__"){ fillDets($("fDet").value); fillJugs($("fJug").value); }
+  }
+  function nextBotColor(){ return PALETTE[Object.values(CATS).filter(o=>o.custom).length%PALETTE.length]; }
+  function renderBot(){
+    if(!CATS[botCat]) botCat=Object.keys(CATS)[0];
+    const wc=$("botCats"); wc.replaceChildren();
+    Object.entries(CATS).forEach(([k,o])=>{
+      const b=el("button",{type:"button",className:"catbtn"+(k===botCat?" active":""),textContent:k.charAt(0)+k.slice(1).toLowerCase(),style:"background:"+o.c,title:"Editar los detalles de «"+k+"»"});
+      b.onclick=()=>{ botCat=k; renderBot(); };
+      if(o.custom) addDelX(b,k,()=>{
+        const n=events.filter(e=>e.cat===k).length;
+        if(!confirm("¿Borrar la categoría «"+k+"»?"+(n?"\n"+n+" evento(s) del registro la usan y dejarán de mostrarse con su color.":""))) return;
+        if($("fCat").value===k) $("fCat").value="OTRO";
+        removeCat(k); botSync(); renderBot(); });
+      wc.append(b);
+    });
+    $("botDetCat").textContent=botCat.charAt(0)+botCat.slice(1).toLowerCase();
+    const wd=$("botDets"); wd.replaceChildren();
+    const L=DETS[botCat]||[];
+    if(!L.length) wd.append(el("span",{className:"botEmpty",textContent:"Sin detalles todavía."}));
+    L.forEach(d=>{
+      const g=CAT_GOL(botCat)?(isParado(botCat,d)?"parado":"juego"):null;
+      const b=el("button",{type:"button",className:"optbtn"+(g?" g-"+g:""),textContent:d});
+      addDelX(b,d,()=>{ removeDetFrom(botCat,d); botSync(); renderBot(); });
+      wd.append(b);
+    });
+    $("botParadoLbl").hidden=!CAT_GOL(botCat);
+    const wj=$("botJugs"); wj.replaceChildren();
+    if(!JUGS.length) wj.append(el("span",{className:"botEmpty",textContent:"Sin jugadores todavía."}));
+    JUGS.forEach(n=>{
+      const b=el("button",{type:"button",className:"optbtn",textContent:n});
+      addDelX(b,n,()=>{ removeJug(n); botSync(); renderBot(); });
+      wj.append(b);
+    });
+  }
+  function botAddCat(){
+    const n=$("botCatName").value.trim().replace(/\s+/g," ").toUpperCase().slice(0,24);
+    if(!n){ $("botCatErr").textContent="Escribe un nombre para la categoría."; return; }
+    if(n==="__NEW__"||CATS[n]){ $("botCatErr").textContent=CATS[n]?"Ya existe esa categoría.":"Ese nombre no es válido."; return; }
+    CATS[n]={c:$("botCatColor").value,custom:true}; saveCats(); botCat=n;
+    $("botCatName").value=""; $("botCatErr").textContent=""; $("botCatColor").value=nextBotColor();
+    botSync(); renderBot();
+  }
+  function botAddDet(){
+    const d=addDetTo(botCat,$("botDetName").value);
+    if(!d){ $("botDetErr").textContent="Escribe el detalle."; return; }
+    if(CAT_GOL(botCat)&&$("botParado").checked) addParado(d);
+    $("botDetName").value=""; $("botDetErr").textContent=""; botSync(); renderBot();
+  }
+  function botAddJug(){
+    const n=addJugTo($("botJugName").value);
+    if(!n){ $("botJugErr").textContent="Escribe el nombre."; return; }
+    $("botJugName").value=""; $("botJugErr").textContent=""; botSync(); renderBot();
+  }
+  $("btnBotonera").onclick=()=>{
+    $("botCatErr").textContent=$("botDetErr").textContent=$("botJugErr").textContent="";
+    $("botCatColor").value=nextBotColor();
+    renderBot(); if(!dlgBot.open) dlgBot.showModal();
+  };
+  $("botClose").onclick=$("botDone").onclick=()=>dlgBot.close();
+  $("botCatAdd").onclick=botAddCat; $("botDetAdd").onclick=botAddDet; $("botJugAdd").onclick=botAddJug;
+  [["botCatName",botAddCat],["botDetName",botAddDet],["botJugName",botAddJug]].forEach(([id,fn])=>
+    $(id).addEventListener("keydown",k=>{ if(k.key==="Enter"){ k.preventDefault(); fn(); } }));
+  $("botSave").onclick=()=>$("saveBot").click();
   const selectedIds=new Set();
   function renderBulkBar(){
     $("bulkBar").classList.toggle("on",selectedIds.size>0);
@@ -2065,8 +2254,28 @@ window.renderHalfBands = function(b1,b2,mk,d){
       const c=clipOf(e); if(!(c.b>0&&c.a<d)) return;
       const t=el("div",{className:"evTick",title:`${e.min} · ${e.cat}${e.det?" · "+e.det:""}`});
       t.style.left=pct(c.a,0,d); t.style.width=Math.max(0,(c.b-c.a)/d*100)+"%"; t.style.background=CATS[e.cat].c;
+      t.append(seekTickHandle(e,t,"a"),seekTickHandle(e,t,"b"));
       box.append(t);
     });
+  }
+  // asas en los extremos de cada corte: arrastrar acorta o alarga el clip desde la línea de tiempo
+  function seekTickHandle(e,tickEl,side){
+    const h=el("div",{className:"evH "+side,title:side==="a"?"Arrastra para cambiar el inicio del corte":"Arrastra para cambiar el final del corte"});
+    h.addEventListener("pointerdown",ev=>{
+      const d=v.duration; if(!d||ev.button>0) return;
+      ev.stopPropagation(); ev.preventDefault(); h.setPointerCapture(ev.pointerId); h.classList.add("drag");
+      const tr=$("vSeekTrack"), r=tr.getBoundingClientRect(), c=clipEnsure(e); let moved=false;
+      const at=x=>Math.min(1,Math.max(0,(x-r.left)/r.width))*d;
+      const move=m=>{ moved=true; const t=at(m.clientX);
+        if(side==="a"){ c.a=Math.max(0,Math.min(t,c.b-0.2)); if(c.a<c.segs[0].s) c.segs[0].s=c.a; }
+        else{ c.b=Math.min(d,Math.max(t,c.a+0.2)); const L=c.segs[c.segs.length-1]; if(c.b>L.e) L.e=c.b; }
+        tickEl.style.left=pct(c.a,0,d); tickEl.style.width=Math.max(0,(c.b-c.a)/d*100)+"%";
+        v.currentTime=side==="a"?c.a:c.b; };
+      const end=()=>{ h.removeEventListener("pointermove",move); h.removeEventListener("pointerup",end); h.removeEventListener("pointercancel",end); h.classList.remove("drag"); if(moved){ save(); refresh(); } };
+      h.addEventListener("pointermove",move); h.addEventListener("pointerup",end); h.addEventListener("pointercancel",end);
+    });
+    h.addEventListener("click",ev=>ev.stopPropagation());
+    return h;
   }
   function renderMarks(){
     renderSeekTicks();
@@ -2198,7 +2407,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   const MARK_BTNS_HIDE_KEY="markBtnsHidden";
   function setMarkBtnsHidden(hidden){
     ["vMarkBtns","edMarkBtns"].forEach(id=>{ $(id).style.display=hidden?"none":"contents"; });
-    ["vMarkToggle","edMarkToggle"].forEach(id=>{ $(id).textContent=hidden?"👁‍🗨":"👁"; $(id).title=hidden?"Mostrar estos botones":"Ocultar estos botones"; });
+    ["edMarkToggle"].forEach(id=>{ $(id).textContent=hidden?"👁‍🗨":"👁"; $(id).title=hidden?"Mostrar estos botones":"Ocultar estos botones"; });
     document.body.classList.toggle("markBtnsHidden",hidden);
     try{ localStorage.setItem(MARK_BTNS_HIDE_KEY, hidden?"1":"0"); }catch(e){}
   }
@@ -2206,7 +2415,6 @@ window.renderHalfBands = function(b1,b2,mk,d){
     let hidden=false;
     try{ hidden=localStorage.getItem(MARK_BTNS_HIDE_KEY)==="1"; }catch(e){}
     setMarkBtnsHidden(hidden);
-    $("vMarkToggle").onclick=()=>setMarkBtnsHidden($("vMarkBtns").style.display!=="none");
     $("edMarkToggle").onclick=()=>setMarkBtnsHidden($("edMarkBtns").style.display!=="none");
   })();
 
@@ -2653,7 +2861,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     saveDets();
     if(Array.isArray(data.jugs)) data.jugs.slice(0,300).forEach(n=>{ const before=JUGS.length; addJugTo(n,false); if(JUGS.length>before) nJugs++; });
     saveJugs();
-    renderLegend(); refresh();
+    renderLegend(); refresh(); if(dlgBot.open) renderBot();
     alert("Botonera cargada: "+nCats+" categoría(s), "+nDets+" detalle(s) y "+nJugs+" jugador(es) nuevos añadidos.");
   }
   $("impBot").onchange=ev=>{ const f=ev.target.files[0]; if(!f) return; if(f.size>2e6){alert("Archivo demasiado grande.");return;}
@@ -3368,6 +3576,8 @@ window.renderHalfBands = function(b1,b2,mk,d){
   }
   let evFilter="";  // "" = todos · "__sin" = sin nombre · resto = nombre del evento
   const evKey=it=>it.name||"__sin";
+  const EV_COL={"Gol a favor":"--c-gol","Gol en contra":"--c-gcn","Ocasión a favor":"--c-oca","Ocasión en contra":"--c-ocn","Salida de balón":"--c-sal","Presión":"--c-pre","Cambio de orientación":"--c-cdo","Duelo":"--c-due"};
+  const evColor=n=>"var("+(EV_COL[n]||"--c-otr")+")";
   function renderFilter(){
     const F=$("edFilter"), names=[...new Set(added.map(evKey))];
     if(evFilter&&names.indexOf(evFilter)<0) evFilter="";
@@ -3390,6 +3600,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
       if(evFilter&&evKey(it)!==evFilter) return;
       const si=sources.findIndex(s=>s.id===it.srcId), s=sources[si];
       const el=document.createElement("div"); el.className="edItem"+(it===activeAdded?" act":""); el.tabIndex=0;
+      el.style.setProperty("--dc",evColor(it.name));
       if(sources.length>1) el.style.borderLeftColor=srcColor(si<0?0:si);
       const num=document.createElement("span"); num.className="n"; num.textContent=idx+1;
       const tx=document.createElement("div"); const r=document.createElement("div"); r.className="rng"; r.textContent=fmt(it.s)+" – "+fmt(it.e);
@@ -3400,7 +3611,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
       const mkText=(ph)=>{ const nm=document.createElement("input"); nm.className="nm"; nm.type="text"; nm.maxLength=60; nm.value=it.name||"";
         nm.placeholder=ph||"Nombre del tramo (opcional)"; nm.setAttribute("aria-label",nmLabel);
         nm.onclick=ev=>ev.stopPropagation(); nm.onkeydown=k=>{ k.stopPropagation(); if(k.key==="Enter") nm.blur(); };
-        nm.oninput=()=>{ it.name=nm.value; }; nm.onblur=()=>{ it.name=nm.value.trim(); addCustomName(it.name); }; return nm; };
+        nm.oninput=()=>{ it.name=nm.value; }; nm.onblur=()=>{ it.name=nm.value.trim(); addCustomName(it.name); render(); }; return nm; };
       let nm;
       if(it.name&&!evKnown(it.name)){ nm=mkText(); }
       else {
@@ -3412,7 +3623,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
         nm.onclick=ev=>ev.stopPropagation(); nm.onkeydown=k=>k.stopPropagation();
         nm.onchange=()=>{
           if(nm.value==="__otro"){ const t=mkText("AÑADE NOMBRE"); it.name=""; nm.replaceWith(t); t.focus(); }
-          else it.name=nm.value;
+          else { it.name=nm.value; render(); }
         };
       }
       tx.append(nm,r,sm);
@@ -3434,7 +3645,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     if(!d){ $("edUndo").disabled=$("edUndo2").disabled=!hist.length; $("edRedo").disabled=!redoOf().length; $("edAddSel").hidden=true; renderMarks(d); tick(); return; }
     const curId=sources[curSrc]&&sources[curSrc].id;
     added.forEach((it,i)=>{ if(it.srcId!==curId) return;
-      const b=document.createElement("div"); b.className="doneCut";
+      const b=document.createElement("div"); b.className="doneCut"; b.style.setProperty("--dc",evColor(it.name));
       b.style.left=(it.s/d*100)+"%"; b.style.width=((it.e-it.s)/d*100)+"%";
       b.dataset.add=i; b.title=`Corte añadido${it.name?": "+it.name:" #"+(i+1)} · ${fmt(it.s)}–${fmt(it.e)} (clic para seleccionarlo)`; wrap.append(b);
     });
@@ -3471,7 +3682,17 @@ window.renderHalfBands = function(b1,b2,mk,d){
     const mc=matchClockText(t); $("edMatchClock").textContent=mc?("⏱ "+mc):"";
     $("edFsClock").textContent=fmt(t).replace(/\.\d$/,"")+" / "+fmt(d).replace(/\.\d$/,""); $("edFsMatch").textContent=mc?("⏱ "+mc):"";
     if(!edFsSeeking) $("edFsSeek").value=d?Math.round(t/d*1000):0;
-    $("edHead").style.left=(d?Math.min(100,t/d*100):0)+"%"; }
+    $("edHead").style.left=(d?Math.min(100,t/d*100):0)+"%";
+    // etiqueta sobre el vídeo (como en el registro de eventos): corte añadido que contiene el cabezal
+    const curId=sources[curSrc]&&sources[curSrc].id, ov=$("edOv");
+    let hit=-1; added.forEach((it,i)=>{ if(it.srcId===curId&&t>=it.s&&t<=it.e&&(hit<0||it===activeAdded||added[hit]!==activeAdded&&it.s>=added[hit].s)) hit=i; });
+    if(hit>=0){ const it=added[hit];
+      $("edOvMin").textContent=mc||fmt(t).replace(/\.\d$/,"");
+      $("edOvCat").textContent=it.name||("Corte "+(hit+1));
+      $("edOvDet").textContent="Inicio "+fmt(it.s)+" · Fin "+fmt(it.e);
+      $("edOvSub").textContent="Duración "+fmt(it.e-it.s);
+      ov.classList.add("on"); }
+    else ov.classList.remove("on"); }
   function setMark(k){ if(!dur()) return; marks[k]=V.currentTime; syncCur(); render(); }
   function renderMarks(d){
     Object.keys(MARK_IDS).forEach(k=>{
@@ -3519,7 +3740,8 @@ window.renderHalfBands = function(b1,b2,mk,d){
       mv={x0:e.clientX,t0:t,in0:inP,out0:outP,moved:false};
       drag="seg"; V.currentTime=t; render(); return;
     }
-    drag="seek"; V.currentTime=t; const i=segAt(t); if(e.target.classList.contains("seg")){ sel=i; render(); } tick(); });
+    // fuera de la selección actual: un clic mueve el cabezal; arrastrar dibuja un corte nuevo
+    drag="new"; mv={x0:e.clientX,t0:t,moved:false}; V.currentTime=t; const i=segAt(t); if(e.target.classList.contains("seg")){ sel=i; render(); } tick(); });
   tr.addEventListener("pointermove",e=>{ if(!drag) return; const t=tAt(e);
     if(drag==="hIn"){ inP=Math.max(0,Math.min(t,outP-0.1)); V.currentTime=inP; syncActive(); render(); }
     else if(drag==="hOut"){ outP=Math.min(dur(),Math.max(t,inP+0.1)); V.currentTime=outP; syncActive(); render(); }
@@ -3528,6 +3750,12 @@ window.renderHalfBands = function(b1,b2,mk,d){
       const w=mv.out0-mv.in0; let ni=mv.in0+(t-mv.t0);
       ni=Math.max(0,Math.min(dur()-w,ni));
       inP=ni; outP=ni+w; V.currentTime=inP; syncActive(); render();
+    }
+    else if(drag==="new"){
+      if(!mv.moved){ if(Math.abs(e.clientX-mv.x0)<4) return; mv.moved=true; snap(); }
+      let a=Math.min(mv.t0,t), b=Math.max(mv.t0,t);
+      if(b-a<0.1){ if(a+0.1<=dur()) b=a+0.1; else a=b-0.1; }
+      inP=a; outP=b; V.currentTime=t; syncActive(); render();
     }
     else { V.currentTime=t; tick(); } });
   tr.addEventListener("pointerup",()=>{ if(drag==="seg"&&mv&&mv.addIdx!==undefined&&!mv.moved) gotoAdded(mv.addIdx); drag=null; mv=null;}); tr.addEventListener("pointercancel",()=>{drag=null; mv=null;});
