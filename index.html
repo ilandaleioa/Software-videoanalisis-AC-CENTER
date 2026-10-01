@@ -189,7 +189,9 @@ kbd{border:1px solid var(--line);border-radius:3px;padding:0 4px;font-size:11px}
 #edMatchClock:empty{display:none}
 .edtrack .head::before{content:"";position:absolute;top:-7px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-top:8px solid var(--red)}
 #vSeekTrack{margin-top:34px}
-#vTimelineToggle .tgl{display:none}
+#vTimelineToggle .tgl,#edCtlToggle .tgl{display:none}
+.fsAB{display:none}
+#edCtl1.ctlHid #edMarkBtns>*:not(#edCtlToggle){display:none!important}
 .headClock{position:absolute;top:-19px;transform:translate(-50%,-100%);font-family:var(--f-disp);font-size:16px;font-weight:700;line-height:1;color:var(--red);background:var(--panel);border:1px solid var(--red);padding:2px 6px;white-space:nowrap;pointer-events:none;z-index:7}
 .headClock:empty{display:none}
 .markLine{position:absolute;top:-6px;bottom:-6px;width:2px;pointer-events:auto;cursor:help;z-index:4;display:none}
@@ -237,7 +239,7 @@ body.markBtnsHidden .hdlTime.markLbl{display:none!important}
 .mk .cut{position:absolute;top:0;bottom:0;background:repeating-linear-gradient(45deg,rgba(255,255,255,.85) 0 3px,transparent 3px 6px)}
 /* Oculto: solo queda visible el botón ojo, en la fila de Velocidad */
 #belowStageWrap.hiddenBlock>:not(.controls){display:none}
-#belowStageWrap.hiddenBlock>.controls>:not(#vTimelineToggle){display:none!important}
+#belowStageWrap.hiddenBlock>.controls>:not(#vTimelineToggle):not(#vUndo):not(#vRedo):not(.vTagBtn){display:none!important}
 .clipEd{margin-top:14px;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px 14px}
 .clipEd[hidden]{display:none}
 /* el panel de edición inferior ya no se muestra: los cortes se editan arrastrando sobre la línea de tiempo */
@@ -484,10 +486,27 @@ kbd{border-radius:0;font-family:var(--f-body)}
   #tabVisor .controls .btn{min-height:32px;padding:4px 8px;font-size:12px}
   #tabVisor .edtrack{height:44px;margin:40px 0 4px}
   #tabVisor .edtrack .edsegs{inset:14px 0}
+  /* textos de las partes más pequeños y más arriba */
+  .halfBand span{top:-1px;font-size:10px;line-height:12px;padding:0 5px}
+  /* pantalla completa del vídeo del editor: botones A, B y Añadir */
+  #edStage:fullscreen .stageControls .fsAB:not([hidden]){display:inline-flex}
+  /* sin selector de velocidad ni botón Tutorial de abajo */
+  #rate,#edRate,#regTutorialB,#edTutorialB,label.row:has(#rate),label.row:has(#edRate){display:none!important}
+  /* sin la opción de ventana emergente */
+  #popOutDlg{display:none!important}
+  /* sin los botones de deshacer / rehacer */
+  .histBtn{display:none!important}
+  /* botones de marcas sin el tiempo */
+  #vMarkBtns .mt,#edMarkBtns .mt{display:none}
+  /* editor sin vídeo: solo «Subir vídeo» y «Ver tutorial» */
+  #edMsg,#edUseVisor,#edEmpty .edDropNote{display:none!important}
+  /* sin el bloque «Proyectos y botoneras» en móvil */
+  .pbGroup{display:none!important}
   /* sin la línea de tiempo por categorías en móvil */
   #tabVisor .catTimelineWrap{display:none!important}
   .stage:fullscreen #vSeekTrack,.stage:fullscreen #tagRow{display:none}
   #tagRow{margin-top:4px;gap:4px}
+  @media (max-width:640px){.vTagBtn{display:none}}
   #tagRow .btn{min-height:34px;padding:4px 2px;font-size:12px}
   /* pantalla completa en móvil vertical: gira 90° para verse en horizontal */
   .fsRot:fullscreen{position:fixed!important;top:0!important;left:100%!important;width:100vh!important;height:100vw!important;
@@ -514,8 +533,11 @@ kbd{border-radius:0;font-family:var(--f-body)}
   #tabEditor .controls:has(#edClock)>span:has(#edTrimInfo),#tabEditor .controls:has(#edClock)>span:has(#edClock){display:none!important}
   #tabEditor .controls:has(#edClock) #edAddSel{grid-column:1/-1;min-height:44px;width:100%}
   /* Marcas de partido en cuadrícula 2×2 */
-  #tabEditor #edMarkBtns{grid-column:1/-1;display:grid!important;grid-template-columns:1fr 1fr;gap:4px}
-  #tabEditor #edMarkBtns .btn{min-height:34px;padding:4px 2px;font-size:12px;white-space:normal;line-height:1.15}
+  #tabEditor #edMarkBtns{grid-column:1/-1;display:grid!important;grid-template-columns:repeat(4,1fr) 34px;gap:4px}
+  #tabEditor #edMarkBtns .btn{min-height:34px;padding:4px 2px;font-size:11px;white-space:normal;line-height:1.15}
+  #tabEditor #edMarkBtns #edCtlToggle{grid-column:5;padding:0;font-size:14px}
+  /* marcas ocultas: solo queda el botón del ojo */
+  #edCtl1.ctlHid #edMarkBtns>*:not(#edCtlToggle){display:none!important}
   /* Listas */
   #tabEditor aside{padding:12px}
   #tabEditor aside .btn{min-height:40px}
@@ -687,30 +709,13 @@ kbd{border-radius:0;font-family:var(--f-body)}
         <button class="btn" id="vBack20" title="Retroceder 20 segundos">-20 seg</button>
         <button class="btn" id="vBack4" title="Retroceder 5 segundos">-5 seg</button>
         <button class="btn" id="vFwd5" title="Avanzar 5 segundos">+5 seg</button>
-        <button class="btn" id="vMute" title="Silenciar / activar sonido" aria-label="Silenciar / activar sonido">🔊<span class="lbl"> Silenciar</span></button>
-        <button class="btn" id="vFull" title="Pantalla completa (F)" aria-label="Pantalla completa">⛶<span class="lbl"> Pantalla completa</span></button>
         <button class="btn" id="vFwd20" title="Avanzar 20 segundos">+20 seg</button>
         <button class="btn" id="vFwd45" title="Avanzar 45 minutos">+45 min</button>
+        <button class="btn" id="vMute" title="Silenciar / activar sonido" aria-label="Silenciar / activar sonido">🔊<span class="lbl"> Silenciar</span></button>
+        <button class="btn" id="vFull" title="Pantalla completa (F)" aria-label="Pantalla completa">⛶<span class="lbl"> Pantalla completa</span></button>
         <button class="btn" id="visFullEditor" title="Pone todo el registro de acciones (vídeo, botonera y listas) a pantalla completa">⛶ Registro a pantalla completa</button>
       </div>
 
-    </div>
-    <div class="legend" id="legend"></div>
-    <div id="belowStageWrap">
-    <div class="controls">
-        <button class="btn histBtn" id="vUndo" title="Deshacer (Ctrl+Z)" aria-label="Deshacer" disabled>↶</button>
-        <button class="btn histBtn" id="vRedo" title="Rehacer (Ctrl+Y)" aria-label="Rehacer" disabled>↷</button>
-      <span id="vMarkBtns" style="display:contents">
-        <button class="btn" id="vMarkP1" title="Fija el inicio de la 1ª parte en el instante actual">▶️ Inicio 1</button>
-        <button class="btn" id="vMarkP1E" title="Fija el fin de la 1ª parte en el instante actual">⏸️ Fin 1</button>
-        <button class="btn" id="vMarkP2" title="Fija el inicio de la 2ª parte en el instante actual">▶️ Inicio 2</button>
-        <button class="btn" id="vMarkEnd" title="Fija el fin del partido en el instante actual">⏹️ Fin Partido</button>
-      </span>
-        <span style="flex:1"></span>
-        <label class="row" style="gap:6px"><span style="font-size:13px;color:var(--muted)">Velocidad</span>
-          <select id="rate"><option>0.5</option><option>0.75</option><option selected>1</option><option>1.5</option><option>2</option></select></label>
-        <button class="btn" id="regTutorialB" title="Mira paso a paso cómo se usa el registro de acciones">❓ Tutorial</button>
-        <button class="btn iconBtn" id="vTimelineToggle" title="Ocultar/mostrar la línea de tiempo y el editor de abajo">👁</button>
     </div>
     <div class="edtrack" id="vSeekTrack" title="Haz clic o arrastra para moverte por el vídeo">
       <div class="edsegs"><div class="seg" style="left:0;right:0;cursor:pointer"></div></div>
@@ -727,6 +732,25 @@ kbd{border-radius:0;font-family:var(--f-body)}
       <div class="hdlTime markLbl" id="vmlEndLbl"></div>
       <div class="head" id="vSeekHead"></div>
       <div class="headClock" id="vHeadClock" title="Tiempo real de juego"></div>
+    </div>
+    <div class="legend" id="legend"></div>
+    <div id="belowStageWrap">
+    <div class="controls">
+        <button class="btn histBtn" id="vUndo" title="Deshacer (Ctrl+Z)" aria-label="Deshacer" disabled>↶</button>
+        <button class="btn histBtn" id="vRedo" title="Rehacer (Ctrl+Y)" aria-label="Rehacer" disabled>↷</button>
+        <button class="btn primary vTagBtn" id="vTagNow" title="Etiquetar en el instante actual (T)">REGISTRO AUTO</button>
+        <button class="btn primary vTagBtn" id="vTagManual" title="Registro manual: tú marcas el inicio (REC) y el final (PAUSE) del corte">REGISTRO MANUAL</button>
+        <button class="btn iconBtn" id="vTimelineToggle" title="Ocultar/mostrar la línea de tiempo y el editor de abajo">👁</button>
+      <span id="vMarkBtns" style="display:contents">
+        <button class="btn" id="vMarkP1" title="Fija el inicio de la 1ª parte en el instante actual">▶️ Inicio 1</button>
+        <button class="btn" id="vMarkP1E" title="Fija el fin de la 1ª parte en el instante actual">⏸️ Fin 1</button>
+        <button class="btn" id="vMarkP2" title="Fija el inicio de la 2ª parte en el instante actual">▶️ Inicio 2</button>
+        <button class="btn" id="vMarkEnd" title="Fija el fin del partido en el instante actual">⏹️ Fin Partido</button>
+      </span>
+        <span style="flex:1"></span>
+        <label class="row" style="gap:6px"><span style="font-size:13px;color:var(--muted)">Velocidad</span>
+          <select id="rate"><option>0.5</option><option>0.75</option><option selected>1</option><option>1.5</option><option>2</option></select></label>
+        <button class="btn" id="regTutorialB" title="Mira paso a paso cómo se usa el registro de acciones">❓ Tutorial</button>
     </div>
     <div class="catTimelineWrap">
       <div class="catLabels" id="catLabels"></div>
@@ -910,7 +934,7 @@ kbd{border-radius:0;font-family:var(--f-body)}
           <button class="btn" id="edUseVisor">Usar el vídeo del visor</button>
           <button class="btn" id="edTutorial" title="Mira paso a paso cómo se usa el editor">▶ Ver tutorial</button>
         </div>
-        <div style="font-size:12px;opacity:.8">También puedes arrastrarlo aquí. Puedes seleccionar varios archivos a la vez.</div>
+        <div class="edDropNote" style="font-size:12px;opacity:.8">También puedes arrastrarlo aquí. Puedes seleccionar varios archivos a la vez.</div>
       </div>
       <div class="edBusy" id="edBusy" hidden>
         <b id="edBusyTxt">Exportando…</b>
@@ -931,29 +955,14 @@ kbd{border-radius:0;font-family:var(--f-body)}
         <button class="btn" id="edMute" title="Silenciar / activar sonido" aria-label="Silenciar / activar sonido">🔊<span class="lbl"> Silenciar</span></button>
         <button class="btn" id="edFull" title="Pantalla completa (F)" aria-label="Pantalla completa">⛶<span class="lbl"> Pantalla completa</span></button>
         <button class="btn" id="edFwd20" title="Avanzar 20 segundos">+20 seg</button>
+        <button class="btn primary fsAB" id="edFsA" title="Fija el punto A (inicio del corte) en el cabezal actual">📍 A</button>
+        <button class="btn primary fsAB" id="edFsB" title="Fija el punto B (fin del corte) en el cabezal actual">📍 B</button>
+        <button class="btn primary fsAB" id="edFsAdd" hidden title="Muestra este tramo en la lista">+ Añadir</button>
         <button class="btn" id="edFwd45" title="Avanzar 45 minutos">+45 min</button>
         <button class="btn" id="edFullEditor" title="Pone todo el editor (vídeo, línea de tiempo, listas y exportación) a pantalla completa">⛶ Editor a pantalla completa</button>
       </div>
     </div>
     <input type="file" id="edFile" accept="video/*" multiple hidden>
-    <div class="row" style="margin:6px 0"><button class="btn" id="edCtlToggle" style="font-size:12px" title="Ocultar/mostrar los botones de corte, marcas y datos de este bloque">🙈 Ocultar controles</button></div>
-    <div class="controls" id="edCtl1">
-        <button class="btn histBtn" id="edUndo2" title="Deshacer (Ctrl+Z)" aria-label="Deshacer" disabled>↶</button>
-        <button class="btn histBtn" id="edRedo" title="Rehacer (Ctrl+Y)" aria-label="Rehacer" disabled>↷</button>
-        <button class="btn primary" id="edSetA" title="Fija el punto A (inicio del corte) en el cabezal actual (A)">📍 <span class="abL">Punto </span>A<span class="abL"> · inicio</span></button>
-        <button class="btn primary" id="edSetB" title="Fija el punto B (fin del corte) en el cabezal actual (B)">📍 <span class="abL">Punto </span>B<span class="abL"> · fin</span></button>
-        <button class="btn primary" id="edAddSel" hidden title="Muestra este tramo en la lista de la derecha">+ Añadir</button>
-        <span id="edMarkBtns" style="display:contents">
-          <button class="btn" id="edMarkP1" title="Fija el inicio de la 1ª parte en el cabezal actual">▶️ Inicio 1</button>
-          <button class="btn" id="edMarkP1E" title="Fija el fin de la 1ª parte en el cabezal actual">⏸️ Fin 1</button>
-          <button class="btn" id="edMarkP2" title="Fija el inicio de la 2ª parte en el cabezal actual">▶️ Inicio 2</button>
-          <button class="btn" id="edMarkEnd" title="Fija el fin del partido en el cabezal actual">⏹️ Fin Partido</button>
-        </span>
-        <span style="flex:1"></span>
-        <label class="row" style="gap:6px"><span style="font-size:13px;color:var(--muted)">Velocidad</span>
-          <select id="edRate"><option>0.5</option><option>0.75</option><option selected>1</option><option>1.5</option><option>2</option></select></label>
-        <button class="btn" id="edTutorialB" title="Mira paso a paso cómo se usa el editor">❓ Tutorial</button>
-    </div>
     <div class="edtrack" id="edTrack">
       <div class="edsegs" id="edSegs"></div>
       <div class="shade" id="shIn"></div><div class="shade" id="shOut"></div>
@@ -973,6 +982,24 @@ kbd{border-radius:0;font-family:var(--f-body)}
       <div class="hdlTime markLbl" id="mlP2Lbl"></div>
       <div class="hdlTime markLbl" id="mlEndLbl"></div>
       <div class="head" id="edHead"><span class="time" id="edMatchClock" title="Minuto de partido, calculado a partir de las marcas de inicio de cada parte"></span></div>
+    </div>
+    <div class="row" style="margin:6px 0"><button class="btn" id="edCtlToggle" style="font-size:12px" title="Ocultar/mostrar los botones de corte, marcas y datos de este bloque">🙈 Ocultar controles</button></div>
+    <div class="controls" id="edCtl1">
+        <button class="btn histBtn" id="edUndo2" title="Deshacer (Ctrl+Z)" aria-label="Deshacer" disabled>↶</button>
+        <button class="btn histBtn" id="edRedo" title="Rehacer (Ctrl+Y)" aria-label="Rehacer" disabled>↷</button>
+        <button class="btn primary" id="edSetA" title="Fija el punto A (inicio del corte) en el cabezal actual (A)">📍 <span class="abL">Punto </span>A<span class="abL"> · inicio</span></button>
+        <button class="btn primary" id="edSetB" title="Fija el punto B (fin del corte) en el cabezal actual (B)">📍 <span class="abL">Punto </span>B<span class="abL"> · fin</span></button>
+        <button class="btn primary" id="edAddSel" hidden title="Muestra este tramo en la lista de la derecha">+ Añadir</button>
+        <span id="edMarkBtns" style="display:contents">
+          <button class="btn" id="edMarkP1" title="Fija el inicio de la 1ª parte en el cabezal actual">▶️ Inicio 1</button>
+          <button class="btn" id="edMarkP1E" title="Fija el fin de la 1ª parte en el cabezal actual">⏸️ Fin 1</button>
+          <button class="btn" id="edMarkP2" title="Fija el inicio de la 2ª parte en el cabezal actual">▶️ Inicio 2</button>
+          <button class="btn" id="edMarkEnd" title="Fija el fin del partido en el cabezal actual">⏹️ Fin Partido</button>
+        </span>
+        <span style="flex:1"></span>
+        <label class="row" style="gap:6px"><span style="font-size:13px;color:var(--muted)">Velocidad</span>
+          <select id="edRate"><option>0.5</option><option>0.75</option><option selected>1</option><option>1.5</option><option>2</option></select></label>
+        <button class="btn" id="edTutorialB" title="Mira paso a paso cómo se usa el editor">❓ Tutorial</button>
     </div>
     <div class="controls" id="edCtl2">
       <span style="display:flex;flex-direction:column;gap:2px">
@@ -2486,7 +2513,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
       if(t==null||!d){ ln.style.display="none"; lb.classList.remove("on"); btn.textContent=label; }
       else{ const p=t/d*100; ln.style.display="block"; ln.style.left=p+"%";
         lb.classList.add("on"); lb.style.left=p+"%"; lb.textContent=HALF_MARK_SHORT[k]+"\n"+fmt(t);
-        btn.textContent=label+" · "+fmt(t); }
+        btn.innerHTML=label+'<span class="mt"> · '+fmt(t)+'</span>'; }
     });
     window.renderHalfBands($("vBandP1"),$("vBandP2"),halfMarks,d);
   }
@@ -2507,15 +2534,15 @@ window.renderHalfBands = function(b1,b2,mk,d){
 
   const ED_CTL_HIDE_KEY="edCtlHidden";
   function setEdCtlHidden(hidden){
-    $("edCtl1").hidden=$("edCtl2").hidden=hidden;
-    $("edCtlToggle").textContent=hidden?"👁 Mostrar controles":"🙈 Ocultar controles";
+    $("edCtl1").classList.toggle("ctlHid",hidden);
+    $("edCtlToggle").innerHTML=hidden?'👁‍🗨<span class="tgl"> Mostrar controles</span>':'👁<span class="tgl"> Ocultar controles</span>';
     try{ localStorage.setItem(ED_CTL_HIDE_KEY, hidden?"1":"0"); }catch(e){}
   }
   (function initEdCtlToggle(){
     let hidden=false;
     try{ hidden=localStorage.getItem(ED_CTL_HIDE_KEY)==="1"; }catch(e){}
     setEdCtlHidden(hidden);
-    $("edCtlToggle").onclick=()=>setEdCtlHidden(!$("edCtl1").hidden);
+    $("edCtlToggle").onclick=()=>setEdCtlHidden(!$("edCtl1").classList.contains("ctlHid"));
   })();
 
   const ED_SRC_HIDE_KEY="edSrcHidden";
@@ -2864,12 +2891,25 @@ window.renderHalfBands = function(b1,b2,mk,d){
     if(wasOpen) d.show();
     updatePopOutBtn();
   }
-  function openDlgInPopout(){
+  async function openDlgInPopout(){
     const d=$("dlg");
-    popoutWin=window.open("","panelEventosCortes3","width=460,height=820,menubar=no,toolbar=no,location=no,status=no,resizable=yes");
-    if(!popoutWin){ alert("El navegador ha bloqueado la ventana emergente. Permite las ventanas emergentes para esta página e inténtalo de nuevo."); popoutWin=null; return; }
+    // Preferido: ventana Picture-in-Picture de documento (Chrome/Edge 116+): el navegador la mantiene SIEMPRE por encima, aunque se pulse en el vídeo o en play
+    if(window.documentPictureInPicture){
+      try{ popoutWin=await window.documentPictureInPicture.requestWindow({width:460,height:820}); }catch(_){ popoutWin=null; }
+    }
+    if(popoutWin){
+      popoutWin.document.title="Botonera de eventos";
+    } else {
+      popoutWin=window.open("","panelEventosCortes3","width=460,height=820,menubar=no,toolbar=no,location=no,status=no,resizable=yes");
+      if(!popoutWin){ alert("El navegador ha bloqueado la ventana emergente. Permite las ventanas emergentes para esta página e inténtalo de nuevo."); popoutWin=null; return; }
+      const pd0=popoutWin.document;
+      pd0.open(); pd0.write('<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><title>Botonera de eventos</title></head><body></body></html>'); pd0.close();
+      // Respaldo (ventana normal, no puede fijarse encima): al pulsar en la ventana principal se intenta devolver el foco a la botonera
+      const refocus=()=>{ try{ if(popoutWin && !popoutWin.closed) setTimeout(()=>popoutWin.focus(),0); }catch(_){} };
+      window.addEventListener("mouseup",refocus);
+      popoutWin.addEventListener("pagehide",()=>window.removeEventListener("mouseup",refocus),{once:true});
+    }
     const pd=popoutWin.document;
-    pd.open(); pd.write('<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><title>Botonera de eventos</title></head><body></body></html>'); pd.close();
     document.querySelectorAll("head style, head link[rel='stylesheet']").forEach(n=>pd.head.appendChild(n.cloneNode(true)));
     pd.body.style.margin="0"; pd.body.style.padding="16px"; pd.body.style.background="var(--bg)";
     const wasOpen=d.open; if(wasOpen) d.close("relocate"); // returnValue distinto de "ok": el listener de close no debe guardar nada
@@ -2877,6 +2917,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     positionDlgOverList();
     if(wasOpen) d.show();
     popoutWin.addEventListener("pagehide", returnDlgFromPopout, {once:true});
+    popoutWin.addEventListener("keydown",k=>{ if(!d.contains(k.target)) dlgSpace(k); }); // Espacio con el foco fuera de la botonera, dentro de la ventana emergente
     popoutWin.addEventListener("wheel",ev=>{ if(ev.ctrlKey){ ev.preventDefault(); setDlgZoom(dlgZoom+(ev.deltaY<0?.1:-.1)); } },{passive:false});
     updatePopOutBtn();
   }
@@ -2929,6 +2970,15 @@ window.renderHalfBands = function(b1,b2,mk,d){
     openDlg(null); // la botonera no se cierra al guardar (ni emergente ni encajada): queda lista para el siguiente evento hasta pulsar Cerrar/Cancelar/Esc
   });
   dlgEl.addEventListener("keydown",k=>{ if(k.key==="Escape"){ k.preventDefault(); dlgEl.close("cancel"); } }); // al no ser modal, Esc ya no cierra por sí solo
+  // Espacio = play/pausa del reproductor también con la botonera abierta (aquí o en la ventana emergente), salvo al escribir en un campo
+  function dlgSpace(k){
+    if(k.code!=="Space"||k.repeat||!dlgEl.open||k.target.closest&&k.target.closest("input,select,textarea,[contenteditable]")) return;
+    k.preventDefault(); $("play").click();
+  }
+  dlgEl.addEventListener("keydown",dlgSpace);
+  dlgEl.addEventListener("keyup",k=>{ if(k.code==="Space"&&!k.target.closest("input,select,textarea,[contenteditable]")) k.preventDefault(); }); // evita que Espacio "pulse" el botón enfocado
+  $("vTagNow").onclick=()=>$("tagNow").click();
+  $("vTagManual").onclick=()=>$("tagManual").click();
   $("tagNow").onclick=()=>{ manualMode=false; openDlg(null); manUI(); };
   $("tagManual").onclick=()=>{ manualMode=true; openDlg(null); manUI(); };
 
@@ -3692,6 +3742,18 @@ window.renderHalfBands = function(b1,b2,mk,d){
     function place(){ if(mq.matches) st.insertBefore(tr,ctl); else if(tr.parentNode===st) home.parentNode.insertBefore(tr,home); }
     place(); (mq.addEventListener?mq.addEventListener("change",place):mq.addListener(place));
   })();
+  // El botón de ocultar controles va junto a las marcas: al final en móvil (debajo de A, B y Añadir) y a la izquierda de «Inicio 1» en escritorio
+  (function placeEdCtlToggle(){
+    const mq=matchMedia("(max-width:640px)"), btn=$("edCtlToggle"), row=btn.parentNode, marks=$("edMarkBtns");
+    function place(){ if(mq.matches) marks.appendChild(btn); else marks.insertBefore(btn,marks.firstChild); row.style.display="none"; }
+    place(); (mq.addEventListener?mq.addEventListener("change",place):mq.addListener(place));
+  })();
+  // Botones A, B y Añadir de la pantalla completa del vídeo: reenvían el clic a los originales
+  (function fsABButtons(){
+    [["edFsA","edSetA"],["edFsB","edSetB"],["edFsAdd","edAddSel"]].forEach(([p,o])=>{ $(p).onclick=()=>$(o).click(); });
+    const add=$("edAddSel"), sync=()=>{ $("edFsAdd").hidden=add.hidden; };
+    sync(); new MutationObserver(sync).observe(add,{attributes:true,attributeFilter:["hidden"]});
+  })();
   // Lo mismo en el registro: la línea de tiempo va justo debajo del vídeo
   (function placeVisorTrack(){
     const mq=matchMedia("(max-width:640px)"), st=document.querySelector("#tabVisor .stage"), tr=$("vSeekTrack"), ctl=st.querySelector(".stageControls"), home=tr.nextElementSibling, par=tr.parentNode;
@@ -3904,7 +3966,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
       if(t==null||!d){ ln.style.display="none"; lb.classList.remove("on"); btn.textContent=label; }
       else{ const pctv=t/d*100; ln.style.display="block"; ln.style.left=pctv+"%";
         lb.classList.add("on"); lb.style.left=pctv+"%"; lb.textContent=MARK_SHORT[k]+"\n"+fmt(t);
-        btn.textContent=label+" · "+fmt(t); }
+        btn.innerHTML=label+'<span class="mt"> · '+fmt(t)+'</span>'; }
     });
     window.renderHalfBands($("edBandP1"),$("edBandP2"),marks,d);
   }
