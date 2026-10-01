@@ -231,7 +231,9 @@ body.markBtnsHidden .hdlTime.markLbl{display:none!important}
 .mk:hover{transform:none;filter:brightness(1.12)}
 .mk.sel{box-shadow:0 0 0 2px var(--ink);z-index:2}
 .mk .cut{position:absolute;top:0;bottom:0;background:repeating-linear-gradient(45deg,rgba(255,255,255,.85) 0 3px,transparent 3px 6px)}
-#belowStageWrap.hiddenBlock{display:none}
+/* Oculto: solo queda visible el botón ojo, en la fila de Velocidad */
+#belowStageWrap.hiddenBlock>:not(.controls){display:none}
+#belowStageWrap.hiddenBlock>.controls>:not(#vTimelineToggle){display:none!important}
 .clipEd{margin-top:14px;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px 14px}
 .clipEd[hidden]{display:none}
 /* el panel de edición inferior ya no se muestra: los cortes se editan arrastrando sobre la línea de tiempo */
@@ -314,8 +316,8 @@ header .btn.primary{align-self:center}
 .btn:disabled{opacity:.45;cursor:not-allowed}
 .stageControls .btn{border-radius:0;border-color:transparent;color:#15181D}
 .stageControls .btn.primary{color:#fff}
-.stageControls #vFull,.stageControls #visFullEditor,.stageControls #edFull,.stageControls #edFullEditor{background:var(--acfc-ink);color:#fff}
-.stageControls #vFull:hover,.stageControls #visFullEditor:hover,.stageControls #edFull:hover,.stageControls #edFullEditor:hover{background:var(--red)}
+.stageControls #vMute,.stageControls #edMute,.stageControls #vFull,.stageControls #visFullEditor,.stageControls #edFull,.stageControls #edFullEditor{background:var(--acfc-ink);color:#fff}
+.stageControls #vMute:hover,.stageControls #edMute:hover,.stageControls #vFull:hover,.stageControls #visFullEditor:hover,.stageControls #edFull:hover,.stageControls #edFullEditor:hover{background:var(--red)}
 .catbtn,.optbtn{border-radius:2px}
 .btnX{border-radius:0 1px 0 2px}
 .ev .acts button,.edItem button{border-radius:0}
@@ -439,6 +441,7 @@ kbd{border-radius:0;font-family:var(--f-body)}
   #edStage:not(:fullscreen) .stageControls #edBack20{order:4}
   #edStage:not(:fullscreen) .stageControls #edFwd20{order:5}
   #edStage:not(:fullscreen) .stageControls #edFull{order:6;grid-column:span 2;background:var(--ink);color:var(--bg);border-color:var(--ink)}
+  #edStage:not(:fullscreen) .stageControls #edMute{order:7;grid-column:span 2}
   #edStage:not(:fullscreen) .stageControls #edFwd45,
   #edStage:not(:fullscreen) .stageControls #edFullEditor{display:none}
   /* Deshacer, rehacer, velocidad */
@@ -628,15 +631,13 @@ kbd{border-radius:0;font-family:var(--f-body)}
         <button class="btn" id="vFwd5" title="Avanzar 5 segundos">+5 seg</button>
         <button class="btn" id="vFwd20" title="Avanzar 20 segundos">+20 seg</button>
         <button class="btn" id="vFwd45" title="Avanzar 45 minutos">+45 min</button>
+        <button class="btn" id="vMute" title="Silenciar / activar sonido">🔊 Silenciar</button>
         <button class="btn" id="vFull" title="Pantalla completa (F)">⛶ Pantalla completa</button>
         <button class="btn" id="visFullEditor" title="Pone todo el registro de acciones (vídeo, botonera y listas) a pantalla completa">⛶ Registro a pantalla completa</button>
       </div>
 
     </div>
     <div class="legend" id="legend"></div>
-    <div style="display:flex;justify-content:flex-end;margin:6px 0 0">
-      <button class="btn iconBtn" id="vTimelineToggle" title="Ocultar/mostrar la línea de tiempo y el editor de abajo">👁</button>
-    </div>
     <div id="belowStageWrap">
     <div class="controls">
         <button class="btn histBtn" id="vUndo" title="Deshacer (Ctrl+Z)" aria-label="Deshacer" disabled>↶</button>
@@ -651,6 +652,7 @@ kbd{border-radius:0;font-family:var(--f-body)}
         <label class="row" style="gap:6px"><span style="font-size:13px;color:var(--muted)">Velocidad</span>
           <select id="rate"><option>0.5</option><option>0.75</option><option selected>1</option><option>1.5</option><option>2</option></select></label>
         <button class="btn" id="regTutorialB" title="Mira paso a paso cómo se usa el registro de acciones">❓ Tutorial</button>
+        <button class="btn iconBtn" id="vTimelineToggle" title="Ocultar/mostrar la línea de tiempo y el editor de abajo">👁</button>
     </div>
     <div class="edtrack" id="vSeekTrack" title="Haz clic o arrastra para moverte por el vídeo">
       <div class="edsegs"><div class="seg" style="left:0;right:0;cursor:pointer"></div></div>
@@ -755,7 +757,7 @@ kbd{border-radius:0;font-family:var(--f-body)}
         <button class="btn" id="delAllEv" title="Borrar todos los eventos del registro">Borrar todos los eventos</button>
       </div>
       <div class="row">
-        <button class="btn primary" id="tagNow" title="Etiquetar en el instante actual (T)" style="flex:1">REGISTRO DE EVENTOS</button>
+        <button class="btn primary" id="tagNow" title="Etiquetar en el instante actual (T)" style="flex:1">REGISTRO AUTO</button>
         <button class="btn primary" id="tagManual" title="Registro manual: tú marcas el inicio (REC) y el final (PAUSE) del corte" style="flex:1">REGISTRO MANUAL</button>
       </div>
       <div class="row bulkbar" id="bulkBar">
@@ -871,6 +873,7 @@ kbd{border-radius:0;font-family:var(--f-body)}
         <button class="btn" id="edFwd5" title="Avanzar 5 segundos">+5 seg</button>
         <button class="btn" id="edFwd20" title="Avanzar 20 segundos">+20 seg</button>
         <button class="btn" id="edFwd45" title="Avanzar 45 minutos">+45 min</button>
+        <button class="btn" id="edMute" title="Silenciar / activar sonido">🔊 Silenciar</button>
         <button class="btn" id="edFull" title="Pantalla completa (F)">⛶ Pantalla completa</button>
         <button class="btn" id="edFullEditor" title="Pone todo el editor (vídeo, línea de tiempo, listas y exportación) a pantalla completa">⛶ Editor a pantalla completa</button>
       </div>
@@ -1076,6 +1079,7 @@ kbd{border-radius:0;font-family:var(--f-body)}
     </div>
     <label for="fComent">Comentario</label>
     <input id="fComent" maxlength="200" placeholder="Comentario libre (opcional)">
+    <div id="manSaveErr" role="alert" hidden style="margin-top:8px;padding:8px 10px;border:1px solid var(--red);border-left:4px solid var(--red);color:var(--red);font-size:13px;font-weight:600"></div>
     <div class="row" style="justify-content:flex-end"><button class="btn" value="cancel" formnovalidate>Cancelar</button><button class="btn primary" value="ok" id="dlgSave">💾 Guardar</button></div>
   </form>
 </dialog>
@@ -1307,7 +1311,7 @@ kbd{border-radius:0;font-family:var(--f-body)}
     </div>
     <div class="tutR">
       <h3>Registro del partido</h3>
-      <span class="tutB red" data-k="reg" style="text-align:center">Registrar gol</span>
+      <div style="display:flex;gap:4px"><span class="tutB red" data-k="reg" style="flex:1;text-align:center">Registro AUTO</span><span class="tutB red" data-k="regman" style="flex:1;text-align:center">Registro manual</span></div>
       <div class="tutList"></div>
       <div class="tutExp">
         <span class="tutInp" data-k="flt">Ver: Todas ▾</span>
@@ -2044,10 +2048,9 @@ window.renderHalfBands = function(b1,b2,mk,d){
   }
   renderEqBtns();
   // Detalle aparece al elegir categoría; Jugador al elegir detalle (o «Sin detalle»)
-  // Detalle además espera a que se pulse una opción de Equipo (salvo al editar un registro: n=2)
   let curStage=0, eqPicked=false;
   function setStage(n){ curStage=n; if(n<1) eqPicked=false;
-    $("stEq").hidden=n<1; $("stDet").hidden=!(n>=2||(n>=1&&eqPicked)); $("stJug").hidden=n<2; }
+    $("stEq").hidden=n<1; $("stDet").hidden=n<1; $("stJug").hidden=n<2; }
   function syncDetBtns(){
     const cur=$("fDet").value;
     $("fDetBtns").querySelectorAll(".optbtn").forEach(b=>b.classList.toggle("active",b.dataset.det===cur));
@@ -2672,6 +2675,9 @@ window.renderHalfBands = function(b1,b2,mk,d){
   $("vFwd45").onclick=()=>vSeek(45*60);
   function toggleFullscreen(el){ if(document.fullscreenElement){ document.exitFullscreen(); } else { (el.requestFullscreen||el.webkitRequestFullscreen).call(el); } }
   $("vFull").onclick=()=>toggleFullscreen(stage);
+  const vMute=$("vMute"); function syncVMute(){ vMute.textContent=v.muted?"🔇 Activar sonido":"🔊 Silenciar"; }
+  vMute.onclick=()=>{ v.muted=!v.muted; syncVMute(); };
+  v.addEventListener("volumechange",syncVMute);
   $("rate").onchange=e=>v.playbackRate=+e.target.value;
   $("track").onclick=ev=>{ if(!v.duration) return; const r=ev.currentTarget.getBoundingClientRect(); playing=null; v.currentTime=(ev.clientX-r.left)/r.width*v.duration; tick(); };
   ["flt"].forEach(id=>$(id).addEventListener("input",()=>{ refresh(); }));
@@ -2727,6 +2733,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   function manUI(){
     $("manBar").hidden=!manualMode;
     if(!manualMode) return;
+    $("manSaveErr").hidden=true;
     $("manRec").classList.toggle("on",manA!==null&&manB===null);
     $("manInfo").textContent=manA===null?"Pulsa REC para empezar el corte y PAUSE para terminarlo."
       :manB===null?"● Grabando desde "+fmt(manA)+" · pulsa PAUSE para terminar."
@@ -2747,7 +2754,11 @@ window.renderHalfBands = function(b1,b2,mk,d){
   };
   $("dlgSave").addEventListener("click",ev=>{
     if(!manualMode||editId) return;
-    if(manA===null||manB===null){ ev.preventDefault(); $("manInfo").textContent="Marca primero el corte: REC (inicio) y PAUSE (final)."; }
+    if(manA===null||manB===null){
+      ev.preventDefault();
+      const msg=manA===null?"Debes darle primero al botón REC y después al botón PAUSE.":"Debes darle primero al botón PAUSE.";
+      const se=$("manSaveErr"); se.textContent=msg; se.hidden=false;
+    }
   });
   // ---------- botonera de eventos en otra ventana (segundo monitor) ----------
   function returnDlgFromPopout(){
@@ -3844,6 +3855,9 @@ window.renderHalfBands = function(b1,b2,mk,d){
   $("edFullEditor").onclick=()=>{ const el=$("tabEditor"); if(document.fullscreenElement){ document.exitFullscreen(); } else { (el.requestFullscreen||el.webkitRequestFullscreen).call(el); } };
   $("visFullEditor").onclick=()=>{ const el=$("tabVisor"); if(document.fullscreenElement){ document.exitFullscreen(); } else { (el.requestFullscreen||el.webkitRequestFullscreen).call(el); } };
   document.addEventListener("fullscreenchange",()=>{ $("visFullEditor").textContent=document.fullscreenElement===$("tabVisor")?"⛶ Salir de pantalla completa":"⛶ Registro a pantalla completa";$("edFull").textContent=document.fullscreenElement===$("edStage")?"⛶ Salir de pantalla completa":"⛶ Pantalla completa"; $("edFullEditor").textContent=document.fullscreenElement===$("tabEditor")?"⛶ Salir del editor a pantalla completa":"⛶ Editor a pantalla completa"; });
+  const edMute=$("edMute"); function syncEdMute(){ edMute.textContent=V.muted?"🔇 Activar sonido":"🔊 Silenciar"; }
+  edMute.onclick=()=>{ V.muted=!V.muted; syncEdMute(); };
+  V.addEventListener("volumechange",syncEdMute);
   $("edFull").onclick=()=>{ const el=$("edStage"); if(document.fullscreenElement){ document.exitFullscreen(); } else { (el.requestFullscreen||el.webkitRequestFullscreen).call(el); } };
   $("edSetA").onclick=()=>dur()&&setIn(V.currentTime);
   $("edSetB").onclick=()=>dur()&&setOut(V.currentTime);
@@ -4026,57 +4040,58 @@ window.tutVoz=(()=>{
   const trackAt=p=>at(q(".tutTrack"),p/100,.5);
   async function setPoint(W,key,p){ // clic en la línea de tiempo para colocar el cabezal y botón «Punto A» o «Punto B»
     const A=key==="in";
-    await go(W,q(".tutTrack"),p/100,.5,800,A?"Hago clic en la línea de tiempo, donde empieza la jugada, para colocar el cabezal rojo":"Hago clic en la línea de tiempo, donde acaba la jugada, para mover el cabezal rojo");
+    await go(W,q(".tutTrack"),p/100,.5,800,"");
     S.head=p; draw(); await W(600);
-    const k=A?"a":"b"; await go(W,q('.tutB[data-k="'+k+'"]'),.5,.5,800,A?"Y pulso «Punto A», inicio del corte":"Y pulso «Punto B», fin del corte");
+    const k=A?"a":"b"; await go(W,q('.tutB[data-k="'+k+'"]'),.5,.5,800,A?"Punto A, inicio":"Punto B, fin");
     S.hot=k; draw(); await tap(W); S.hot=null; S.showH=true; if(A){ if(p>=S.outP) S.outP=100; S.inP=p; } else { if(p<=S.inP) S.inP=0; S.outP=p; } draw(); await W(700); }
   async function pickEvent(W,idx,name){
-    const sel=LIST.children[idx].querySelector(".sel"); await go(W,sel,.5,.5,800,"Hago clic en el desplegable «Nombre del tramo»"); await tap(W);
+    const sel=LIST.children[idx].querySelector(".sel"); await go(W,sel,.5,.5,800,"Nombre del tramo"); await tap(W);
     const [x,y]=at(sel,0,1); MENU.style.left=x+"px"; MENU.style.top=(y+2)+"px"; MENU.replaceChildren();
     EV_NAMES.concat(["+ Añadir otro…"]).forEach(n=>{ const d=document.createElement("div"); d.textContent=n; MENU.append(d); }); MENU.hidden=false; await W(700);
     const opt=[...MENU.children].find(d=>d.textContent===name);
-    await go(W,opt,.4,.5,900,"Elijo «"+name+"»"); opt.classList.add("hi"); await W(500); await tap(W);
+    await go(W,opt,.4,.5,900,name); opt.classList.add("hi"); await W(500); await tap(W);
     MENU.hidden=true; S.items[idx].name=name; draw(); await W(900); }
   async function addTramo(W,s,e){
-    const b=q('.tutB[data-k="add"]'); await go(W,b,.5,.5,900,"Pulso «Añadir»"); S.hot="add"; draw(); await tap(W);
+    const b=q('.tutB[data-k="add"]'); await go(W,b,.5,.5,900,"Añadir"); S.hot="add"; draw(); await tap(W);
     S.items.push({s,e,name:"",fresh:true}); S.hot=null; draw(); await W(1000); }
 
   // ---------- pasos ----------
   const STEPS=[
     {t:"Sube uno o varios vídeos",opt:false,
-     d:"Pulsa «Subir vídeo» (o arrastra los archivos a la ventana negra). Puedes elegir varios a la vez y luego añadir más con «+ Añadir vídeo».",
+     d:"Pulsa «Subir vídeo».",
      pre(){ S.vid=true; },
-     async run(W){ await go(W,q('.tutB[data-k="up"]'),.5,.5,900,"Llevo el ratón a «Subir vídeo» y hago clic"); S.hot="up"; draw(); await tap(W); S.hot=null; S.vid=true; draw(); await wait(W,1600,"El vídeo queda cargado en el visor"); }},
-    {t:"Marca las partes del partido",opt:true,
-     d:"Mueve el cabezal rojo (clic en la línea de tiempo) y pulsa el botón que toca: inicio de la 1ª parte, fin de la 1ª, inicio de la 2ª y fin del partido. Así el editor calcula el minuto real de cada acción.",
+     async run(W){ await go(W,q('.tutB[data-k="up"]'),.5,.5,900,"Subir vídeo"); S.hot="up"; draw(); await tap(W); S.hot=null; S.vid=true; draw(); await wait(W,1600,"Vídeo cargado"); }},
+    {t:"Marca las partes",opt:true,
+     d:"Inicio y fin de cada parte.",
      pre(){ S.marks={p1:4,p1e:46,p2:54,end:97}; S.head=97; },
      async run(W){ const seq=[["p1",4],["p1e",46],["p2",54],["end",97]];
-       const L={p1:["el inicio de la primera parte","Inicio primera parte"],p1e:["el final de la primera parte","Fin primera parte"],p2:["el inicio de la segunda parte","Inicio segunda parte"],end:["el final del partido","Fin partido"]};
-       for(const [k,p] of seq){ const [x,y]=trackAt(p); await go(W,q(".tutTrack"),p/100,.5,800,"Hago clic en la línea de tiempo, en "+L[k][0]+", para mover el cabezal rojo"); S.head=p; draw(); await W(700);
-         await go(W,q('.tutB[data-k="'+k+'"]'),.5,.5,800,"Y pulso «"+L[k][1]+"»"); S.hot=k; draw(); await tap(W); S.hot=null; S.marks[k]=p; draw(); await W(500); }
+       const L={p1:"Inicio primera parte",p1e:"Fin primera parte",p2:"Inicio segunda parte",end:"Fin del partido"};
+       for(const [k,p] of seq){ const [x,y]=trackAt(p); await go(W,q(".tutTrack"),p/100,.5,700,""); S.head=p; draw(); await W(400);
+         await go(W,q('.tutB[data-k="'+k+'"]'),.5,.5,700,L[k]); S.hot=k; draw(); await tap(W); S.hot=null; S.marks[k]=p; draw(); await W(500); }
        await W(1000); }},
-    {t:"Define el tramo con el punto A y el punto B",opt:false,
-     d:"Coloca el cabezal rojo (clic en la línea de tiempo) donde empieza la jugada y pulsa «Punto A · inicio» (atajo: tecla A). Muévelo al final y pulsa «Punto B · fin» (tecla B). Lo que queda entre A y B es el tramo que se guardará. Si quieres afinar, también puedes arrastrar las barras negras.",
+    {t:"Marca el tramo",opt:false,
+     d:"«Punto A» al empezar, «Punto B» al acabar.",
      pre(){ S.showH=true; S.inP=20; S.outP=26; S.head=26; },
      async run(W){ await setPoint(W,"in",20); await setPoint(W,"out",26); await W(800); }},
     {t:"Pulsa «+ Añadir»",opt:false,
-     d:"El tramo aparece en la lista «Eventos» de la derecha y queda fijo en la línea de tiempo (en rojo). Fijar de nuevo A y B define el siguiente tramo.",
+     d:"Pulsa «+ Añadir».",
      pre(){ S.items=[{s:20,e:26,name:""}]; },
      async run(W){ await addTramo(W,20,26); await W(800); }},
     {t:"Asigna un evento predeterminado",opt:false,
-     d:"En el tramo nuevo, abre el desplegable «Nombre del tramo» y elige un evento: Gol a favor, Ocasión, Salida de balón, Presión… Si no está, usa «+ Añadir otro…».",
+     d:"Elige su evento.",
      pre(){ S.items=[{s:20,e:26,name:"Gol a favor"}]; },
      async run(W){ await pickEvent(W,0,"Gol a favor"); await W(700); }},
     {t:"Haz un nuevo registro",opt:false,
-     d:"Repite lo mismo: fija el punto A y el punto B en la nueva jugada, pulsa «+ Añadir» y asígnale su evento. Puedes añadir todos los tramos que quieras.",
+     d:"Repite A, B, añadir y evento.",
      pre(){ S.items=[{s:20,e:26,name:"Gol a favor"},{s:62,e:67,name:"Ocasión a favor"}]; S.inP=62; S.outP=67; },
      async run(W){ await setPoint(W,"in",62); await setPoint(W,"out",67); await addTramo(W,62,67); await pickEvent(W,1,"Ocasión a favor"); await W(700); }},
     {t:"Descarga los eventos",opt:false,
-     d:"En la columna derecha elige la resolución, pon un nombre y pulsa «Descargar uno a uno» (un archivo por evento). «Descarga en un vídeo» los une en uno solo, y el botón «Desc.» de cada tramo baja solo ese. Mantén la pestaña visible mientras exporta.",
+     d:"«Descarga en un vídeo»: un único vídeo con todos los eventos. «Descargar uno a uno»: un vídeo por cada evento.",
      pre(){ S.items=[{s:20,e:26,name:"Gol a favor"},{s:62,e:67,name:"Ocasión a favor"}]; S.inP=62; S.outP=67; },
-     async run(W){ const b=q('.tutB[data-k="sep"]'); await go(W,b,.5,.5,1000,"Llevo el ratón a «Descargar uno a uno» y hago clic"); S.hot="sep"; draw(); await tap(W);
-       S.hot=null; S.busy=true; draw(); const bar=q(".tutBar i"); bar.style.transition="none"; bar.style.width="0"; void bar.offsetWidth; bar.style.transition="width "+(1.6*tutVoz.k)+"s linear"; bar.style.width="100%"; await wait(W,1900,"El editor exporta cada tramo como un archivo");
-       S.busy=false; S.toast="✔ Listo: se han descargado 2 archivos (Gol a favor y Ocasión a favor)"; draw(); await wait(W,2600,"Listo: se han descargado dos archivos, Gol a favor y Ocasión a favor"); }}
+     async run(W){ await go(W,q('.tutB[data-k="one"]'),.5,.5,900,"Descarga en un vídeo: un único vídeo con todos los eventos seleccionados"); await W(500);
+       const b=q('.tutB[data-k="sep"]'); await go(W,b,.5,.5,900,"Descargar uno a uno: un vídeo por cada evento"); S.hot="sep"; draw(); await tap(W);
+       S.hot=null; S.busy=true; draw(); const bar=q(".tutBar i"); bar.style.transition="none"; bar.style.width="0"; void bar.offsetWidth; bar.style.transition="width "+(1.6*tutVoz.k)+"s linear"; bar.style.width="100%"; await wait(W,1900,"Exportando");
+       S.busy=false; S.toast="✔ Listo: se han descargado 2 archivos (Gol a favor y Ocasión a favor)"; draw(); await wait(W,2600,"Listo"); }}
   ];
 
   // ---------- control de reproducción ----------
@@ -4096,7 +4111,7 @@ window.tutVoz=(()=>{
     W.say=txt=>t===token?tutVoz.say(txt):Promise.resolve();
     try{
       if(n===0) place(...at(M,.5,.9));
-      await W(500); await wait(W,0,STEPS[n].t+". "+STEPS[n].d); await STEPS[n].run(W);
+      await W(500); await STEPS[n].run(W);
       if(n<STEPS.length-1){ if(playing){ await W(1200); show(n+1); } }
       else { finished=true; playing=false; ui(); }
     }catch(e){ if(e!==0) console.error(e); }
@@ -4104,7 +4119,7 @@ window.tutVoz=(()=>{
   function stop(){ token++; tutVoz.stop(); }
   tutVoz.bind(q("#tutVoz")); tutVoz.bindSpeed(q("#tutSpd"));
   const list=q("#tutSteps");
-  STEPS.forEach((s,i)=>{ const li=document.createElement("li"), b=document.createElement("button"); b.type="button"; b.textContent=(i+1)+". "+s.t.replace(/^Sube uno o varios vídeos$/,"Subir vídeos").replace(/^Marca las partes del partido$/,"Partes").replace(/^Define el tramo con el punto A y el punto B$/,"Tramo A–B").replace(/^Pulsa «\+ Añadir»$/,"Añadir").replace(/^Asigna un evento predeterminado$/,"Evento").replace(/^Haz un nuevo registro$/,"Otro registro").replace(/^Descarga los eventos$/,"Descargar");
+  STEPS.forEach((s,i)=>{ const li=document.createElement("li"), b=document.createElement("button"); b.type="button"; b.textContent=(i+1)+". "+s.t.replace(/^Sube uno o varios vídeos$/,"Subir vídeos").replace(/^Marca las partes$/,"Partes").replace(/^Marca el tramo$/,"Tramo A–B").replace(/^Pulsa «\+ Añadir»$/,"Añadir").replace(/^Asigna un evento predeterminado$/,"Evento").replace(/^Haz un nuevo registro$/,"Otro registro").replace(/^Descarga los eventos$/,"Descargar");
     b.onclick=()=>show(i); li.append(b); list.append(li); });
   q("#tutPrev").onclick=()=>{ if(cur>0) show(cur-1); };
   q("#tutNext").onclick=()=>{ if(cur<STEPS.length-1) show(cur+1); };
@@ -4133,7 +4148,7 @@ window.tutVoz=(()=>{
   const colOf=c=>(CATS.find(x=>x[0]===c)||[0,"var(--c-otr)"])[1];
   const blank=()=>({vid:false,head:0,marks:{},ev:[],sel:null,clip:{a:37.5,b:62.5},form:null,flt:"",busy:false,toast:"",hot:null});
   const EV1={p:22,cat:"Gol",eq:"Mi equipo",det:"Tiro fuera del área",jug:"1",com:"Buena acción"};
-  const EV2={p:70,cat:"Salida de balón",eq:"Rival",det:"En corto",jug:"",com:"Acción de calidad"};
+  const EV3={p:40,cat:"Ocasión",eq:"Mi equipo",det:"",jug:"",com:"",man:true};
   let S=blank(), token=0, cur=0, playing=true, finished=false;
 
   const mk=(tag,cls,txt)=>{ const e=document.createElement(tag); if(cls) e.className=cls; if(txt!=null) e.textContent=txt; return e; };
@@ -4141,7 +4156,9 @@ window.tutVoz=(()=>{
   // ---------- pintado del estado ----------
   function drawForm(){
     FORM.replaceChildren(); FORM.hidden=!S.form; const f=S.form; if(!f) return;
-    FORM.append(mk("b","tutFh","Evento · minuto "+fmt(f.p)));
+    FORM.append(mk("b","tutFh",(f.man?"Registro manual":"Evento · minuto "+fmt(f.p))));
+    if(f.man){ const r=mk("div","tutFr"); const rec=mk("span","tutB"+(f.ma!=null&&f.mb==null?" set":""),"● REC"); rec.dataset.f="rec"; const pa=mk("span","tutB"+(f.mb!=null?" set":""),"⏸ PAUSE"); pa.dataset.f="pause";
+      r.append(rec,pa,mk("small",null,f.ma==null?"":f.mb==null?"Grabando desde "+fmt(f.ma):"Corte de "+fmt(f.ma)+" a "+fmt(f.mb))); FORM.append(r); }
     const row=(lab,items,key,val)=>{ const r=mk("div","tutFr"); r.append(mk("i",null,lab));
       items.forEach(t=>{ const s=mk("span","tutB"+(t===val?" set":""),t); s.dataset.f=key+":"+t; r.append(s); }); FORM.append(r); };
     row("Categoría",CATS.map(c=>c[0]),"cat",f.cat);
@@ -4188,60 +4205,58 @@ window.tutVoz=(()=>{
   async function press(W,sel,key,txt){ await go(W,q(sel),.5,.5,800,txt); S.hot=key; draw(); await tap(W); S.hot=null; }
   const pressF=(W,key,txt)=>press(W,'[data-f="'+key+'"]',key,txt);
   const pressK=(W,key,txt)=>press(W,'[data-k="'+key+'"]',key,txt);
-  const PICK={cat:v=>"Elijo la categoría «"+v+"»",eq:v=>"Marco el equipo «"+v+"»",det:v=>"Elijo el detalle «"+v+"»",jug:v=>"Marco al jugador "+v};
+  const PICK={cat:v=>v,eq:v=>v,det:v=>v,jug:v=>"Jugador "+v};
   async function pick(W,field,val){ await pressF(W,field+":"+val,PICK[field](val)); S.form[field]=val; if(field==="cat"){ S.form.det=""; S.form.jug=""; } draw(); await W(500); }
-  async function typeCom(W,text){ await go(W,q('[data-f="com"]'),.3,.5,800,"Hago clic en el comentario"); await tap(W);
-    const p=W.say("Escribo: "+text); await p.started; await W(0);
+  async function typeCom(W,text){ await go(W,q('[data-f="com"]'),.3,.5,800,""); await tap(W);
+    const p=W.say(text); await p.started; await W(0);
     for(let i=1;i<=text.length;i++){ S.form.com=text.slice(0,i); draw(); await W(55); } await p; await W(500); }
-  async function register(W,p){
-    await go(W,q(".tutTrack"),p/100,.5,900,"Muevo el cabezal rojo hasta el momento de la jugada"); S.head=p; draw(); await W(600);
-    await pressK(W,"reg","Pulso «Registrar gol»"); S.form={p,cat:"",eq:"Mi equipo",det:"",jug:"",com:""}; draw(); await wait(W,700,"Se abre la botonera del evento"); }
-  async function save(W,ev){ await pressF(W,"save","Pulso «Guardar»"); S.ev.push({...ev,fresh:true}); S.form=null; draw(); await wait(W,1000,"El evento aparece en la lista y en la línea de tiempo"); }
-  async function dragClip(W,key,pct){ const h=q('.tutCh[data-c="'+key+'"]'); await go(W,h,.5,.5,800,key==="b"?"Agarro el tirador derecho":"Agarro el tirador izquierdo");
-    S.clip[key]=pct; draw(); const [x,y]=at(q(".tutClip"),pct/100,.5); place(x,y); await wait(W,1100,key==="b"?"y lo arrastro para que el corte termine más tarde":"y lo arrastro para que el corte empiece antes"); }
-  async function choose(W,name){ const sel=q('[data-k="flt"]'); await go(W,sel,.5,.5,800,"Abro el filtro «Ver»"); await tap(W);
+  async function register(W,p,man){
+    await go(W,q(".tutTrack"),p/100,.5,900,""); S.head=p; draw(); await W(600);
+    await pressK(W,man?"regman":"reg",man?"Registro manual":"Registro AUTO"); S.form={p,cat:"",eq:"Mi equipo",det:"",jug:"",com:"",man:!!man}; draw(); await W(700); }
+  async function save(W,ev){ await pressF(W,"save","Guardar"); S.ev.push({...ev,fresh:true}); S.form=null; draw(); await wait(W,1000,"Evento registrado"); }
+  async function dragClip(W,key,pct){ const h=q('.tutCh[data-c="'+key+'"]'); await go(W,h,.5,.5,800,"");
+    S.clip[key]=pct; draw(); const [x,y]=at(q(".tutClip"),pct/100,.5); place(x,y); await wait(W,1100,key==="b"?"Termina más tarde":"Empieza antes"); }
+  async function choose(W,name){ const sel=q('[data-k="flt"]'); await go(W,sel,.5,.5,800,"Filtro «Ver»"); await tap(W);
     const [x,y]=at(sel,0,0); MENU.style.left=x+"px"; MENU.style.top=Math.max(4,y-84)+"px"; MENU.replaceChildren();
     ["Todas"].concat(CATS.slice(0,3).map(c=>c[0])).forEach(n=>MENU.append(mk("div",null,n))); MENU.hidden=false; await W(700);
-    const opt=[...MENU.children].find(d=>d.textContent===name); await go(W,opt,.4,.5,900,"Elijo «"+name+"»"); opt.classList.add("hi"); await W(500); await tap(W);
+    const opt=[...MENU.children].find(d=>d.textContent===name); await go(W,opt,.4,.5,900,name); opt.classList.add("hi"); await W(500); await tap(W);
     MENU.hidden=true; S.flt=name==="Todas"?"":name; draw(); await W(900); }
 
   // ---------- pasos ----------
   const MARKS={p1:4,p1e:46,p2:54,end:97};
   const STEPS=[
     {s:"Vídeo",t:"Elige el vídeo del ordenador",
-     d:"Pulsa «Elegir vídeo» (o arrastra el archivo a la ventana negra) y selecciona el MP4 del partido. Se queda cargado en el visor.",
+     d:"Pulsa «Elegir vídeo».",
      pre(){ S.vid=true; },
-     async run(W){ await pressK(W,"up","Llevo el ratón a «Elegir vídeo» y hago clic"); S.vid=true; draw(); await wait(W,1600,"El vídeo queda cargado en el visor"); }},
+     async run(W){ await pressK(W,"up","Elegir vídeo"); S.vid=true; draw(); await wait(W,1600,"Vídeo cargado"); }},
     {s:"Sincronizar",t:"Sincroniza el partido",
-     d:"Mueve el cabezal y pulsa cada botón: inicio de la 1ª parte, fin de la 1ª, inicio de la 2ª y fin del partido. Así cada evento recibe su minuto real de partido.",
+     d:"Inicio y fin de cada parte.",
      pre(){ S.marks={...MARKS}; S.head=97; },
-     async run(W){ const L={p1:["el inicio de la primera parte","Inicio primera parte"],p1e:["el final de la primera parte","Fin primera parte"],p2:["el inicio de la segunda parte","Inicio segunda parte"],end:["el final del partido","Fin partido"]};
-       for(const [k,p] of Object.entries(MARKS)){ await go(W,q(".tutTrack"),p/100,.5,800,"Hago clic en la línea de tiempo, en "+L[k][0]+", para mover el cabezal rojo"); S.head=p; draw(); await W(600);
-         await pressK(W,k,"Y pulso «"+L[k][1]+"»"); S.marks[k]=p; draw(); await W(500); } await W(900); }},
-    {s:"Registrar",t:"Sitúate y pulsa «Registrar gol»",
-     d:"Mueve el cabezal al momento de la jugada (clic en la barra o con el reproductor) y pulsa «Registrar gol» (atajo T). Se abre la botonera del evento.",
-     pre(){ S.head=22; S.form={p:22,cat:"",eq:"Mi equipo",det:"",jug:"",com:""}; },
-     async run(W){ await register(W,22); await W(900); }},
-    {s:"Gol",t:"Gol · tiro fuera del área · jugador 1",
-     d:"Elige la categoría «Gol», el detalle «Tiro fuera del área», el jugador 1 y escribe en el comentario «Buena acción». Pulsa «Guardar» y el evento aparece en la lista y en la línea de tiempo.",
-     pre(){ S.form=null; S.ev=[{...EV1}]; },
-     async run(W){ await pick(W,"cat","Gol"); await pick(W,"det","Tiro fuera del área"); await pick(W,"jug","1"); await typeCom(W,EV1.com); await save(W,EV1); await W(700); }},
-    {s:"Rival",t:"Salida de balón del rival, sin jugador",
-     d:"Sigue con el reproductor, ve a otro punto del partido y registra otro evento: categoría «Salida de balón», equipo «Rival», detalle «En corto». No marques ningún jugador y escribe «Acción de calidad». Guarda.",
-     pre(){ S.head=70; S.ev=[{...EV1},{...EV2}]; },
-     async run(W){ await register(W,70); await pick(W,"cat","Salida de balón"); await pick(W,"eq","Rival"); await pick(W,"det","En corto");
-       await typeCom(W,EV2.com); await save(W,EV2); await W(700); }},
+     async run(W){ const L={p1:"Inicio primera parte",p1e:"Fin primera parte",p2:"Inicio segunda parte",end:"Fin del partido"};
+       for(const [k,p] of Object.entries(MARKS)){ await go(W,q(".tutTrack"),p/100,.5,700,""); S.head=p; draw(); await W(400);
+         await pressK(W,k,L[k]); S.marks[k]=p; draw(); await W(500); } await W(900); }},
+    {s:"Eventos",t:"Registro AUTO",
+     d:"Sitúate en la jugada, pulsa «Registro AUTO», rellena y guarda.",
+     pre(){ S.head=22; S.form=null; S.ev=[{...EV1}]; },
+     async run(W){ await register(W,22); await pick(W,"cat","Gol"); await pick(W,"det","Tiro fuera del área"); await pick(W,"jug","1"); await typeCom(W,EV1.com); await save(W,EV1); await W(700); }},
+    {s:"Manual",t:"Registro manual",
+     d:"«REC» marca el inicio del corte y «PAUSE» el final.",
+     pre(){ S.head=46; S.form=null; S.ev=[{...EV1},{...EV3}]; },
+     async run(W){ await register(W,40,true);
+       await pressF(W,"rec","REC, inicio"); S.form.ma=40; draw(); await W(300); S.head=46; draw(); await W(1200);
+       await pressF(W,"pause","PAUSE, final"); S.form.mb=46; draw(); await W(400);
+       await pick(W,"cat","Ocasión"); await save(W,EV3); await W(700); }},
     {s:"Duración",t:"Ajusta la duración de un evento",
-     d:"Haz clic en un evento de la línea de tiempo: se abre su clip. Arrastra los tiradores negros para empezar antes o terminar después y así cambiar cuánto dura el corte.",
+     d:"Pulsa un evento y arrastra los tiradores.",
      pre(){ S.sel=1; S.clip={a:25,b:80}; },
-     async run(W){ const t=q(".tutEvs").children[1]; await go(W,t,.5,.5,900,"Hago clic en el evento de la línea de tiempo para abrir su clip"); await tap(W); S.sel=1; draw(); await W(900);
+     async run(W){ const t=q(".tutEvs").children[1]; await go(W,t,.5,.5,900,"Abre el clip"); await tap(W); S.sel=1; draw(); await W(900);
        await dragClip(W,"b",80); await dragClip(W,"a",25); await W(800); }},
     {s:"Exportar",t:"Filtra los eventos y expórtalos",
-     d:"En «Ver» elige qué eventos quieres (por ejemplo solo «Gol»; también puedes filtrar por equipo). Después pulsa «Descargar filtrados (vídeos separados)», o «1 vídeo» para unirlos en uno solo. Mantén la pestaña visible mientras exporta.",
+     d:"Filtra con «Ver» y descarga: «1 vídeo» o «vídeos separados».",
      pre(){ S.sel=null; S.flt="Gol"; },
-     async run(W){ S.sel=null; draw(); await choose(W,"Gol"); await pressK(W,"fltsep","Pulso «Descargar filtrados, vídeos separados»");
-       S.busy=true; draw(); const bar=q(".tutBar i"); bar.style.transition="none"; bar.style.width="0"; void bar.offsetWidth; bar.style.transition="width "+(1.6*tutVoz.k)+"s linear"; bar.style.width="100%"; await wait(W,1900,"La herramienta exporta cada evento como un archivo");
-       S.busy=false; S.toast="✔ Listo: se ha descargado 1 archivo (Gol)"; draw(); await wait(W,2600,"Listo: se ha descargado un archivo, Gol"); }}
+     async run(W){ S.sel=null; draw(); await choose(W,"Gol"); await go(W,q('[data-k="fltone"]'),.5,.5,800,"Descargar filtrados, un único vídeo"); await W(400); await pressK(W,"fltsep","Descargar filtrados, un vídeo por evento");
+       S.busy=true; draw(); const bar=q(".tutBar i"); bar.style.transition="none"; bar.style.width="0"; void bar.offsetWidth; bar.style.transition="width "+(1.6*tutVoz.k)+"s linear"; bar.style.width="100%"; await wait(W,1900,"Exportando");
+       S.busy=false; S.toast="✔ Listo: se ha descargado 1 archivo (Gol)"; draw(); await wait(W,2600,"Listo"); }}
   ];
 
   // ---------- control de reproducción ----------
@@ -4260,7 +4275,7 @@ window.tutVoz=(()=>{
     W.say=txt=>t===token?tutVoz.say(txt):Promise.resolve();
     try{
       if(n===0) place(...at(M,.5,.9));
-      await W(500); await wait(W,0,STEPS[n].t+". "+STEPS[n].d); await STEPS[n].run(W);
+      await W(500); await STEPS[n].run(W);
       if(n<STEPS.length-1){ if(playing){ await W(1200); show(n+1); } }
       else { finished=true; playing=false; ui(); }
     }catch(e){ if(e!==0) console.error(e); }
