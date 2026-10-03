@@ -25,7 +25,7 @@
   --red:#D3291E; --red-2:#B6170D; --pitch:#2f6b3c; --acfc-ink:#15181D; --acfc-ink-2:#1B2026;
   --f-disp:"DIN PRO","Barlow Condensed",Barlow,"Helvetica Neue",Arial,sans-serif;
   --f-body:"DIN PRO",Barlow,-apple-system,"Helvetica Neue",Arial,sans-serif;
-  --c-gol:#c8102e; --c-oca:#e08a00; --c-tra:#7a3fb5; --c-trd:#0e8f8f; --c-sal:#1f6fd1; --c-pre:#2f8a4a; --c-otr:#6b7280; --c-gcn:#7f0a1d; --c-ocn:#8a5200; --c-cdo:#0e8f8f; --c-due:#c026a3;
+  --c-gol:#1F6FD1; --c-oca:#e08a00; --c-tra:#7a3fb5; --c-trd:#0e8f8f; --c-sal:#6B7A3A; --c-pre:#2f8a4a; --c-otr:#6b7280; --c-gcn:#123F7A; --c-ocn:#8a5200; --c-cdo:#0e8f8f; --c-due:#c026a3;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#0B0D10; --panel:#15181D; --ink:#EDEDEB; --muted:#9AA0A6; --line:#2C3338;
@@ -169,6 +169,8 @@ dialog input,dialog select{width:100%;padding:7px;border:1px solid var(--line);b
 .catbtn.add,.optbtn.add{padding-right:11px}
 .btnX{position:absolute;top:1px;right:1px;width:16px;height:16px;line-height:14px;text-align:center;border-radius:0 4px 0 4px;background:rgba(0,0,0,.28);color:inherit;cursor:pointer;font-size:12px}
 .catbtn .btnX:hover,.optbtn .btnX:hover{background:var(--red);color:#fff}
+.btnE{position:absolute;top:1px;left:1px;width:16px;height:16px;line-height:16px;text-align:center;border-radius:4px 0 4px 0;background:rgba(0,0,0,.28);color:inherit;cursor:pointer;font-size:11px}
+.catbtn .btnE:hover,.optbtn .btnE:hover{background:var(--ink);color:#fff}
 kbd{border:1px solid var(--line);border-radius:3px;padding:0 4px;font-size:11px}
 @media (prefers-reduced-motion:reduce){.overlay{transition:none}}
 .tabs{display:flex;gap:4px;margin-left:10px}
@@ -178,11 +180,23 @@ kbd{border:1px solid var(--line);border-radius:3px;padding:0 4px;font-size:11px}
 @media (max-width:1250px){.edgrid{grid-template-columns:1fr}}
 .edtrack{position:relative;height:52px;margin-top:40px;background:var(--panel);border:1px solid var(--line);border-radius:6px;cursor:pointer;touch-action:none;user-select:none}
 .edsegs{position:absolute;inset:8px 0}
+.edZoomWrap{position:absolute;top:0;bottom:0;left:0;width:100%}
+.edtrack.zoomed{clip-path:inset(-60px 0 -30px 0)}
+.catZoomWrap{position:relative;width:100%}
+.track.zoomed{clip-path:inset(-60px 0 -30px 0)}
+.edZoomBar{display:flex;align-items:center;gap:8px;margin:2px 0 4px}
+.edZoomBar .btn{padding:2px 12px;min-height:0;line-height:1.3}
+.edZoomBar [hidden]{display:none!important}
+.edZoomBar input[type=range]{flex:1;min-width:80px;accent-color:var(--red)}
+#edZoomLbl,#vZoomLbl{font-size:12px;color:var(--muted);min-width:56px;text-align:center}
 .seg{position:absolute;top:0;bottom:0;background:color-mix(in srgb,var(--pitch) 70%,transparent);border-right:2px solid var(--panel);border-radius:3px;cursor:grab}
 .seg.off{background:repeating-linear-gradient(45deg,color-mix(in srgb,var(--red) 55%,transparent) 0 6px,transparent 6px 12px)}
 .seg.sel{outline:3px solid var(--ink);outline-offset:-3px;z-index:1}
 .doneCut{--dc:var(--c-otr);position:absolute;top:0;bottom:0;cursor:grab;z-index:3;background:color-mix(in srgb,var(--dc) 65%,transparent);border:1px solid var(--dc);border-bottom:3px solid var(--dc);box-sizing:border-box}
 .doneCut:hover{background:color-mix(in srgb,var(--dc) 85%,transparent)}
+.doneCut .evLbl{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;overflow:hidden;pointer-events:none;font-family:var(--f-disp);font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;color:#fff;opacity:.8;text-shadow:0 0 4px rgba(0,0,0,.65),0 0 8px rgba(0,0,0,.45)}
+.stillMk{position:absolute;top:-3px;bottom:-3px;width:3px;margin-left:-1px;z-index:5;pointer-events:none;background:var(--red);box-shadow:0 0 0 1px var(--panel)}
+.stillMk::before{content:"";position:absolute;left:50%;top:-20px;width:18px;height:18px;transform:translateX(-50%);background:var(--red) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 20h9'/%3E%3Cpath d='M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z'/%3E%3C/svg%3E") center/12px 12px no-repeat;border:2px solid var(--panel);box-sizing:border-box}
 .shade{position:absolute;top:0;bottom:0;background:color-mix(in srgb,var(--bg) 70%,transparent);pointer-events:none;z-index:2}
 .hdl{position:absolute;top:-4px;bottom:-4px;width:6px;margin-left:-3px;background:var(--ink);border-radius:2px;cursor:ew-resize;z-index:4}
 .hdl::after{content:"";position:absolute;left:2px;top:14px;width:2px;height:20px;background:var(--panel)}
@@ -208,6 +222,10 @@ body.markBtnsHidden .hdlTime.markLbl{display:none!important}
 #mlP1Lbl,#vmlP1Lbl,#mlP1ELbl,#vmlP1ELbl,#mlP2Lbl,#vmlP2Lbl,#mlEndLbl,#vmlEndLbl{background:#1c2420}
 .evTicks{position:absolute;inset:8px 0;pointer-events:none;z-index:3}
 .evTick{position:absolute;top:0;bottom:0;min-width:4px;margin-left:-2px;box-shadow:0 0 0 1px rgba(255,255,255,.85),0 0 0 2px rgba(0,0,0,.25)}
+.evTick{overflow:visible;container-type:inline-size}
+.evTick .evLbl{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;overflow:hidden;pointer-events:none;font-family:var(--f-disp);font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;color:#fff;opacity:.8;text-shadow:0 0 4px rgba(0,0,0,.65),0 0 8px rgba(0,0,0,.45)}
+.evTick .evDur{position:absolute;left:50%;bottom:-8px;transform:translateX(-50%);font-size:10px;line-height:1;font-weight:600;color:#fff;background:rgba(0,0,0,.65);border-radius:3px;padding:2px 4px;white-space:nowrap;pointer-events:none;z-index:2}
+@container (max-width:44px){.evTick .evLbl{display:none}}
 .evH{position:absolute;top:-3px;bottom:-3px;width:7px;pointer-events:auto;cursor:ew-resize;background:var(--ink);border-radius:2px;opacity:0;transition:opacity .12s}
 .evH.a{right:100%;margin-right:1px}.evH.b{left:100%;margin-left:1px}
 #vSeekTrack:hover .evH{opacity:.55}.evH:hover,.evH.drag{opacity:1!important;background:var(--red)}
@@ -630,6 +648,10 @@ kbd{border-radius:0;font-family:var(--f-body)}
   :is(#tutDlg,#tutDlgR) .tutSteps button{padding:5px 7px;font-size:12px}
 }
 @media (prefers-reduced-motion:reduce){:is(#tutDlg,#tutDlgR) .tutCur,:is(#tutDlg,#tutDlgR) .tutH,:is(#tutDlg,#tutDlgR) .tutShade,:is(#tutDlg,#tutDlgR) .tutPh{transition-duration:.01s}}
+/* Pintado de acciones en los tutoriales */
+:is(#tutDlg,#tutDlgR) .tutPaint{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2}
+:is(#tutDlg,#tutDlgR) .tutPbar{position:absolute;left:6px;top:6px;right:6px;display:flex;gap:4px;flex-wrap:wrap;z-index:3}
+:is(#tutDlg,#tutDlgR) .tutPbar .tutB{padding:3px 7px;font-size:10px}
 /* Tutorial del registro de acciones (mismas piezas, añade formulario de evento y editor de clip) */
 #tutDlgR .tutMock{min-height:370px}
 #tutDlgR .tutStg{aspect-ratio:16/7}
@@ -680,7 +702,34 @@ kbd{border-radius:0;font-family:var(--f-body)}
 .pintRail{border:1px solid var(--line);border-top:3px solid var(--ink);background:var(--panel);padding:8px 10px 12px}
 .pintGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
 .pintGrid4{grid-template-columns:repeat(4,1fr)}
+.pintGrid5{grid-template-columns:repeat(5,1fr)}
 .pintGrid2{grid-template-columns:repeat(2,1fr)}
+.pintNums{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.pintNum{min-height:38px;background:var(--panel);border:1px solid var(--line);border-radius:0;color:var(--ink);cursor:pointer;font-family:var(--f-disp);font-size:16px;font-weight:700}
+.pintNum:hover{border-color:var(--ink)}
+.pintNum:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+.pintNum.is-active{border-color:var(--red);color:var(--red);background:color-mix(in srgb,var(--red) 8%,var(--panel));box-shadow:inset 0 -3px 0 var(--red)}
+.pintNums.hasNames{grid-template-columns:repeat(2,1fr)}
+.pintNum.named{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:6px 4px;line-height:1.1}
+.pintNum.named b{font-size:18px;color:var(--red)}
+.pintNum.named small{font-family:var(--f-body);font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;text-align:center;overflow-wrap:anywhere}
+.pintRoster{margin-top:8px;border:1px solid var(--line);background:var(--panel);padding:6px 8px}
+.pintRoster summary{cursor:pointer;font-family:var(--f-body);font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase}
+.pintRoster textarea{width:100%;box-sizing:border-box;margin:6px 0;padding:6px;border:1px solid var(--line);border-radius:0;background:var(--bg);color:var(--ink);font:13px/1.35 var(--f-body);resize:vertical}
+.pintRosterBtns{display:flex;gap:6px;flex-wrap:wrap}
+.pintRosterList{display:flex;flex-direction:column;gap:4px;max-height:280px;overflow-y:auto;margin:6px 0}
+.pintRRow{display:grid;grid-template-columns:48px minmax(0,1fr) auto 32px;gap:4px;align-items:center}
+.pintRRow button.ra{padding:0 8px;background:var(--ink);border-color:var(--ink);color:var(--bg);font:700 12px var(--f-body);text-transform:uppercase;letter-spacing:.03em}
+.pintRRow button.ra:hover{background:var(--red);border-color:var(--red);color:#fff}
+.pintRRow input{box-sizing:border-box;min-width:0;height:34px;padding:0 8px;border:1px solid var(--line);border-radius:0;background:var(--bg);color:var(--ink);font:14px var(--f-body)}
+.pintRRow input.rd{text-align:center;font-family:var(--f-disp);font-weight:700;font-size:16px;padding:0 2px}
+.pintRRow input:focus{outline:2px solid var(--red);outline-offset:-1px}
+.pintRRow button{height:34px;padding:0;border:1px solid var(--line);border-radius:0;background:var(--panel);color:var(--muted);cursor:pointer;font-size:18px;line-height:1}
+.pintRRow button:hover{border-color:var(--red);color:var(--red)}
+.pintRosterPaste{margin-top:8px;border-top:1px solid var(--line);padding-top:6px}
+.pintRosterPaste summary{cursor:pointer;font-family:var(--f-body);font-size:12px;color:var(--muted);text-decoration:underline;text-transform:none;font-weight:400}
+.pintTextOpts{display:contents}
+.pintTextOpts[hidden]{display:none}
 .pintTool{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:60px;padding:6px 4px;background:var(--panel);border:1px solid var(--line);border-radius:0;color:var(--ink);cursor:pointer;font-family:var(--f-body);font-size:11.5px;line-height:1.1}
 .pintTool:hover{border-color:var(--ink)}
 .pintTool:focus-visible,.pintVar:focus-visible,.pintLine:focus-visible,.pintInfo:focus-visible{outline:2px solid var(--red);outline-offset:2px}
@@ -729,7 +778,7 @@ kbd{border-radius:0;font-family:var(--f-body)}
    Solo presentación. Debe ir al FINAL del <style> (gana a lo anterior).
    ===================================================================== */
 :root{
-  --c-gol:#D3291E; --c-gcn:#7A1712; --c-oca:#C98A1B; --c-ocn:#8A5E12;
+  --c-gol:#1F6FD1; --c-gcn:#123F7A; --c-oca:#C98A1B; --c-ocn:#8A5E12;
   --c-tra:#3F5568; --c-trd:#7C8FA0; --c-sal:#6B7A3A; --c-pre:#2F6B3C;
   --c-cdo:#6B5B4B; --c-due:#9C4A2F; --c-otr:#8A8F96;
   --glass:rgba(18,21,26,.52); --glass-2:rgba(18,21,26,.78); --glass-bd:rgba(255,255,255,.16);
@@ -761,6 +810,7 @@ kbd{border-radius:0;font-family:var(--f-body)}
 #edUseVisor,#regUseEditor{color:#15181D}
 #edClearAdded{background:none;border-color:transparent;color:var(--muted);font-size:12px;text-decoration:underline;text-underline-offset:4px;text-decoration-color:var(--line)}
 #edClearAdded:hover{color:var(--red);filter:none}
+#edViewEv.on,#edStillsToggle.on{color:var(--ink);text-decoration-color:var(--red);font-weight:700}
 /* marcas de partido: fichas discretas */
 #vMarkBtns .btn,#edMarkBtns .btn:not(#edCtlToggle){font-size:12px;padding:6px 10px;color:var(--muted);background:transparent}
 #vMarkBtns .btn:hover,#edMarkBtns .btn:not(#edCtlToggle):hover{color:var(--ink)}
@@ -928,7 +978,7 @@ html.acfc-imm .stageControls .pi{display:inline!important;font-size:15px;line-he
 html.acfc-imm .stageControls #vMute,html.acfc-imm .stageControls #edMute{background:rgba(255,255,255,.1);color:#fff;font-size:16px}
 html.acfc-imm #vFwd45,html.acfc-imm #vFwd45b,html.acfc-imm #edFwd45,html.acfc-imm #edFwd45b,html.acfc-imm .stageControls #vFwd45,html.acfc-imm .stageControls #edFwd45,html.acfc-imm .stageControls #vFull,html.acfc-imm .stageControls #edFull,
 html.acfc-imm .stageControls #visFullEditor,html.acfc-imm .stageControls #edFullEditor,html.acfc-imm .stageControls .fsAB{display:none!important}
-html.acfc-imm #vSeekTrack,html.acfc-imm #edTrack,html.acfc-imm .catTimelineWrap,html.acfc-imm .clipEd,html.acfc-imm .edNote,
+html.acfc-imm #vSeekTrack,html.acfc-imm #edTrack,html.acfc-imm #edZoomBar,html.acfc-imm #vZoomBar,html.acfc-imm .catTimelineWrap,html.acfc-imm .clipEd,html.acfc-imm .edNote,
 html.acfc-imm #tabVisor #belowStageWrap>.controls:not(:first-child),html.acfc-imm #edCtl2,html.acfc-imm #tabEditor .row:has(>#edCtlToggle){display:none!important}
 /* acciones: columna translúcida a la derecha */
 html.acfc-imm #belowStageWrap{display:block!important}
@@ -983,6 +1033,10 @@ html.acfc-imm .empty{inset:0!important;aspect-ratio:auto!important}
 .evPickNew{display:grid;grid-template-columns:1fr auto;gap:3px;margin-top:3px}
 .evPickNew input{min-width:0;box-sizing:border-box;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:0;padding:8px;font:inherit;font-size:14px}
 .evPickNew button{text-align:center;background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.evPickCus{display:grid;grid-template-columns:1fr auto auto;gap:3px}
+.evPickCus[hidden],.evPickCus [hidden]{display:none}
+.evPickRen{grid-column:1 / -1;min-width:0;box-sizing:border-box;border:1px solid var(--red);background:var(--bg);color:var(--ink);border-radius:0;padding:8px 10px;font:inherit;font-size:14px}
+.evPick .evPickDel{text-align:center;padding:8px 12px;color:var(--muted)}
 .evPick .evPickSkip{border:0;text-decoration:underline;color:var(--muted);text-align:center;min-height:30px}
 @media (max-width:640px){
   .evPick button{min-height:44px}
@@ -1000,6 +1054,12 @@ dialog#dlg.enEmergente{position:static!important;width:100%!important;max-height
 #btnInstalar[hidden]{display:none!important}
 header #btnInstalar{align-self:center;background:transparent;color:#fff;border:1px solid rgba(255,255,255,.45);font-family:var(--f-disp);text-transform:uppercase;letter-spacing:.1em;white-space:nowrap}
 header #btnInstalar:hover{border-color:#fff;background:rgba(255,255,255,.1)}
+header #btnAddVids,header #vidSel{align-self:center;background:transparent;color:#fff;border:1px solid rgba(255,255,255,.45);font-family:var(--f-disp);text-transform:uppercase;letter-spacing:.1em;white-space:nowrap;border-radius:0}
+header #btnAddVids:hover{border-color:#fff;background:rgba(255,255,255,.1)}
+header #vidSel{display:none!important;padding:7px 8px;font-size:12px;max-width:26vw;text-overflow:ellipsis;text-transform:none;letter-spacing:0}
+header #vidSel option{color:#000;background:#fff}
+header #vidSel[hidden]{display:none}
+@media (max-width:640px){header #btnAddVids{flex:none;padding:7px 10px;font-size:10.5px;min-height:0}header #vidSel{max-width:40vw;font-size:11px}}
 @media (max-width:640px){header #btnInstalar{flex:none;padding:7px 10px;font-size:10.5px;min-height:0}}
 dialog#dlgInstalar{max-width:min(420px,94vw);border:1px solid var(--line);border-top:3px solid var(--ink);background:var(--panel);color:var(--ink);padding:18px 20px;font-family:var(--f-body)}
 dialog#dlgInstalar::backdrop{background:rgba(0,0,0,.55)}
@@ -1025,10 +1085,11 @@ html header .tab[aria-selected="true"],html header .tab[aria-selected="true"]:ho
 </div></div>
 <header>
   <h1 class="acfcBrand"><a href="https://acfootballcenter.eus/" target="_blank" rel="noopener" title="Athletic Club Football Center"><img src="https://acfootballcenter.eus/wp-content/uploads/2022/11/acfc-logo-white.svg" alt="Athletic Club Football Center" width="118" height="32"></a><span class="acfcBrandTxt">Videoanálisis<small>Lezama Talks</small></span></h1><nav class="tabs" role="tablist"><button class="tab" role="tab" id="tabBtnEditor" aria-selected="false">Editor de vídeo</button><button class="tab" role="tab" id="tabBtnVisor" aria-selected="true">Registro de acciones</button></nav><span class="sub" id="vidName">cortes3.mp4</span><span class="sub" id="vidNote" style="font-size:12px"></span>
+  <select id="vidSel" hidden aria-label="Vídeo abierto en el registro" title="Cambiar de vídeo"></select>
   <span class="sp"></span>
   <button type="button" class="btn" id="btnInstalar" hidden title="Instalar la app o crear un acceso directo">Instalar app</button>
-  <label class="btn primary" for="file">Cargar vídeo</label>
   <input type="file" id="file" accept="video/*" hidden>
+  <input type="file" id="fileAdd" accept="video/*" multiple hidden>
 </header>
 
 <div id="tabVisor">
@@ -1040,6 +1101,7 @@ html header .tab[aria-selected="true"],html header .tab[aria-selected="true"]:ho
         <div id="emptyMsg">Carga <b>cortes3.mp4</b> para vincularlo con los eventos, o arrástralo aquí.</div>
         <div class="row" style="justify-content:center">
           <label class="btn primary" for="file">Elegir vídeo</label>
+          <label class="btn" for="fileAdd">Añadir vídeos</label>
           <button class="btn" id="regUseEditor">Usar el vídeo del editor</button>
           <button class="btn" id="regTutorial" title="Mira paso a paso cómo se usa el registro de acciones">▶ Ver tutorial</button>
         </div>
@@ -1068,8 +1130,10 @@ html header .tab[aria-selected="true"],html header .tab[aria-selected="true"]:ho
 
     </div>
     <div class="edtrack" id="vSeekTrack" title="Haz clic o arrastra para moverte por el vídeo">
+     <div class="edZoomWrap" id="vZoomWrap">
       <div class="edsegs"><div class="seg" style="left:0;right:0;cursor:pointer"></div></div>
       <div class="evTicks" id="vEvTicks"></div>
+      <div id="vPintMks"></div>
       <div class="halfBand" id="vBandP1"><span>1ª PARTE</span></div>
       <div class="halfBand" id="vBandP2"><span>2ª PARTE</span></div>
       <div class="markLine" id="vmlP1" title="Inicio 1ª parte"></div>
@@ -1082,6 +1146,14 @@ html header .tab[aria-selected="true"],html header .tab[aria-selected="true"]:ho
       <div class="hdlTime markLbl" id="vmlEndLbl"></div>
       <div class="head" id="vSeekHead"></div>
       <div class="headClock" id="vHeadClock" title="Tiempo real de juego"></div>
+     </div>
+    </div>
+    <div class="edZoomBar" id="vZoomBar">
+      <button class="btn" id="vZoomMinus" title="Alejar la línea de tiempo (Ctrl + rueda del ratón)" aria-label="Alejar">−</button>
+      <span class="time" id="vZoomLbl">Zoom ×1</span>
+      <button class="btn" id="vZoomPlus" title="Acercar la línea de tiempo para ser más preciso (Ctrl + rueda del ratón)" aria-label="Acercar">+</button>
+      <input type="range" id="vZoomPan" min="0" max="1000" value="0" hidden aria-label="Desplazar la línea de tiempo ampliada" title="Desplazar la línea de tiempo (también Mayús + rueda)">
+      <button class="btn" id="vZoomReset" hidden title="Volver a ver el vídeo entero">Quitar zoom</button>
     </div>
     <div class="legend" id="legend"></div>
     <div id="belowStageWrap">
@@ -1107,9 +1179,11 @@ html header .tab[aria-selected="true"],html header .tab[aria-selected="true"]:ho
     <div class="catTimelineWrap">
       <div class="catLabels" id="catLabels"></div>
       <div class="track" id="track">
+       <div class="catZoomWrap" id="catZoomWrap">
         <div class="catRows" id="catRows"></div>
         <div class="prog" id="prog"></div>
         <div class="head" id="head"></div>
+       </div>
       </div>
     </div>
     <div class="controls">
@@ -1124,7 +1198,7 @@ html header .tab[aria-selected="true"],html header .tab[aria-selected="true"]:ho
         <span style="flex:1"></span>
         <button class="btn" id="ceClose" title="Cerrar (Esc)">Cerrar</button>
       </div>
-      <div class="edtrack" id="ceTrack">
+      <div class="edtrack" id="ceTrack" title="Arrastra para mover el cursor · Mayús + arrastrar mueve el clip entero">
         <div class="edsegs" id="ceSegs"></div>
         <div class="shade" id="ceShA"></div><div class="shade" id="ceShB"></div>
         <div class="hdl" id="ceHA" title="Arrastra para acortar el inicio"></div>
@@ -1153,6 +1227,14 @@ html header .tab[aria-selected="true"],html header .tab[aria-selected="true"]:ho
 
   <aside>
     <div class="top">
+      <div class="row regSrcHead" style="justify-content:space-between;margin:0">
+        <h2 style="margin:0">Vídeos</h2>
+        <button type="button" class="btn acfcLink" id="regSrcToggle" title="Ocultar/mostrar la lista de vídeos">Ocultar</button>
+      </div>
+      <div id="regSrcBody" style="display:grid;gap:8px">
+        <div id="regSrcList" style="display:grid;grid-template-columns:minmax(0,1fr);grid-auto-flow:row;gap:4px;overflow:visible"></div>
+        <label class="btn" for="fileAdd" id="regAddFile" style="text-align:center" title="Añade otro vídeo (p. ej. la segunda parte) y cambia entre ellos">+ Añadir vídeo</label>
+      </div>
       <div class="row" style="justify-content:space-between;margin:0">
         <h2 style="margin:0">Tiempo del evento</h2>
         <button type="button" class="btn acfcLink" id="ajToggle" title="Ocultar/mostrar los ajustes">Ocultar</button>
@@ -1213,7 +1295,6 @@ html header .tab[aria-selected="true"],html header .tab[aria-selected="true"]:ho
     </div>
     <div class="row" id="evSecHead" style="justify-content:space-between;align-items:center;margin:0;padding:10px 14px;border-top:1px solid var(--line)">
       <h2 style="margin:0">Eventos</h2>
-      <button type="button" class="btn acfcLink" id="evSecToggle" title="Ocultar/mostrar la lista de eventos">Ocultar</button>
     </div>
     <div class="list" id="list"></div>
     <div style="border-top:1px solid var(--line);padding:10px 14px;display:grid;gap:8px">
@@ -1241,19 +1322,22 @@ html header .tab[aria-selected="true"],html header .tab[aria-selected="true"]:ho
     <div class="pintBlock" id="pintBlock">
       <div class="pbHead">
         <h2 style="margin:0">Pintado de acciones</h2>
-        <button type="button" class="btn acfcLink" id="pintToggle" aria-expanded="true" aria-controls="pintBody" title="Ocultar/mostrar las herramientas de pintado">Ocultar</button>
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end">
+          <button type="button" class="btn" id="pintClear" title="Borra todo lo pintado">Limpiar</button>
+          <button type="button" class="btn acfcLink" id="pintToggle" aria-expanded="true" aria-controls="pintBody" title="Ocultar/mostrar las herramientas de pintado">Ocultar</button>
+        </div>
       </div>
       <div id="pintBody">
         <div class="pintBar">
           <button type="button" class="btn" id="pintMode" aria-pressed="false" title="Activa o desactiva el dibujo sobre el vídeo">Dibujo: apagado</button>
           <button type="button" class="btn" id="pintUndo" title="Deshace el último cambio del pintado">Deshacer</button>
           <button type="button" class="btn" id="pintRedo" title="Rehace el último cambio deshecho">Rehacer</button>
-          <button type="button" class="btn" id="pintClear" title="Borra todo lo pintado">Limpiar</button>
           <button type="button" class="btn" id="pintPng" title="Descarga el fotograma actual con lo pintado en PNG"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 19h14"/></svg>Exportar PNG</button>
+          <button type="button" class="btn" id="pintStill" style="display:none" title="Inserta este fotograma con lo pintado como una imagen fija de 5 segundos dentro del vídeo descargado, justo en este instante">Insertar en el vídeo (5 s)</button>
         </div>
         <p class="pintMsg" id="pintStatus" role="status" aria-live="polite"></p>
         <div class="pintRail">
-          <div class="pintGrid pintGrid4">
+          <div class="pintGrid pintGrid5">
             <button class="pintTool" type="button" data-tool="move" title="Mover y redimensionar lo pintado">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v16"/><path d="M4 12h16"/><path d="M12 4l-2.3 2.3"/><path d="M12 4l2.3 2.3"/><path d="M12 20l-2.3-2.3"/><path d="M12 20l2.3-2.3"/><path d="M4 12l2.3-2.3"/><path d="M4 12l2.3 2.3"/><path d="M20 12l-2.3-2.3"/><path d="M20 12l-2.3 2.3"/></svg>
               <span>Mover</span>
@@ -1269,6 +1353,10 @@ html header .tab[aria-selected="true"],html header .tab[aria-selected="true"]:ho
             <button class="pintTool" type="button" id="pintDup" title="Duplica lo seleccionado">
               <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="12" height="12" rx="1.5"/><path d="M9 20h9a2 2 0 0 0 2-2v-9"/></svg>
               <span>Duplicar</span>
+            </button>
+            <button class="pintTool" type="button" id="pintRot" title="Rota lo seleccionado 15° (Mays + clic: sentido contrario). Señala antes la flecha con «Mover».">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12a7 7 0 1 1-2.1-5"/><path d="M19.5 3.5v4h-4"/></svg>
+              <span>Rotar</span>
             </button>
           </div>
 
@@ -1325,7 +1413,7 @@ html header .tab[aria-selected="true"],html header .tab[aria-selected="true"]:ho
           </div>
 
           <div class="pintDiv"><i></i>Varios</div>
-          <div class="pintGrid pintGrid2">
+          <div class="pintGrid">
             <button class="pintTool" type="button" data-tool="connector" title="Conector (clic para añadir puntos, doble clic para terminar)">
               <svg viewBox="0 0 24 24" aria-hidden="true"><circle class="solid" cx="4.5" cy="17" r="2"/><circle class="solid" cx="12" cy="7" r="2"/><circle class="solid" cx="19.5" cy="17" r="2"/><line x1="4.5" y1="17" x2="12" y2="7"/><line x1="12" y1="7" x2="19.5" y2="17"/></svg>
               <span>Conector</span>
@@ -1334,6 +1422,29 @@ html header .tab[aria-selected="true"],html header .tab[aria-selected="true"]:ho
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4 6.5 19"/><path d="M12 4 17.5 19"/><path d="M8.5 16.8c2.1 1.1 4.9 1.1 7 0"/><path d="M7.4 19h9.2"/></svg>
               <span>Foco</span>
             </button>
+            <button class="pintTool" type="button" data-tool="orientation" title="Orientación: arrastra desde los pies del jugador hacia donde mira o se orienta">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="19" rx="4.5" ry="1.8"/><path d="M12 19L5.5 6.5"/><path d="M12 19l6.5-12.5"/><path d="M5.5 6.5Q12 2.5 18.5 6.5"/></svg>
+              <span>Orientación</span>
+            </button>
+          </div>
+          <div class="pintDiv pintDivFollow"><i></i><span>Números y jugadores</span>
+            <button type="button" class="btn acfcLink" id="pintNumsToggle" aria-expanded="true" aria-controls="pintNumsWrap" title="Ocultar/mostrar los números y la plantilla">Ocultar</button>
+          </div>
+          <div id="pintNumsWrap">
+          <div class="pintNums" id="pintNums" role="group" aria-label="Números de jugador: pulsa uno y luego pulsa sobre el vídeo">
+          </div>
+          <details class="pintRoster" id="pintRoster">
+            <summary>Plantilla: dorsales y nombres</summary>
+            <p class="pintHelp">Escribe el dorsal y el nombre de cada jugador. Se guarda solo. Al pulsar un jugador y luego el vídeo, se coloca con su dorsal y su nombre.</p>
+            <div class="pintRosterList" id="pintRosterList"></div>
+            <div class="pintRosterBtns"><button type="button" class="btn primary" id="pintRosterAdd">Añadir jugador</button><button type="button" class="btn" id="pintRosterReset">Restaurar 1-11</button></div>
+            <details class="pintRosterPaste">
+              <summary>Pegar lista desde Excel</summary>
+              <p class="pintHelp">Una línea por jugador: dorsal y nombre, p. ej. «1 Unai Simón». Sustituye la plantilla actual.</p>
+              <textarea id="pintRosterTxt" rows="6" maxlength="2000" spellcheck="false" placeholder="1 Unai Simón&#10;2 De Marcos&#10;3 Yeray" aria-label="Pegar lista de jugadores (dorsal y nombre)"></textarea>
+              <div class="pintRosterBtns"><button type="button" class="btn" id="pintRosterSave">Cargar lista</button></div>
+            </details>
+          </details>
           </div>
           <div class="pintVariants" id="pintFocusStyles" hidden>
             <button type="button" class="pintVar" data-focus-style="abierto" title="Foco abierto"><svg viewBox="0 0 44 60" aria-hidden="true"><polygon points="22,4 3,56 41,56"/></svg><span>Abierto</span></button>
@@ -1341,6 +1452,8 @@ html header .tab[aria-selected="true"],html header .tab[aria-selected="true"]:ho
             <button type="button" class="pintVar is-active" data-focus-style="cilindrico" title="Foco cilíndrico"><svg viewBox="0 0 44 60" aria-hidden="true"><rect x="12" y="6" width="20" height="46"/><ellipse cx="22" cy="52" rx="12" ry="4"/></svg><span>Cilíndrico</span></button>
           </div>
 
+          <!-- Seguimiento del foco: oculto de momento (quitar style="display:none" para mostrarlo) -->
+          <div style="display:none">
           <div class="pintDiv pintDivFollow"><i></i><span>Seguimiento del foco</span>
             <button type="button" class="pintInfo" id="pintFocusInfo" aria-expanded="false" aria-label="Información sobre el seguimiento del foco" title="Información">i</button>
           </div>
@@ -1348,9 +1461,16 @@ html header .tab[aria-selected="true"],html header .tab[aria-selected="true"]:ho
             <button type="button" class="btn" id="focusFollowEnd" title="El foco desaparecerá a partir de este instante del vídeo">Terminar seguimiento aquí</button>
             <p class="pintHelp" id="pintFollowHint" hidden>Cuando quieras que el foco deje de seguir al jugador, pausa el vídeo en ese momento y pulsa «Terminar seguimiento aquí».</p>
           </div>
+          </div>
 
-          <div class="pintDiv"><i></i>Estilo</div>
-          <div class="pintStyle">
+          <div class="pintDiv pintDivFollow"><i></i><span>Estilo general</span>
+            <button type="button" class="btn acfcLink" id="pintStyleToggle" aria-expanded="true" aria-controls="pintStyleWrap" title="Ocultar/mostrar el estilo general">Ocultar</button>
+          </div>
+          <div class="pintStyle" id="pintStyleWrap">
+            <div class="pintTextOpts" id="pintTextOpts" hidden>
+              <label class="pintField"><span>Tamaño de fuente <b id="pintFontVal">24</b></span><input id="pintFontSize" type="range" min="4" max="120" value="24"></label>
+              <label class="pintField"><span>Tamaño del cajetín <b id="pintPadVal">100%</b></span><input id="pintBoxPad" type="range" min="30" max="300" value="100"></label>
+            </div>
             <label class="pintField"><span>Color</span><input id="strokeColor" type="color" value="#d3291e"></label>
             <label class="pintField"><span>Relleno</span><input id="fillColor" type="color" value="#15181d"></label>
             <label class="pintField"><span>Grosor</span><input id="lineWidth" type="range" min="1" max="14" value="4"></label>
@@ -1463,24 +1583,33 @@ html header .tab[aria-selected="true"],html header .tab[aria-selected="true"]:ho
     </div>
     <input type="file" id="edFile" accept="video/*" multiple hidden>
     <div class="edtrack" id="edTrack">
-      <div class="edsegs" id="edSegs"></div>
-      <div class="shade" id="shIn"></div><div class="shade" id="shOut"></div>
-      <div class="hdl" id="hIn" title="Arrastra para recortar el inicio"></div>
-      <div class="hdl" id="hOut" title="Arrastra para recortar el final"></div>
-      <div class="hdlTime" id="hInTime" style="display:none"></div>
-      <div class="hdlTime" id="hOutTime" style="display:none"></div>
-      <div class="trimDur" id="trimDur" style="display:none"></div>
-      <div class="halfBand" id="edBandP1"><span>1ª PARTE</span></div>
-      <div class="halfBand" id="edBandP2"><span>2ª PARTE</span></div>
-      <div class="markLine" id="mlP1" title="Inicio 1ª parte"></div>
-      <div class="markLine" id="mlP1E" title="Fin 1ª parte"></div>
-      <div class="markLine" id="mlP2" title="Inicio 2ª parte"></div>
-      <div class="markLine" id="mlEnd" title="Fin partido"></div>
-      <div class="hdlTime markLbl" id="mlP1Lbl"></div>
-      <div class="hdlTime markLbl" id="mlP1ELbl"></div>
-      <div class="hdlTime markLbl" id="mlP2Lbl"></div>
-      <div class="hdlTime markLbl" id="mlEndLbl"></div>
-      <div class="head" id="edHead"><span class="time" id="edMatchClock" title="Minuto de partido, calculado a partir de las marcas de inicio de cada parte"></span></div>
+      <div class="edZoomWrap" id="edZoomWrap">
+        <div class="edsegs" id="edSegs"></div>
+        <div class="shade" id="shIn"></div><div class="shade" id="shOut"></div>
+        <div class="hdl" id="hIn" title="Arrastra para recortar el inicio"></div>
+        <div class="hdl" id="hOut" title="Arrastra para recortar el final"></div>
+        <div class="hdlTime" id="hInTime" style="display:none"></div>
+        <div class="hdlTime" id="hOutTime" style="display:none"></div>
+        <div class="trimDur" id="trimDur" style="display:none"></div>
+        <div class="halfBand" id="edBandP1"><span>1ª PARTE</span></div>
+        <div class="halfBand" id="edBandP2"><span>2ª PARTE</span></div>
+        <div class="markLine" id="mlP1" title="Inicio 1ª parte"></div>
+        <div class="markLine" id="mlP1E" title="Fin 1ª parte"></div>
+        <div class="markLine" id="mlP2" title="Inicio 2ª parte"></div>
+        <div class="markLine" id="mlEnd" title="Fin partido"></div>
+        <div class="hdlTime markLbl" id="mlP1Lbl"></div>
+        <div class="hdlTime markLbl" id="mlP1ELbl"></div>
+        <div class="hdlTime markLbl" id="mlP2Lbl"></div>
+        <div class="hdlTime markLbl" id="mlEndLbl"></div>
+        <div class="head" id="edHead"><span class="time" id="edMatchClock" title="Minuto de partido, calculado a partir de las marcas de inicio de cada parte"></span></div>
+      </div>
+    </div>
+    <div class="edZoomBar" id="edZoomBar">
+      <button class="btn" id="edZoomMinus" title="Alejar la línea de tiempo (Ctrl + rueda del ratón)" aria-label="Alejar">−</button>
+      <span class="time" id="edZoomLbl">Zoom ×1</span>
+      <button class="btn" id="edZoomPlus" title="Acercar la línea de tiempo para ser más preciso (Ctrl + rueda del ratón)" aria-label="Acercar">+</button>
+      <input type="range" id="edZoomPan" min="0" max="1000" value="0" hidden aria-label="Desplazar la línea de tiempo ampliada" title="Desplazar la línea de tiempo (también Mayús + rueda)">
+      <button class="btn" id="edZoomReset" hidden title="Volver a ver el vídeo entero">Quitar zoom</button>
     </div>
     <div class="row" style="margin:6px 0"><button class="btn acfcLink" id="edCtlToggle" title="Ocultar/mostrar los botones de corte, marcas y datos de este bloque">Ocultar</button></div>
     <div class="controls" id="edCtl1">
@@ -1532,14 +1661,17 @@ html header .tab[aria-selected="true"],html header .tab[aria-selected="true"]:ho
       <div class="row" style="justify-content:space-between;margin:0">
         <h2 style="margin:0">Eventos</h2>
         <span class="row" style="margin:0;gap:10px">
-          <button class="btn acfcLink" id="edEvToggle" title="Ocultar/mostrar la lista de eventos">Ocultar</button>
-          <button class="btn" id="edClearAdded" title="Quitar todos los eventos de la lista">Limpiar</button>
+          <button class="btn acfcLink on" id="edViewEv" aria-pressed="true" title="Ver la lista de eventos">Evento</button>
+          <button class="btn acfcLink" id="edStillsToggle" aria-pressed="false" title="Ver las capturas de pintado insertadas en el vídeo">Capturas</button>
+          <button class="btn" id="edClearAdded" title="Quitar todos los eventos (o todas las capturas, si estás en Capturas)">Limpiar</button>
+          <button class="btn acfcLink" id="edEvToggle" title="Ocultar/mostrar la lista">Ocultar</button>
         </span>
       </div>
       <select id="edFilter" aria-label="Filtrar eventos por tipo" title="Filtrar la lista por tipo de evento" style="width:100%;display:none"></select>
       <div class="row" id="edResultRow" style="font-size:14px">Resultado: <b id="edTotal">0:00.0</b> <span style="color:var(--muted)" id="edOrig"></span></div>
     </div>
     <div class="list" id="edList"></div>
+    <div id="edStills" style="display:none;flex-direction:column;gap:6px;padding:8px 0"></div>
     <div class="foot" style="flex-direction:column;align-items:stretch">
       <button class="btn acfcLink" id="edExpToggle" title="Ocultar/mostrar las opciones de exportación">Ocultar</button>
       <div id="edExpBody" style="display:flex;flex-direction:column;gap:8px">
@@ -1686,6 +1818,7 @@ html header .tab[aria-selected="true"],html header .tab[aria-selected="true"]:ho
       <div class="row botAdd">
         <input id="botCatName" maxlength="24" placeholder="Nueva categoría" aria-label="Nombre de la nueva categoría">
         <input id="botCatColor" type="color" value="#3D4852" aria-label="Color de la nueva categoría" class="botColor">
+        <button type="button" class="btn" id="botCatCancel" hidden>Cancelar</button>
         <button type="button" class="btn primary" id="botCatAdd">Añadir</button>
       </div>
       <div id="botCatErr" class="botErr"></div>
@@ -1715,6 +1848,7 @@ html header .tab[aria-selected="true"],html header .tab[aria-selected="true"]:ho
 
     <div class="row" style="justify-content:space-between">
       <div class="row">
+        <button type="button" class="btn" id="botNew" title="Empieza una botonera nueva: mantiene las categorías y vacía los detalles y jugadores">Nueva botonera</button>
         <button type="button" class="btn edGreen" id="botSave" title="Descarga la botonera como archivo">💾 Guardar botonera</button>
         <label class="btn" for="impBot" title="Carga una botonera guardada previamente; se añade a la actual">📂 Cargar botonera</label>
       </div>
@@ -1833,6 +1967,8 @@ html header .tab[aria-selected="true"],html header .tab[aria-selected="true"]:ho
           <div class="tutRow"><span class="tutB red" data-k="up">Subir vídeo</span><span class="tutB">Usar el vídeo del visor</span></div>
         </div>
         <div class="tutBusy" hidden><b>Exportando…</b><div class="tutBar"><i></i></div><span>Cada tramo se guarda como un archivo</span></div>
+        <svg class="tutPaint" aria-hidden="true"></svg>
+        <div class="tutPbar" hidden><span class="tutB" data-k="pmode">Dibujo: apagado</span><span class="tutB" data-k="parrow">Flecha</span><span class="tutB" data-k="pcirc">Círculo</span><span class="tutB" data-k="ptext">Texto</span><span class="tutB" data-k="ppng">Exportar PNG</span></div>
       </div>
       <div class="tutTrack" data-k="track">
         <div class="tutBase"></div>
@@ -1899,6 +2035,8 @@ html header .tab[aria-selected="true"],html header .tab[aria-selected="true"]:ho
           <div class="tutRow"><span class="tutB red" data-k="up">Elegir vídeo</span></div>
         </div>
         <div class="tutBusy" hidden><b>Exportando…</b><div class="tutBar"><i></i></div><span>Cada evento se guarda como un archivo</span></div>
+        <svg class="tutPaint" aria-hidden="true"></svg>
+        <div class="tutPbar" hidden><span class="tutB" data-k="pmode">Dibujo: apagado</span><span class="tutB" data-k="parrow">Flecha</span><span class="tutB" data-k="pcirc">Círculo</span><span class="tutB" data-k="ptext">Texto</span><span class="tutB" data-k="ppng">Exportar PNG</span></div>
       </div>
       <div class="tutTrack" data-k="track">
         <div class="tutBase"></div>
@@ -2031,7 +2169,15 @@ window.VidExport=(()=>{
     catch(e){ if(e&&e.code==="declined") return false; }
     const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=name; document.body.append(a); a.click(); a.remove(); return true; }
   // Rotula el nombre del tramo dentro del vídeo (abajo a la izquierda). Sin nombre, no dibuja nada.
-  let curLabel="", curOv=null;
+  let curLabel="", curOv=null, curStill=null;
+  // Modo compatible: mantiene la imagen fija de una captura insertada (x.still) durante x.e segundos, grabando en tiempo real.
+  async function holdStill(cx,W,H,x,rec,ui,done,total){
+    curStill=x.still; cx.drawImage(x.still,0,0,W,H); rec.resume();
+    const t0=performance.now();
+    await new Promise(res=>{ (function chk(){ const el=(performance.now()-t0)/1000, p=done+Math.min(x.e,el);
+      ui.bar.style.width=Math.min(100,p/total*100)+"%"; ui.txt.textContent="Exportando… "+fmt(p)+" / "+fmt(total);
+      if(cancelReq||el>=x.e) return res(); requestAnimationFrame(chk); })(); });
+    rec.pause(); curStill=null; }
   // Rótulo del evento (arriba a la derecha del vídeo), igual que el que se ve sobre el visor:
   // minuto | categoría (con su color) | detalle y jugador. ov={min,cat,color,det,jug}
   function drawOverlay(cx,W,H,ov){
@@ -2084,11 +2230,13 @@ window.VidExport=(()=>{
     const chunks=[]; rec.ondataavailable=e=>{ if(e.data&&e.data.size) chunks.push(e.data); }; const stopped=once(rec,"stop");
     const total=ranges.reduce((a,x)=>a+x.e-x.s,0); let done=0;
     const muted=V.muted, rate=V.playbackRate; V.muted=false; V.playbackRate=1; if(r.gain) r.gain.gain.value=0;
-    let drawing=true; (function draw(){ if(!drawing) return; if(V.readyState>=2){ cx.drawImage(V,0,0,W,H); drawLabel(cx,W,H,curLabel,curOv); } requestAnimationFrame(draw); })();
+    let drawing=true; (function draw(){ if(!drawing) return; if(curStill) cx.drawImage(curStill,0,0,W,H); else if(V.readyState>=2){ cx.drawImage(V,0,0,W,H); drawLabel(cx,W,H,curLabel,curOv); } requestAnimationFrame(draw); })();
     try{
       rec.start(1000); rec.pause();
       for(const x of ranges){
-        if(cancelReq) break; curLabel=x.label||""; curOv=x.ov||null; await seekTo(V,x.s); cx.drawImage(V,0,0,W,H); drawLabel(cx,W,H,curLabel,curOv); rec.resume(); await V.play();
+        if(cancelReq) break;
+        if(x.still){ await holdStill(cx,W,H,x,rec,ui,done,total); done+=x.e; continue; }
+        curLabel=x.label||""; curOv=x.ov||null; await seekTo(V,x.s); cx.drawImage(V,0,0,W,H); drawLabel(cx,W,H,curLabel,curOv); rec.resume(); await V.play();
         await new Promise(res=>{ (function chk(){ const t=V.currentTime, p=done+Math.max(0,t-x.s);
           ui.bar.style.width=Math.min(100,p/total*100)+"%"; ui.txt.textContent=(window.__fastErr?"[modo lento, motivo: "+window.__fastErr+"] ":"")+"Exportando… "+fmt(p)+" / "+fmt(total);
           if(cancelReq||t>=x.e-0.02||V.ended) return res(); requestAnimationFrame(chk); })(); });
@@ -2133,7 +2281,7 @@ window.VidExport=(()=>{
     const chunks=[]; rec.ondataavailable=e=>{ if(e.data&&e.data.size) chunks.push(e.data); }; const stopped=once(rec,"stop");
     const total=groups.reduce((a,g)=>a+g.ranges.reduce((x,r)=>x+r.e-r.s,0),0); let done=0;
     const muted=V.muted, rate=V.playbackRate; V.muted=false; V.playbackRate=1; if(r.gain) r.gain.gain.value=0;
-    let drawing=true; (function draw(){ if(!drawing) return; if(V.readyState>=2){ cx.drawImage(V,0,0,W,H); drawLabel(cx,W,H,curLabel,curOv); } requestAnimationFrame(draw); })();
+    let drawing=true; (function draw(){ if(!drawing) return; if(curStill) cx.drawImage(curStill,0,0,W,H); else if(V.readyState>=2){ cx.drawImage(V,0,0,W,H); drawLabel(cx,W,H,curLabel,curOv); } requestAnimationFrame(draw); })();
     const allRanges=[]; let loadErr=null;
     try{
       rec.start(1000); rec.pause();
@@ -2141,7 +2289,9 @@ window.VidExport=(()=>{
         if(cancelReq) break; const g=groups[gi];
         if(gi>0){ try{ await loadSrc(V,g.src); }catch(e){ loadErr=e; break; } }
         for(const x of g.ranges){
-          if(cancelReq) break; curLabel=x.label||""; curOv=x.ov||null; await seekTo(V,x.s); cx.drawImage(V,0,0,W,H); drawLabel(cx,W,H,curLabel,curOv); rec.resume(); await V.play();
+          if(cancelReq) break;
+          if(x.still){ await holdStill(cx,W,H,x,rec,ui,done,total); done+=x.e; continue; }
+          curLabel=x.label||""; curOv=x.ov||null; await seekTo(V,x.s); cx.drawImage(V,0,0,W,H); drawLabel(cx,W,H,curLabel,curOv); rec.resume(); await V.play();
           await new Promise(res=>{ (function chk(){ const t=V.currentTime, p=done+Math.max(0,t-x.s);
             ui.bar.style.width=Math.min(100,p/total*100)+"%"; ui.txt.textContent=(window.__fastErr?"[modo lento, motivo: "+window.__fastErr+"] ":"")+"Exportando… "+fmt(p)+" / "+fmt(total);
             if(cancelReq||t>=x.e-0.02||V.ended) return res(); requestAnimationFrame(chk); })(); });
@@ -2247,6 +2397,18 @@ window.VidExport=(()=>{
       const audioSink=(audioSource&&audioTrack)?new AudioBufferSink(audioTrack):null;
       for(const x of g.ranges){
         if(cancelReq) break; const rangeStart=outClock;
+        // Captura insertada: imagen fija (con lo pintado) durante x.e segundos y audio en silencio.
+        if(x.still){
+          cx.drawImage(x.still,0,0,cv.width,cv.height);
+          for(let t=0;t<x.e-1e-6&&!cancelReq;t+=0.5) await videoSource.add(rangeStart+t,Math.min(0.5,x.e-t));
+          if(audioSource&&audioTrack&&!cancelReq){
+            const sr=audioTrack.sampleRate||48000, ch=audioTrack.numberOfChannels||2;
+            for(let t=0;t<x.e-1e-6;t+=1){ await audioSource.add(new AudioBuffer({length:Math.max(1,Math.round(Math.min(1,x.e-t)*sr)), numberOfChannels:ch, sampleRate:sr})); }
+          }
+          done+=x.e; outClock+=x.e;
+          ui.bar.style.width=Math.min(100,done/total*100)+"%"; ui.txt.textContent="Exportando… "+fmt(done)+" / "+fmt(total);
+          continue;
+        }
         // Si fps>0 y es menor que la del vídeo original, se saltan fotogramas intermedios (el
         // último decodificado antes de cada intervalo es el que se codifica, con una duración que
         // cubre también los que se saltaron): menos fotogramas que codificar, exportación más
@@ -2382,8 +2544,38 @@ window.renderHalfBands = function(b1,b2,mk,d){
       const n=String(o&&o.n||"").trim().toUpperCase().slice(0,24), c=/^#[0-9a-f]{6}$/i.test(o&&o.c)?o.c:PALETTE[0];
       if(n&&!CATS[n]) CATS[n]={c,custom:true}; }); }catch(e){} }
   function saveCats(){ try{ localStorage.setItem(CAT_KEY,JSON.stringify(Object.entries(CATS).filter(([,o])=>o.custom).map(([n,o])=>({n,c:o.c})))); }catch(e){} }
-  function removeCat(n){ if(!CATS[n]||!CATS[n].custom) return; delete CATS[n]; saveCats(); }
+  // categorías de serie: se pueden borrar (queda anotado) y recolorear (se guarda el color)
+  const CAT_HID_KEY="visor_cat_ocultas_v1", CAT_COL_KEY="visor_cat_color_v1";
+  const CAT_FIJAS=["OTRO"]; // OTRO es el refugio de los eventos de categorías borradas
+  const CAT_NOMBRE_FIJO=["GOL","OCASIÓN","OTRO"]; // su nombre lo usa la lógica de balón parado
+  let catHid=[], catCol={};
+  try{ const x=JSON.parse(localStorage.getItem(CAT_HID_KEY)); if(Array.isArray(x)) catHid=x.map(String).slice(0,40); }catch(e){}
+  try{ const x=JSON.parse(localStorage.getItem(CAT_COL_KEY)); if(x&&typeof x==="object"&&!Array.isArray(x)) Object.entries(x).slice(0,40).forEach(([k,c])=>{ if(/^#[0-9a-f]{6}$/i.test(c)) catCol[k]=c; }); }catch(e){}
+  function saveCatBase(){ try{ localStorage.setItem(CAT_HID_KEY,JSON.stringify(catHid)); localStorage.setItem(CAT_COL_KEY,JSON.stringify(catCol)); }catch(e){} }
+  function removeCat(n){ if(!CATS[n]||CAT_FIJAS.includes(n)) return;
+    const custom=CATS[n].custom; delete CATS[n];
+    if(custom) saveCats(); else { if(!catHid.includes(n)) catHid.push(n); delete catCol[n]; saveCatBase(); }
+    events.forEach(e=>{ if(e.cat===n) e.cat="OTRO"; }); save(); }
+  // cambia nombre y/o color; los eventos y los detalles de la categoría la siguen
+  function editCat(old,nw,color){
+    const o=CATS[old]; if(!o) return "No existe esa categoría.";
+    if(nw!==old){
+      if(CAT_NOMBRE_FIJO.includes(old)) return "El nombre de esta categoría no se puede cambiar (solo su color).";
+      if(CATS[nw]||nw==="__NEW__") return CATS[nw]?"Ya existe esa categoría.":"Ese nombre no es válido.";
+      const ent=Object.entries(CATS).map(([k,v])=>k===old?[nw,{c:color,custom:true}]:[k,v]);
+      Object.keys(CATS).forEach(k=>delete CATS[k]); ent.forEach(([k,v])=>{ CATS[k]=v; });
+      if(!o.custom){ if(!catHid.includes(old)) catHid.push(old); delete catCol[old]; saveCatBase(); }
+      if(DETS[old]){ DETS[nw]=DETS[old]; delete DETS[old]; saveDets(); }
+      events.forEach(e=>{ if(e.cat===old) e.cat=nw; }); save(); saveCats();
+    } else {
+      o.c=color;
+      if(o.custom) saveCats(); else { catCol[old]=color; saveCatBase(); }
+    }
+    return "";
+  }
   loadCats();
+  catHid.forEach(n=>{ delete CATS[n]; });
+  Object.entries(catCol).forEach(([k,c])=>{ if(CATS[k]&&!CATS[k].custom) CATS[k].c=c; });
   let events=load(), active=null, editId=null;
   // detalles por categoría (se guardan en este navegador)
   const DET_KEY="visor_detalles_v1"; const DETS={};
@@ -2402,10 +2594,13 @@ window.renderHalfBands = function(b1,b2,mk,d){
   try{ const x=JSON.parse(localStorage.getItem(PARADO_KEY)); if(Array.isArray(x)) x.slice(0,100).forEach(d=>{ d=String(d).toLowerCase().slice(0,60); if(d&&!GOL_PARADO.includes(d)) GOL_PARADO.push(d); }); }catch(e){}
   function addParado(d){ d=String(d).toLowerCase(); if(GOL_PARADO.includes(d)) return; GOL_PARADO.push(d);
     try{ localStorage.setItem(PARADO_KEY,JSON.stringify(GOL_PARADO.slice(5))); }catch(e){} }
-  (function loadDets(){ GOL_DETS.forEach(d=>{ addDetTo("GOL",d,false); addDetTo("OCASIÓN",d,false); }); SEED.forEach(e=>addDetTo(e.cat,e.det,false));
+  // «Nueva botonera»: detalles y jugadores vacíos; este indicador evita que se vuelvan a sembrar los de serie al recargar
+  const BOT_NUEVA_KEY="visor_botonera_nueva_v1"; let botNueva=false;
+  try{ botNueva=localStorage.getItem(BOT_NUEVA_KEY)==="1"; }catch(e){}
+  (function loadDets(){ if(!botNueva){ GOL_DETS.forEach(d=>{ addDetTo("GOL",d,false); addDetTo("OCASIÓN",d,false); }); SEED.forEach(e=>addDetTo(e.cat,e.det,false)); }
     try{ const x=JSON.parse(localStorage.getItem(DET_KEY)); if(x&&typeof x==="object"&&!Array.isArray(x))
       Object.entries(x).slice(0,80).forEach(([c,arr])=>{ if(Array.isArray(arr)) arr.slice(0,150).forEach(d=>addDetTo(String(c).toUpperCase().slice(0,24),d,false)); }); }catch(e){}
-    events.forEach(e=>addDetTo(e.cat,e.det,false)); })();
+    if(!botNueva) events.forEach(e=>addDetTo(e.cat,e.det,false)); })();
   // jugadores (se guardan en este navegador)
   const JUG_KEY="visor_jugadores_v2"; let JUGS=[];
   const JUG_DEFAULT=["Jugador 1","Jugador 2"];
@@ -2414,7 +2609,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     JUGS.push(n); JUGS.sort((a,b)=>a.localeCompare(b,'es')); if(persist) saveJugs(); return n; }
   function saveJugs(){ try{ localStorage.setItem(JUG_KEY,JSON.stringify(JUGS)); }catch(e){} }
   function removeJug(n){ const i=JUGS.findIndex(x=>x===n); if(i<0) return; JUGS.splice(i,1); saveJugs(); }
-  (function loadJugs(){ JUG_DEFAULT.forEach(n=>addJugTo(n,false));
+  (function loadJugs(){ if(!botNueva) JUG_DEFAULT.forEach(n=>addJugTo(n,false));
     try{ const x=JSON.parse(localStorage.getItem(JUG_KEY)); if(Array.isArray(x)) x.slice(0,300).forEach(n=>addJugTo(n,false)); }catch(e){}
   })();
   // listas de reproducción (con nombre; se guardan en este navegador)
@@ -2609,6 +2804,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   function renderCatBtns(){
     const wrap=$("fCatBtns"), fc=$("fCat"); wrap.replaceChildren();
     Object.entries(CATS).forEach(([k,o])=>{
+      if(k==="OTRO") return; // «Otro» no se muestra como botón; sigue existiendo como categoría de respaldo
       const b=el("button",{type:"button",className:"catbtn",textContent:k.charAt(0)+k.slice(1).toLowerCase(),style:"background:"+o.c});
       b.dataset.cat=k;
       b.onclick=()=>{ fc.value=k; fc.dispatchEvent(new Event("change")); syncCatBtns(); if(k!=="__new__"){ eqPicked=false; setStage(1); } };
@@ -2774,17 +2970,34 @@ window.renderHalfBands = function(b1,b2,mk,d){
     if(dlgEl.open && $("fCat").value!=="__new__"){ fillDets($("fDet").value); fillJugs($("fJug").value); }
   }
   function nextBotColor(){ return PALETTE[Object.values(CATS).filter(o=>o.custom).length%PALETTE.length]; }
+  let botEditCat=null; // categoría que se está editando (nombre/color) en la fila de «Añadir»
+  const addDetName=s=>String(s||"").trim().replace(/\s+/g," ").slice(0,60);
+  function cssToHex(c){ const t=document.createElement("i"); t.style.color=c; document.body.append(t);
+    const m=getComputedStyle(t).color.match(/\d+/g)||[61,72,82]; t.remove();
+    return "#"+m.slice(0,3).map(x=>(+x).toString(16).padStart(2,"0")).join(""); }
+  function addEditE(btn,label,onEdit){
+    const x=el("span",{className:"btnE",textContent:"✎",title:label});
+    x.onclick=ev=>{ ev.stopPropagation(); onEdit(); };
+    btn.append(x);
+  }
   function renderBot(){
     if(!CATS[botCat]) botCat=Object.keys(CATS)[0];
+    if(botEditCat&&!CATS[botEditCat]) botEditCat=null;
+    $("botCatAdd").textContent=botEditCat?"Guardar":"Añadir"; $("botCatCancel").hidden=!botEditCat;
+    $("botCatName").placeholder=botEditCat?"Nombre de la categoría":"Nueva categoría";
+    $("botCatName").readOnly=!!botEditCat&&CAT_NOMBRE_FIJO.includes(botEditCat);
     const wc=$("botCats"); wc.replaceChildren();
     Object.entries(CATS).forEach(([k,o])=>{
+      if(k==="OTRO") return; // «Otro» no se muestra como botón; sigue existiendo como categoría de respaldo
       const b=el("button",{type:"button",className:"catbtn"+(k===botCat?" active":""),textContent:k.charAt(0)+k.slice(1).toLowerCase(),style:"background:"+o.c,title:"Editar los detalles de «"+k+"»"});
       b.onclick=()=>{ botCat=k; renderBot(); };
-      if(o.custom) addDelX(b,k,()=>{
+      addEditE(b,"Editar nombre y color de «"+k+"»",()=>{ botCat=k; botEditCat=k; $("botCatName").value=k.charAt(0)+k.slice(1).toLowerCase(); $("botCatColor").value=cssToHex(o.c); $("botCatErr").textContent=""; renderBot(); $("botCatName").focus(); });
+      if(!CAT_FIJAS.includes(k)) addDelX(b,k,()=>{
         const n=events.filter(e=>e.cat===k).length;
-        if(!confirm("¿Borrar la categoría «"+k+"»?"+(n?"\n"+n+" evento(s) del registro la usan y dejarán de mostrarse con su color.":""))) return;
+        if(!confirm("¿Borrar la categoría «"+k+"»?"+(n?"\n"+n+" evento(s) del registro pasarán a «Otro».":""))) return;
         if($("fCat").value===k) $("fCat").value="OTRO";
-        removeCat(k); botSync(); renderBot(); });
+        if(botEditCat===k) botEditCat=null;
+        removeCat(k); botSync(); renderBot(); refresh(); });
       wc.append(b);
     });
     $("botDetCat").textContent=botCat.charAt(0)+botCat.slice(1).toLowerCase();
@@ -2794,6 +3007,13 @@ window.renderHalfBands = function(b1,b2,mk,d){
     L.forEach(d=>{
       const g=CAT_GOL(botCat)?(isParado(botCat,d)?"parado":"juego"):null;
       const b=el("button",{type:"button",className:"optbtn"+(g?" g-"+g:""),textContent:d});
+      addEditE(b,"Editar «"+d+"»",()=>{
+        const nv=addDetName(prompt("Nuevo nombre del detalle:",d)); if(!nv||nv===d) return;
+        const L2=DETS[botCat]; if(L2.some(x=>x!==d&&x.toLowerCase()===nv.toLowerCase())){ $("botDetErr").textContent="Ya existe ese detalle."; return; }
+        const par=isParado(botCat,d); L2[L2.indexOf(d)]=nv; saveDets();
+        events.forEach(e=>{ if(e.cat===botCat&&e.det===d) e.det=nv; }); save();
+        if(par) addParado(nv);
+        $("botDetErr").textContent=""; botSync(); renderBot(); refresh(); });
       addDelX(b,d,()=>{ removeDetFrom(botCat,d); botSync(); renderBot(); });
       wd.append(b);
     });
@@ -2802,13 +3022,27 @@ window.renderHalfBands = function(b1,b2,mk,d){
     if(!JUGS.length) wj.append(el("span",{className:"botEmpty",textContent:"Sin jugadores todavía."}));
     JUGS.forEach(n=>{
       const b=el("button",{type:"button",className:"optbtn",textContent:n});
+      addEditE(b,"Editar «"+n+"»",()=>{
+        const nv=String(prompt("Nuevo nombre del jugador:",n)||"").trim().replace(/\s+/g," ").slice(0,40); if(!nv||nv===n) return;
+        if(JUGS.some(x=>x!==n&&x.toLowerCase()===nv.toLowerCase())){ $("botJugErr").textContent="Ya existe ese jugador."; return; }
+        JUGS[JUGS.indexOf(n)]=nv; JUGS.sort((a,b)=>a.localeCompare(b,'es')); saveJugs();
+        events.forEach(e=>{ if(e.jug===n) e.jug=nv; }); save();
+        $("botJugErr").textContent=""; botSync(); renderBot(); refresh(); });
       addDelX(b,n,()=>{ removeJug(n); botSync(); renderBot(); });
       wj.append(b);
     });
   }
+  function botCancelEdit(){ botEditCat=null; $("botCatName").value=""; $("botCatErr").textContent=""; $("botCatColor").value=nextBotColor(); renderBot(); }
   function botAddCat(){
     const n=$("botCatName").value.trim().replace(/\s+/g," ").toUpperCase().slice(0,24);
     if(!n){ $("botCatErr").textContent="Escribe un nombre para la categoría."; return; }
+    if(botEditCat){
+      const err=editCat(botEditCat,n,$("botCatColor").value);
+      if(err){ $("botCatErr").textContent=err; return; }
+      botCat=n; if($("fCat").value===botEditCat) $("fCat").value=n;
+      botEditCat=null; $("botCatName").value=""; $("botCatErr").textContent=""; $("botCatColor").value=nextBotColor();
+      botSync(); renderBot(); refresh(); return;
+    }
     if(n==="__NEW__"||CATS[n]){ $("botCatErr").textContent=CATS[n]?"Ya existe esa categoría.":"Ese nombre no es válido."; return; }
     CATS[n]={c:$("botCatColor").value,custom:true}; saveCats(); botCat=n;
     $("botCatName").value=""; $("botCatErr").textContent=""; $("botCatColor").value=nextBotColor();
@@ -2831,7 +3065,17 @@ window.renderHalfBands = function(b1,b2,mk,d){
     renderBot(); if(!dlgBot.open) dlgBot.showModal();
   };
   $("btnBotoneraMov").onclick=()=>$("btnBotonera").click();
+  // Nueva botonera: mismas categorías (estructura), pero sin detalles ni jugadores
+  $("botNew").onclick=()=>{
+    if(!confirm("¿Crear una botonera nueva?\n\nSe mantienen las categorías, pero se vacían todos los detalles y jugadores. Los eventos ya registrados no se tocan.\n\nSi quieres conservar la actual, pulsa antes «Guardar botonera».")) return;
+    Object.keys(DETS).forEach(k=>{ DETS[k]=[]; }); saveDets();
+    JUGS.length=0; saveJugs();
+    botNueva=true; try{ localStorage.setItem(BOT_NUEVA_KEY,"1"); }catch(e){}
+    $("botDetErr").textContent=$("botJugErr").textContent="";
+    botSync(); renderBot(); refresh();
+  };
   $("botClose").onclick=$("botDone").onclick=()=>dlgBot.close();
+  $("botCatCancel").onclick=botCancelEdit;
   $("botCatAdd").onclick=botAddCat; $("botDetAdd").onclick=botAddDet; $("botJugAdd").onclick=botAddJug;
   [["botCatName",botAddCat],["botDetName",botAddDet],["botJugName",botAddJug]].forEach(([id,fn])=>
     $(id).addEventListener("keydown",k=>{ if(k.key==="Enter"){ k.preventDefault(); fn(); } }));
@@ -2905,7 +3149,8 @@ window.renderHalfBands = function(b1,b2,mk,d){
       const c=clipOf(e); if(!(c.b>0&&c.a<d)) return;
       const t=el("div",{className:"evTick",title:`${e.min} · ${e.cat}${e.det?" · "+e.det:""}`});
       t.style.left=pct(c.a,0,d); t.style.width=Math.max(0,(c.b-c.a)/d*100)+"%"; t.style.background=CATS[e.cat].c;
-      t.append(seekTickHandle(e,t,"a"),seekTickHandle(e,t,"b"));
+      const ds=Math.round(Math.max(0,clipLen(e)));
+      t.append(el("span",{className:"evLbl",textContent:e.cat}),el("span",{className:"evDur",textContent:Math.floor(ds/60)+":"+String(ds%60).padStart(2,"0")}),seekTickHandle(e,t,"a"),seekTickHandle(e,t,"b"));
       box.append(t);
     });
   }
@@ -2915,7 +3160,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     h.addEventListener("pointerdown",ev=>{
       const d=v.duration; if(!d||ev.button>0) return;
       ev.stopPropagation(); ev.preventDefault(); h.setPointerCapture(ev.pointerId); h.classList.add("drag");
-      const tr=$("vSeekTrack"), r=tr.getBoundingClientRect(), c=clipEnsure(e); let moved=false;
+      const r=$("vZoomWrap").getBoundingClientRect(), c=clipEnsure(e); let moved=false;
       const at=x=>Math.min(1,Math.max(0,(x-r.left)/r.width))*d;
       const move=m=>{ moved=true; const t=at(m.clientX);
         if(side==="a"){ c.a=Math.max(0,Math.min(t,c.b-0.2)); if(c.a<c.segs[0].s) c.segs[0].s=c.a; }
@@ -2965,7 +3210,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     handle.addEventListener("pointerdown",ev=>{
       if(ev.button!==0||!v.duration) return;
       ev.preventDefault(); ev.stopPropagation();
-      const d=v.duration, trackEl=$("track"); const rect=trackEl.getBoundingClientRect();
+      const d=v.duration, trackEl=$("catZoomWrap"); const rect=trackEl.getBoundingClientRect();
       const orig=structuredClone(clipOf(e)); const startX=ev.clientX; let moved=false;
       try{ handle.setPointerCapture(ev.pointerId); }catch(err){}
       chip.classList.add("dragging"); bar.classList.add("dragging");
@@ -3101,7 +3346,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   }
   (function initEdEvToggle(){
     const st=document.createElement("style");
-    st.textContent="body.edEvHid #edList,body.edEvHid #edFilter,body.edEvHid #edResultRow{display:none !important}";
+    st.textContent="body.edEvHid #edList,body.edEvHid #edFilter,body.edEvHid #edResultRow,body.edEvHid #edStills,body.edStillsShow #edList,body.edStillsShow #edFilter,body.edStillsShow #edResultRow{display:none !important}";
     document.head.appendChild(st);
     let hidden=false;
     try{ hidden=localStorage.getItem(ED_EV_HIDE_KEY)==="1"; }catch(e){}
@@ -3180,7 +3425,6 @@ window.renderHalfBands = function(b1,b2,mk,d){
   }
   simpleFold("ajToggle","ajHidden",h=>{ $("ajBody").style.display=h?"none":"contents"; });
   simpleFold("fltToggle","fltHidden",h=>{ $("fltBody").style.display=h?"none":""; });
-  simpleFold("evSecToggle","evSecHidden",h=>{ $("list").style.display=h?"none":""; });
   const TIMELINE_HIDE_KEY="timelineHidden";
   function setTimelineHidden(hidden){
     $("belowStageWrap").classList.toggle("hiddenBlock",hidden);
@@ -3223,10 +3467,33 @@ window.renderHalfBands = function(b1,b2,mk,d){
     return fmtHM(2700+(t-halfMarks.p2));
   }
   { const tr=$("vSeekTrack"); let drag=false;
-    const seekTo=ev=>{ const d=isFinite(v.duration)?v.duration:0; if(!d) return; const r=tr.getBoundingClientRect(); v.currentTime=Math.min(1,Math.max(0,(ev.clientX-r.left)/r.width))*d; };
+    const seekTo=ev=>{ const d=isFinite(v.duration)?v.duration:0; if(!d) return; const r=$("vZoomWrap").getBoundingClientRect(); v.currentTime=Math.min(1,Math.max(0,(ev.clientX-r.left)/r.width))*d; };
     tr.addEventListener("pointerdown",ev=>{ drag=true; tr.setPointerCapture(ev.pointerId); seekTo(ev); });
     tr.addEventListener("pointermove",ev=>{ if(drag) seekTo(ev); });
     tr.addEventListener("pointerup",()=>{ drag=false; }); tr.addEventListener("pointercancel",()=>{ drag=false; }); }
+  // Zoom de las líneas de tiempo del registro (la de arriba y la de categorías van juntas)
+  let vZoom=1, vZv=0, vPanTs=0; const VZMAX=64;
+  function vApplyZoom(){
+    vZoom=Math.max(1,Math.min(VZMAX,vZoom)); vZv=Math.max(0,Math.min(1-1/vZoom,vZv));
+    const w=(vZoom*100)+"%", l=(-vZv*vZoom*100)+"%";
+    const zw=$("vZoomWrap"); zw.style.width=w; zw.style.left=l; $("vSeekTrack").classList.toggle("zoomed",vZoom>1);
+    const cw=$("catZoomWrap"); cw.style.width=w; cw.style.left=l; $("track").classList.toggle("zoomed",vZoom>1);
+    $("vZoomLbl").textContent="Zoom ×"+(Math.round(vZoom*10)/10);
+    $("vZoomPan").hidden=$("vZoomReset").hidden=vZoom<=1;
+    $("vZoomPan").value=vZoom>1?Math.round(vZv/(1-1/vZoom)*1000):0; }
+  function vZoomTo(nz,anc){ const d=isFinite(v.duration)?v.duration:0; if(!d) return; nz=Math.max(1,Math.min(VZMAX,nz));
+    if(anc==null){ const f=(v.currentTime||0)/d; anc=(f>=vZv&&f<=vZv+1/vZoom)?f:vZv+0.5/vZoom; }
+    const p=(anc-vZv)*vZoom; vZoom=nz; vZv=anc-p/nz; vPanTs=0; vApplyZoom(); }
+  $("vZoomPlus").onclick=()=>vZoomTo(vZoom*2);
+  $("vZoomMinus").onclick=()=>vZoomTo(vZoom/2);
+  $("vZoomReset").onclick=()=>{ vZoom=1; vZv=0; vApplyZoom(); };
+  $("vZoomPan").addEventListener("input",e=>{ vZv=e.target.value/1000*(1-1/vZoom); vPanTs=Date.now(); vApplyZoom(); });
+  $("vZoomPan").addEventListener("keydown",e=>e.stopPropagation());
+  [["vSeekTrack","vZoomWrap"],["track","catZoomWrap"]].forEach(([tid,wid])=>{ const t=$(tid), w=$(wid);
+    t.addEventListener("wheel",e=>{ if(!v.duration) return;
+      if(e.ctrlKey||e.metaKey){ e.preventDefault(); const r=w.getBoundingClientRect(); vZoomTo(vZoom*(e.deltaY<0?1.25:0.8),(e.clientX-r.left)/r.width); }
+      else if(vZoom>1&&(e.shiftKey||Math.abs(e.deltaX)>Math.abs(e.deltaY))){ e.preventDefault(); vZv+=(e.deltaX||e.deltaY)/t.clientWidth/vZoom; vPanTs=Date.now(); vApplyZoom(); } },{passive:false}); });
+  v.addEventListener("loadedmetadata",()=>{ vZoom=1; vZv=0; vApplyZoom(); });
   let fsSeeking=false;
   { const s=$("fsSeek");
     s.addEventListener("pointerdown",()=>{ fsSeeking=true; });
@@ -3238,6 +3505,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     $("clock").textContent=fmt(t).replace(/\.\d$/,"")+" / "+fmt(d).replace(/\.\d$/,"");    const mc=matchClockText(t); $("matchClock").textContent=mc?("⏱ "+mc):"";
     $("fsClock").textContent=$("clock").textContent; $("fsMatch").textContent=mc?("⏱ "+mc):"";
     if(!fsSeeking) $("fsSeek").value=d?Math.round(t/d*1000):0;
+    if(vZoom>1&&d&&Date.now()-vPanTs>2500){ const f=t/d; if(f<vZv||f>vZv+1/vZoom){ vZv=f-0.5/vZoom; vApplyZoom(); } } // el zoom sigue al cabezal
     const p=d?Math.min(100,t/d*100):0; $("prog").style.width=p+"%"; $("head").style.left=p+"%"; $("vSeekHead").style.left=p+"%"; $("vHeadClock").style.left=p+"%"; $("vHeadClock").textContent=mc?("⏱ "+mc):"";
     { const pl=[halfMarks.p1,halfMarks.p1e,halfMarks.p2,halfMarks.end]; const jug=pl.every(x=>typeof x==="number")?(halfMarks.p1e-halfMarks.p1)+(halfMarks.end-halfMarks.p2):null;
       const fS=x=>{ const q=Math.round(Math.max(0,x||0)); return Math.floor(q/60)+":"+String(q%60).padStart(2,"0"); };
@@ -3296,6 +3564,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     if(!(f.type.startsWith("video/")||/\.(mp4|m4v|mov|webm)$/i.test(f.name))){ showMsg("Ese archivo no es un vídeo."); return; }
     // el mismo vídeo se carga también en el editor (si aún no está allí)
     if(!fromEditor&&window.__edAddFileIfNew) try{ window.__edAddFileIfNew(f); }catch(e){}
+    regVidAdd(f);
     if(v.dataset.url) URL.revokeObjectURL(v.dataset.url);
     const url=URL.createObjectURL(f); (window.__fileByUrl=window.__fileByUrl||{})[url]=f; v.dataset.user="1"; v.dataset.url=url;
     showMsg("Abriendo "+f.name.replace(/[<>&"]/g,"")+"…");
@@ -3321,6 +3590,59 @@ window.renderHalfBands = function(b1,b2,mk,d){
   function note(t){ $("vidNote").textContent=t; }
   window.__visorOpenFile=f=>openFile(f,true);
   $("file").onchange=ev=>{ openFile(ev.target.files[0]); ev.target.value=""; };
+  // varios vídeos en el registro (p. ej. 1.ª y 2.ª parte): lista + selector para cambiar entre ellos
+  const regVids=window.__regVids=[];
+  function isVid(f){ return f&&(f.type.startsWith("video/")||/\.(mp4|m4v|mov|webm)$/i.test(f.name)); }
+  function regVidAdd(f){ if(!regVids.some(x=>x.name===f.name&&x.size===f.size)) regVids.push(f); regVidSync(f); }
+  function regVidSync(cur){ const S=$("vidSel"); S.textContent="";
+    regVids.forEach((f,i)=>{ const o=document.createElement("option"); o.value=i; o.textContent=f.name; o.title=f.name; S.append(o); });
+    const i=regVids.findIndex(x=>cur&&x.name===cur.name&&x.size===cur.size); if(i>=0) S.value=i;
+    S.hidden=regVids.length<2||$("tabVisor").hidden;
+    if(cur) regCur=cur; regSrcRender(); }
+  // lista de vídeos del registro: mismo diseño que la del editor de vídeo
+  let regCur=null; const regDurs=new Map();
+  const REG_SRC_COLORS=["#2f6b3c","#3F5568","#D3291E","#C98A1B","#7A1712","#6B5B4B","#5E6B3A","#8A8F96"];
+  const regFmt=s=>{ s=Math.max(0,Math.round(s)); const h=Math.floor(s/3600), m=Math.floor(s%3600/60), x=s%60; return (h?h+":"+String(m).padStart(2,"0"):m)+":"+String(x).padStart(2,"0"); };
+  function regDurOf(f){
+    if(f===regCur&&isFinite(v.duration)&&v.duration>0) regDurs.set(f,v.duration);
+    if(regDurs.has(f)) return regDurs.get(f);
+    if(!regDurs.has(f)){ regDurs.set(f,0); const t=document.createElement("video"), u=URL.createObjectURL(f); t.preload="metadata";
+      const end=()=>{ if(isFinite(t.duration)&&t.duration>0){ regDurs.set(f,t.duration); regSrcRender(); } URL.revokeObjectURL(u); t.removeAttribute("src"); };
+      t.onloadedmetadata=end; t.onerror=()=>URL.revokeObjectURL(u); t.src=u; }
+    return 0; }
+  function regSrcRender(){
+    const L=$("regSrcList"); if(!L) return; L.replaceChildren();
+    regVids.forEach((f,i)=>{
+      const active=regCur&&f.name===regCur.name&&f.size===regCur.size, d=regDurOf(f);
+      const row=document.createElement("div");
+      row.style.cssText="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px;align-items:center;padding:6px 8px;box-sizing:border-box;max-width:100%;min-width:0;border-radius:5px;cursor:pointer;border-left:5px solid "+REG_SRC_COLORS[i%REG_SRC_COLORS.length]+";background:"+(active?"var(--bg)":"transparent")+";"+(active?"box-shadow:inset 0 0 0 2px var(--ink);":"");
+      const info=document.createElement("div"); info.style.minWidth="0";
+      const b=document.createElement("b"); b.textContent=(i+1)+". "+f.name; b.title=f.name; b.style.cssText="font-size:13px;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden;overflow-wrap:anywhere;line-height:1.25";
+      const sm=document.createElement("small"); sm.style.cssText="color:var(--muted);font-size:11px";
+      sm.textContent=d?regFmt(d):"cargando…";
+      info.append(b,sm);
+      const acts=document.createElement("div"); acts.style.cssText="display:flex;gap:3px";
+      const del=document.createElement("button"); del.className="btn"; del.textContent="✕"; del.style.padding="2px 6px"; del.title="Quitar vídeo";
+      del.onclick=ev=>{ ev.stopPropagation(); regVidRemove(i); };
+      acts.append(del); row.append(info,acts);
+      row.onclick=()=>{ if(!active) openFile(f); };
+      L.append(row);
+    }); }
+  function regVidRemove(i){
+    const f=regVids[i]; if(!f) return; const wasCur=regCur&&f.name===regCur.name&&f.size===regCur.size;
+    regVids.splice(i,1); regDurs.delete(f);
+    if(wasCur){ if(regVids.length){ openFile(regVids[Math.min(i,regVids.length-1)]); return; }
+      regCur=null; if(v.dataset.url){ URL.revokeObjectURL(v.dataset.url); v.dataset.url=""; } v.pause(); v.removeAttribute("src"); v.load(); $("vidName").textContent=""; }
+    regVidSync(null); }
+  (function(){ const b=$("regSrcToggle"); let h=false; try{ h=localStorage.getItem("regSrcHidden")==="1"; }catch(e){}
+    const set=x=>{ h=x; $("regSrcBody").style.display=x?"none":"grid"; b.textContent=x?"Mostrar":"Ocultar"; try{ localStorage.setItem("regSrcHidden",x?"1":"0"); }catch(e){} };
+    set(h); b.onclick=()=>set(!h); })();
+  v.addEventListener("loadedmetadata",()=>regSrcRender());
+  $("vidSel").onchange=ev=>{ const f=regVids[+ev.target.value]; if(f) openFile(f); };
+  $("fileAdd").onchange=ev=>{ const fl=Array.from(ev.target.files).filter(isVid); ev.target.value="";
+    if(!fl.length){ showMsg("No has elegido ningún vídeo."); return; }
+    fl.forEach(f=>{ if(window.__edAddFileIfNew) try{ window.__edAddFileIfNew(f); }catch(e){} regVidAdd(f); });
+    openFile(fl[0]); };
   const stage=document.querySelector(".stage");
   stage.addEventListener("dragover",e=>{e.preventDefault();});
   stage.addEventListener("drop",e=>{e.preventDefault(); openFile(e.dataTransfer.files[0]);});
@@ -3359,7 +3681,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   vMute.onclick=()=>{ v.muted=!v.muted; syncVMute(); };
   v.addEventListener("volumechange",syncVMute);
   $("rate").onchange=e=>v.playbackRate=+e.target.value;
-  $("track").onclick=ev=>{ if(!v.duration) return; const r=ev.currentTarget.getBoundingClientRect(); playing=null; v.currentTime=(ev.clientX-r.left)/r.width*v.duration; tick(); };
+  $("track").onclick=ev=>{ if(!v.duration) return; const r=$("catZoomWrap").getBoundingClientRect(); playing=null; v.currentTime=(ev.clientX-r.left)/r.width*v.duration; tick(); };
   ["flt"].forEach(id=>$(id).addEventListener("input",()=>{ refresh(); }));
   $("offRow").style.display="none";
 
@@ -4034,8 +4356,8 @@ window.renderHalfBands = function(b1,b2,mk,d){
   const ceT=ev=>{ const r=ceTr.getBoundingClientRect(); return ceView[0]+Math.max(0,Math.min(1,(ev.clientX-r.left)/r.width))*(ceView[1]-ceView[0]); };
   ceTr.addEventListener("pointerdown",ev=>{ const e=selE(); if(!e||!ceView||!v.duration||VidExport.running) return; ceTr.setPointerCapture(ev.pointerId);
     if(ev.target.id==="ceHA"||ev.target.id==="ceHB"){ edit(e); ceDrag=ev.target.id; v.pause(); playing=null; return; }
-    ceDrag="seek"; const t=ceT(ev); const c=clipOf(e); if(t<c.a||t>c.b) playing=null;
-    else ceMove={x0:ev.clientX,span:ceView[1]-ceView[0],a:c.a,b:c.b,segs:c.segs.map(g=>({...g})),on:false};
+    ceDrag="seek"; const t=ceT(ev); const c=clipOf(e); playing=null; v.pause();
+    if(t>=c.a&&t<=c.b&&ev.shiftKey) ceMove={x0:ev.clientX,span:ceView[1]-ceView[0],a:c.a,b:c.b,segs:c.segs.map(g=>({...g})),on:false};
     v.currentTime=t;
     renderClip(); tick(); });
   ceTr.addEventListener("pointermove",ev=>{ if(!ceDrag) return; const t=ceT(ev), e=selE(); if(!e) return;
@@ -4045,7 +4367,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
         const dt=Math.max(-m.a,Math.min(dx/w*m.span,dur-m.b));
         c.a=m.a+dt; c.b=m.b+dt; c.segs=m.segs.map(g=>({...g,s:g.s+dt,e:g.e+dt}));
         v.currentTime=c.a; commit(); return; } }
-    if(ceDrag==="ceHA"){ ceSetA(t,false); v.currentTime=e.clip.a; } else if(ceDrag==="ceHB"){ ceSetB(t,false); v.currentTime=e.clip.b; } else { v.currentTime=t; tick(); } });
+    if(ceDrag==="ceHA"){ ceSetA(t,false); v.currentTime=e.clip.a; } else if(ceDrag==="ceHB"){ ceSetB(t,false); v.currentTime=e.clip.b; } else { playing=null; v.currentTime=t; tick(); } });
   const ceUp=()=>{ ceDrag=null; ceMove=null; };
   ceTr.addEventListener("pointerup",ceUp); ceTr.addEventListener("pointercancel",ceUp);
   $("cePlay").onclick=()=>{ const e=selE(); if(e) go(e); };
@@ -4154,9 +4476,11 @@ window.renderHalfBands = function(b1,b2,mk,d){
   const MARK_IDS={p1:"P1",p1e:"P1E",p2:"P2",end:"End"};
   const MARK_LABELS={p1:"Inicio primera parte",p1e:"Fin primera parte",p2:"Inicio segunda parte",end:"Fin de partido"};
   const MARK_SHORT={p1:"Inicio 1ª",p1e:"Fin 1ª",p2:"Inicio 2ª",end:"Fin partido"};
+  let bPend=false; // Punto A colocado y Punto B todavía sin marcar (el fin queda al final del vídeo, pero no se muestra)
   let activeAdded=null; // tramo de la lista vinculado a los marcadores (se actualiza al editar)
   let sources=[], curSrc=-1, pendingFile=null, pendingSeek=null; // varios vídeos, unidos en orden para exportar
   let added=[]; // tramos confirmados con "+ Añadir", en el orden en que se exportarán
+  let stills=[]; // capturas (fotograma + pintado) que se insertan como imagen fija en la exportación
   let pendingEdProject=null; // proyecto de edición cargado en espera de que se vuelvan a subir los vídeos
   const SRC_COLORS=["#2f6b3c","#3F5568","#D3291E","#C98A1B","#7A1712","#6B5B4B","#5E6B3A","#8A8F96"];
   const srcColor=i=>SRC_COLORS[i%SRC_COLORS.length];
@@ -4174,7 +4498,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   const tabs=[["tabBtnVisor","tabVisor"],["tabBtnEditor","tabEditor"]];
   tabs.forEach(([b,p])=>$(b).onclick=()=>{ tabs.forEach(([b2,p2])=>{ $(b2).setAttribute("aria-selected",b2===b); $(p2).hidden=b2!==b; });
     document.querySelectorAll("video").forEach(x=>{ if(!x.closest("#"+p)) x.pause(); });
-    const vis=p==="tabVisor"; ["vidName","vidNote"].forEach(id=>$(id).hidden=!vis); document.querySelector('label[for="file"]').hidden=!vis; });
+    const vis=p==="tabVisor"; ["vidName","vidNote"].forEach(id=>$(id).hidden=!vis); $("vidSel").hidden=!vis||(window.__regVids||[]).length<2; });
   $("tabBtnEditor").click(); // el editor de vídeo es la pestaña inicial
 
   // ---------- carga ----------
@@ -4303,7 +4627,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     [sources[i],sources[j]]=[sources[j],sources[i]]; if(curSrc===i) curSrc=j; else if(curSrc===j) curSrc=i; renderSources(); render(); }
   function removeSource(i){ const s=sources[i]; if(!s||!confirm("¿Quitar «"+s.name+"» del editor?")) return;
     const wasActive=i===curSrc; if(s.file&&s.url&&s.url.startsWith("blob:")) URL.revokeObjectURL(s.url);
-    sources.splice(i,1); if(curSrc>i) curSrc--; added=added.filter(it=>it.srcId!==s.id);
+    sources.splice(i,1); if(curSrc>i) curSrc--; added=added.filter(it=>it.srcId!==s.id); stills=stills.filter(k=>k.srcId!==s.id);
     if(!sources.length){ curSrc=-1; segs=[]; inP=0; outP=0; hist=[]; sel=-1; marks=emptyMarks(); V.pause(); V.removeAttribute("src"); V.load();
       msg("Sube uno o varios vídeos, realiza cortes, asigna el nombre al evento y descárgalos a tu ordenador."); renderSources(); render(); return; }
     if(wasActive) switchSource(Math.min(i,sources.length-1)); else { renderSources(); render(); } }
@@ -4329,8 +4653,8 @@ window.renderHalfBands = function(b1,b2,mk,d){
   }
   // En móvil la línea de tiempo va encima de los botones -5/+5 (dentro del bloque del vídeo)
   (function placeEdTrack(){
-    const mq=matchMedia("(max-width:640px)"), st=$("edStage"), tr=$("edTrack"), ctl=st.querySelector(".stageControls"), home=tr.nextElementSibling;
-    function place(){ if(mq.matches) st.insertBefore(tr,ctl); else if(tr.parentNode===st) home.parentNode.insertBefore(tr,home); }
+    const mq=matchMedia("(max-width:640px)"), st=$("edStage"), tr=$("edTrack"), zb=$("edZoomBar"), ctl=st.querySelector(".stageControls"), home=zb.nextElementSibling;
+    function place(){ if(mq.matches){ st.insertBefore(tr,ctl); st.insertBefore(zb,ctl); } else if(tr.parentNode===st){ home.parentNode.insertBefore(tr,home); home.parentNode.insertBefore(zb,home); } }
     place(); (mq.addEventListener?mq.addEventListener("change",place):mq.addListener(place));
   })();
   // El botón de ocultar controles va junto a las marcas: al final en móvil (debajo de A, B y Añadir) y a la izquierda de «Inicio 1» en escritorio
@@ -4347,11 +4671,11 @@ window.renderHalfBands = function(b1,b2,mk,d){
   })();
   // Lo mismo en el registro: la línea de tiempo va justo debajo del vídeo
   (function placeVisorTrack(){
-    const mq=matchMedia("(max-width:640px)"), st=document.querySelector("#tabVisor .stage"), tr=$("vSeekTrack"), ctl=st.querySelector(".stageControls"), home=tr.nextElementSibling, par=tr.parentNode;
+    const mq=matchMedia("(max-width:640px)"), st=document.querySelector("#tabVisor .stage"), tr=$("vSeekTrack"), zb=$("vZoomBar"), ctl=st.querySelector(".stageControls"), home=zb.nextElementSibling, par=tr.parentNode;
     const tag=$("tagRow"), tagHome=tag.nextElementSibling, tagPar=tag.parentNode;
     function place(){
-      if(mq.matches){ st.insertBefore(tr,ctl); st.insertBefore(tag,ctl.nextSibling); }
-      else{ if(tr.parentNode===st) par.insertBefore(tr,home); if(tag.parentNode===st) tagPar.insertBefore(tag,tagHome); }
+      if(mq.matches){ st.insertBefore(tr,ctl); st.insertBefore(zb,ctl); st.insertBefore(tag,ctl.nextSibling); }
+      else{ if(tr.parentNode===st){ par.insertBefore(tr,home); par.insertBefore(zb,home); } if(tag.parentNode===st) tagPar.insertBefore(tag,tagHome); }
     }
     place(); (mq.addEventListener?mq.addEventListener("change",place):mq.addListener(place));
   })();
@@ -4391,8 +4715,8 @@ window.renderHalfBands = function(b1,b2,mk,d){
   // si hay un tramo de la lista activo, su corte sigue a los marcadores de entrada/salida
   function syncActive(){ const a=activeAdded, s=sources[curSrc];
     if(!a||!s||a.srcId!==s.id||added.indexOf(a)<0) return; a.s=inP; a.e=outP; }
-  function setIn(t){ snap(); if(t>=outP-0.1) outP=dur(); inP=Math.max(0,Math.min(t,outP-0.1)); syncActive(); render(); }
-  function setOut(t){ snap(); if(t<=inP+0.1) inP=0; outP=Math.min(dur(),Math.max(t,inP+0.1)); syncActive(); render(); }
+  function setIn(t){ snap(); if(t>=outP-0.1) outP=dur(); inP=Math.max(0,Math.min(t,outP-0.1)); bPend=!activeAdded&&outP>=dur()-0.05&&inP>0.05; syncActive(); render(); }
+  function setOut(t){ snap(); if(t<=inP+0.1) inP=0; outP=Math.min(dur(),Math.max(t,inP+0.1)); bPend=false; syncActive(); render(); }
 
   // ---------- render ----------
   function addedTotal(){ return added.reduce((a,it)=>a+(it.e-it.s),0); }
@@ -4407,7 +4731,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   function openEditAdded(idx){
     const it=added[idx]; if(!it) return; edtIt=it;
     $("edtNum").textContent="#"+(idx+1); $("edtName").value=it.name||"";
-    $("edtNames").replaceChildren(...EV_NAMES.concat(evCustom).map(n=>{ const o=document.createElement("option"); o.value=n; return o; }));
+    $("edtNames").replaceChildren(...evBase().concat(evCustom).map(n=>{ const o=document.createElement("option"); o.value=n; return o; }));
     const S=$("edtSrc"); S.replaceChildren(...sources.map(s=>{ const o=document.createElement("option"); o.value=s.id; o.textContent=s.name||"Vídeo"; return o; }));
     S.value=it.srcId; $("edtSrcRow").hidden=sources.length<2;
     $("edtS").value=fmtD(it.s); $("edtE").value=fmtD(it.e); $("edtErr").textContent="";
@@ -4430,7 +4754,8 @@ window.renderHalfBands = function(b1,b2,mk,d){
     $("dlgEdTramo").close(); render();
   };
   function removeAdded(idx){ if(added[idx]===activeAdded) activeAdded=null; added.splice(idx,1); render(); }
-  function clearAdded(){ if(added.length&&!confirm("¿Quitar todos los eventos de la lista?")) return; added=[]; activeAdded=null; render(); }
+  function clearStills(){ if(stills.length&&!confirm("¿Quitar todas las capturas de pintado?")) return; stills.length=0; render(); }
+  function clearAdded(){ if(document.body.classList.contains("edStillsShow")) return clearStills(); if(added.length&&!confirm("¿Quitar todos los eventos de la lista?")) return; added=[]; activeAdded=null; render(); }
   $("edClearAdded").onclick=clearAdded;
   function halfLabel(s,t){
     const m=s&&s.marks; if(!m||m.p1==null) return "";
@@ -4438,14 +4763,38 @@ window.renderHalfBands = function(b1,b2,mk,d){
   }
   const EV_NAMES=["Gol a favor","Gol en contra","Ocasión a favor","Ocasión en contra","Salida de balón","Presión","Cambio de orientación","Duelo"];
   let evCustom=[]; try{ evCustom=(JSON.parse(localStorage.getItem("acfcEvCustom")||"[]")||[]).filter(n=>typeof n==="string"&&n&&EV_NAMES.indexOf(n)<0).slice(0,50); }catch(e){}
-  const evKnown=n=>EV_NAMES.indexOf(n)>=0||evCustom.indexOf(n)>=0;
+  // nombres fijos que el usuario ha quitado del selector
+  let evHidden=[]; try{ evHidden=(JSON.parse(localStorage.getItem("acfcEvHidden")||"[]")||[]).filter(n=>EV_NAMES.indexOf(n)>=0); }catch(e){}
+  const saveHidden=()=>{ try{ localStorage.setItem("acfcEvHidden",JSON.stringify(evHidden)); }catch(e){} };
+  const evBase=()=>EV_NAMES.filter(n=>evHidden.indexOf(n)<0);
+  const evKnown=n=>evBase().indexOf(n)>=0||evCustom.indexOf(n)>=0;
   function addCustomName(n){
     n=(n||"").trim(); if(!n||evKnown(n)) return;
+    if(EV_NAMES.indexOf(n)>=0){ evHidden=evHidden.filter(x=>x!==n); saveHidden(); return; }
     evCustom.push(n); try{ localStorage.setItem("acfcEvCustom",JSON.stringify(evCustom)); }catch(e){}
     document.querySelectorAll("#edList select.nm").forEach(sel=>{
       const o=document.createElement("option"); o.value=n; o.textContent=n;
       sel.insertBefore(o,[...sel.options].find(x=>x.value==="__otro")||null);
     });
+  }
+  // Renombra un tipo de evento (fijo o propio) y todos los tramos que ya lo usan
+  function renameEv(old,nw){
+    nw=(nw||"").trim().slice(0,60); if(!nw||nw===old) return false;
+    added.forEach(x=>{ if(x.name===old) x.name=nw; });
+    if(evFilter===old) evFilter=nw;
+    const saveCus=()=>{ try{ localStorage.setItem("acfcEvCustom",JSON.stringify(evCustom)); }catch(e){} };
+    const ci=evCustom.indexOf(old);
+    if(ci>=0){
+      if(evKnown(nw)||EV_NAMES.indexOf(nw)>=0){ evCustom.splice(ci,1); saveCus(); if(!evKnown(nw)){ evHidden=evHidden.filter(x=>x!==nw); saveHidden(); } }
+      else{ evCustom[ci]=nw; saveCus(); }
+    } else {
+      if(evHidden.indexOf(old)<0){ evHidden.push(old); saveHidden(); }
+      if(!evKnown(nw)){
+        if(EV_NAMES.indexOf(nw)>=0){ evHidden=evHidden.filter(x=>x!==nw); saveHidden(); }
+        else{ evCustom.push(nw); saveCus(); }
+      }
+    }
+    return true;
   }
   let evFilter="";  // "" = todos · "__sin" = sin nombre · resto = nombre del evento
   const evKey=it=>it.name||"__sin";
@@ -4476,7 +4825,46 @@ window.renderHalfBands = function(b1,b2,mk,d){
     const N=$("edName"), nm=(evFilter&&evFilter!=="__sin")?evFilter.replace(/[\\/:*?"<>|]/g,"").trim():"";
     if(nm||N.value===autoName){ N.value=nm; autoName=nm; }
     renderTramosList(); $("edTotal").textContent=fmt(filteredTotal()); };
-  function filteredTotal(){ return added.reduce((a,it)=>a+(!evFilter||evKey(it)===evFilter?it.e-it.s:0),0); }
+  function filteredTotal(){ const used=new Set();
+    return added.reduce((a,it,i)=>a+(!evFilter||evKey(it)===evFilter?it.e-it.s+expandRange(it,i,used).reduce((b,x)=>b+(x.still?x.e:0),0):0),0); }
+  // ---------- capturas insertadas (imagen fija de 5 s dentro del vídeo exportado) ----------
+  const STILL_SECS=5;
+  // Parte un tramo en trozos de vídeo y capturas: cada captura se inserta en su instante (una sola vez por exportación si se pasa `used`).
+  function expandRange(it,idx,used){
+    const ov=edOvOf(it,idx), out=[]; let cur=it.s;
+    stills.filter(k=>k.srcId===it.srcId&&k.t>=it.s-0.05&&k.t<=it.e+0.05&&!(used&&used.has(k))).sort((a,b)=>a.t-b.t).forEach(k=>{
+      if(used) used.add(k);
+      const t=Math.min(Math.max(k.t,it.s),it.e);
+      if(t-cur>0.05){ out.push({s:cur,e:t,ov}); cur=t; }
+      out.push({still:k.canvas,s:0,e:k.dur}); });
+    if(it.e-cur>0.05||!out.length) out.push({s:cur,e:it.e,ov});
+    return out; }
+  window.acfcEdAddStill=(cap,t)=>{
+    const s=sources[curSrc]; if(!s||!cap) return "Carga un vídeo en el editor.";
+    stills.push({id:newSrcId(),srcId:s.id,t,dur:STILL_SECS,canvas:cap}); render();
+    return added.some(it=>it.srcId===s.id&&t>=it.s-0.05&&t<=it.e+0.05)
+      ? "Captura insertada en "+fmt(t)+": saldrá "+STILL_SECS+" s en el vídeo descargado."
+      : "Captura guardada en "+fmt(t)+", pero ese instante no está dentro de ningún tramo añadido: no saldrá hasta que lo esté."; };
+  function renderStills(){
+    const L=$("edStills"); if(!L) return; L.replaceChildren();
+    const open=document.body.classList.contains("edStillsShow"), tb=$("edStillsToggle");
+    if(tb){ tb.textContent="Capturas"+(stills.length?" ("+stills.length+")":""); tb.setAttribute("aria-pressed",open); tb.classList.toggle("on",open); const ve=$("edViewEv"); ve.setAttribute("aria-pressed",!open); ve.classList.toggle("on",!open); }
+    L.style.display=open?"flex":"none"; if(!open) return;
+    if(!stills.length){ const e=document.createElement("div"); e.className="hint"; e.style.cssText="margin:0;font-size:12px;color:var(--muted)"; e.textContent="Aún no hay capturas. Pinta sobre el vídeo y pulsa «Insertar en el vídeo (5 s)»."; L.append(e); return; }
+    const h=document.createElement("div"); h.className="hint"; h.style.cssText="margin:0;font-size:12px;color:var(--muted)"; h.textContent="Capturas insertadas ("+STILL_SECS+" s cada una)"; L.append(h);
+    stills.forEach((k,i)=>{
+      const row=document.createElement("div"); row.style.cssText="display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:8px;align-items:center;padding:4px 6px;border:1px solid var(--line);background:var(--panel);cursor:pointer";
+      const th=document.createElement("canvas"); th.width=64; th.height=Math.max(1,Math.round(64*k.canvas.height/k.canvas.width)); th.getContext("2d").drawImage(k.canvas,0,0,th.width,th.height);
+      const s=sources.find(x=>x.id===k.srcId);
+      const tx=document.createElement("div"); tx.style.cssText="font-size:13px;min-width:0"; tx.textContent="Captura "+(i+1)+" · "+fmt(k.t)+(sources.length>1&&s?" · "+s.name:"");
+      const x=document.createElement("button"); x.type="button"; x.className="btn"; x.textContent="Quitar"; x.title="Quitar esta captura";
+      x.onclick=ev=>{ ev.stopPropagation(); stills.splice(i,1); render(); };
+      row.onclick=()=>{ if(s&&sources[curSrc]===s) V.currentTime=k.t; };
+      row.append(th,tx,x); L.append(row); });
+  }
+  function edShowView(st){ document.body.classList.toggle("edStillsShow",st); if(document.body.classList.contains("edEvHid")) $("edEvToggle").click(); renderStills(); }
+  $("edStillsToggle").onclick=()=>edShowView(true);
+  $("edViewEv").onclick=()=>edShowView(false);
   function renderTramosList(){
     const L=$("edList"); L.replaceChildren();
     added.forEach((it,idx)=>{
@@ -4490,6 +4878,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
       const sm=document.createElement("small");
       const half=halfLabel(s,it.s);
       sm.textContent=(sources.length>1?(s?s.name:"?")+" · ":"")+(half?half+" · ":"")+fmt(it.e-it.s);
+      { const nS=stills.filter(k=>k.srcId===it.srcId&&k.t>=it.s-0.05&&k.t<=it.e+0.05).length; if(nS) sm.textContent+=" · "+nS+(nS===1?" captura pintada":" capturas pintadas"); }
       const nmLabel="Nombre del tramo "+(idx+1);
       const mkText=(ph)=>{ const nm=document.createElement("input"); nm.className="nm"; nm.type="text"; nm.maxLength=60; nm.value=it.name||"";
         nm.placeholder=ph||"Nombre del tramo (opcional)"; nm.setAttribute("aria-label",nmLabel);
@@ -4500,7 +4889,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
       else {
         nm=document.createElement("select"); nm.className="nm"; nm.setAttribute("aria-label",nmLabel);
         const o0=document.createElement("option"); o0.value=""; o0.textContent="Nombre del tramo (opcional)"; nm.append(o0);
-        EV_NAMES.concat(evCustom).forEach(n=>{ const o=document.createElement("option"); o.value=n; o.textContent=n; nm.append(o); });
+        evBase().concat(evCustom).forEach(n=>{ const o=document.createElement("option"); o.value=n; o.textContent=n; nm.append(o); });
         const oz=document.createElement("option"); oz.value="__otro"; oz.textContent="+ Añadir otro…"; nm.append(oz);
         nm.value=it.name||"";
         nm.onclick=ev=>ev.stopPropagation(); nm.onkeydown=k=>k.stopPropagation();
@@ -4524,7 +4913,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   function render(){
     syncCur();
     const d=dur(), wrap=$("edSegs"); wrap.replaceChildren();
-    renderSources(); renderFilter(); renderTramosList();
+    renderSources(); renderFilter(); renderTramosList(); renderStills();
     const go=sources.reduce((a,s)=>a+(s.dur||0),0);
     $("edTotal").textContent=fmt(filteredTotal());
     $("edResultRow").style.display=added.length?"":"none";
@@ -4534,13 +4923,23 @@ window.renderHalfBands = function(b1,b2,mk,d){
     added.forEach((it,i)=>{ if(it.srcId!==curId) return;
       const b=document.createElement("div"); b.className="doneCut"; b.style.setProperty("--dc",evColor(it.name));
       b.style.left=(it.s/d*100)+"%"; b.style.width=((it.e-it.s)/d*100)+"%";
+      // si el tramo asoma por fuera de los marcadores A–B actuales, no se pinta esa parte sobrante
+      if(it!==activeAdded&&(inP>0.05||outP<d-0.05)&&it.s<outP&&it.e>inP&&(it.s<inP||it.e>outP)){
+        const w=it.e-it.s, l=Math.max(0,(inP-it.s)/w*100), r=Math.max(0,(it.e-outP)/w*100);
+        b.style.clipPath="inset(0 "+r+"% 0 "+l+"%)"; }
+      if(it.name){ const lb=document.createElement("span"); lb.className="evLbl"; lb.textContent=it.name; b.append(lb); }
       b.dataset.add=i; b.title=`Corte añadido${it.name?": "+it.name:" #"+(i+1)} · ${fmt(it.s)}–${fmt(it.e)} (clic para seleccionarlo, arrastra para moverlo)`; wrap.append(b);
     });
+    stills.forEach((k,i)=>{ if(k.srcId!==curId) return;
+      const m=document.createElement("div"); m.className="stillMk"; m.style.left=(k.t/d*100)+"%";
+      m.title="Captura pintada "+(i+1)+" · "+fmt(k.t); wrap.append(m); });
     segs.forEach((g,i)=>{
       const n=document.createElement("div"); n.className="seg"+(g.off?" off":"")+(i===sel?" sel":"");
       n.style.left=(g.s/d*100)+"%"; n.style.width=((g.e-g.s)/d*100)+"%"; n.title=`Tramo ${i+1}: ${fmt(g.s)}–${fmt(g.e)}`;
       n.dataset.i=i; wrap.append(n);
     });
+    if(bPend&&(activeAdded||inP<=0.05||outP<d-0.05)) bPend=false;
+    ["hOut","hOutTime","trimDur","shOut"].forEach(k=>{ $(k).style.display=bPend?"none":""; });
     $("shIn").style.left="0"; $("shIn").style.width=(inP/d*100)+"%";
     $("shOut").style.left=(outP/d*100)+"%"; $("shOut").style.right="0";
     $("hIn").style.left=(inP/d*100)+"%"; $("hOut").style.left=(outP/d*100)+"%";
@@ -4549,7 +4948,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     $("trimDur").style.left=((inP+outP)/2/d*100)+"%"; $("trimDur").textContent=fmt(outP-inP);
     { const pl=[marks.p1,marks.p1e,marks.p2,marks.end]; const jug=pl.every(x=>typeof x==="number")?(marks.p1e-marks.p1)+(marks.end-marks.p2):null;
       const fmtS=t=>{ const s=Math.round(Math.max(0,t||0)); return Math.floor(s/60)+":"+String(s%60).padStart(2,"0"); };
-      $("edTrimInfo").textContent="· Inicio "+fmtS(inP)+" · Fin "+fmtS(outP)+"\n· Duración "+fmtS(outP-inP);
+      $("edTrimInfo").textContent=bPend?"· Inicio "+fmtS(inP)+"\n· Marca el punto B para fijar el fin":"· Inicio "+fmtS(inP)+" · Fin "+fmtS(outP)+"\n· Duración "+fmtS(outP-inP);
       $("edJug").textContent=jug!=null&&jug>=0?"Tiempo jugado "+fmt(jug):""; }
     $("edUndo").disabled=$("edUndo2").disabled=!hist.length; $("edRedo").disabled=!redoOf().length; $("edAddSel").hidden=true; renderMarks(d); tick(); // el botón «+ Añadir» ya no se muestra: Punto B añade el tramo
   }
@@ -4571,6 +4970,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     $("edFsClock").textContent=fmt(t).replace(/\.\d$/,"")+" / "+fmt(d).replace(/\.\d$/,""); $("edFsMatch").textContent=mc?("⏱ "+mc):"";
     if(!edFsSeeking) $("edFsSeek").value=d?Math.round(t/d*1000):0;
     $("edHead").style.left=(d?Math.min(100,t/d*100):0)+"%";
+    if(edZoom>1&&d&&Date.now()-edPanTs>2500){ const f=t/d; if(f<edZv||f>edZv+1/edZoom){ edZv=f-0.5/edZoom; applyZoom(); } } // el zoom sigue al cabezal
     // etiqueta sobre el vídeo (como en el registro de eventos): corte añadido que contiene el cabezal
     const curId=sources[curSrc]&&sources[curSrc].id, ov=$("edOv");
     let hit=-1; added.forEach((it,i)=>{ if(it.srcId===curId&&t>=it.s&&t<=it.e&&(hit<0||it===activeAdded||added[hit]!==activeAdded&&it.s>=added[hit].s)) hit=i; });
@@ -4606,8 +5006,29 @@ window.renderHalfBands = function(b1,b2,mk,d){
   $("edRate").onchange=e=>V.playbackRate=+e.target.value;
   V.addEventListener("play",()=>setPlay($("edPlay"),1));
   V.addEventListener("pause",()=>setPlay($("edPlay"),0));
+  // Vista previa de las capturas: al llegar a su instante, el vídeo se para STILL_SECS s mostrando la imagen (con lo pintado) y sigue solo.
+  let stillHold=null, prevT=-1;
+  function endStill(resume){
+    if(!stillHold) return; const h=stillHold; stillHold=null; clearTimeout(h.timer); h.cv.remove();
+    if(window.acfcPintEd&&window.acfcPintEd.cutAt) window.acfcPintEd.cutAt(h.t);
+    if(resume&&V.paused&&!exporting) V.play(); }
+  function startStill(k){
+    V.pause(); const cv=document.createElement("canvas"), host=V.offsetParent||V.parentNode;
+    const w=Math.max(2,V.offsetWidth), h=Math.max(2,V.offsetHeight); cv.width=w; cv.height=h;
+    cv.style.cssText="position:absolute;left:"+V.offsetLeft+"px;top:"+V.offsetTop+"px;width:"+w+"px;height:"+h+"px;z-index:3;pointer-events:none;background:#000";
+    const c=cv.getContext("2d"), r=Math.min(w/k.canvas.width,h/k.canvas.height), dw=k.canvas.width*r, dh=k.canvas.height*r;
+    c.fillStyle="#000"; c.fillRect(0,0,w,h); c.drawImage(k.canvas,(w-dw)/2,(h-dh)/2,dw,dh);
+    host.append(cv); stillHold={cv,t:k.t,timer:setTimeout(()=>endStill(true),k.dur*1000)}; }
+  V.addEventListener("play",()=>{ if(stillHold) endStill(false); }); // si se pulsa Reproducir durante la captura, se salta
+  V.addEventListener("seeking",()=>{ if(stillHold) endStill(false); prevT=-1; });
   (function loop(){
+    if(V.paused||exporting) prevT=-1;
     if(!V.paused&&!exporting){
+      { const t=V.currentTime, s=sources[curSrc];
+        if(s&&!stillHold&&prevT>=0&&t>prevT&&t-prevT<0.5){
+          const k=stills.find(k=>k.srcId===s.id&&k.t>prevT&&k.t<=t&&added.some(it=>it.srcId===s.id&&k.t>=it.s-0.05&&k.t<=it.e+0.05));
+          if(k){ prevT=-1; startStill(k); requestAnimationFrame(loop); return; } }
+        prevT=t; }
       if($("edPrev").checked){ const t=V.currentTime, k=kept();
         if(!k.some(r=>t>=r.s&&t<r.e)){ const nx=k.find(r=>r.s>t); if(nx) V.currentTime=nx.s; else V.pause(); } }
       tick(); }
@@ -4615,18 +5036,43 @@ window.renderHalfBands = function(b1,b2,mk,d){
   V.addEventListener("seeked",()=>{ if(exporting) return; const i=segAt(V.currentTime); if(i!==sel){ sel=i; render(); } else tick(); });
 
   // ---------- timeline: clic y arrastre ----------
-  const tr=$("edTrack"); let drag=null, mv=null;
-  const tAt=e=>{ const r=tr.getBoundingClientRect(); return Math.max(0,Math.min(1,(e.clientX-r.left)/r.width))*dur(); };
+  const tr=$("edTrack"), zw=$("edZoomWrap"); let drag=null, mv=null;
+  // Zoom de la línea de tiempo: edZoom = aumentos; edZv = inicio de lo visible (fracción de la duración)
+  var edZoom=1, edZv=0, edPanTs=0; const ZMAX=64;
+  function applyZoom(){
+    edZoom=Math.max(1,Math.min(ZMAX,edZoom)); edZv=Math.max(0,Math.min(1-1/edZoom,edZv));
+    zw.style.width=(edZoom*100)+"%"; zw.style.left=(-edZv*edZoom*100)+"%"; tr.classList.toggle("zoomed",edZoom>1);
+    $("edZoomLbl").textContent="Zoom ×"+(Math.round(edZoom*10)/10);
+    $("edZoomPan").hidden=$("edZoomReset").hidden=edZoom<=1;
+    $("edZoomPan").value=edZoom>1?Math.round(edZv/(1-1/edZoom)*1000):0; }
+  function zoomTo(nz,anc){ const d=dur(); if(!d) return; nz=Math.max(1,Math.min(ZMAX,nz));
+    if(anc==null){ const f=(V.currentTime||0)/d; anc=(f>=edZv&&f<=edZv+1/edZoom)?f:edZv+0.5/edZoom; }
+    const p=(anc-edZv)*edZoom; edZoom=nz; edZv=anc-p/nz; edPanTs=0; applyZoom(); }
+  $("edZoomPlus").onclick=()=>zoomTo(edZoom*2);
+  $("edZoomMinus").onclick=()=>zoomTo(edZoom/2);
+  $("edZoomReset").onclick=()=>{ edZoom=1; edZv=0; applyZoom(); };
+  $("edZoomPan").addEventListener("input",e=>{ edZv=e.target.value/1000*(1-1/edZoom); edPanTs=Date.now(); applyZoom(); });
+  $("edZoomPan").addEventListener("keydown",e=>e.stopPropagation());
+  tr.addEventListener("wheel",e=>{ if(!dur()) return;
+    if(e.ctrlKey||e.metaKey){ e.preventDefault(); const r=zw.getBoundingClientRect(); zoomTo(edZoom*(e.deltaY<0?1.25:0.8),(e.clientX-r.left)/r.width); }
+    else if(edZoom>1&&(e.shiftKey||Math.abs(e.deltaX)>Math.abs(e.deltaY))){ e.preventDefault(); edZv+=(e.deltaX||e.deltaY)/tr.clientWidth/edZoom; edPanTs=Date.now(); applyZoom(); } },{passive:false});
+  V.addEventListener("loadedmetadata",()=>{ edZoom=1; edZv=0; applyZoom(); });
+  const tAt=e=>{ const r=zw.getBoundingClientRect(); return Math.max(0,Math.min(1,(e.clientX-r.left)/r.width))*dur(); };
   tr.addEventListener("pointerdown",e=>{ if(!dur()||exporting) return; tr.setPointerCapture(e.pointerId);
     if(e.target.id==="hIn"||e.target.id==="hOut"){ snap(); drag=e.target.id; return; }
     const t=tAt(e);
     if(e.target.dataset&&e.target.dataset.add!==undefined){ e.preventDefault(); const ai=+e.target.dataset.add, it=added[ai];
       // el corte ya añadido tapa la franja verde: si se arrastra dentro de la selección actual (no vinculada a él), se mueve la selección
+      // dentro de la selección actual (también si es el corte activo): arrastrar desplaza el cursor; con Mayús mueve el corte entero
+      if(it&&!e.shiftKey&&t>=inP&&t<=outP){ const si=segAt(t);
+        mv=null; drag="scrub"; if(si>=0) sel=si; V.currentTime=t; render(); return; }
       if(it&&it!==activeAdded&&t>inP&&t<outP){ const si=segAt(t);
         mv={x0:e.clientX,t0:t,in0:inP,out0:outP,moved:false,addIdx:ai};
         drag="seg"; if(si>=0) sel=si; V.currentTime=t; render(); return; }
-      // clic: lo selecciona; arrastrar: mueve el tramo entero (sus marcadores A y B lo siguen)
-      gotoAdded(ai); mv={x0:e.clientX,t0:t,in0:inP,out0:outP,moved:false}; drag="seg"; return; }
+      // clic: selecciona el corte y coloca el cursor donde se pulsa; arrastrar desplaza el cursor (Mayús + arrastrar mueve el tramo entero con sus marcadores A y B)
+      gotoAdded(ai);
+      if(!e.shiftKey){ const s0=sources[curSrc]; if(it&&s0&&it.srcId===s0.id){ mv=null; drag="scrub"; V.currentTime=t; tick(); return; } }
+      mv={x0:e.clientX,t0:t,in0:inP,out0:outP,moved:false}; drag="seg"; return; }
     if(e.target.classList.contains("seg")&&t>inP&&t<outP){
       // dentro de la selección actual (p. ej. con A fijado y B aún en el final del vídeo) arrastrar desplaza el cabezal;
       // antes movía la selección entera y el cabezal volvía al punto A, impidiendo situarse para fijar B
@@ -4668,7 +5114,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   $("edFull").onclick=()=>toggleFullscreen($("edStage"));
   $("edSetA").onclick=()=>dur()&&setIn(V.currentTime);
   // Punto B cierra el tramo y lo añade a la lista (abre el selector de tipo de evento); si el tramo ya está en la lista, solo lo actualiza
-  function setBAndAdd(){ if(!dur()) return; const was=activeAdded; setOut(V.currentTime); if(!was) $("edAddSel").click(); }
+  function setBAndAdd(){ if(!dur()) return; const was=activeAdded; setOut(V.currentTime); if(!was) $("edAddSel").click(); else if(!was.name&&added.indexOf(was)>=0) openEvPicker(was); }
   $("edSetB").onclick=setBAndAdd;
   $("edSplit").onclick=()=>dur()&&split();
   $("edDel").onclick=()=>toggle(sel>=0?sel:segAt(V.currentTime));
@@ -4688,7 +5134,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   let evPick=null;
   function closeEvPicker(){ if(evPick){ evPick.remove(); evPick=null; document.removeEventListener("pointerdown",evPickOut,true); document.removeEventListener("keydown",evPickKey,true); } }
   function evPickOut(e){ if(evPick&&!evPick.contains(e.target)) closeEvPicker(); }
-  function evPickKey(e){ if(e.key==="Escape"){ e.stopPropagation(); closeEvPicker(); } }
+  function evPickKey(e){ if(e.key==="Escape"&&!(e.target&&e.target.classList&&e.target.classList.contains("evPickRen"))){ e.stopPropagation(); closeEvPicker(); } }
   function openEvPicker(it){
     closeEvPicker();
     const vis=b=>b&&!b.hidden&&b.offsetParent!==null&&b.getClientRects().length;
@@ -4696,7 +5142,28 @@ window.renderHalfBands = function(b1,b2,mk,d){
     const box=document.createElement("div"); box.className="evPick"; box.setAttribute("role","dialog"); box.setAttribute("aria-label","Tipo de evento");
     const h=document.createElement("div"); h.className="evPickH"; h.textContent="Tipo de evento"; box.append(h);
     const pick=n=>{ it.name=(n||"").trim(); addCustomName(it.name); closeEvPicker(); render(); };
-    EV_NAMES.concat(evCustom).forEach(n=>{ const b=document.createElement("button"); b.type="button"; b.textContent=n; b.onclick=()=>pick(n); box.append(b); });
+    // cada nombre (fijo o propio) lleva un botón para eliminarlo de la lista
+    evBase().concat(evCustom).forEach(n=>{
+      const wrap=document.createElement("div"); wrap.className="evPickCus";
+      const b=document.createElement("button"); b.type="button"; b.textContent=n; b.onclick=()=>pick(n);
+      const d=document.createElement("button"); d.type="button"; d.className="evPickDel"; d.textContent="✕"; d.title="Eliminar «"+n+"» de la lista"; d.setAttribute("aria-label","Eliminar "+n);
+      d.onclick=e=>{ e.stopPropagation(); if(EV_NAMES.indexOf(n)>=0){ if(evHidden.indexOf(n)<0) evHidden.push(n); saveHidden(); }
+        else{ const i=evCustom.indexOf(n); if(i>=0) evCustom.splice(i,1); try{ localStorage.setItem("acfcEvCustom",JSON.stringify(evCustom)); }catch(er){} }
+        wrap.remove(); document.querySelectorAll("#edList select.nm option").forEach(o=>{ if(o.value===n&&!added.some(x=>x.name===n)) o.remove(); }); };
+      // ✎ convierte el nombre en un campo editable; Intro o salir del campo guarda, Esc cancela
+      const ed=document.createElement("button"); ed.type="button"; ed.className="evPickDel evPickEdit"; ed.textContent="✎"; ed.title="Renombrar «"+n+"»"; ed.setAttribute("aria-label","Renombrar "+n);
+      ed.onclick=e=>{ e.stopPropagation();
+        const ri=document.createElement("input"); ri.type="text"; ri.maxLength=60; ri.value=n; ri.className="evPickRen"; ri.setAttribute("aria-label","Nuevo nombre para "+n);
+        let done=false;
+        const finish=save=>{ if(done) return; done=true;
+          const v=ri.value.trim();
+          if(save&&v&&v!==n){ renameEv(n,v); if(it.name===n) it.name=v; closeEvPicker(); render(); openEvPicker(it); }
+          else{ ri.replaceWith(b); ed.hidden=false; d.hidden=false; } };
+        ri.onkeydown=k=>{ k.stopPropagation(); if(k.key==="Enter"){ k.preventDefault(); finish(true); } else if(k.key==="Escape"){ k.preventDefault(); finish(false); } };
+        ri.onblur=()=>finish(true);
+        b.replaceWith(ri); ed.hidden=true; d.hidden=true; ri.focus(); ri.select(); };
+      wrap.append(b,ed,d); box.append(wrap);
+    });
     const row=document.createElement("div"); row.className="evPickNew";
     const inp=document.createElement("input"); inp.type="text"; inp.maxLength=60; inp.placeholder="Otro nombre…"; inp.setAttribute("aria-label","Otro nombre de evento");
     inp.onkeydown=k=>{ k.stopPropagation(); if(k.key==="Enter"&&inp.value.trim()) pick(inp.value); };
@@ -4706,12 +5173,16 @@ window.renderHalfBands = function(b1,b2,mk,d){
     (document.fullscreenElement||document.body).append(box);
     // justo encima de la fila de botones; si no cabe, debajo
     const fe=document.fullscreenElement;
-    if(fe&&fe.classList.contains("fsRot")){ box.style.left="50%"; box.style.top="50%"; box.style.transform="translate(-50%,-50%)"; evPick=box;
-      setTimeout(()=>{ document.addEventListener("pointerdown",evPickOut,true); document.addEventListener("keydown",evPickKey,true); },0); return; }
-    const r=anchor.getBoundingClientRect(), row0=anchor.parentElement.getBoundingClientRect();
+    let r=anchor.getBoundingClientRect(), row0=anchor.parentElement.getBoundingClientRect(), W=innerWidth, H=innerHeight;
+    if(fe&&fe.classList.contains("fsRot")){
+      // pantalla completa girada 90°: se pasa a las coordenadas locales del contenedor (x local = y de pantalla, y local = ox - x de pantalla)
+      const fr=fe.getBoundingClientRect(), ox=fr.right, oy=fr.top;
+      const loc=q=>({left:q.top-oy,right:q.bottom-oy,top:ox-q.right,bottom:ox-q.left,width:q.height,height:q.width});
+      r=loc(r); row0=loc(row0); W=fe.offsetWidth; H=fe.offsetHeight;
+    }
     const top0=Math.min(r.top,row0.top), bw=box.offsetWidth, bh=box.offsetHeight;
-    let y=top0-bh-6; if(y<4) y=Math.min(innerHeight-bh-4,Math.max(r.bottom,row0.bottom)+6);
-    let x=r.left+r.width/2-bw/2; x=Math.max(4,Math.min(innerWidth-bw-4,x));
+    let y=top0-bh-6; if(y<4) y=Math.min(H-bh-4,Math.max(r.bottom,row0.bottom)+6);
+    let x=r.left+r.width/2-bw/2; x=Math.max(4,Math.min(W-bw-4,x));
     box.style.left=x+"px"; box.style.top=Math.max(4,y)+"px";
     evPick=box; setTimeout(()=>{ document.addEventListener("pointerdown",evPickOut,true); document.addEventListener("keydown",evPickKey,true); },0);
     const f=box.querySelector("button"); if(f) f.focus({preventScroll:true});
@@ -4738,11 +5209,11 @@ window.renderHalfBands = function(b1,b2,mk,d){
   { const edMp4Opt=VidExport.mimes.find(m=>m[1]==="MP4"); if(edMp4Opt) $("edFmt").value=edMp4Opt[0]; }
   if(!VidExport.mimes.length){ $("edExport").disabled=true; $("edExportSep").disabled=true; $("edExport").textContent="Tu navegador no permite exportar vídeo"; }
   $("edCancel").onclick=()=>VidExport.cancel();
-  function buildGroups(){ const out=[]; let cur=null;
+  function buildGroups(){ const out=[]; let cur=null; const used=new Set();
     added.forEach(it=>{ const s=sources.find(x=>x.id===it.srcId); if(!s) return;
       if(evFilter&&evKey(it)!==evFilter) return;
       if(!cur||cur.srcId!==it.srcId){ cur={srcId:it.srcId,src:s.url,name:s.name,ranges:[]}; out.push(cur); }
-      cur.ranges.push({s:it.s,e:it.e,ov:edOvOf(it,added.indexOf(it))}); });
+      cur.ranges.push(...expandRange(it,added.indexOf(it),used)); });
     return out; }
   // Descarga cada tramo indicado (por defecto todos) como un archivo de vídeo independiente.
   async function exportSeparate(idxs){
@@ -4759,7 +5230,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
         if((V.currentSrc||V.src)!==s.url){ const ready=new Promise(r=>V.addEventListener("loadedmetadata",r,{once:true})); V.src=s.url; V.load(); await ready; }
         const own=(it.name||"").replace(/[\\/:*?"<>|]/g,"").trim();
         const name=own?String(i+1).padStart(pad,"0")+"_"+own:base+"_"+String(i+1).padStart(pad,"0")+"_"+fmt(it.s).replace(":","m").replace(".","s");
-        const ok=await VidExport.run({video:V, ranges:[{s:it.s,e:it.e,ov:edOvOf(it,i)}], name, mime:$("edFmt").value, target:+$("edRes").value, fps:+$("edFps").value, ui:{busy:$("edBusy"),bar:$("edBar"),txt:$("edBusyTxt")}, silent:true});
+        const ok=await VidExport.run({video:V, ranges:expandRange(it,i), name, mime:$("edFmt").value, target:+$("edRes").value, fps:+$("edFps").value, ui:{busy:$("edBusy"),bar:$("edBar"),txt:$("edBusyTxt")}, silent:true});
         if(!ok) break;
       }
     } finally {
@@ -4788,7 +5259,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
 window.tutVoz=(()=>{
   const ok="speechSynthesis" in window && "SpeechSynthesisUtterance" in window;
   let on=false; try{ on=localStorage.getItem("tutVoz")==="1"; }catch(e){}
-  const SPD=[1,1.5,2,3]; let spd=3; try{ const v=parseFloat(localStorage.getItem("tutSpd")); if(SPD.includes(v)) spd=v; }catch(e){}
+  const SPD=[1,1.5,2,3]; let spd=2; try{ const v=parseFloat(localStorage.getItem("tutSpd2")); if(SPD.includes(v)) spd=v; }catch(e){}
   const sbtns=new Set();
   const apply=()=>{ document.documentElement.style.setProperty("--tut-k",String(1/spd)); sbtns.forEach(b=>{ b.textContent="⏩ Velocidad: "+String(spd).replace(".5",",5")+"×"; }); };
   const btns=new Set();
@@ -4817,11 +5288,57 @@ window.tutVoz=(()=>{
   }
   function bindSpeed(b){
     sbtns.add(b); apply();
-    b.onclick=()=>{ spd=SPD[(SPD.indexOf(spd)+1)%SPD.length]; try{ localStorage.setItem("tutSpd",String(spd)); }catch(e){} apply(); };
+    b.onclick=()=>{ spd=SPD[(SPD.indexOf(spd)+1)%SPD.length]; try{ localStorage.setItem("tutSpd2",String(spd)); }catch(e){} apply(); };
   }
   apply();
   if(ok) speechSynthesis.getVoices(); // precarga la lista de voces
   return {say,stop,bind,bindSpeed,get on(){ return on; },get k(){ return 1/spd; },get speed(){ return spd; }};
+})();
+</script>
+<script>
+// Pintado de acciones en los tutoriales: dibuja flecha, círculo y texto sobre la maqueta del vídeo. Compartido por los dos tutoriales.
+window.tutPaint=(()=>{
+  const NS="http://www.w3.org/2000/svg";
+  const el=(t,a,st)=>{ const e=document.createElementNS(NS,t); for(const k in a) e.setAttribute(k,a[k]); if(st) Object.assign(e.style,st); return e; };
+  const blank=()=>({bar:false,on:false,tool:"",shapes:[]});
+  const final=()=>({bar:true,on:true,tool:"ptext",shapes:[{t:"arrow",x1:.25,y1:.72,x2:.5,y2:.45},{t:"ell",cx:.66,cy:.52,rx:.09,ry:.2},{t:"txt",x:.66,y:.16,s:"Marcaje tardío"}]});
+  function draw(D,P){
+    const stg=D.querySelector(".tutStg"), svg=stg.querySelector(".tutPaint"), bar=stg.querySelector(".tutPbar"); if(!svg||!bar) return;
+    const r=stg.getBoundingClientRect(), w=r.width, h=r.height;
+    bar.hidden=!P.bar;
+    bar.querySelectorAll(".tutB").forEach(b=>b.classList.toggle("set",(b.dataset.k==="pmode"&&P.on)||b.dataset.k===P.tool));
+    bar.querySelector('[data-k="pmode"]').textContent="Dibujo: "+(P.on?"activado":"apagado");
+    svg.replaceChildren();
+    P.shapes.forEach(s=>{
+      if(s.t==="arrow"){ const x1=s.x1*w,y1=s.y1*h,x2=s.x2*w,y2=s.y2*h, a=Math.atan2(y2-y1,x2-x1), L=14;
+        svg.append(el("line",{x1,y1,x2,y2},{stroke:"var(--red)",strokeWidth:"4",strokeLinecap:"round"}));
+        svg.append(el("polygon",{points:[[x2,y2],[x2-L*Math.cos(a-.45),y2-L*Math.sin(a-.45)],[x2-L*Math.cos(a+.45),y2-L*Math.sin(a+.45)]].map(p=>p.join(",")).join(" ")},{fill:"var(--red)"})); }
+      else if(s.t==="ell") svg.append(el("ellipse",{cx:s.cx*w,cy:s.cy*h,rx:Math.max(.1,s.rx*w),ry:Math.max(.1,s.ry*h)},{stroke:"var(--red)",strokeWidth:"3",fill:"rgba(211,41,30,.22)"}));
+      else if(s.t==="txt"){ const t=el("text",{x:s.x*w,y:s.y*h,"text-anchor":"middle","dominant-baseline":"middle"},{fill:"#fff",fontSize:"13px",fontWeight:"700",fontFamily:"var(--f-body)"}); t.textContent=s.s;
+        const bw=Math.max(8,s.s.length*7.4+14); svg.append(el("rect",{x:s.x*w-bw/2,y:s.y*h-11,width:bw,height:22},{fill:"var(--ink)",stroke:"var(--red)",strokeWidth:"2"})); svg.append(t); }
+    });
+  }
+  // env: {q,S(),draw,go,tap,wait,at,place} · recorre: activar dibujo, flecha, círculo, texto y exportar PNG
+  async function run(W,env){
+    const {q,S,draw:dr,go,tap,wait,at,place}=env, stg=q(".tutStg"), P=()=>S().paint;
+    const key=async(k,txt)=>{ await go(W,q('.tutB[data-k="'+k+'"]'),.5,.5,800,txt); S().hot=k; dr(); await tap(W); S().hot=null; };
+    const pos=(fx,fy)=>place(...at(stg,fx,fy));
+    P().bar=true; dr(); await W(700);
+    await key("pmode","Dibujo: actívalo para pintar sobre el vídeo"); P().on=true; dr(); await W(500);
+    await key("parrow","Flecha"); P().tool="parrow"; dr(); await W(300);
+    const ar={t:"arrow",x1:.25,y1:.72,x2:.25,y2:.72}; pos(.25,.72); await W(800); P().shapes.push(ar);
+    for(let i=1;i<=8;i++){ ar.x2=.25+.25*i/8; ar.y2=.72-.27*i/8; pos(ar.x2,ar.y2); dr(); await W(80); } await wait(W,500,"Arrastra sobre el vídeo para dibujar");
+    await key("pcirc","Círculo"); P().tool="pcirc"; dr(); await W(300);
+    const ce={t:"ell",cx:.66,cy:.52,rx:0,ry:0}; pos(.66,.52); await W(800); P().shapes.push(ce);
+    for(let i=1;i<=8;i++){ ce.rx=.09*i/8; ce.ry=.2*i/8; pos(.66+ce.rx,.52); dr(); await W(80); } await W(500);
+    await key("ptext","Texto"); P().tool="ptext"; dr(); await W(300);
+    pos(.66,.16); await W(800); await tap(W);
+    const tx={t:"txt",x:.66,y:.16,s:""}; P().shapes.push(tx); const T="Marcaje tardío";
+    for(let i=1;i<=T.length;i++){ tx.s=T.slice(0,i); dr(); await W(55); } await W(600);
+    await key("ppng","Exportar PNG: guarda el fotograma con lo pintado");
+    S().toast="✔ Listo: fotograma descargado en PNG con lo pintado"; dr(); await wait(W,2600,"Listo");
+  }
+  return {blank,final,draw,run};
 })();
 </script>
 <script>
@@ -4834,7 +5351,7 @@ window.tutVoz=(()=>{
   const DUR=95*60; // duración ficticia del vídeo: 95 min
   const fmt=p=>{ const s=Math.round(p/100*DUR); return Math.floor(s/60)+":"+String(s%60).padStart(2,"0"); };
   const sleep=ms=>new Promise(r=>setTimeout(r,ms*tutVoz.k));
-  const blank=()=>({vid:false,head:0,marks:{},inP:0,outP:100,items:[],busy:false,toast:"",hot:null,showH:false});
+  const blank=()=>({vid:false,head:0,marks:{},inP:0,outP:100,items:[],busy:false,toast:"",hot:null,showH:false,paint:tutPaint.blank()});
   let S=blank(), token=0, cur=0, playing=true;
 
   // ---------- pintado del estado ----------
@@ -4871,6 +5388,7 @@ window.tutVoz=(()=>{
       el.append(n,tx,acts); LIST.append(el);
     });
     qa(".tutB[data-k]").forEach(b=>b.classList.toggle("hot",b.dataset.k===S.hot));
+    tutPaint.draw(D,S.paint);
   }
 
   // ---------- cursor y esperas ----------
@@ -4927,6 +5445,11 @@ window.tutVoz=(()=>{
      d:"Repite A, B, añadir y evento.",
      pre(){ S.items=[{s:20,e:26,name:"Gol a favor"},{s:62,e:67,name:"Ocasión a favor"}]; S.inP=62; S.outP=67; },
      async run(W){ await setPoint(W,"in",62); await setPoint(W,"out",67); await addTramo(W,62,67); await pickEvent(W,1,"Ocasión a favor"); await W(700); }},
+    {t:"Pinta sobre el vídeo",opt:true,
+     d:"Activa «Dibujo», elige flecha, círculo o texto y dibuja sobre el vídeo. «Exportar PNG» guarda el fotograma con lo pintado (en los vídeos descargados el pintado no se incluye; para eso usa «Insertar en el vídeo (5 s)» en el editor, que mete el fotograma pintado como imagen fija de 5 segundos).",
+     pre(){ S.items=[{s:20,e:26,name:"Gol a favor"},{s:62,e:67,name:"Ocasión a favor"}]; S.paint=tutPaint.final(); },
+     async run(W){ S.items=[{s:20,e:26,name:"Gol a favor"},{s:62,e:67,name:"Ocasión a favor"}]; S.inP=62; S.outP=67; S.toast=""; draw();
+       await tutPaint.run(W,{q,S:()=>S,draw,go,tap,wait,at,place}); }},
     {t:"Descarga los eventos",opt:false,
      d:"«Descarga en un vídeo»: un único vídeo con todos los eventos. «Descargar uno a uno»: un vídeo por cada evento.",
      pre(){ S.items=[{s:20,e:26,name:"Gol a favor"},{s:62,e:67,name:"Ocasión a favor"}]; S.inP=62; S.outP=67; },
@@ -4961,7 +5484,7 @@ window.tutVoz=(()=>{
   function stop(){ token++; tutVoz.stop(); }
   tutVoz.bind(q("#tutVoz")); tutVoz.bindSpeed(q("#tutSpd"));
   const list=q("#tutSteps");
-  STEPS.forEach((s,i)=>{ const li=document.createElement("li"), b=document.createElement("button"); b.type="button"; b.textContent=(i+1)+". "+s.t.replace(/^Sube uno o varios vídeos$/,"Subir vídeos").replace(/^Marca las partes$/,"Partes").replace(/^Marca el tramo$/,"Tramo A–B").replace(/^Pulsa «\+ Añadir»$/,"Añadir").replace(/^Asigna un evento predeterminado$/,"Evento").replace(/^Haz un nuevo registro$/,"Otro registro").replace(/^Descarga los eventos$/,"Descargar");
+  STEPS.forEach((s,i)=>{ const li=document.createElement("li"), b=document.createElement("button"); b.type="button"; b.textContent=(i+1)+". "+s.t.replace(/^Sube uno o varios vídeos$/,"Subir vídeos").replace(/^Marca las partes$/,"Partes").replace(/^Marca el tramo$/,"Tramo A–B").replace(/^Pulsa «\+ Añadir»$/,"Añadir").replace(/^Asigna un evento predeterminado$/,"Evento").replace(/^Haz un nuevo registro$/,"Otro registro").replace(/^Descarga los eventos$/,"Descargar").replace(/^Pinta sobre el vídeo$/,"Pintado");
     b.onclick=()=>show(i); li.append(b); list.append(li); });
   q("#tutPrev").onclick=()=>{ if(cur>0) show(cur-1); };
   q("#tutNext").onclick=()=>{ if(cur<STEPS.length-1) show(cur+1); };
@@ -4988,7 +5511,7 @@ window.tutVoz=(()=>{
   const DET={"Gol":["Tiro dentro del área","Tiro fuera del área","Penalti"],"Salida de balón":["En largo","En corto","Con portero"]};
   const JUG=["1","2","3","4","5"];
   const colOf=c=>(CATS.find(x=>x[0]===c)||[0,"var(--c-otr)"])[1];
-  const blank=()=>({vid:false,head:0,marks:{},ev:[],sel:null,clip:{a:37.5,b:62.5},form:null,flt:"",busy:false,toast:"",hot:null});
+  const blank=()=>({vid:false,head:0,marks:{},ev:[],sel:null,clip:{a:37.5,b:62.5},form:null,flt:"",busy:false,toast:"",hot:null,paint:tutPaint.blank()});
   const EV1={p:22,cat:"Gol",eq:"Mi equipo",det:"Tiro fuera del área",jug:"1",com:"Buena acción"};
   const EV3={p:40,cat:"Ocasión",eq:"Mi equipo",det:"",jug:"",com:"",man:true};
   let S=blank(), token=0, cur=0, playing=true, finished=false;
@@ -5036,6 +5559,7 @@ window.tutVoz=(()=>{
     q('[data-k="flt"]').textContent="Ver: "+(S.flt||"Todas")+" ▾";
     drawForm();
     qa("[data-k],[data-f]").forEach(b=>b.classList.toggle("hot",(b.dataset.k||b.dataset.f)===S.hot));
+    tutPaint.draw(D,S.paint);
   }
 
   // ---------- cursor y esperas ----------
@@ -5098,7 +5622,11 @@ window.tutVoz=(()=>{
      pre(){ S.sel=null; S.flt="Gol"; },
      async run(W){ S.sel=null; draw(); await choose(W,"Gol"); await go(W,q('[data-k="fltone"]'),.5,.5,800,"Descargar filtrados, un único vídeo"); await W(400); await pressK(W,"fltsep","Descargar filtrados, un vídeo por evento");
        S.busy=true; draw(); const bar=q(".tutBar i"); bar.style.transition="none"; bar.style.width="0"; void bar.offsetWidth; bar.style.transition="width "+(1.6*tutVoz.k)+"s linear"; bar.style.width="100%"; await wait(W,1900,"Exportando");
-       S.busy=false; S.toast="✔ Listo: se ha descargado 1 archivo (Gol)"; draw(); await wait(W,2600,"Listo"); }}
+       S.busy=false; S.toast="✔ Listo: se ha descargado 1 archivo (Gol)"; draw(); await wait(W,2600,"Listo"); }},
+    {s:"Pintado",t:"Pinta sobre el vídeo",
+     d:"En «Pintado de acciones» activa «Dibujo», elige flecha, círculo o texto y dibuja sobre el vídeo. «Exportar PNG» guarda el fotograma con lo pintado.",
+     pre(){ S.flt="Gol"; S.paint=tutPaint.final(); },
+     async run(W){ S.flt=""; S.toast=""; draw(); await tutPaint.run(W,{q,S:()=>S,draw,go,tap,wait,at,place}); }}
   ];
 
   // ---------- control de reproducción ----------
@@ -5178,6 +5706,9 @@ const opacityControlInput=$("opacityControl"), opacityValueEl=$("opacityValue");
 const focusStyleButtons=block.querySelectorAll("[data-focus-style]");
 const focusStylePicker=$("pintFocusStyles");
 const focusFollowEndButton=$("focusFollowEnd");
+const numsEl=$("pintNums");
+const textOptsEl=$("pintTextOpts"), fontSizeInput=$("pintFontSize"), fontSizeVal=$("pintFontVal");
+const boxPadInput=$("pintBoxPad"), boxPadVal=$("pintPadVal");
 const undoActionButton=$("pintUndo"), redoActionButton=$("pintRedo"), clearActionButton=$("pintClear");
 const durSel=$("pintDur");
 
@@ -5195,6 +5726,8 @@ const state={
   selectedAnnotationIndex:-1,
   resizeBaseline:null,
   selectedQuickInsert:"",
+  number:1,
+  playerName:"",
   focusStyle:"cilindrico",
   spotlightStyle:"filled",
   opacity:1,
@@ -5232,8 +5765,10 @@ function refreshHint(){
   if(state.drawEnabled){
     if(t==="connector") msg="Clic para añadir puntos · doble clic para finalizar · Esc para cancelar";
     else if(t==="polygonZone") msg="Clic para añadir vértices · doble clic para finalizar · Esc para cancelar";
+    else if(t==="number") msg="Pulsa sobre el vídeo para colocar el número "+state.number;
+    else if(t==="orientation") msg="Arrastra desde los pies del jugador hacia donde se orienta · suelta para finalizar";
     else if(t==="pen") msg="Arrastra para dibujar · suelta para finalizar";
-    else if(t==="edit") msg="Pulsa una marca para editarla: texto (doble) y ajustes del panel";
+    else if(t==="edit") msg="Pulsa una marca para editarla: doble clic en textos, etiquetas y números; colores y ajustes en el panel";
     else if(t!=="move" && t!=="text" && t!=="callout") msg="Arrastra para dibujar · suelta para finalizar";
   }
   showHint(msg);
@@ -5402,6 +5937,13 @@ function getStrokeDrawProgress(shape, currentTime) {
 }
 
 function isShapeHiddenAt(shape, currentTime) {
+  // Tras una captura fija insertada: lo que ya estaba pintado en ese instante no continúa en el vídeo
+  if (typeof state.stillCut === "number" && currentTime > state.stillCut + 0.001) {
+    const a0 = (shape.type === "focus" && Array.isArray(shape.keyframes) && shape.keyframes.length)
+      ? shape.keyframes[0].time
+      : (typeof shape.appearTime === "number" ? shape.appearTime : null);
+    if (a0 === null || a0 <= state.stillCut + 0.001) return true;
+  }
   // Para focos con keyframes, usar la lógica existente
   if (shape.type === "focus" && Array.isArray(shape.keyframes) && shape.keyframes.length) {
     return isFocusHiddenAt(shape, currentTime);
@@ -5513,11 +6055,19 @@ function deleteSelectedAnnotation() {
   setStatus("Anotacion borrada.");
 }
 
-function measureTextShape(text, lineWidth) {
+// Tamaño de fuente y de cajetín editables: shape.fontSize (px) y shape.boxPad (multiplicador, 1 = normal).
+function defaultFontSize(shape) {
+  return shape.type === "callout" ? Math.max(16, shape.lineWidth * 4) : Math.max(18, shape.lineWidth * 5);
+}
+function shapeFontSize(shape) { return shape.fontSize > 0 ? shape.fontSize : defaultFontSize(shape); }
+function shapeBoxPad(shape) { return shape.boxPad > 0 ? shape.boxPad : 1; }
+
+function measureTextShape(text, lineWidth, shape) {
   ctx.save();
-  const fontSize = Math.max(18, lineWidth * 5);
-  const paddingX = Math.max(12, fontSize * 0.45);
-  const paddingY = Math.max(8, fontSize * 0.28);
+  const fontSize = shape ? shapeFontSize(shape) : Math.max(18, lineWidth * 5);
+  const k = shape ? shapeBoxPad(shape) : 1;
+  const paddingX = Math.max(12, fontSize * 0.45) * k;
+  const paddingY = Math.max(8, fontSize * 0.28) * k;
   ctx.font = `700 ${fontSize}px Barlow, Arial`;
   const width = ctx.measureText(text).width;
   const height = fontSize;
@@ -5593,7 +6143,7 @@ function getShapeBounds(shape) {
   }
 
   if (shape.type === "text") {
-    const size = measureTextShape(shape.text, shape.lineWidth);
+    const size = measureTextShape(shape.text, shape.lineWidth, shape);
     return {
       left: shape.x,
       top: shape.y - size.boxHeight + size.paddingY,
@@ -5603,13 +6153,14 @@ function getShapeBounds(shape) {
   }
 
   if (shape.type === "callout") {
-    const fontSize = Math.max(16, shape.lineWidth * 4);
+    const fontSize = shapeFontSize(shape);
+    const k = shapeBoxPad(shape);
     ctx.save();
     ctx.font = `700 ${fontSize}px Barlow, Arial`;
     const textWidth = ctx.measureText(shape.text).width;
     ctx.restore();
-    const boxWidth = textWidth + 32;
-    const boxHeight = fontSize + 24;
+    const boxWidth = textWidth + 32 * k;
+    const boxHeight = fontSize + 24 * k;
     return {
       left: shape.x,
       top: shape.y - boxHeight,
@@ -5638,6 +6189,20 @@ function getShapeBounds(shape) {
     };
   }
 
+  if (shape.type === "orientation") {
+    const d = Math.hypot(shape.x2 - shape.x1, shape.y2 - shape.y1);
+    const a = Math.atan2(shape.y2 - shape.y1, shape.x2 - shape.x1);
+    const pts = [[shape.x1, shape.y1], [shape.x1 + d * Math.cos(a - ORI_HALF), shape.y1 + d * Math.sin(a - ORI_HALF)],
+      [shape.x1 + d * Math.cos(a + ORI_HALF), shape.y1 + d * Math.sin(a + ORI_HALF)], [shape.x2, shape.y2]];
+    const pad = Math.max(8, Math.min(d * 0.22, 26));
+    return {
+      left: Math.min(...pts.map((p) => p[0])) - pad,
+      top: Math.min(...pts.map((p) => p[1])) - pad,
+      right: Math.max(...pts.map((p) => p[0])) + pad,
+      bottom: Math.max(...pts.map((p) => p[1])) + pad,
+    };
+  }
+
   if (shape.type === "arrow" || shape.type === "arrowStraight") {
     const dx = shape.x2 - shape.x1;
     const dy = shape.y2 - shape.y1;
@@ -5652,7 +6217,7 @@ function getShapeBounds(shape) {
     if (shape.type === "arrow" && distance >= 2) {
       const normalX = -dy / distance;
       const normalY = dx / distance;
-      const curveDirection = normalY > 0 ? -1 : 1;
+      const curveDirection = arrowCurveDir(shape);
       const curveAmount = Math.max(26, Math.min(distance * 0.35, 120));
       const controlX = (shape.x1 + shape.x2) / 2 + normalX * curveAmount * curveDirection;
       const controlY = (shape.y1 + shape.y2) / 2 + normalY * curveAmount * curveDirection;
@@ -5697,6 +6262,39 @@ function findAnnotationAtPoint(point) {
     }
   }
   return -1;
+}
+
+// Por defecto la flecha curva siempre abomba hacia arriba; tras rotarla se fija el sentido (shape.curveDir).
+function arrowCurveDir(shape) {
+  if (shape.curveDir === 1 || shape.curveDir === -1) return shape.curveDir;
+  const dx = shape.x2 - shape.x1, dy = shape.y2 - shape.y1;
+  return dx > 0 ? -1 : 1;
+}
+
+function rotateShape(shape, angle) {
+  const rotatable = ["arrow", "arrowStraight", "orientation", "pen", "connector", "polygonZone"];
+  if (!rotatable.includes(shape.type)) return false;
+  const bounds = getShapeBounds(shape);
+  const cx = (bounds.left + bounds.right) / 2;
+  const cy = (bounds.top + bounds.bottom) / 2;
+  const cos = Math.cos(angle), sin = Math.sin(angle);
+  const rot = (x, y) => ({ x: cx + (x - cx) * cos - (y - cy) * sin, y: cy + (x - cx) * sin + (y - cy) * cos });
+  if (shape.points) {
+    shape.points = shape.points.map((p) => rot(p.x, p.y));
+    return true;
+  }
+  if (shape.type === "arrow") shape.curveDir = arrowCurveDir(shape);
+  const a = rot(shape.x1, shape.y1), b = rot(shape.x2, shape.y2);
+  shape.x1 = a.x; shape.y1 = a.y; shape.x2 = b.x; shape.y2 = b.y;
+  return true;
+}
+
+function rotateSelectedAnnotation(angle) {
+  const idx = state.selectedAnnotationIndex;
+  if (!(idx >= 0 && idx < state.annotations.length)) { setStatus("Señala primero una flecha con «Mover» para rotarla."); return; }
+  pushHistory();
+  if (!rotateShape(state.annotations[idx], angle)) { setStatus("Esta marca no se puede rotar (prueba con flechas, líneas y zonas libres)."); return; }
+  redraw();
 }
 
 function translateShape(shape, dx, dy) {
@@ -5746,6 +6344,7 @@ function scaleShapeFromBaseline(shape, factor) {
     scaledShape.x = anchor.x;
     scaledShape.y = anchor.y;
     scaledShape.lineWidth = Math.max(1, shape.lineWidth * factor);
+    if (shape.fontSize > 0) scaledShape.fontSize = Math.max(6, shape.fontSize * factor);
     return scaledShape;
   }
 
@@ -5759,7 +6358,19 @@ function scaleShapeFromBaseline(shape, factor) {
   return scaledShape;
 }
 
+function syncTextOpts() {
+  const sel = isSelTool() ? state.annotations[state.selectedAnnotationIndex] : undefined;
+  const on = !!sel && (sel.type === "text" || sel.type === "callout");
+  textOptsEl.hidden = !on;
+  if (!on) return;
+  fontSizeInput.value = String(Math.round(shapeFontSize(sel)));
+  fontSizeVal.textContent = fontSizeInput.value;
+  boxPadInput.value = String(Math.round(shapeBoxPad(sel) * 100));
+  boxPadVal.textContent = boxPadInput.value + "%";
+}
+
 function syncSizeControl() {
+  syncTextOpts();
   const hasSelection = isSelTool() && state.selectedAnnotationIndex >= 0 && state.selectedAnnotationIndex < state.annotations.length;
   sizeControlInput.disabled = !hasSelection;
 
@@ -5924,7 +6535,7 @@ function drawArrow(shape, drawProgress = 1) {
 
   const normalX = -dy / distance;
   const normalY = dx / distance;
-  const curveDirection = normalY > 0 ? -1 : 1;
+  const curveDirection = arrowCurveDir(shape);
   const curveAmount = Math.max(26, Math.min(distance * 0.35, 120));
   const controlX = (shape.x1 + shape.x2) / 2 + normalX * curveAmount * curveDirection;
   const controlY = (shape.y1 + shape.y2) / 2 + normalY * curveAmount * curveDirection;
@@ -6206,6 +6817,32 @@ function drawFocus(shape) {
   drawFocusAbierto(shape);
 }
 
+// Orientación: abanico (±35°) desde los pies hacia donde se orienta el jugador.
+const ORI_HALF = Math.PI * 35 / 180;
+function drawOrientation(shape) {
+  const dx = shape.x2 - shape.x1, dy = shape.y2 - shape.y1;
+  const d = Math.hypot(dx, dy);
+  if (d < 12) return;
+  const a = Math.atan2(dy, dx);
+  ctx.save();
+  ctx.beginPath();
+  ctx.moveTo(shape.x1, shape.y1);
+  ctx.arc(shape.x1, shape.y1, d, a - ORI_HALF, a + ORI_HALF);
+  ctx.closePath();
+  ctx.globalAlpha = (ctx.globalAlpha || 1) * 0.28;
+  ctx.fillStyle = shape.stroke;
+  ctx.fill();
+  ctx.restore();
+  ctx.save();
+  ctx.lineWidth = Math.max(2, shape.lineWidth);
+  ctx.beginPath();
+  ctx.moveTo(shape.x1, shape.y1);
+  ctx.arc(shape.x1, shape.y1, d, a - ORI_HALF, a + ORI_HALF);
+  ctx.closePath();
+  ctx.stroke();
+  ctx.restore();
+}
+
 function drawCone(shape) {
   const left = Math.min(shape.x1, shape.x2);
   const top = Math.min(shape.y1, shape.y2);
@@ -6399,7 +7036,7 @@ function drawPen(shape) {
 }
 
 function drawText(shape) {
-  const size = measureTextShape(shape.text, shape.lineWidth);
+  const size = measureTextShape(shape.text, shape.lineWidth, shape);
   const boxX = shape.x;
   const boxY = shape.y - size.boxHeight + size.paddingY;
   const radius = Math.max(12, size.fontSize * 0.5);
@@ -6438,9 +7075,10 @@ function drawText(shape) {
 }
 
 function drawCallout(shape) {
-  const paddingX = 16;
-  const paddingY = 12;
-  const fontSize = Math.max(16, shape.lineWidth * 4);
+  const k = shapeBoxPad(shape);
+  const paddingX = 16 * k;
+  const paddingY = 12 * k;
+  const fontSize = shapeFontSize(shape);
   ctx.font = `700 ${fontSize}px Barlow, Arial`;
   const textWidth = ctx.measureText(shape.text).width;
   const boxWidth = textWidth + paddingX * 2;
@@ -6721,6 +7359,9 @@ function drawShape(shape, currentTime = 0) {
   if (shape.type === "cone") {
     drawCone(shape);
   }
+  if (shape.type === "orientation") {
+    drawOrientation(shape);
+  }
   if (shape.type === "zone") {
     drawZone(shape);
   }
@@ -6805,28 +7446,7 @@ function beginDrawing(event) {
     setTool("move");
   }
 
-  if (state.tool === "edit") {
-    const ei = findAnnotationAtPoint(point);
-    state.selectedAnnotationIndex = ei;
-    state.draggingAnnotationIndex = -1;
-    if (ei >= 0) {
-      const shape = state.annotations[ei];
-      if (shape.type === "focus") { state.focusStyle = shape.focusStyle || "cilindrico"; syncFocusStyleButtons(); }
-      if (shape.type === "spotlight") { state.spotlightStyle = shape.spotlightStyle || "filled"; syncSpotlightStyleButtons(); }
-      if ((shape.type === "text" || shape.type === "callout") && typeof shape.text === "string") {
-        const nt = window.prompt("Editar texto", shape.text);
-        if (nt && nt !== shape.text) { pushHistory(); shape.text = nt; }
-      }
-      setStatus("Editando: cambia color, grosor u opacidad en el panel.");
-    } else {
-      setStatus("No he encontrado una marca en ese punto. Pulsa sobre una anotación existente.");
-    }
-    syncSizeControl();
-    redraw();
-    return;
-  }
-
-  if (state.tool === "move") {
+  if (isSelTool()) {
     state.vertexDrag = null;
     const vi = getSelectedVertexAtPoint(point);
     if (vi >= 0) {
@@ -6903,6 +7523,26 @@ function beginDrawing(event) {
     return;
   }
 
+  if (state.tool === "number") {
+    pushHistory();
+    addAnnotation({
+      type: "player",
+      x: point.x,
+      y: point.y,
+      dorsal: state.number,
+      nombre: state.playerName,
+      stroke: state.stroke,
+      fill: state.fill,
+      lineWidth: state.lineWidth,
+      lineStyle: state.lineStyle,
+      opacity: state.opacity,
+    });
+    state.selectedAnnotationIndex = state.annotations.length - 1;
+    syncSizeControl();
+    redraw();
+    return;
+  }
+
   if (state.tool === "pen") {
     state.drawing = {
       type: "pen",
@@ -6955,7 +7595,7 @@ function updateDrawing(event) {
     return;
   }
 
-  if (state.tool === "move" && state.vertexDrag) {
+  if (isSelTool() && state.vertexDrag) {
     const vd = state.vertexDrag;
     const shape = state.annotations[vd.shapeIndex];
     if (shape && shape.points && shape.points[vd.vertexIndex]) {
@@ -6966,7 +7606,7 @@ function updateDrawing(event) {
     return;
   }
 
-  if (state.tool === "move" && state.resizingHandleIndex >= 0 && state.resizeAnchor) {
+  if (isSelTool() && state.resizingHandleIndex >= 0 && state.resizeAnchor) {
     const point = getCanvasPoint(event);
     const idx = state.selectedAnnotationIndex;
     if (idx >= 0 && state.resizeBaseline) {
@@ -6977,7 +7617,7 @@ function updateDrawing(event) {
     return;
   }
 
-  if (state.tool === "move" && state.draggingAnnotationIndex >= 0 && state.dragLastPoint) {
+  if (isSelTool() && state.draggingAnnotationIndex >= 0 && state.dragLastPoint) {
     const point = getCanvasPoint(event);
     const dx = point.x - state.dragLastPoint.x;
     const dy = point.y - state.dragLastPoint.y;
@@ -7024,7 +7664,7 @@ function finishDrawing(event) {
     return;
   }
 
-  if (state.tool === "move") {
+  if (isSelTool()) {
     if (state.vertexDrag) {
       state.vertexDrag = null;
       setStatus("Vértice movido.");
@@ -7163,6 +7803,10 @@ function paintToolButtons(){
     b.classList.toggle("is-active",on);
     b.setAttribute("aria-pressed",String(on));
   });
+  numsEl.querySelectorAll(".pintNum[data-idx]").forEach(b=>{
+    const p=roster[Number(b.dataset.idx)];
+    b.classList.toggle("is-active",!!p && state.drawEnabled && state.tool==="number" && p.d===state.number && p.n===state.playerName);
+  });
   const sel=state.annotations[state.selectedAnnotationIndex];
   focusStylePicker.hidden=!(state.drawEnabled && (state.tool==="focus" || (isSelTool() && sel && sel.type==="focus")));
 }
@@ -7176,7 +7820,7 @@ function setTool(nextTool){
   paintToolButtons();
   refreshHint();
   syncSizeControl();
-  if(nextTool==="edit") setStatus("Modo editar: pulsa una marca; cambia sus colores, grosor y demás en el panel. En textos y etiquetas se pide el texto.");
+  if(nextTool==="edit") setStatus("Modo editar: pulsa una marca (arrástrala o mueve sus vértices); doble clic para cambiar el texto o el número; colores y grosor en el panel.");
   if(nextTool==="move") setStatus("Modo mover: pulsa una marca y arrástrala; las esquinas la redimensionan.");
 }
 
@@ -7217,16 +7861,156 @@ function placeCanvas(){
 toolButtons.forEach(button=>{
   button.addEventListener("click",()=>{
     if(!(v.currentSrc||v.src)){ setStatus("Carga un vídeo para poder pintar sobre él."); return; }
-    // Pulsar de nuevo la herramienta activa la desactiva y deja de pintar.
-    if(state.drawEnabled && state.tool===button.dataset.tool){ setDrawEnabled(false); return; }
+    // Pulsar de nuevo la herramienta activa la mantiene (dejar de pintar: botón «Dibujo: activo»).
+    // Antes la apagaba y, al ir a pintar otra marca, el primer clic parecía no hacer nada.
+    if(state.drawEnabled && state.tool===button.dataset.tool){ setStatus("Herramienta activa. Arrastra sobre el vídeo para pintar."); return; }
     setTool(button.dataset.tool);
     if(!state.drawEnabled) setDrawEnabled(true);
   });
 });
 modeBtn.addEventListener("click",()=>setDrawEnabled(!state.drawEnabled));
+// ---------- plantilla de jugadores (dorsal + nombre), compartida por registro y editor ----------
+const ROSTER_KEY="acfcPintRoster";
+const rosterTxt=$("pintRosterTxt");
+const rosterDefault=()=>Array.from({length:11},(_,i)=>({d:i+1,n:""}));
+function rosterParse(text){
+  const out=[];
+  String(text||"").split(/\r?\n/).slice(0,60).forEach(line=>{
+    const m=line.trim().match(/^(\d{1,2})(?:[\s\t.\-–:)]+(.*))?$/);
+    if(!m) return;
+    out.push({d:Number(m[1]),n:(m[2]||"").trim().replace(/\s+/g," ").slice(0,30)});
+  });
+  return out.slice(0,40);
+}
+const rosterToText=list=>list.map(p=>p.d+(p.n?" "+p.n:"")).join("\n");
+function rosterLoad(){
+  try{
+    const a=JSON.parse(localStorage.getItem(ROSTER_KEY)||"null");
+    if(Array.isArray(a)){ const l=rosterParse(a.map(p=>Math.round(Number(p&&p.d))+" "+String(p&&p.n||"")).join("\n")); if(l.length||!a.length) return l; }
+  }catch(e){}
+  return rosterDefault();
+}
+let roster=rosterLoad();
+function renderRoster(){
+  const named=roster.some(p=>p.n);
+  numsEl.classList.toggle("hasNames",named);
+  numsEl.replaceChildren();
+  roster.forEach((p,i)=>{
+    const b=document.createElement("button");
+    b.type="button"; b.className="pintNum"+(p.n?" named":""); b.dataset.idx=String(i);
+    b.title=p.n?("Dorsal "+p.d+" · "+p.n):"Dorsal "+p.d;
+    if(p.n){ const d=document.createElement("b"), s=document.createElement("small"); d.textContent=p.d; s.textContent=p.n; b.append(d,s); }
+    else b.textContent=p.d;
+    numsEl.appendChild(b);
+  });
+  const o=document.createElement("button");
+  o.type="button"; o.className="pintNum"; o.dataset.other="1"; o.title="Otro número"; o.textContent="Otro";
+  numsEl.appendChild(o);
+  paintToolButtons();
+}
+const rosterListEl=$("pintRosterList");
+function persistRoster(){
+  try{ localStorage.setItem(ROSTER_KEY,JSON.stringify(roster)); }catch(e){}
+  document.dispatchEvent(new CustomEvent("acfcPintRoster",{detail:{from:sfx}}));
+}
+function renderRosterRows(focusIdx){
+  if(!rosterListEl) return;
+  rosterListEl.replaceChildren();
+  roster.forEach((p,i)=>{
+    const row=document.createElement("div"); row.className="pintRRow"; row.dataset.idx=String(i);
+    const d=document.createElement("input"); d.className="rd"; d.type="text"; d.inputMode="numeric"; d.maxLength=2; d.value=p.d; d.placeholder="Nº"; d.setAttribute("aria-label","Dorsal");
+    const n=document.createElement("input"); n.className="rn"; n.type="text"; n.maxLength=30; n.value=p.n; n.placeholder="Nombre (opcional)"; n.setAttribute("aria-label","Nombre del jugador");
+    const a=document.createElement("button"); a.type="button"; a.className="ra"; a.textContent="Asignar"; a.title="Asignar este dorsal y nombre a un jugador del vídeo: pulsa y luego pincha sobre el jugador";
+    const x=document.createElement("button"); x.type="button"; x.className="rx"; x.textContent="×"; x.title="Quitar jugador"; x.setAttribute("aria-label","Quitar jugador");
+    row.append(d,n,a,x); rosterListEl.appendChild(row);
+  });
+  if(focusIdx!=null){ const r=rosterListEl.children[focusIdx]; if(r){ r.scrollIntoView({block:"nearest"}); r.querySelector(".rn").focus(); } }
+}
+function setRoster(list,save,focusIdx){
+  roster=list;
+  if(rosterTxt) rosterTxt.value="";
+  renderRosterRows(focusIdx);
+  renderRoster();
+  if(save) persistRoster();
+}
+if(rosterListEl){
+  rosterListEl.addEventListener("input",e=>{
+    const row=e.target.closest(".pintRRow"); if(!row) return;
+    const p=roster[Number(row.dataset.idx)]; if(!p) return;
+    if(e.target.classList.contains("rd")){
+      e.target.value=e.target.value.replace(/\D/g,"").slice(0,2);
+      if(e.target.value==="") return;
+      p.d=Number(e.target.value);
+    } else p.n=e.target.value.replace(/\s+/g," ").slice(0,30).trimStart();
+    renderRoster(); persistRoster();
+  });
+  rosterListEl.addEventListener("focusout",e=>{
+    const row=e.target.closest&&e.target.closest(".pintRRow"); if(!row||!e.target.classList.contains("rd")) return;
+    const p=roster[Number(row.dataset.idx)]; if(p) e.target.value=p.d;
+  });
+  rosterListEl.addEventListener("keydown",e=>{
+    if(e.key!=="Enter"||!e.target.classList.contains("rn")) return;
+    e.preventDefault(); $("pintRosterAdd").click();
+  });
+  rosterListEl.addEventListener("click",e=>{
+    const x=e.target.closest(".rx"); if(!x) return;
+    const i=Number(x.parentNode.dataset.idx);
+    roster.splice(i,1); setRoster(roster,true);
+  });
+}
+$("pintRosterAdd").addEventListener("click",()=>{
+  if(roster.length>=40){ setStatus("La plantilla admite hasta 40 jugadores."); return; }
+  const last=roster.reduce((m,p)=>Math.max(m,p.d),0);
+  roster.push({d:Math.min(99,last+1),n:""});
+  setRoster(roster,true,roster.length-1);
+});
+document.addEventListener("acfcPintRoster",e=>{
+  if(e.detail&&e.detail.from===sfx) return;
+  setRoster(rosterLoad(),false);
+});
+$("pintRosterSave").addEventListener("click",()=>{
+  const l=rosterParse(rosterTxt.value);
+  if(!l.length){ setStatus("Escribe al menos una línea con el dorsal (0-99) y el nombre."); return; }
+  setRoster(l,true); setStatus("Lista cargada: "+l.length+" jugador(es).");
+});
+$("pintRosterReset").addEventListener("click",()=>{ setRoster(rosterDefault(),true); setStatus("Plantilla restaurada (dorsales 1-11)."); });
+function armRosterPlayer(idx){
+  if(!(v.currentSrc||v.src)){ setStatus("Carga un vídeo para poder asignar un jugador."); return; }
+  const p=roster[idx]; if(!p) return;
+  state.number=p.d; state.playerName=p.n;
+  setTool("number");
+  if(!state.drawEnabled) setDrawEnabled(true);
+  paintToolButtons(); refreshHint();
+  setStatus("Asignando "+p.d+(p.n?" ("+p.n+")":"")+": pulsa sobre el jugador en el vídeo.");
+}
+if(rosterListEl) rosterListEl.addEventListener("click",e=>{
+  const a=e.target.closest(".ra"); if(a) armRosterPlayer(Number(a.parentNode.dataset.idx));
+});
+numsEl.addEventListener("click",e=>{
+  const b=e.target.closest(".pintNum"); if(!b) return;
+  if(!(v.currentSrc||v.src)){ setStatus("Carga un vídeo para poder pintar sobre él."); return; }
+  let n, nom="";
+  if(b.dataset.other){
+    const t=window.prompt("Número a colocar (0-99)",String(state.number));
+    n=Math.round(Number(t));
+    if(!t||!(n>=0&&n<=99)) return;
+    const q=window.prompt("Nombre del jugador (opcional)","");
+    nom=(q||"").trim().slice(0,30);
+  } else {
+    const p=roster[Number(b.dataset.idx)]; if(!p) return;
+    n=p.d; nom=p.n;
+  }
+  state.number=n; state.playerName=nom;
+  setTool("number");
+  if(!state.drawEnabled) setDrawEnabled(true);
+  paintToolButtons(); refreshHint();
+  setStatus("Pulsa sobre el vídeo para colocar el "+n+(nom?" ("+nom+")":"")+".");
+});
+setRoster(roster,false);
 
 duplicateAnnotationButton.addEventListener("click",()=>{ duplicateSelectedAnnotation(); paintToolButtons(); });
 deleteAnnotationButton.addEventListener("click",()=>{ deleteSelectedAnnotation(); paintToolButtons(); });
+$("pintRot").addEventListener("click",e=>{ rotateSelectedAnnotation((e.shiftKey?-1:1)*Math.PI/12); });
 
 // Los ajustes del panel solo tocan una marca ya pintada si se ha señalado con «Mover»;
 // con cualquier herramienta de dibujo valen para lo siguiente que se pinte.
@@ -7281,6 +8065,20 @@ sizeControlInput.addEventListener("input",e=>{
   state.annotations[i]=scaleShapeFromBaseline(state.resizeBaseline,f);
   redraw();
 });
+// Fuente y cajetín de textos y etiquetas (una sola entrada de historial por arrastre del deslizador)
+let textHistoryPushed=false;
+[fontSizeInput,boxPadInput].forEach(inp=>{
+  inp.addEventListener("pointerdown",()=>{ textHistoryPushed=false; });
+  inp.addEventListener("input",()=>{
+    const sel=isSelTool()?state.annotations[state.selectedAnnotationIndex]:undefined;
+    if(!sel||(sel.type!=="text"&&sel.type!=="callout")) return;
+    if(!textHistoryPushed){ pushHistory(); textHistoryPushed=true; }
+    if(inp===fontSizeInput){ sel.fontSize=Number(inp.value); fontSizeVal.textContent=inp.value; }
+    else { sel.boxPad=Number(inp.value)/100; boxPadVal.textContent=inp.value+"%"; }
+    state.resizeBaseline=cloneShape(sel);
+    redraw();
+  });
+});
 let opacityHistoryPushed=false;
 opacityControlInput.addEventListener("pointerdown",()=>{ opacityHistoryPushed=false; });
 opacityControlInput.addEventListener("input",e=>{
@@ -7315,8 +8113,9 @@ clearActionButton.addEventListener("click",()=>{
 });
 
 // ---------- Exportar PNG: fotograma actual + lo pintado ----------
-$("pintPng").addEventListener("click",()=>{
-  if(!(v.currentSrc||v.src) || !v.videoWidth){ setStatus("Carga un vídeo para exportar un fotograma."); return; }
+// Fotograma actual + lo pintado, en un lienzo a la resolución del vídeo (null si no se puede)
+function pintCaptureFrame(){
+  if(!(v.currentSrc||v.src) || !v.videoWidth){ setStatus("Carga un vídeo para capturar un fotograma."); return null; }
   const W=v.videoWidth, H=Math.max(1,Math.round(W*LH/LW));
   const out=document.createElement("canvas"); out.width=W; out.height=H;
   const o=out.getContext("2d");
@@ -7325,8 +8124,23 @@ $("pintPng").addEventListener("click",()=>{
     o.drawImage(v,0,0,W,H);
     state.selectedAnnotationIndex=-1; state.cachedCurrentTimeAt=0; redraw(); // sin marcas de selección
     o.drawImage(canvas,0,0,W,H);
-  }catch(e){ setStatus("No se pudo exportar: el navegador bloquea este vídeo."); return; }
+  }catch(e){ setStatus("No se pudo capturar: el navegador bloquea este vídeo."); return null; }
   finally{ state.selectedAnnotationIndex=sel; state.tool=prevTool; redraw(); }
+  return out;
+}
+if(cfg.onStill){
+  const stillBtn=$("pintStill");
+  if(stillBtn){
+    stillBtn.style.display="";
+    stillBtn.addEventListener("click",()=>{
+      const cap=pintCaptureFrame(); if(!cap) return;
+      const msg=cfg.onStill(cap,v.currentTime||0);
+      setStatus(msg||"Captura insertada en el vídeo.");
+    });
+  }
+}
+$("pintPng").addEventListener("click",()=>{
+  const out=pintCaptureFrame(); if(!out) return;
   out.toBlob(blob=>{
     if(!blob){ setStatus("No se pudo generar el PNG."); return; }
     const a=document.createElement("a"), t=Math.floor(v.currentTime||0);
@@ -7348,6 +8162,28 @@ function setPanelHidden(hidden){
 toggleBtn.addEventListener("click",()=>setPanelHidden(!bodyEl.hidden));
 try{ if(localStorage.getItem("acfcPintHidden")==="1") setPanelHidden(true); }catch(e){}
 
+// ---------- Ocultar / Mostrar los números ----------
+const numsBtn=$("pintNumsToggle"), numsWrap=$("pintNumsWrap");
+function setNumsHidden(hidden){
+  numsWrap.hidden=hidden;
+  numsBtn.textContent=hidden?"Mostrar":"Ocultar";
+  numsBtn.setAttribute("aria-expanded",String(!hidden));
+  try{ localStorage.setItem("acfcPintNumsHidden",hidden?"1":"0"); }catch(e){}
+}
+numsBtn.addEventListener("click",()=>setNumsHidden(!numsWrap.hidden));
+try{ if(localStorage.getItem("acfcPintNumsHidden")==="1") setNumsHidden(true); }catch(e){}
+
+// ---------- Ocultar / Mostrar el estilo general ----------
+const styleBtn=$("pintStyleToggle"), styleWrap=$("pintStyleWrap");
+function setStyleHidden(hidden){
+  styleWrap.style.display=hidden?"none":"";
+  styleBtn.textContent=hidden?"Mostrar":"Ocultar";
+  styleBtn.setAttribute("aria-expanded",String(!hidden));
+  try{ localStorage.setItem("acfcPintStyleHidden",hidden?"1":"0"); }catch(e){}
+}
+styleBtn.addEventListener("click",()=>setStyleHidden(styleWrap.style.display!=="none"));
+try{ if(localStorage.getItem("acfcPintStyleHidden")==="1") setStyleHidden(true); }catch(e){}
+
 // ---------- persistencia del pintado ----------
 // Se guarda en el navegador por nombre de vídeo (sobrevive a recargar) y viaja dentro del proyecto exportado.
 const pintName=()=>String(cfg.keyOf?cfg.keyOf():"").trim();
@@ -7357,6 +8193,7 @@ function pintCleanList(arr){
 }
 function pintSaveNow(){
   clearTimeout(pintSaveTimer); pintSaveTimer=0;
+  if(cfg.onChange) cfg.onChange();
   if(!pintSavedName) return;
   try{
     const k=cfg.keyPrefix+pintSavedName;
@@ -7371,6 +8208,7 @@ function pintSetAnnotations(list){
   state.draggingAnnotationIndex=-1; state.dragLastPoint=null;
   state.resizingHandleIndex=-1; state.resizeAnchor=null; state.history=[]; state.redo=[];
   syncSizeControl(); redraw();
+  if(cfg.onChange) cfg.onChange();
 }
 function pintRestore(){
   let list=[];
@@ -7386,6 +8224,8 @@ const api={
   set:list=>{ pintSetAnnotations(list); pintSaveNow(); },
   // true mientras el dibujo está activo (para que otros atajos no actúen a la vez)
   isDrawing:()=>state.drawEnabled,
+  // vista previa: al acabar una captura fija, lo pintado hasta ese instante deja de verse
+  cutAt:t=>{ state.stillCut=(typeof t==="number")?t:null; redraw(); },
 };
 if(cfg.expose) window[cfg.expose]=api;
 // cualquier cambio (pintar, mover, deshacer, borrar, estilos…) termina en pointerup, clic, input o tecla
@@ -7393,6 +8233,22 @@ if(cfg.expose) window[cfg.expose]=api;
 ["click","input","change"].forEach(ev=>block.addEventListener(ev,pintSaveSoon));
 window.addEventListener("keyup",()=>{ if(state.drawEnabled) pintSaveSoon(); });
 canvas.addEventListener("dblclick",pintSaveSoon);
+canvas.addEventListener("dblclick",e=>{
+  if(!state.drawEnabled || !isSelTool()) return;
+  const i=findAnnotationAtPoint(getCanvasPoint(e));
+  if(i<0) return;
+  const sh=state.annotations[i];
+  if((sh.type==="text"||sh.type==="callout") && typeof sh.text==="string"){
+    const nt=window.prompt("Editar texto",sh.text);
+    if(nt && nt!==sh.text){ pushHistory(); sh.text=nt; }
+  } else if(sh.type==="player"){
+    const nd=window.prompt("Número del jugador (0-99)",String(sh.dorsal??""));
+    if(nd!==null && nd.trim()!==""){ const n=Math.round(Number(nd)); if(n>=0 && n<=99 && n!==sh.dorsal){ pushHistory(); sh.dorsal=n; } }
+    const nn=window.prompt("Nombre del jugador (vacío = sin nombre)",sh.nombre||"");
+    if(nn!==null && nn.trim().slice(0,30)!==(sh.nombre||"")){ pushHistory(); sh.nombre=nn.trim().slice(0,30); }
+  } else return;
+  state.selectedAnnotationIndex=i; syncSizeControl(); redraw();
+});
 window.addEventListener("pagehide",pintSaveNow);
 document.addEventListener("visibilitychange",()=>{ if(document.hidden) pintSaveNow(); });
 pintRestore();
@@ -7480,15 +8336,30 @@ if(visorBlock&&edAside){
   edAside.appendChild(edBlock);
 }
 const vName=g("vidName");
+// Marca (barra roja + lápiz) en la línea de tiempo del registro en cada instante donde hay pintado
+function pintRenderMarks(){
+  const box=g("vPintMks"), vid=g("v"); if(!box) return;
+  box.replaceChildren();
+  const d=vid&&isFinite(vid.duration)?vid.duration:0;
+  const list=window.acfcPint?window.acfcPint.get():[]; if(!d||!list.length) return;
+  const ts=[...new Set(list.filter(s=>typeof s.appearTime==="number").map(s=>Math.max(0,Math.round((s.appearTime+0.4)*2)/2)))].sort((a,b)=>a-b);
+  const fm=t=>Math.floor(t/60)+":"+String(Math.floor(t%60)).padStart(2,"0");
+  ts.forEach(t=>{ if(t>d) return;
+    const m=document.createElement("div"); m.className="stillMk"; m.style.left=(t/d*100)+"%";
+    m.title="Pintado · "+fm(t); box.append(m); });
+}
+{ const vid=g("v"); if(vid) ["loadedmetadata","durationchange","emptied"].forEach(ev=>vid.addEventListener(ev,pintRenderMarks)); }
 acfcPintMount({
-  video:g("v"), host:document.querySelector("#tabVisor .stage"), block:visorBlock, sfx:"", expose:"acfcPint",
+  video:g("v"), host:document.querySelector("#tabVisor .stage"), block:visorBlock, sfx:"", expose:"acfcPint", onChange:()=>setTimeout(pintRenderMarks,0),
   keyPrefix:"acfcPint:", keyOf:()=>vName?vName.textContent:"",
+  onStill:(cap,t)=>window.acfcEdAddStill?window.acfcEdAddStill(cap,t):"El editor no está listo.",
   watch:fn=>{ if(vName) new MutationObserver(fn).observe(vName,{childList:true,characterData:true,subtree:true}); }
 });
 const edV=g("edV");
 acfcPintMount({
   video:edV, host:g("edStage"), block:edBlock, sfx:"Ed", expose:"acfcPintEd",
   keyPrefix:"acfcPintEd:", keyOf:()=>window.acfcEdSrcName?window.acfcEdSrcName():"",
+  onStill:(cap,t)=>window.acfcEdAddStill?window.acfcEdAddStill(cap,t):"El editor no está listo.",
   watch:fn=>{ if(edV) ["loadedmetadata","emptied"].forEach(ev=>edV.addEventListener(ev,fn)); }
 });
 })();
@@ -7686,6 +8557,178 @@ acfcPintMount({
     else ayuda();
   });
   document.getElementById("instalarCerrar").addEventListener("click",function(){dlg.close();});
+})();
+</script>
+<!-- ACFC · LICENCIA: versión limitada (6 botones) y versión completa con código -->
+<style>
+/* Versión limitada: los botones sin data-lite siguen visibles pero con corona y bloqueados (los diálogos conservan los suyos) */
+html.acfc-lite button:not([data-lite]):not(dialog button),
+html.acfc-lite label.btn:not([data-lite]){position:relative;opacity:.6;cursor:not-allowed}
+html.acfc-lite button:not([data-lite]):not(dialog button)::after,
+html.acfc-lite label.btn:not([data-lite])::after{content:"";position:absolute;top:3px;right:3px;width:14px;height:14px;background:var(--red);pointer-events:none;
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M2 7l5 4 5-7 5 7 5-4-2 12H4z'/%3E%3C/svg%3E") center/contain no-repeat;
+  mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M2 7l5 4 5-7 5 7 5-4-2 12H4z'/%3E%3C/svg%3E") center/contain no-repeat}
+html.acfc-lite .primary:not([data-lite]):not(dialog .primary)::after{background:#fff}
+#acfcLicBtn.btn,#acfcFreeBtn.btn{font-family:var(--f-disp);font-size:15px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;text-decoration:none;padding:9px 18px;background:transparent;color:#fff;border:2px solid var(--red);border-radius:0;opacity:1;cursor:pointer}
+#acfcFreeBtn.btn{margin-right:-8px}
+#acfcLicBtn.btn,#acfcFreeBtn.btn{white-space:nowrap}
+#acfcLicBtn.btn:hover,#acfcFreeBtn.btn:hover,#acfcLicBtn.btn[aria-pressed="true"],#acfcFreeBtn.btn[aria-pressed="true"]{background:var(--red);color:#fff;border-color:var(--red)}
+@media (max-width:640px){#acfcLicBtn.btn,#acfcFreeBtn.btn{font-size:12px;padding:6px 9px;letter-spacing:1px}#acfcFreeBtn.btn{margin-right:-4px}}
+/* Corona: función solo Premium (se añade con la lista PREMIUM del script) */
+.acfcCrown{position:relative}
+.acfcCrown::after{content:"";position:absolute;top:3px;right:3px;width:14px;height:14px;background:var(--red);pointer-events:none;
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M2 7l5 4 5-7 5 7 5-4-2 12H4z'/%3E%3C/svg%3E") center/contain no-repeat;
+  mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M2 7l5 4 5-7 5 7 5-4-2 12H4z'/%3E%3C/svg%3E") center/contain no-repeat}
+.acfcCrown.is-active::after{background:var(--red)}
+#acfcLicDlg{max-width:min(420px,92vw)}
+#acfcLicDlg input{width:100%;box-sizing:border-box;font:inherit;font-family:var(--f-disp);font-size:20px;letter-spacing:2px;text-transform:uppercase;text-align:center;padding:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:0}
+#acfcLicMsg{min-height:1.4em;font-size:13px;margin:8px 0}
+#acfcLicMsg.err{color:var(--red)}
+</style>
+<dialog id="acfcLicDlg" aria-labelledby="acfcLicT"><h2 id="acfcLicT">Versión completa</h2>
+<p id="acfcLicTxt" style="font-size:14px;color:var(--muted)"></p>
+<input id="acfcLicIn" type="text" autocomplete="off" spellcheck="false" maxlength="14" placeholder="Código" aria-label="Código de activación">
+<div id="acfcLicMsg" role="status"></div>
+<div style="display:flex;gap:8px;justify-content:flex-end">
+<button type="button" class="btn" id="acfcLicClose">Cerrar</button>
+<button type="button" class="btn primary" id="acfcLicGo">Activar</button>
+</div></dialog>
+<script>
+(function(){
+  /* Huellas SHA-256 de los códigos válidos (el código en claro no está aquí). Se generan con generar-codigo.mjs. */
+  var ACFC_LIC_HASHES=[
+    "6529a56058d38843c879561b535beab0c49e403fdfc950965eca60dfb08d8891" /* provisional: «registro» */
+  ];
+  var SAL="acfc-lezama-talks|", KEY="acfcLic";
+  /* Los 6 botones de la versión limitada */
+  /* LIMITAR=true: la versión gratuita oculta todo salvo los botones de LITE.
+     PREMIUM_PARA_TODOS=true: de momento todos arrancan en Premium sin código; «Versión gratuita» sirve para previsualizar
+     las limitaciones y «Premium» vuelve sin pedir código. Poner a false para exigir el código. */
+  var LIMITAR=false;
+  var PREMIUM_PARA_TODOS=true;
+  /* Funciones solo Premium: llevan corona (de momento solo el pintado de acciones, en el registro y en el editor) */
+  var PREMIUM=[".pintTool[data-tool]:not([data-tool=move]):not([data-tool=edit]):not([data-tool=arrow]):not([data-tool=arrowStraight]):not([data-tool=pen]):not([data-tool=text]):not([data-tool=callout]):not([data-tool=rect]):not([data-tool=ellipse]):not([data-tool=triangleZone])","#pintStill","#pintStillEd","#regAddFile","#edAddFile","#botJugAdd","#newJugAdd"];
+  var LITE=["#play","#vBack4","#vFwd5","#vTagNow","#vFull"];
+  var H=document.documentElement, $=function(i){return document.getElementById(i);};
+
+  function norm(s){return String(s||"").toUpperCase().replace(/[^A-Z0-9]/g,"");}
+  async function sha(s){
+    var b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(s));
+    return Array.from(new Uint8Array(b)).map(function(x){return x.toString(16).padStart(2,"0");}).join("");
+  }
+  var ok=async function(code){
+    if(!(window.crypto&&crypto.subtle)) throw new Error("nocrypto");
+    var h=await sha(SAL+norm(code)); return ACFC_LIC_HASHES.indexOf(h)>=0?h:null;
+  };
+  var store={
+    get:function(){try{return localStorage.getItem(KEY)||"";}catch(e){return "";}},
+    set:function(v){try{v?localStorage.setItem(KEY,v):localStorage.removeItem(KEY);}catch(e){}}
+  };
+
+  PREMIUM.forEach(function(q){ document.querySelectorAll(q).forEach(function(el){
+    el.classList.add("acfcCrown"); el.title=(el.title?el.title+" · ":"")+"Solo Premium"; }); });
+  LITE.forEach(function(q){var el=document.querySelector(q); if(el) el.setAttribute("data-lite","");});
+
+  /* Botón de activación en la cabecera (no cuenta entre los 6: es el acceso al código) */
+  var btn=document.createElement("button"); btn.type="button"; btn.className="btn acfcLink"; btn.id="acfcLicBtn"; btn.setAttribute("data-lite","");
+  var hdr=document.querySelector("header"), sp=hdr&&hdr.querySelector(".sp");
+  var free=document.createElement("button"); free.type="button"; free.className="btn acfcLink"; free.id="acfcFreeBtn"; free.setAttribute("data-lite",""); free.textContent="Versión gratuita";
+  if(hdr){ var ref=sp?sp.nextSibling:null; hdr.insertBefore(free,ref); hdr.insertBefore(btn,ref); }
+
+  var dlg=$("acfcLicDlg"), inp=$("acfcLicIn"), msg=$("acfcLicMsg"), txt=$("acfcLicTxt"), go=$("acfcLicGo");
+  var full=false;
+
+  function apply(f){
+    full=f; H.classList.toggle("acfc-lite",LIMITAR&&!f);
+    btn.textContent="Premium"; btn.dataset.on=f?"1":"0";
+    btn.setAttribute("aria-pressed",f); free.setAttribute("aria-pressed",!f);
+    free.title=f?"Volver a la versión gratuita":"Estás en la versión gratuita";
+    btn.title=f?"Premium activado":"Introduce tu código Premium";
+    if(LIMITAR&&!f){ var v=$("tabBtnVisor"); if(v&&$("tabVisor").hidden) v.click(); }   // sin editor: vuelve al registro (clic programático, no se bloquea)
+  }
+  function open(){
+    msg.textContent=""; msg.className=""; inp.value="";
+    if(full){ $("acfcLicT").textContent="Premium activado"; txt.textContent="Premium activado en este navegador."; inp.hidden=true; go.textContent=LIMITAR?"Volver a la versión limitada":"Quitar código"; }
+    else { $("acfcLicT").textContent="Activar Premium"; txt.textContent=LIMITAR?"Introduce tu código para desbloquear todas las funciones (editor de vídeo, listas, importación, pintado…). La versión limitada incluye solo 5 botones.":"Introduce tu código Premium."; inp.hidden=false; go.textContent="Activar"; }
+    if(PREMIUM_PARA_TODOS&&!full){ inp.hidden=true; go.textContent="Activar Premium"; }
+    dlg.showModal(); if(!full) inp.focus();
+  }
+  free.onclick=function(){ if(full){ if(!PREMIUM_PARA_TODOS) store.set(""); apply(false); } };
+  btn.onclick=function(){ if(PREMIUM_PARA_TODOS){ apply(true); return; } open(); }; $("acfcLicClose").onclick=function(){dlg.close();};
+  go.onclick=async function(){
+    if(PREMIUM_PARA_TODOS){ apply(true); dlg.close(); return; }
+    if(full){ store.set(""); apply(false); dlg.close(); return; }
+    msg.className=""; msg.textContent="Comprobando…";
+    try{
+      var h=await ok(inp.value);
+      if(h){ store.set(h); apply(true); dlg.close(); }
+      else { msg.className="err"; msg.textContent="Código no válido. Revisa que lo hayas escrito bien."; }
+    }catch(e){ msg.className="err"; msg.textContent="Este navegador no permite comprobar el código aquí (abre la herramienta desde https)."; }
+  };
+  inp.addEventListener("keydown",function(e){ if(e.key==="Enter") go.click(); });
+
+  /* Versión gratuita: los botones con corona no actúan, avisan de que son Premium */
+  document.addEventListener("click",function(e){
+    if(!H.classList.contains("acfc-lite")||!e.isTrusted||!e.target.closest) return;
+    if(!e.target.closest("button:not([data-lite]):not(dialog button), label.btn:not([data-lite])")) return;
+    e.preventDefault(); e.stopImmediatePropagation();
+    open(); txt.textContent="Esta función es Premium.";
+  },true);
+
+  /* Pintado de acciones sin Premium: solo barra superior (mover, editar…), Flechas y Textos.
+     El resto (Zonas, Varios, números, estilos de foco) avisa de que hay que activar Premium. */
+  var PINT_FREE=["move","edit","arrow","arrowStraight","pen","text","callout","rect","ellipse","triangleZone"];
+  document.addEventListener("click",function(e){
+    if(full||PREMIUM_PARA_TODOS||!e.target.closest) return;
+    var b=e.target.closest(".pintBlock .pintTool[data-tool], .pintBlock .pintNums button, .pintBlock .pintVar");
+    if(!b||(b.dataset.tool&&PINT_FREE.indexOf(b.dataset.tool)>=0)) return;
+    e.preventDefault(); e.stopImmediatePropagation();
+    open(); txt.textContent="Activa el modo premium para usar esta herramienta.";
+  },true);
+
+  /* Añadir un segundo vídeo (registro y editor): solo Premium */
+  document.addEventListener("click",function(e){
+    if(full||PREMIUM_PARA_TODOS||!e.target.closest) return;
+    if(!e.target.closest("#regAddFile, #edAddFile")) return;
+    e.preventDefault(); e.stopImmediatePropagation();
+    open(); txt.textContent="Añadir más de un vídeo es una función Premium. Introduce tu código para activarla.";
+  },true);
+
+  /* Añadir jugadores a la botonera: solo Premium (clic en Añadir o Intro en el campo) */
+  function jugPremium(e){
+    if(full||PREMIUM_PARA_TODOS||!e.target.closest) return;
+    var isKey=e.type==="keydown";
+    if(isKey?(e.key!=="Enter"||!e.target.closest("#botJugName, #newJugName")):!e.target.closest("#botJugAdd, #newJugAdd")) return;
+    e.preventDefault(); e.stopImmediatePropagation();
+    open(); txt.textContent="Añadir jugadores a la botonera es una función Premium. Introduce tu código para activarla.";
+  }
+  document.addEventListener("click",jugPremium,true);
+  document.addEventListener("keydown",jugPremium,true);
+
+  /* Categorías de la botonera: hasta 7 botones gratis; el 8.º es Premium (corona en «Añadir» al llegar a 7) */
+  var MAX_CATS=7, catBox=$("botCats"), catAdd=$("botCatAdd");
+  function catsLlenas(){ return !!catBox&&catBox.querySelectorAll(".catbtn").length>=MAX_CATS&&catAdd.textContent.trim()==="Añadir"; }
+  function catCrown(){
+    var on=catsLlenas(); catAdd.classList.toggle("acfcCrown",on);
+    catAdd.title=on?"Solo Premium · la versión gratuita admite 7 botones":"";
+  }
+  if(catBox&&catAdd){
+    new MutationObserver(catCrown).observe(catBox,{childList:true});
+    catCrown();
+    var catPremium=function(e){
+      if(full||PREMIUM_PARA_TODOS||!e.target.closest||!catsLlenas()) return;
+      if(e.type==="keydown"?(e.key!=="Enter"||!e.target.closest("#botCatName")):!e.target.closest("#botCatAdd")) return;
+      e.preventDefault(); e.stopImmediatePropagation();
+      open(); txt.textContent="La versión gratuita admite 7 botones de categoría. Para añadir más, activa Premium.";
+    };
+    document.addEventListener("click",catPremium,true);
+    document.addEventListener("keydown",catPremium,true);
+  }
+
+  /* Arranque: limitada salvo que haya una activación guardada que siga siendo válida */
+  apply(PREMIUM_PARA_TODOS);
+  var saved=store.get();
+  if(saved&&ACFC_LIC_HASHES.indexOf(saved)>=0) apply(true); else if(saved) store.set("");
 })();
 </script>
 </body>
