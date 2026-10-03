@@ -499,7 +499,7 @@ kbd{border-radius:0;font-family:var(--f-body)}
   /* sin selector de velocidad ni botón Tutorial de abajo */
   #rate,#edRate,#regTutorialB,#edTutorialB,label.row:has(#rate),label.row:has(#edRate){display:none!important}
   /* sin la opción de ventana emergente */
-  #popOutDlg{display:none!important}
+  #popOutDlg,#fijoDlg{display:none!important}
   /* sin los botones de deshacer / rehacer */
   .histBtn{display:none!important}
   /* botones de marcas sin el tiempo */
@@ -903,7 +903,7 @@ html.acfc-imm #dlg{position:fixed!important;top:max(8px,env(safe-area-inset-top,
   width:min(340px,46vw)!important;height:auto!important;max-height:none!important;margin:0;overflow:auto;z-index:75;border:1px solid var(--line);border-top:3px solid var(--red);
   background:color-mix(in srgb,var(--panel) 88%,transparent);-webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur)}
 html.acfc-imm #dlg .catbtn,html.acfc-imm #dlg .optbtn{min-height:36px;font-size:13px}
-html.acfc-imm #popOutDlg{display:none!important}
+html.acfc-imm #popOutDlg,html.acfc-imm #fijoDlg{display:none!important}
 html.acfc-imm.acfc-dlg #acfcImmBar,html.acfc-imm.acfc-dlg #tabVisor #belowStageWrap>.controls:first-child{display:none!important}
 html.acfc-imm.acfc-dlg #tabVisor .stage{right:calc(min(340px,46vw) + 16px)}
 html.acfc-imm.acfc-dlg #tabVisor .stage .stageControls{width:calc(100% - 24px)}
@@ -1394,6 +1394,7 @@ dialog#dlg.enEmergente{position:static!important;width:100%!important;max-height
       <button type="button" class="btn" id="dlgZoomOut" title="Reducir el tamaño de la botonera (también Ctrl + rueda)" style="display:none">A−</button>
       <button type="button" class="btn" id="dlgZoomIn" title="Aumentar el tamaño de la botonera (también Ctrl + rueda)" style="display:none">A+</button>
       <button type="button" class="btn" id="popOutDlg" title="Abrir esta botonera en otra ventana, para moverla a un segundo monitor">🖥️ EMERGENTE</button>
+      <button type="button" class="btn" id="fijoDlg" title="Dejar la botonera fija a la derecha, dentro de esta ventana" style="display:none">📌 FIJO</button>
       <button type="button" class="btn" id="closeBotDlg" title="Cerrar">❌ Cerrar</button>
     </div>
     <div id="manBar" hidden style="border:1px solid var(--line);border-top:3px solid var(--ink);padding:8px;margin:6px 0">
@@ -3144,7 +3145,9 @@ window.renderHalfBands = function(b1,b2,mk,d){
     if(e) manualMode=false; else manReset();
     placeDlgForFullscreen(); editId=e?e.id:null; const cur=v.currentTime||0;
     $("fMin").value=e?e.min:(matchClockText(cur)||(Math.floor(cur/60)+":"+String(Math.floor(cur%60)).padStart(2,"0")));
-    $("newCatRow").hidden=true; $("newCatErr").textContent=""; $("fCat").value=e&&CATS[e.cat]?e.cat:(CATS[prevCat]?prevCat:"OCASIÓN"); syncCatBtns(); setEq(e?e.eq:prevEq); fillDets(e?e.det:""); fillJugs(e?e.jug:""); setStage(e?2:0); $("fComent").value=e?(e.coment||""):""; positionDlgOverList(); if(!dlgEl.open){ try{ dlgEl.show(); }catch(err){ console.error("No se pudo abrir la botonera:",err); dlgEl.setAttribute("open",""); } } updatePopOutBtn(); manUI(); }
+    $("newCatRow").hidden=true; $("newCatErr").textContent=""; $("fCat").value=e&&CATS[e.cat]?e.cat:(CATS[prevCat]?prevCat:"OCASIÓN"); syncCatBtns(); setEq(e?e.eq:prevEq); fillDets(e?e.det:""); fillJugs(e?e.jug:""); setStage(e?2:0); $("fComent").value=e?(e.coment||""):""; positionDlgOverList(); if(!dlgEl.open){ try{ dlgEl.show(); }catch(err){ console.error("No se pudo abrir la botonera:",err); dlgEl.setAttribute("open",""); } } updatePopOutBtn(); manUI();
+    // por defecto, en ventana emergente (salvo que se haya elegido «Fijo» o no esté disponible, p. ej. en móvil)
+    if(!dlgFijo && !popoutWin && dlgEl.ownerDocument===document && getComputedStyle($("popOutDlg")).display!=="none") openDlgInPopout(true); }
   // ---------- registro manual: REC marca el inicio del corte y PAUSE el final ----------
   let manualMode=false, manA=null, manB=null;
   function manReset(){ manA=null; manB=null; }
@@ -3179,17 +3182,20 @@ window.renderHalfBands = function(b1,b2,mk,d){
     }
   });
   // ---------- botonera de eventos en otra ventana (segundo monitor) ----------
-  function returnDlgFromPopout(){
+  function returnDlgFromPopout(keepOpen=true){
     const d=$("dlg");
     if(!d || d.ownerDocument===document) return; // ya está en la ventana principal
     const wasOpen=d.open; if(wasOpen) d.close("relocate"); // returnValue distinto de "ok": el listener de close no debe guardar nada
     document.body.appendChild(d);
     popoutWin=null;
     positionDlgOverList();
-    if(wasOpen) d.show();
+    if(wasOpen&&keepOpen) d.show();
     updatePopOutBtn();
   }
-  async function openDlgInPopout(){
+  // Preferencia: por defecto la botonera se abre en ventana emergente; «Fijo» la deja a la derecha (se recuerda)
+  let dlgFijo=false; try{ dlgFijo=localStorage.getItem("dlgFijo")==="1"; }catch(_){}
+  function setDlgFijo(f){ dlgFijo=f; try{ localStorage.setItem("dlgFijo",f?"1":"0"); }catch(_){} }
+  async function openDlgInPopout(auto){
     const d=$("dlg");
     // Preferido: ventana Picture-in-Picture de documento (Chrome/Edge 116+): el navegador la mantiene SIEMPRE por encima, aunque se pulse en el vídeo o en play
     if(window.documentPictureInPicture){
@@ -3199,7 +3205,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
       popoutWin.document.title="Botonera de eventos";
     } else {
       popoutWin=window.open("","panelEventosCortes3","width=460,height=820,menubar=no,toolbar=no,location=no,status=no,resizable=yes");
-      if(!popoutWin){ alert("El navegador ha bloqueado la ventana emergente. Permite las ventanas emergentes para esta página e inténtalo de nuevo."); popoutWin=null; return; }
+      if(!popoutWin){ if(!auto) alert("El navegador ha bloqueado la ventana emergente. Permite las ventanas emergentes para esta página e inténtalo de nuevo."); popoutWin=null; return; }
       const pd0=popoutWin.document;
       pd0.open(); pd0.write('<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><title>Botonera de eventos</title></head><body></body></html>'); pd0.close();
       // Respaldo (ventana normal, no puede fijarse encima): al pulsar en la ventana principal se intenta devolver el foco a la botonera
@@ -3214,7 +3220,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     pd.body.appendChild(d);
     positionDlgOverList();
     if(wasOpen) d.show();
-    popoutWin.addEventListener("pagehide", returnDlgFromPopout, {once:true});
+    popoutWin.addEventListener("pagehide", ()=>returnDlgFromPopout(false), {once:true}); // al cerrar la ventana con la X, la botonera se cierra (no reaparece fija)
     popoutWin.addEventListener("keydown",k=>{ if(!d.contains(k.target)) dlgSpace(k); }); // Espacio con el foco fuera de la botonera, dentro de la ventana emergente
     popoutWin.addEventListener("wheel",ev=>{ if(ev.ctrlKey){ ev.preventDefault(); setDlgZoom(dlgZoom+(ev.deltaY<0?.1:-.1)); } },{passive:false});
     updatePopOutBtn();
@@ -3251,6 +3257,8 @@ window.renderHalfBands = function(b1,b2,mk,d){
     const d=$("dlg"), inPopout=d.ownerDocument!==document;
     applyDlgZoom();
     const cb=$("closeBotDlg");
+    const fb=$("fijoDlg"); if(fb) fb.style.display=inPopout?"":"none";
+    b.style.display=inPopout?"none":"";
     if(inPopout){ b.textContent="↩️ Traer de vuelta"; b.title="Cerrar la ventana emergente y volver a mostrar aquí"; cb.textContent="❌ Cerrar botonera"; cb.title="Cerrar la ventana emergente de la botonera"; }
     else { b.textContent="🖥️ EMERGENTE"; b.title="Abrir esta botonera en otra ventana, para moverla a un segundo monitor"; cb.textContent="❌ Cerrar"; cb.title="Cerrar sin guardar"; }
   }
@@ -3258,11 +3266,12 @@ window.renderHalfBands = function(b1,b2,mk,d){
   $("popOutDlg").onclick=()=>{
     const d=$("dlg");
     if(d.ownerDocument!==document) closePopoutDlg();
-    else openDlgInPopout();
+    else { setDlgFijo(false); openDlgInPopout(); }
   };
+  $("fijoDlg").onclick=()=>{ setDlgFijo(true); closePopoutDlg(); }; // vuelve a la derecha y se queda abierta
   $("closeBotDlg").onclick=()=>{
     const d=$("dlg");
-    if(d.ownerDocument!==document) closePopoutDlg();
+    if(d.ownerDocument!==document){ d.close("cancel"); closePopoutDlg(); }
     else d.close("cancel");
   };
   window.addEventListener("beforeunload",()=>{ if(popoutWin&&!popoutWin.closed) popoutWin.close(); });
