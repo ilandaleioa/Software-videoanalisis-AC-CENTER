@@ -181,6 +181,7 @@ kbd{border:1px solid var(--line);border-radius:3px;padding:0 4px;font-size:11px}
 .edtrack{position:relative;height:52px;margin-top:40px;background:var(--panel);border:1px solid var(--line);border-radius:6px;cursor:pointer;touch-action:none;user-select:none}
 .edsegs{position:absolute;inset:8px 0}
 .edZoomWrap{position:absolute;top:0;bottom:0;left:0;width:100%}
+.edtrack,.track{overflow-x:clip;max-width:100%}
 .edtrack.zoomed{clip-path:inset(-60px 0 -30px 0)}
 .catZoomWrap{position:relative;width:100%}
 .track.zoomed{clip-path:inset(-60px 0 -30px 0)}
@@ -1157,6 +1158,10 @@ html #expOptsToggle:hover,html #pbToggle:hover,html #edCtlToggle:hover,html #edS
 html button.acfcTgl[data-tgl="mostrar"],html button.acfcTgl[data-tgl="mostrar"]:hover{background:#0B3D80;border-color:#0B3D80;color:#fff}
 html button.acfcTgl[data-tgl="ocultar"],html button.acfcTgl[data-tgl="ocultar"]:hover{background:#4C93E8;border-color:#4C93E8;color:#fff}
 html #fltClear:hover,html #pintClear:hover,html #edClearAdded:hover{background:var(--red);border-color:var(--red)}
+/* Escritorio: la columna derecha queda fija bajo la cabecera y llega hasta el borde inferior de la ventana */
+@media (min-width:1251px){
+  html:not(.acfc-imm) #tabVisor main>aside,html:not(.acfc-imm) #tabEditor:not(:fullscreen) .edgrid>aside{position:sticky;top:96px;align-self:start;max-height:calc(100vh - 108px);min-height:420px}
+}
 </style>
 </head>
 <body>
@@ -2687,7 +2692,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   function loadCats(){ try{ const x=JSON.parse(localStorage.getItem(CAT_KEY)); if(Array.isArray(x)) x.slice(0,40).forEach(o=>{
       const n=String(o&&o.n||"").trim().toUpperCase().slice(0,24), c=/^#[0-9a-f]{6}$/i.test(o&&o.c)?o.c:PALETTE[0];
       if(n&&!CATS[n]) CATS[n]={c,custom:true}; }); }catch(e){} }
-  function saveCats(){ try{ localStorage.setItem(CAT_KEY,JSON.stringify(Object.entries(CATS).filter(([,o])=>o.custom).map(([n,o])=>({n,c:o.c})))); }catch(e){} }
+  function saveCats(){ try{ localStorage.setItem(CAT_KEY,JSON.stringify(Object.entries(CATS).filter(([,o])=>o.custom&&!o.ret).map(([n,o])=>({n,c:o.c})))); }catch(e){} botSyncActiva(); }
   // categorías de serie: se pueden borrar (queda anotado) y recolorear (se guarda el color)
   const CAT_HID_KEY="visor_cat_ocultas_v1", CAT_COL_KEY="visor_cat_color_v1";
   const CAT_FIJAS=["OTRO"]; // OTRO es el refugio de los eventos de categorías borradas
@@ -2695,7 +2700,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   let catHid=[], catCol={};
   try{ const x=JSON.parse(localStorage.getItem(CAT_HID_KEY)); if(Array.isArray(x)) catHid=x.map(String).slice(0,40); }catch(e){}
   try{ const x=JSON.parse(localStorage.getItem(CAT_COL_KEY)); if(x&&typeof x==="object"&&!Array.isArray(x)) Object.entries(x).slice(0,40).forEach(([k,c])=>{ if(/^#[0-9a-f]{6}$/i.test(c)) catCol[k]=c; }); }catch(e){}
-  function saveCatBase(){ try{ localStorage.setItem(CAT_HID_KEY,JSON.stringify(catHid)); localStorage.setItem(CAT_COL_KEY,JSON.stringify(catCol)); }catch(e){} }
+  function saveCatBase(){ try{ localStorage.setItem(CAT_HID_KEY,JSON.stringify(catHid)); localStorage.setItem(CAT_COL_KEY,JSON.stringify(catCol)); }catch(e){} botSyncActiva(); }
   function removeCat(n){ if(!CATS[n]||CAT_FIJAS.includes(n)) return;
     const custom=CATS[n].custom; delete CATS[n];
     if(custom) saveCats(); else { if(!catHid.includes(n)) catHid.push(n); delete catCol[n]; saveCatBase(); }
@@ -2727,7 +2732,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   function addDetTo(cat,d,persist=true){ d=String(d||"").trim().replace(/\s+/g," ").slice(0,60); if(!d||d==="__new__") return null;
     const L=DETS[cat]||(DETS[cat]=[]); const f=L.find(x=>x.toLowerCase()===d.toLowerCase()); if(f) return f;
     L.push(d); if(persist) saveDets(); return d; }
-  function saveDets(){ try{ localStorage.setItem(DET_KEY,JSON.stringify(DETS)); }catch(e){} }
+  function saveDets(){ try{ localStorage.setItem(DET_KEY,JSON.stringify(DETS)); }catch(e){} botSyncActiva(); }
   function removeDetFrom(cat,d){ const L=DETS[cat]; if(!L) return; const i=L.findIndex(x=>x===d); if(i<0) return; L.splice(i,1); saveDets(); }
   // detalles de GOL: los de balón parado van agrupados y con otro color
   const GOL_DETS=["Centro lateral","Tiro fuera del área","Uno contra uno","Tiro dentro del área","Rechace","Penalti","Córner","Falta lateral","Falta frontal","Falta directa"];
@@ -2752,7 +2757,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   function addJugTo(n,persist=true){ n=String(n||"").trim().replace(/\s+/g," ").slice(0,40); if(!n||n==="__new__") return null;
     const f=JUGS.find(x=>x.toLowerCase()===n.toLowerCase()); if(f) return f;
     JUGS.push(n); JUGS.sort((a,b)=>a.localeCompare(b,'es')); if(persist) saveJugs(); return n; }
-  function saveJugs(){ try{ localStorage.setItem(JUG_KEY,JSON.stringify(JUGS)); }catch(e){} }
+  function saveJugs(){ try{ localStorage.setItem(JUG_KEY,JSON.stringify(JUGS)); }catch(e){} botSyncActiva(); }
   function removeJug(n){ const i=JUGS.findIndex(x=>x===n); if(i<0) return; JUGS.splice(i,1); saveJugs(); }
   (function loadJugs(){ if(!botNueva) JUG_DEFAULT.forEach(n=>addJugTo(n,false));
     try{ const x=JSON.parse(localStorage.getItem(JUG_KEY)); if(Array.isArray(x)) x.slice(0,300).forEach(n=>addJugTo(n,false)); }catch(e){}
@@ -2949,7 +2954,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   function renderCatBtns(){
     const wrap=$("fCatBtns"), fc=$("fCat"); wrap.replaceChildren();
     Object.entries(CATS).forEach(([k,o])=>{
-      if(k==="OTRO") return; // «Otro» no se muestra como botón; sigue existiendo como categoría de respaldo
+      if(k==="OTRO"||o.ret) return; // «Otro» y las categorías solo de eventos no se muestran como botón
       const b=el("button",{type:"button",className:"catbtn",textContent:k.charAt(0)+k.slice(1).toLowerCase(),style:"background:"+o.c});
       b.dataset.cat=k;
       b.onclick=()=>{ fc.value=k; fc.dispatchEvent(new Event("change")); syncCatBtns(); if(k!=="__new__"){ eqPicked=false; setStage(1); } };
@@ -3134,7 +3139,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     $("botCatName").readOnly=!!botEditCat&&CAT_NOMBRE_FIJO.includes(botEditCat);
     const wc=$("botCats"); wc.replaceChildren();
     Object.entries(CATS).forEach(([k,o])=>{
-      if(k==="OTRO") return; // «Otro» no se muestra como botón; sigue existiendo como categoría de respaldo
+      if(k==="OTRO"||o.ret) return; // «Otro» y las categorías solo de eventos no se muestran como botón
       const b=el("button",{type:"button",className:"catbtn"+(k===botCat?" active":""),textContent:k.charAt(0)+k.slice(1).toLowerCase(),style:"background:"+o.c,title:"Editar los detalles de «"+k+"»"});
       b.onclick=()=>{ botCat=k; renderBot(); };
       addEditE(b,"Editar nombre y color de «"+k+"»",()=>{ botCat=k; botEditCat=k; $("botCatName").value=k.charAt(0)+k.slice(1).toLowerCase(); $("botCatColor").value=cssToHex(o.c); $("botCatErr").textContent=""; renderBot(); $("botCatName").focus(); });
@@ -3189,6 +3194,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
       botEditCat=null; $("botCatName").value=""; $("botCatErr").textContent=""; $("botCatColor").value=nextBotColor();
       botSync(); renderBot(); refresh(); return;
     }
+    if(CATS[n]&&CATS[n].ret){ CATS[n]={c:$("botCatColor").value,custom:true}; saveCats(); botCat=n; $("botCatName").value=""; $("botCatColor").value=nextBotColor(); botSync(); renderBot(); return; }
     if(n==="__NEW__"||CATS[n]){ $("botCatErr").textContent=CATS[n]?"Ya existe esa categoría.":"Ese nombre no es válido."; return; }
     CATS[n]={c:$("botCatColor").value,custom:true}; saveCats(); botCat=n;
     $("botCatName").value=""; $("botCatErr").textContent=""; $("botCatColor").value=nextBotColor();
@@ -3220,8 +3226,10 @@ window.renderHalfBands = function(b1,b2,mk,d){
       if(!BOTS.lista.some(o=>o.id===BOTS.act)) BOTS.act=BOTS.lista[0].id; } }catch(e){}
   const botActual=()=>BOTS.lista.find(o=>o.id===BOTS.act);
   function saveBots(){ try{ localStorage.setItem(BOTS_KEY,JSON.stringify(BOTS)); }catch(e){} }
-  const botCatsSnap=()=>({custom:Object.entries(CATS).filter(([,o])=>o.custom).map(([n,o])=>({n,c:o.c})),hid:catHid.slice(),col:{...catCol}});
-  function botGuardaActiva(){ const a=botActual(); a.dets=JSON.parse(JSON.stringify(DETS)); a.jugs=JUGS.slice(); a.cats=botCatsSnap(); }
+  const botCatsSnap=()=>({custom:Object.entries(CATS).filter(([,o])=>o.custom&&!o.ret).map(([n,o])=>({n,c:o.c})),hid:catHid.slice(),col:{...catCol}});
+  let botAplicando=false;
+  function botSyncActiva(){ try{ if(botAplicando) return; botGuardaActiva(); saveBots(); }catch(e){} } // antes de que existan BOTS/botAplicando lanza y se ignora
+  function botGuardaActiva(){ const a=botActual(); if(!a) return; a.dets=JSON.parse(JSON.stringify(DETS)); a.jugs=JUGS.slice(); a.cats=botCatsSnap(); }
   function botAplicaCats(s){ // cada botonera tiene sus categorías; las que usan los eventos registrados se conservan para no perder su color
     const prev=JSON.parse(JSON.stringify(CATS));
     Object.keys(CATS).forEach(k=>delete CATS[k]);
@@ -3232,18 +3240,18 @@ window.renderHalfBands = function(b1,b2,mk,d){
     Object.entries(catCol).forEach(([k,c])=>{ if(CATS[k]&&!CATS[k].custom) CATS[k].c=c; });
     (Array.isArray(s.custom)?s.custom:[]).slice(0,40).forEach(o=>{ const n=String(o&&o.n||"").trim().toUpperCase().slice(0,24), c=/^#[0-9a-f]{6}$/i.test(o&&o.c)?o.c:PALETTE[0]; if(n&&!CATS[n]) CATS[n]={c,custom:true}; });
     if(!CATS.OTRO) CATS.OTRO=JSON.parse(JSON.stringify(CATS_BASE.OTRO));
-    events.forEach(e=>{ if(e.cat&&!CATS[e.cat]) CATS[e.cat]={c:(prev[e.cat]&&prev[e.cat].c)||PALETTE[0],custom:true}; });
+    events.forEach(e=>{ if(e.cat&&!CATS[e.cat]) CATS[e.cat]={c:(prev[e.cat]&&prev[e.cat].c)||PALETTE[0],custom:true,ret:true}; });
     saveCats(); saveCatBase();
     if(!CATS[botCat]) botCat=Object.keys(CATS)[0];
     const fc=$("fCat"); if(fc&&!CATS[fc.value]){ fc.value=CATS[prevCat]?prevCat:"OTRO"; setStage(0); }
     renderCatBtns();
   }
   function botAplica(o){ // vuelca los datos de una botonera en las listas vivas
-    if(o.cats) botAplicaCats(o.cats);
+    botAplicando=true; try{ botAplicaCats(o.cats||{});
     Object.keys(DETS).forEach(k=>delete DETS[k]);
     if(o.dets&&typeof o.dets==="object"&&!Array.isArray(o.dets)) Object.entries(o.dets).forEach(([c,arr])=>{ if(Array.isArray(arr)) DETS[c]=arr.map(String); });
     JUGS.length=0; if(Array.isArray(o.jugs)) o.jugs.forEach(n=>JUGS.push(String(n)));
-    saveDets(); saveJugs(); botNueva=true; try{ localStorage.setItem(BOT_NUEVA_KEY,"1"); }catch(e){}
+    saveDets(); saveJugs(); botNueva=true; try{ localStorage.setItem(BOT_NUEVA_KEY,"1"); }catch(e){} }finally{ botAplicando=false; }
   }
   function botIr(id){
     const o=BOTS.lista.find(x=>x.id===id); if(!o||id===BOTS.act) return;
