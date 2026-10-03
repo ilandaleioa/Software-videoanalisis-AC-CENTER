@@ -3,6 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Videoanálisis ACFC">
 <title>Videoanálisis · Lezama Talks | AC Football Center</title>
 <meta name="description" content="Herramienta de videoanálisis de Lezama Talks: registra acciones, crea clips y listas de reproducción y edita el vídeo del partido. Athletic Club Football Center.">
 <meta name="theme-color" content="#15181D">
@@ -308,9 +312,10 @@ header h1.acfcBrand{display:flex;align-items:center;gap:14px;font-size:inherit;m
 .acfcBrandTxt{display:flex;flex-direction:column;justify-content:center;padding-left:14px;border-left:1px solid rgba(255,255,255,.28);font-family:var(--f-disp);font-weight:700;font-size:17px;line-height:1;letter-spacing:.6px;text-transform:uppercase;color:#fff}
 .acfcBrandTxt small{font-size:10px;font-weight:700;letter-spacing:1.6px;color:#E9564C;margin-top:4px}
 header .tabs{align-self:stretch;margin-left:6px}
-header .tab{display:flex;align-items:center;margin-bottom:-3px;padding:0 14px;font-size:13px;font-weight:700;letter-spacing:1.1px;text-transform:uppercase;color:rgba(255,255,255,.62);transition:color .2s}
-header .tab:hover{color:#fff}
-header .tab[aria-selected="true"]{color:#fff;border-color:var(--red)}
+header .tab{display:flex;align-items:center;margin-bottom:-3px;padding:0 20px;font-size:17px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:rgba(255,255,255,.8);border-bottom-width:4px;background:rgba(255,255,255,.14);transition:color .2s,background .2s}
+header .tab:hover{color:#fff;background:rgba(255,255,255,.24)}
+header .tab[aria-selected="true"]{color:#fff;border-color:#fff;background:var(--red)}
+header .tab[aria-selected="true"]:hover{background:var(--red-2)}
 header .sub{color:rgba(255,255,255,.55)}
 header #vidNote{color:#F1A39D}
 header .btn.primary{align-self:center}
@@ -661,6 +666,236 @@ kbd{border-radius:0;font-family:var(--f-body)}
 .optbtn[data-eq].active{border-color:#111;box-shadow:0 0 0 2px #fff,0 0 0 4px #111}
 .optbtn.nodet{background:#000;border-color:#000;color:#fff}
 .optbtn.nodet.active{border-color:var(--red);background:#000;box-shadow:0 0 0 2px #fff,0 0 0 4px #000}
+/* =====================================================================
+   ACFC · INTERFAZ v2 (2026-10-02) · colores de marca, jerarquía y móvil
+   Línea visual: acfootballcenter.eus/ia-aplicada-gestion-deportiva/
+   Rojo #D3291E · tinta #15181D · grises cálidos · cantos rectos.
+   Solo presentación. Debe ir al FINAL del <style> (gana a lo anterior).
+   ===================================================================== */
+:root{
+  --c-gol:#D3291E; --c-gcn:#7A1712; --c-oca:#C98A1B; --c-ocn:#8A5E12;
+  --c-tra:#3F5568; --c-trd:#7C8FA0; --c-sal:#6B7A3A; --c-pre:#2F6B3C;
+  --c-cdo:#6B5B4B; --c-due:#9C4A2F; --c-otr:#8A8F96;
+  --glass:rgba(18,21,26,.52); --glass-2:rgba(18,21,26,.78); --glass-bd:rgba(255,255,255,.16);
+  --blur:saturate(1.5) blur(18px);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--c-tra:#6F8AA3;--c-cdo:#9A8875}}
+:root[data-theme="dark"]{--c-tra:#6F8AA3;--c-cdo:#9A8875}
+
+/* ---------- 1. Jerarquía de botones ----------
+   Rojo  = la acción principal de cada bloque.
+   Tinta = añadir / descargar.   Contorno = acciones secundarias.
+   Texto = mostrar/ocultar y acciones menores (se minimizan). */
+.btn{font-size:13px;line-height:1.15;border-color:var(--line)}
+.btn:hover{border-color:var(--ink)}
+#edAddSel,#edAddFile,#newCatAdd,#newDetAdd,#newJugAdd,.optbtn.add,
+:is(#tutDlg,#tutDlgR) .tutBtns .tutB[data-k=add]{background:var(--ink);border:2px solid var(--ink);color:var(--panel)}
+#edAddSel:hover,#edAddFile:hover,#newCatAdd:hover,#newDetAdd:hover,#newJugAdd:hover,.optbtn.add:hover{background:var(--red);border-color:var(--red);color:#fff;filter:none}
+.edGreen{background:var(--panel)!important;color:var(--ink)!important;border:1px solid var(--ink)!important}
+.edGreen:hover:not(:disabled),.edGreen.on{background:var(--ink)!important;color:var(--panel)!important}
+#edExport,#fltExport,#plExport,#bulkDl{background:var(--ink)!important;color:var(--panel)!important;border-color:var(--ink)!important;font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:12px}
+#edExport:hover:not(:disabled),#fltExport:hover:not(:disabled),#plExport:hover:not(:disabled),#bulkDl:hover{background:var(--red)!important;border-color:var(--red)!important;color:#fff!important}
+/* mostrar / ocultar y acciones menores: solo texto */
+#vMarkToggle,#edMarkToggle,#pbToggle,#vTimelineToggle,#plListToggle,#evListToggle,#expOptsToggle,#edSrcToggle,#edExpToggle,#edCtlToggle,
+#delAllEv,#fltClear,#regTutorialB,#edTutorialB,.acfcLink{background:none;border-color:transparent;color:var(--muted);font-size:12px;padding:5px 4px;min-height:0;filter:none;text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:4px;letter-spacing:.02em;font-weight:400;text-transform:none}
+#vMarkToggle:hover,#edMarkToggle:hover,#pbToggle:hover,#vTimelineToggle:hover,#plListToggle:hover,#evListToggle:hover,#expOptsToggle:hover,#edSrcToggle:hover,#edExpToggle:hover,#edCtlToggle:hover,
+#delAllEv:hover,#fltClear:hover,#regTutorialB:hover,#edTutorialB:hover,.acfcLink:hover{background:none;border-color:transparent;color:var(--red);text-decoration-color:var(--red);filter:none}
+#edTutorial,#regTutorial{background:transparent;border-color:rgba(255,255,255,.5);color:#fff;font-weight:400}
+#edTutorial:hover,#regTutorial:hover{background:#fff;border-color:#fff;color:#15181D}
+#edUseVisor,#regUseEditor{color:#15181D}
+#edClearAdded{background:none;border-color:transparent;color:var(--muted);font-size:12px;text-decoration:underline;text-underline-offset:4px;text-decoration-color:var(--line)}
+#edClearAdded:hover{color:var(--red);filter:none}
+/* marcas de partido: fichas discretas */
+#vMarkBtns .btn,#edMarkBtns .btn:not(#edCtlToggle){font-size:12px;padding:6px 10px;color:var(--muted);background:transparent}
+#vMarkBtns .btn:hover,#edMarkBtns .btn:not(#edCtlToggle):hover{color:var(--ink)}
+.histBtn{background:transparent;border-color:var(--line);color:var(--ink)}
+.histBtn:hover:not(:disabled){background:var(--ink);border-color:var(--ink);color:var(--panel)}
+/* botonera: grupos y equipo */
+.optbtn.g-juego:not(.active){background:#3D4852;border-color:#3D4852;color:#fff}
+.optbtn.g-parado:not(.active){background:#8A8F96;border-color:#8A8F96;color:#fff}
+.optbtn[data-eq="propio"]{background:#15181D;border-color:#15181D;color:#fff}
+.optbtn[data-eq="rival"]{background:#D3291E;border-color:#D3291E;color:#fff}
+.optbtn[data-eq="ambos"]{background:#8A8F96;border-color:#8A8F96;color:#fff}
+.optbtn[data-eq].active{border-color:#15181D;box-shadow:0 0 0 2px var(--panel),0 0 0 4px var(--red)}
+.eqDot.propio{background:var(--ink)}.eqDot.rival{background:#D3291E}
+#edBandP1,#vBandP1{background:color-mix(in srgb,#3F5568 14%,transparent)}
+#edBandP2,#vBandP2{background:color-mix(in srgb,#6B5B4B 14%,transparent)}
+:is(#tutDlg,#tutDlgR) .tutB.g{color:var(--ink);border-color:var(--ink)}
+:is(#tutDlg,#tutDlgR) .tutBar i{background:var(--red)}
+:is(#tutDlg,#tutDlgR) .tutToast{border-left-color:var(--red)}
+:is(#tutDlg,#tutDlgR) .tutMk,:is(#tutDlg,#tutDlgR) .tutMk em{background:var(--ink)}
+/* paneles más ligeros */
+aside{border-top-width:2px}
+aside h2{font-size:16px;letter-spacing:.06em}
+.row label{font-size:12px;letter-spacing:.02em}
+.seg{background:color-mix(in srgb,var(--ink) 22%,transparent)}
+.edItem{border-left-color:var(--ink)}
+
+/* ---------- 2. Iconos de línea (sustituyen a los emojis) ---------- */
+[data-ic]::before{content:none}
+[data-ic="vol"]::before,[data-ic="mute"]::before,[data-ic="full"]::before,[data-ic="trash"]::before,.iconBtn[data-ic="eye"]::before,.iconBtn[data-ic="hide"]::before{
+  content:"";display:inline-block;width:1.15em;height:1.15em;vertical-align:-.22em;background:currentColor;
+  -webkit-mask:var(--ic) center/contain no-repeat;mask:var(--ic) center/contain no-repeat}
+[data-ic="vol"]{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linejoin='round' stroke-linecap='round'%3E%3Cpath d='M4 9.5h3.2L12 5.5v13l-4.8-4H4z'/%3E%3Cpath d='M15.5 9a4.2 4.2 0 0 1 0 6M18.2 6.5a8 8 0 0 1 0 11'/%3E%3C/svg%3E")}
+[data-ic="mute"]{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linejoin='round' stroke-linecap='round'%3E%3Cpath d='M4 9.5h3.2L12 5.5v13l-4.8-4H4z'/%3E%3Cpath d='M16 9.5l5 5M21 9.5l-5 5'/%3E%3C/svg%3E")}
+[data-ic="full"]{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='square'%3E%3Cpath d='M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5'/%3E%3C/svg%3E")}
+[data-ic="trash"]{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4.5 7h15M9.5 7V4.5h5V7M6.5 7l.8 12.5h9.4L17.5 7M10 10.5v6M14 10.5v6'/%3E%3C/svg%3E")}
+[data-ic="eye"],[data-ic="hide"]{--ic:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z'/%3E%3Ccircle cx='12' cy='12' r='2.8'/%3E%3C/svg%3E")}
+#visFullEditor[data-ic]::before,#edFullEditor[data-ic]::before{margin-right:.45em}
+#closeBotDlg[data-ic="close"]::before,#botClose[data-ic="close"]::before{content:"✕";margin-right:6px;font-size:.9em}
+#acfcFold{display:none}
+#acfcRot,#acfcImmBar{display:none}
+
+/* ---------- 3. Móvil en vertical ---------- */
+@media (max-width:640px){
+  .acfcUtil{display:none}
+  /* cabecera compacta y translúcida: el contenido pasa por debajo difuminado */
+  header{position:sticky;top:0;z-index:30;min-height:50px;padding:0 12px;gap:12px;flex-wrap:nowrap;border-bottom:2px solid var(--red);
+    background:rgba(18,21,26,.9);-webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur);transition:background-color .25s}
+  html.acfc-scrolled header{background:rgba(18,21,26,.58)}
+  .acfcBrandTxt{display:none}
+  .acfcBrand img{height:24px}
+  header .tabs{order:0;flex:1 1 auto;margin:0;gap:16px;justify-content:flex-end;align-self:stretch}
+  header .tab{font-size:0;padding:0;margin-bottom:-2px;border-bottom-width:2px}
+  header .tab::after{font-size:11.5px;letter-spacing:.12em}
+  #tabBtnEditor::after{content:"Editor"}
+  #tabBtnVisor::after{content:"Registro"}
+  header .sub,header .sp{display:none!important}
+  header label.btn.primary{flex:none;padding:7px 10px;font-size:10.5px;letter-spacing:.1em;white-space:nowrap}
+  /* vídeo + mandos fijos arriba: la lista se desliza por debajo */
+  #tabVisor main>section,#tabEditor .edgrid>section{display:contents}
+  #tabVisor main,#tabEditor:not(:fullscreen) .edgrid{padding:0 12px 20px;gap:0;display:grid}
+  #tabVisor:not(:fullscreen) .stage:not(:fullscreen),#tabEditor:not(:fullscreen) #edStage:not(:fullscreen){position:sticky;top:50px;z-index:20;margin:0 -12px;padding:0 12px 10px;
+    background:var(--bg);border-radius:0;box-shadow:0 14px 18px -16px rgba(0,0,0,.45)}
+  #tabVisor:not(:fullscreen) .stage:not(:fullscreen) video,#tabEditor:not(:fullscreen) #edStage:not(:fullscreen) video{margin:0 -12px;width:calc(100% + 24px);max-width:none}
+  #tabVisor:not(:fullscreen) .stage:not(:fullscreen) .empty,#tabEditor:not(:fullscreen) #edStage:not(:fullscreen) .empty{inset:0 0 auto 0}
+  #tabVisor .edtrack,#tabEditor .edtrack{height:38px;margin:26px 0 2px}
+  #tabVisor .edtrack .edsegs,#tabEditor .edtrack .edsegs{inset:12px 0}
+  /* mandos: reproducir en rojo, el resto discreto */
+  #tabVisor:not(:fullscreen) .stage:not(:fullscreen) .stageControls,#tabEditor:not(:fullscreen) #edStage:not(:fullscreen) .stageControls{grid-template-columns:1.4fr 1fr 1fr 40px 40px;gap:6px;padding:8px 0 0}
+  #tabVisor .stage:not(:fullscreen) .stageControls .btn,#edStage:not(:fullscreen) .stageControls .btn{min-height:40px;font-size:13px;border-color:var(--line);background:var(--panel)}
+  #tabVisor .stage:not(:fullscreen) .stageControls #vBack20,#tabVisor .stage:not(:fullscreen) .stageControls #vFwd20,
+  #edStage:not(:fullscreen) .stageControls #edBack20,#edStage:not(:fullscreen) .stageControls #edFwd20{display:none}
+  #tabVisor .stage:not(:fullscreen) .stageControls #vFull,#edStage:not(:fullscreen) .stageControls #edFull{background:var(--panel);color:var(--ink);border-color:var(--line)}
+  .stageControls #vMute,.stageControls #vFull,.stageControls #edMute,.stageControls #edFull{font-size:17px}
+  #tagRow{margin-top:6px;gap:6px}
+  #tagRow .btn{min-height:44px;font-size:12.5px;letter-spacing:.1em}
+  #edStage .stageControls .fsAB{display:none}
+  /* fila de corte del editor: A y B grandes */
+  #tabEditor #edCtl1{margin-top:10px;gap:6px}
+  #tabEditor #edCtl1 #edSetA,#tabEditor #edCtl1 #edSetB{flex:1;min-height:44px;font-size:13px}
+  #tabEditor .controls:has(#edClock) #edAddSel{min-height:46px}
+  /* marcas y ajustes: se minimizan */
+  #tabVisor #belowStageWrap>.controls{margin-top:8px;gap:6px}
+  #vTimelineToggle{margin-right:auto;font-size:12px;min-height:0;padding:5px 4px}
+  #vMarkBtns .btn,#edMarkBtns .btn:not(#edCtlToggle){min-height:32px;font-size:11px;padding:4px 4px;white-space:nowrap!important}
+  #tabEditor #edMarkBtns #edCtlToggle{font-size:12px}
+  /* panel de registro: primero la lista; ajustes y filtros plegados */
+  aside{border-left:0;border-right:0;margin:14px -12px 0;border-top:2px solid var(--ink)}
+  aside .top{padding:12px 12px 8px}
+  #acfcFold{display:inline-block;margin-left:auto}
+  #tabVisor aside .top:not(.acfc-open)>.row:has(#pre),
+  #tabVisor aside .top:not(.acfc-open)>div:has(#fltEqBtns){display:none!important}
+  .ev{grid-template-columns:26px 62px 1fr auto;gap:8px;padding:10px 6px}
+  .ev .chk{width:20px;height:20px;accent-color:var(--red)}
+  .ev .acts button{min-height:32px;padding:4px 9px}
+  .bulkbar.on{position:sticky;bottom:8px;z-index:6;background:var(--ink);color:#fff;padding:8px 10px;margin:4px 0}
+  .bulkbar.on #bulkCount{color:#fff!important}
+  .bulkbar.on .btn{min-height:36px;background:transparent;color:#fff;border-color:rgba(255,255,255,.4)}
+  .bulkbar.on #bulkDl{background:var(--red)!important;border-color:var(--red)!important;color:#fff!important}
+  /* botonera: hoja inferior, el vídeo sigue a la vista */
+  #dlg{position:fixed!important;left:0!important;right:0!important;top:auto!important;bottom:0!important;width:100%!important;max-width:none!important;margin:0;
+    max-height:calc(100dvh - 50px - 56.25vw - 10px)!important;overflow:auto;border:0;border-top:3px solid var(--red);box-shadow:0 -18px 40px rgba(0,0,0,.28);
+    padding-bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:40}
+  #dlg .catbtn,#dlg .optbtn{min-height:40px}
+  /* aviso de girar el móvil */
+  #acfcRot:not([hidden]){display:flex;position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:90;align-items:center;gap:12px;padding:12px 12px 12px 14px;
+    color:#fff;font-size:13px;line-height:1.3;background:var(--glass-2);-webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur);border:1px solid var(--glass-bd);border-left:3px solid var(--red)}
+  #acfcRot span{flex:1}
+  #acfcRot button{background:none;border:0;color:#fff;font-size:22px;line-height:1;padding:4px 8px;opacity:.7}
+  .acfcRotIc{flex:none;width:18px;height:30px;border:2px solid #fff;border-radius:4px;animation:acfcRot 2.6s ease-in-out infinite}
+  .acfcFoot{margin-top:18px}
+}
+@keyframes acfcRot{0%,25%{transform:rotate(0)}55%,80%{transform:rotate(-90deg)}100%{transform:rotate(0)}}
+@media (prefers-reduced-motion:reduce){.acfcRotIc{animation:none;transform:rotate(-90deg)}}
+
+/* ---------- 4. Modo inmersivo: móvil apaisado, vídeo a toda pantalla ---------- */
+html.acfc-imm,html.acfc-imm body{overflow:hidden;background:#000}
+html.acfc-imm .acfcUtil,html.acfc-imm .acfcFoot,html.acfc-imm .hint,html.acfc-imm #legend{display:none!important}
+/* pestañas: cápsula translúcida arriba a la izquierda */
+html.acfc-imm header{position:fixed;top:max(8px,env(safe-area-inset-top,0px));left:max(8px,env(safe-area-inset-left,0px));right:auto;z-index:60;min-height:0;padding:0 4px;gap:0;flex-wrap:nowrap;
+  border:1px solid var(--glass-bd);background:var(--glass);-webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur)}
+html.acfc-imm header>*:not(.tabs){display:none!important}
+html.acfc-imm header .tabs{margin:0;gap:0;order:0;flex:none}
+html.acfc-imm header .tab{font-size:0;height:34px;padding:0 10px;margin:0;border-bottom:2px solid transparent}
+html.acfc-imm header .tab::after{font-size:10.5px;letter-spacing:.14em}
+html.acfc-imm #tabBtnEditor::after{content:"Editor"}
+html.acfc-imm #tabBtnVisor::after{content:"Registro"}
+/* el vídeo ocupa toda la pantalla */
+html.acfc-imm #tabVisor main,html.acfc-imm #tabEditor .edgrid{display:block;padding:0;max-width:none}
+html.acfc-imm #tabVisor main>section,html.acfc-imm #tabEditor .edgrid>section{position:fixed;inset:0;z-index:40;background:#000;display:block}
+html.acfc-imm #tabVisor .stage,html.acfc-imm #edStage{position:absolute;inset:0;aspect-ratio:auto;border-radius:0;background:#000;overflow:hidden;display:block}
+html.acfc-imm #tabVisor .stage video,html.acfc-imm #edStage video{width:100%;height:100%;object-fit:contain;aspect-ratio:auto;margin:0}
+html.acfc-imm .overlay{top:max(8px,env(safe-area-inset-top,0px));right:auto;left:50%;transform:translateX(-50%)!important;display:flex!important;box-shadow:none}
+html.acfc-imm .overlay .min,html.acfc-imm .overlay .cat{font-size:15px;padding:5px 10px}
+html.acfc-imm .overlay .det{padding:3px 10px}
+html.acfc-imm .overlay .det b{font-size:13px}
+/* mandos: barra translúcida abajo, con la barra de avance dentro */
+html.acfc-imm .stageControls{position:absolute!important;left:50%;right:auto;top:auto;bottom:max(8px,env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:3;
+  width:min(560px,calc(100% - 320px));display:flex!important;flex-wrap:wrap;justify-content:center;align-items:center;gap:6px;padding:8px 10px;
+  background:var(--glass);-webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur);border:1px solid var(--glass-bd)}
+html.acfc-imm #tabVisor .stage .stageControls .fsBar,html.acfc-imm #edStage .stageControls .fsBar{display:flex!important;font-size:12px;gap:8px}
+html.acfc-imm .fsBar input[type=range]{height:22px}
+html.acfc-imm .stageControls .btn{flex:1 1 0;min-width:0;min-height:38px;padding:4px 6px;font-size:12.5px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.16);color:#fff;white-space:nowrap}
+html.acfc-imm .stageControls .btn.primary,html.acfc-imm .stageControls #play,html.acfc-imm .stageControls #edPlay{flex:1.5 1 0;background:var(--red);border-color:var(--red);color:#fff}
+html.acfc-imm .stageControls .pl,html.acfc-imm .stageControls .lbl{display:none}
+html.acfc-imm #vBack20,html.acfc-imm #edBack20{order:1}html.acfc-imm #vBack4,html.acfc-imm #edBack4{order:2}html.acfc-imm #play,html.acfc-imm #edPlay{order:3}html.acfc-imm #vFwd5,html.acfc-imm #edFwd5{order:4}html.acfc-imm #vFwd20,html.acfc-imm #edFwd20{order:5}html.acfc-imm #vMute,html.acfc-imm #edMute{order:6}html.acfc-imm .stageControls .fsBar{order:0}
+html.acfc-imm .stageControls .pi{display:inline!important;font-size:15px;line-height:1}
+html.acfc-imm .stageControls #vMute,html.acfc-imm .stageControls #edMute{background:rgba(255,255,255,.1);color:#fff;font-size:16px}
+html.acfc-imm .stageControls #vFwd45,html.acfc-imm .stageControls #edFwd45,html.acfc-imm .stageControls #vFull,html.acfc-imm .stageControls #edFull,
+html.acfc-imm .stageControls #visFullEditor,html.acfc-imm .stageControls #edFullEditor,html.acfc-imm .stageControls .fsAB{display:none!important}
+html.acfc-imm #vSeekTrack,html.acfc-imm #edTrack,html.acfc-imm .catTimelineWrap,html.acfc-imm .clipEd,html.acfc-imm .edNote,
+html.acfc-imm #tabVisor #belowStageWrap>.controls:not(:first-child),html.acfc-imm #edCtl2,html.acfc-imm #tabEditor .row:has(>#edCtlToggle){display:none!important}
+/* acciones: columna translúcida a la derecha */
+html.acfc-imm #belowStageWrap{display:block!important}
+html.acfc-imm #tabVisor #belowStageWrap>.controls:first-child,html.acfc-imm #edCtl1{position:fixed;right:max(8px,env(safe-area-inset-right,0px));top:50%;transform:translateY(-50%);z-index:45;
+  width:118px;margin:0;display:flex;flex-direction:column;flex-wrap:nowrap;align-items:stretch;gap:6px;padding:8px;
+  background:var(--glass);-webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur);border:1px solid var(--glass-bd)}
+html.acfc-imm #tabVisor #belowStageWrap>.controls:first-child>*,html.acfc-imm #edCtl1>*{display:none}
+html.acfc-imm #vTagNow,html.acfc-imm #vTagManual,html.acfc-imm #edSetA,html.acfc-imm #edSetB,html.acfc-imm #edAddSel:not([hidden]){display:block!important;min-height:42px;font-size:11.5px;letter-spacing:.1em;padding:4px 6px;white-space:normal;line-height:1.15}
+html.acfc-imm #edAddSel{background:#fff;border-color:#fff;color:#15181D}
+html.acfc-imm #vMarkBtns,html.acfc-imm #edMarkBtns{display:grid!important;grid-template-columns:1fr;gap:4px;margin-top:2px}
+html.acfc-imm .abL{display:none}
+html.acfc-imm #edSetA,html.acfc-imm #edSetB{font-size:17px!important;letter-spacing:.04em!important}
+html.acfc-imm #tabVisor main>section:has(.empty:not([hidden])) #belowStageWrap,html.acfc-imm #tabEditor .edgrid>section:has(.empty:not([hidden])) #edCtl1{display:none!important}
+html.acfc-imm #vMarkBtns .btn,html.acfc-imm #edMarkBtns .btn:not(#edCtlToggle){min-height:28px;padding:2px 6px;font-size:11px;text-align:left;color:#fff;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);white-space:nowrap}
+html.acfc-imm #edMarkBtns #edCtlToggle,html.acfc-imm #vMarkBtns .mt,html.acfc-imm #edMarkBtns .mt{display:none!important}
+/* barra propia: abrir la lista y salir */
+html.acfc-imm #acfcImmBar{display:flex;position:fixed;top:max(8px,env(safe-area-inset-top,0px));right:max(8px,env(safe-area-inset-right,0px));z-index:80;gap:6px}
+#acfcImmBar button{height:36px;padding:0 12px;font:inherit;font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#fff;cursor:pointer;
+  background:var(--glass);-webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur);border:1px solid var(--glass-bd)}
+/* lista de eventos / cortes: cajón translúcido */
+html.acfc-imm #tabVisor main>aside,html.acfc-imm #tabEditor .edgrid>aside{position:fixed;top:0;right:0;bottom:0;z-index:70;width:min(400px,60vw);max-height:none;min-height:0;margin:0;overflow:auto;
+  padding-top:52px;padding-right:env(safe-area-inset-right,0px);border:0;border-left:1px solid var(--line);
+  background:color-mix(in srgb,var(--panel) 86%,transparent);-webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur);
+  transform:translateX(102%);transition:transform .28s cubic-bezier(.2,.6,.2,1);visibility:hidden}
+html.acfc-imm.acfc-drawer #tabVisor main>aside,html.acfc-imm.acfc-drawer #tabEditor .edgrid>aside{transform:none;visibility:visible}
+html.acfc-imm aside .list{overflow:visible;flex:none}
+html.acfc-imm #acfcFold{display:inline-block}
+html.acfc-imm #tabVisor aside .top:not(.acfc-open)>.row:has(#pre),html.acfc-imm #tabVisor aside .top:not(.acfc-open)>div:has(#fltEqBtns){display:none!important}
+/* botonera: panel translúcido a la derecha, el vídeo queda a la vista */
+html.acfc-imm #dlg{position:fixed!important;top:max(8px,env(safe-area-inset-top,0px))!important;bottom:max(8px,env(safe-area-inset-bottom,0px))!important;left:auto!important;right:max(8px,env(safe-area-inset-right,0px))!important;
+  width:min(340px,46vw)!important;height:auto!important;max-height:none!important;margin:0;overflow:auto;z-index:75;border:1px solid var(--line);border-top:3px solid var(--red);
+  background:color-mix(in srgb,var(--panel) 88%,transparent);-webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur)}
+html.acfc-imm #dlg .catbtn,html.acfc-imm #dlg .optbtn{min-height:36px;font-size:13px}
+html.acfc-imm #popOutDlg{display:none!important}
+html.acfc-imm.acfc-dlg #acfcImmBar,html.acfc-imm.acfc-dlg #tabVisor #belowStageWrap>.controls:first-child{display:none!important}
+html.acfc-imm.acfc-dlg #tabVisor .stage{right:calc(min(340px,46vw) + 16px)}
+html.acfc-imm.acfc-dlg #tabVisor .stage .stageControls{width:calc(100% - 24px)}
+html.acfc-imm.acfc-dlg header{opacity:.0;pointer-events:none}
+html.acfc-imm .empty{inset:0!important;aspect-ratio:auto!important}
+@media (prefers-reduced-motion:reduce){html.acfc-imm aside{transition:none}}
+/* ===================== fin interfaz v2 ACFC ===================== */
 </style>
 </head>
 <body>
@@ -845,6 +1080,7 @@ kbd{border-radius:0;font-family:var(--f-body)}
       <div class="row bulkbar" id="bulkBar">
         <span style="font-size:13px;color:var(--muted)" id="bulkCount"></span>
         <span class="row" style="gap:6px;margin:0">
+          <button class="btn" id="bulkDl" title="Descarga los eventos seleccionados, unidos en un solo vídeo">Descargar</button>
           <button class="btn" id="bulkPl">+ Lista</button>
           <button class="btn" id="bulkDel">✕ Borrar</button>
           <button class="btn" id="bulkClear">Cancelar</button>
@@ -1131,7 +1367,7 @@ kbd{border-radius:0;font-family:var(--f-body)}
     <select id="fCat" hidden aria-hidden="true"></select>
     <div id="newCatRow" class="row" hidden style="flex-wrap:nowrap">
       <input id="newCatName" maxlength="24" placeholder="Nombre de la categoría" aria-label="Nombre de la nueva categoría" style="flex:1">
-      <input id="newCatColor" type="color" value="#0f8b8d" aria-label="Color" style="width:46px;padding:2px">
+      <input id="newCatColor" type="color" value="#3D4852" aria-label="Color" style="width:46px;padding:2px">
       <button type="button" class="btn primary" id="newCatAdd">Añadir</button>
     </div>
     <div id="newCatErr" style="font-size:12px;color:var(--red)"></div>
@@ -1180,7 +1416,7 @@ kbd{border-radius:0;font-family:var(--f-body)}
       <div id="botCats" class="catbtns" role="group" aria-label="Categorías"></div>
       <div class="row botAdd">
         <input id="botCatName" maxlength="24" placeholder="Nueva categoría" aria-label="Nombre de la nueva categoría">
-        <input id="botCatColor" type="color" value="#0f8b8d" aria-label="Color de la nueva categoría" class="botColor">
+        <input id="botCatColor" type="color" value="#3D4852" aria-label="Color de la nueva categoría" class="botColor">
         <button type="button" class="btn primary" id="botCatAdd">Añadir</button>
       </div>
       <div id="botCatErr" class="botErr"></div>
@@ -1484,6 +1720,7 @@ window.VidExport=(()=>{
   const cleanName=n=>(String(n||"corte").replace(/[\\/:*?"<>|]/g,"").replace(/\s+/g,"_").trim().slice(0,80)||"corte");
   // Guarda un blob, dejando elegir carpeta y nombre con el selector nativo del sistema cuando el navegador lo permite.
   async function saveBlob(blob,name){
+    if(window.acfcSave){ const r=await window.acfcSave(blob,name); if(r!==undefined) return r; } // ACFC: en móvil, hoja «Guardar vídeo»
     if(window.showSaveFilePicker){
       try{
         const ext=(name.match(/\.([a-z0-9]+)$/i)||[,"dat"])[1].toLowerCase();
@@ -1844,7 +2081,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   const v=$("v");
   // categorías propias (se guardan en este navegador)
   const CAT_KEY="visor_categorias_v1";
-  const PALETTE=["#0f8b8d","#d64f8a","#8a6d1f","#3b4cca","#c0392b","#16a085","#7f5539","#5c6f82"];
+  const PALETTE=["#3D4852","#9C4A2F","#B5651D","#5E6B3A","#7A1712","#2E4A3A","#6B5B4B","#8B8275"];
   function loadCats(){ try{ const x=JSON.parse(localStorage.getItem(CAT_KEY)); if(Array.isArray(x)) x.slice(0,40).forEach(o=>{
       const n=String(o&&o.n||"").trim().toUpperCase().slice(0,24), c=/^#[0-9a-f]{6}$/i.test(o&&o.c)?o.c:PALETTE[0];
       if(n&&!CATS[n]) CATS[n]={c,custom:true}; }); }catch(e){} }
@@ -3529,6 +3766,13 @@ window.renderHalfBands = function(b1,b2,mk,d){
         if(!ok) break;
       }
     } finally{ fltBusy(false); } };
+  // ACFC: descarga en un solo vídeo los eventos marcados con la casilla
+  $("bulkDl").onclick=async()=>{ if(!v.duration||VidExport.running||!selectedIds.size) return; playing=null;
+    const items=sorted().map(x=>x.e).filter(e=>selectedIds.has(e.id)); if(!items.length) return;
+    const rs=[]; items.forEach(e=>rangesOf(e).forEach(r=>rs.push(r)));
+    fltBusy(true);
+    try{ await VidExport.run({video:v, ranges:rs, name:slug("seleccion_"+items.length+"eventos_"+$("vidName").textContent.replace(/\.[^.]+$/,"")), mime:$("vFmt").value, target:+$("vRes").value, fps:+$("vFps").value, ui:vUI}); }
+    finally{ fltBusy(false); } };
   $("plClear").onclick=clearPlaylist;
   $("delAllEv").onclick=()=>{
     if(!events.length) return;
@@ -3568,7 +3812,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   let sources=[], curSrc=-1, pendingFile=null, pendingSeek=null; // varios vídeos, unidos en orden para exportar
   let added=[]; // tramos confirmados con "+ Añadir", en el orden en que se exportarán
   let pendingEdProject=null; // proyecto de edición cargado en espera de que se vuelvan a subir los vídeos
-  const SRC_COLORS=["#2f6b3c","#1f6fd1","#c8102e","#e08a00","#7a3fb5","#0f8b8d","#8a6d1f","#5c6f82"];
+  const SRC_COLORS=["#2f6b3c","#3F5568","#D3291E","#C98A1B","#7A1712","#6B5B4B","#5E6B3A","#8A8F96"];
   const srcColor=i=>SRC_COLORS[i%SRC_COLORS.length];
   const dur=()=>isFinite(V.duration)?V.duration:0;
   function fixBrokenDuration(vid){
@@ -4475,6 +4719,149 @@ window.tutVoz=(()=>{
 
   window.openTutorialRegistro=()=>{ document.querySelectorAll("video").forEach(v=>v.pause()); playing=true; D.showModal(); show(0); };
   ["regTutorial","regTutorialB"].forEach(id=>{ const b=document.getElementById(id); if(b) b.onclick=window.openTutorialRegistro; });
+})();
+</script>
+<script>
+/* =====================================================================
+   ACFC · CAPA DE INTERFAZ v2 (2026-10-02)
+   Iconos sobrios, móvil, modo inmersivo apaisado y guardado en la galería.
+   No sustituye ninguna función de la herramienta: solo presenta y enlaza.
+   Va en un <script> propio al final del <body>.
+   ===================================================================== */
+(()=>{
+  const $=id=>document.getElementById(id), H=document.documentElement, D=document;
+  const on=(el,ev,fn,o)=>el&&el.addEventListener(ev,fn,o);
+  const mq=q=>matchMedia(q);
+  const isTouch=()=>mq("(pointer:coarse)").matches;
+
+  /* ---------- 1. Iconos: fuera emojis de los botones ---------- */
+  // Cada emoji deja, como mucho, un icono de línea (data-ic) que pinta el CSS.
+  const IC={"\u{1F50A}":"vol","\u{1F507}":"mute","\u26F6":"full","\u{1F441}":"eye","\u{1F648}":"hide","\u{1F5D1}":"trash","\u274C":"close","\u2753":"help","\u{1F5A5}":"pop","\u{1F4CD}":"pin","\u{1F4BE}":"save","\u{1F4C2}":"open","\u{1F39B}":"grid"};
+  const RX=/[\u{1F000}-\u{1FAFF}\u{2753}\u{274C}\u{26F6}\u{23F1}][\uFE0E\uFE0F\u200D]*/gu;
+  const HOST=".btn,.tab,.histBtn,.plBtn,.acts button,summary,.fsMatch,.time";
+  function clean(t){
+    const s=t.nodeValue; if(!s) return;
+    const host=t.parentElement&&t.parentElement.closest(HOST); if(!host) return;
+    let out=s; const m=out.match(RX);
+    if(m){ const k=IC[m[0].replace(/[\uFE0E\uFE0F\u200D]/g,"")]; if(k) host.dataset.ic=k; out=out.replace(RX,""); }
+    out=out.replace(/\uFE0F/g,"\uFE0E");                     // ▶ ⏸ ⏹ en trazo, no en emoji
+    out=out.replace(/^\s+(?=\S)/,"");
+    if(out!==s) t.nodeValue=out;
+  }
+  function sweep(root){
+    if(root.nodeType===3) return clean(root);
+    if(root.nodeType!==1) return;
+    const w=D.createTreeWalker(root,NodeFilter.SHOW_TEXT); let n; const list=[];
+    while((n=w.nextNode())) list.push(n);
+    list.forEach(clean);
+  }
+  sweep(D.body);
+  new MutationObserver(ms=>{ for(const m of ms){
+      if(m.type==="characterData") clean(m.target);
+      else m.addedNodes.forEach(sweep);
+    } }).observe(D.body,{subtree:true,childList:true,characterData:true});
+
+  /* ---------- 2. Cabecera translúcida al hacer scroll ---------- */
+  const onScroll=()=>H.classList.toggle("acfc-scrolled",(window.scrollY||0)>6);
+  on(window,"scroll",onScroll,{passive:true}); onScroll();
+
+  /* ---------- 3. Móvil: ajustes plegados y aviso de girar ---------- */
+  function addFold(){
+    const aside=D.querySelector("#tabVisor aside .top"); if(!aside||$("acfcFold")) return;
+    const b=D.createElement("button"); b.type="button"; b.id="acfcFold"; b.className="btn acfcLink";
+    const set=o=>{ aside.classList.toggle("acfc-open",o); b.textContent=o?"Ocultar ajustes y filtros":"Ajustes y filtros"; b.setAttribute("aria-expanded",o); };
+    b.onclick=()=>set(!aside.classList.contains("acfc-open"));
+    const head=aside.querySelector(".row"); (head||aside).appendChild(b); set(false);
+  }
+  addFold();
+
+  let hintSeen=false; try{ hintSeen=sessionStorage.getItem("acfcRotHint")==="1"; }catch(e){}
+  const hint=D.createElement("div"); hint.id="acfcRot"; hint.hidden=true; hint.setAttribute("role","status");
+  hint.innerHTML='<i class="acfcRotIc" aria-hidden="true"></i><span><b>Gira el móvil</b> para trabajar a pantalla completa</span><button type="button" aria-label="Cerrar aviso">×</button>';
+  D.body.appendChild(hint);
+  const hideHint=(forever)=>{ hint.hidden=true; if(forever){ hintSeen=true; try{ sessionStorage.setItem("acfcRotHint","1"); }catch(e){} } };
+  hint.querySelector("button").onclick=()=>hideHint(true);
+  let hintT=0;
+  function showHint(force){
+    if(!isTouch()||!mq("(orientation:portrait)").matches) return;
+    if(hintSeen&&!force) return;
+    hint.hidden=false; clearTimeout(hintT); hintT=setTimeout(()=>hideHint(!force),force?4200:7000);
+  }
+  ["v","edV"].forEach(id=>on($(id),"loadedmetadata",()=>showHint(false)));
+
+  /* ---------- 4. Modo inmersivo (móvil apaisado) ---------- */
+  const mqImm=mq("(orientation:landscape) and (max-height:540px) and (pointer:coarse)");
+  let immOff=false;
+  const bar=D.createElement("div"); bar.id="acfcImmBar";
+  bar.innerHTML='<button type="button" id="acfcDrawerBtn" aria-expanded="false">Eventos</button><button type="button" id="acfcImmExit" aria-label="Salir de pantalla completa" title="Salir de pantalla completa">Salir</button>';
+  D.body.appendChild(bar);
+  const dlg=$("dlg");
+  function syncImm(){
+    if(!mqImm.matches) immOff=false;
+    const o=mqImm.matches&&!immOff;
+    H.classList.toggle("acfc-imm",o);
+    setDrawer(false);
+    if(o) hideHint(false);
+    // la botonera (diálogo no modal) se recoloca con las reglas del modo inmersivo
+    if(dlg&&dlg.open&&typeof window.dispatchEvent==="function") window.dispatchEvent(new Event("resize"));
+  }
+  function setDrawer(o){ H.classList.toggle("acfc-drawer",o); const b=$("acfcDrawerBtn"); if(b){ b.setAttribute("aria-expanded",o); b.textContent=o?"Cerrar":labelDrawer(); } }
+  const labelDrawer=()=>($("tabEditor")&&!$("tabEditor").hidden)?"Cortes":"Eventos";
+  $("acfcDrawerBtn").onclick=()=>setDrawer(!H.classList.contains("acfc-drawer"));
+  $("acfcImmExit").onclick=()=>{
+    if(D.fullscreenElement||D.webkitFullscreenElement){ (D.exitFullscreen||D.webkitExitFullscreen).call(D); return; }
+    immOff=true; syncImm();
+  };
+  (mqImm.addEventListener?mqImm.addEventListener("change",syncImm):mqImm.addListener(syncImm));
+  ["tabBtnEditor","tabBtnVisor"].forEach(id=>on($(id),"click",()=>setTimeout(()=>setDrawer(false),30)));
+  // al abrir la botonera se cierra el cajón de eventos para que no se tapen
+  const syncDlg=()=>{ H.classList.toggle("acfc-dlg",!!(dlg&&dlg.open)); if(dlg&&dlg.open) setDrawer(false); };
+  if(dlg){ new MutationObserver(syncDlg).observe(dlg,{attributes:true,attributeFilter:["open"]}); syncDlg(); }
+  syncImm();
+
+  /* ---------- 5. Pantalla completa que funciona también en iPhone ---------- */
+  // En móvil se pone toda la página a pantalla completa y se bloquea en horizontal (Android);
+  // el iPhone no lo permite a las webs: se le pide girar el móvil y entra el modo inmersivo.
+  const nativeFs=el=>el.requestFullscreen||el.webkitRequestFullscreen;
+  function phoneFull(){
+    if(mqImm.matches&&immOff){ immOff=false; syncImm(); return; }      // vuelve al modo inmersivo tras «Salir»
+    if(D.fullscreenElement||D.webkitFullscreenElement){ (D.exitFullscreen||D.webkitExitFullscreen).call(D); return; }
+    const rq=nativeFs(H);
+    if(!rq){ showHint(true); return; }
+    let p; try{ p=rq.call(H); }catch(e){ showHint(true); return; }
+    Promise.resolve(p).then(()=>{ if(screen.orientation&&screen.orientation.lock) return screen.orientation.lock("landscape"); })
+      .catch(()=>showHint(true));
+  }
+  const fsBtns={vFull:()=>D.querySelector("#tabVisor .stage"),edFull:()=>$("edStage"),visFullEditor:()=>$("tabVisor"),edFullEditor:()=>$("tabEditor")};
+  Object.keys(fsBtns).forEach(id=>{ const b=$(id); if(!b) return; const old=b.onclick;
+    b.onclick=ev=>{
+      if(isTouch()&&Math.min(innerWidth,innerHeight)<=540) return phoneFull();
+      const el=fsBtns[id]();
+      if(!nativeFs(el)&&!D.fullscreenElement){ showHint(true); return; }   // sin API: no falla en silencio
+      return old&&old.call(b,ev);
+    }; });
+
+  /* ---------- 6. Guardar el vídeo en la galería (móvil) ---------- */
+  // La herramienta llama a window.acfcSave(blob,nombre) antes de su descarga clásica.
+  // Devuelve true/false si lo resuelve, o undefined para que siga la vía habitual.
+  window.acfcSave=function(blob,name){
+    if(!isTouch()||!navigator.share||!navigator.canShare) return undefined;
+    if(!/\.(mp4|webm|mov)$/i.test(name)) return undefined;
+    let file; try{ file=new File([blob],name,{type:blob.type||"video/mp4"}); }catch(e){ return undefined; }
+    if(!navigator.canShare({files:[file]})) return undefined;
+    return navigator.share({files:[file]}).then(()=>true,e=>{
+      if(e&&e.name==="AbortError") return false;       // el usuario cerró la hoja
+      return undefined;                                // sin gesto de usuario u otro fallo: descarga clásica
+    });
+  };
+  // Ventana «Vídeo exportado»: texto y botón adaptados al móvil
+  new MutationObserver(()=>{ const x=$("vxDlg"); if(!x||!x.open||!isTouch()) return;
+      const h=x.querySelector("#vxHint"), b=x.querySelector("#vxSave");
+      const can=!!(navigator.share&&navigator.canShare);
+      const t=can?"Pulsa «Guardar en el móvil» y elige «Guardar vídeo»: se queda en tu galería de fotos y vídeos.":"Pulsa «Descargar»: el vídeo se guarda en las descargas de tu móvil.";
+      if(h&&h.textContent!==t) h.textContent=t;
+      if(b&&can&&b.textContent==="Descargar") b.textContent="Guardar en el móvil";
+    }).observe(D.body,{subtree:true,childList:true,attributes:true,attributeFilter:["open"]});
 })();
 </script>
 </body>
