@@ -308,9 +308,10 @@ header h1.acfcBrand{display:flex;align-items:center;gap:14px;font-size:inherit;m
 .acfcBrandTxt{display:flex;flex-direction:column;justify-content:center;padding-left:14px;border-left:1px solid rgba(255,255,255,.28);font-family:var(--f-disp);font-weight:700;font-size:17px;line-height:1;letter-spacing:.6px;text-transform:uppercase;color:#fff}
 .acfcBrandTxt small{font-size:10px;font-weight:700;letter-spacing:1.6px;color:#E9564C;margin-top:4px}
 header .tabs{align-self:stretch;margin-left:6px}
-header .tab{display:flex;align-items:center;margin-bottom:-3px;padding:0 14px;font-size:13px;font-weight:700;letter-spacing:1.1px;text-transform:uppercase;color:rgba(255,255,255,.62);transition:color .2s}
-header .tab:hover{color:#fff}
-header .tab[aria-selected="true"]{color:#fff;border-color:var(--red)}
+header .tab{display:flex;align-items:center;margin-bottom:-3px;padding:0 20px;font-size:17px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:rgba(255,255,255,.8);border-bottom-width:4px;background:rgba(255,255,255,.14);transition:color .2s,background .2s}
+header .tab:hover{color:#fff;background:rgba(255,255,255,.24)}
+header .tab[aria-selected="true"]{color:#fff;border-color:#fff;background:var(--red)}
+header .tab[aria-selected="true"]:hover{background:var(--red-2)}
 header .sub{color:rgba(255,255,255,.55)}
 header #vidNote{color:#F1A39D}
 header .btn.primary{align-self:center}
