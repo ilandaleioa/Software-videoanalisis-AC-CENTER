@@ -132,4 +132,15 @@ Desde el repo no hace falta tocar nada del servidor.
 - Las anotaciones se guardan en un espacio lógico de 1280 px de ancho y se escalan al vídeo. Cada elemento nuevo aparece en el instante en que se pinta y dura lo que marca «Visible durante».
 - Las anotaciones se guardan solas en el navegador (localStorage, clave `acfcPint:<nombre del vídeo>`) y viajan en el proyecto exportado (campo `pintado`). API: `window.acfcPint.get()` y `.set(lista)`.
 - El motor es la función `acfcPintMount(cfg)` y se monta dos veces: en el registro (`#pintBlock`, sufijo de ids vacío, `window.acfcPint`) y en el editor de vídeo (copia del panel con ids terminados en `Ed`, `window.acfcPintEd`, clave `acfcPintEd:<nombre del vídeo>`). Cualquier cambio del motor o del panel vale para los dos.
-- En el editor, el pintado no se incluye todavía en los vídeos exportados (solo en el PNG del fotograma).
+- En el editor, el pintado no se incluye en el vídeo en movimiento. «Insertar en el vídeo (5 s)» (`#pintStillEd`) captura fotograma + pintado y lo inserta como imagen fija de 5 s (con audio en silencio) en ese instante del vídeo exportado: lista `stills` del editor, `expandRange()` parte los tramos y `exportFast`/`holdStill` los codifican. Las capturas no se guardan en el proyecto.
+
+---
+
+## 10. Versión limitada / completa (código de activación)
+
+- Bloque «ACFC · LICENCIA» justo antes de `</body>` (CSS, `<dialog id="acfcLicDlg">` y script). No se borra ni se mueve.
+- Ahora mismo `LIMITAR=false` (no se limita nada; solo queda el botón de código). Con `LIMITAR=true`, sin código `html.acfc-lite` oculta todos los botones salvo los marcados con `data-lite`: los 5 de la lista `LITE` del script (Reproducir, −5 seg, +5 seg, Registro auto, Pantalla completa), más los botones «Versión gratuita» y «Premium» (este abre la ventana del código; el de la versión en uso aparece relleno de rojo). También oculta el editor y las pestañas. Los botones dentro de `<dialog>` no se tocan.
+- Para cambiar qué botones quedan en la versión limitada, edita solo la lista `LITE`.
+- Los códigos válidos se guardan como huella SHA-256 en `ACFC_LIC_HASHES`. Se generan con `node generar-codigo.mjs [cantidad]` (entrega el código, pega la huella). La activación se recuerda en `localStorage` (clave `acfcLic`).
+- Es una barrera de uso, no seguridad real: al ser un HTML estático, quien conozca las DevTools puede saltársela. Para proteger de verdad haría falta validar en un servidor.
+- Corona de función Premium: la lista `PREMIUM` del script (selectores) añade la clase `acfcCrown` (corona en la esquina) y «Solo Premium» al título. Ahora: herramientas de pintado (`.pintTool`), «Insertar en el vídeo» (`#pintStill`, `#pintStillEd`) y «+ Añadir vídeo» (`#regAddFile`, `#edAddFile`; sin Premium abre la ventana del código). Solo marca; la limitación real depende de `LIMITAR`.

@@ -25,7 +25,7 @@
   --red:#D3291E; --red-2:#B6170D; --pitch:#2f6b3c; --acfc-ink:#15181D; --acfc-ink-2:#1B2026;
   --f-disp:"DIN PRO","Barlow Condensed",Barlow,"Helvetica Neue",Arial,sans-serif;
   --f-body:"DIN PRO",Barlow,-apple-system,"Helvetica Neue",Arial,sans-serif;
-  --c-gol:#c8102e; --c-oca:#e08a00; --c-tra:#7a3fb5; --c-trd:#0e8f8f; --c-sal:#1f6fd1; --c-pre:#2f8a4a; --c-otr:#6b7280; --c-gcn:#7f0a1d; --c-ocn:#8a5200; --c-cdo:#0e8f8f; --c-due:#c026a3;
+  --c-gol:#1F6FD1; --c-oca:#e08a00; --c-tra:#7a3fb5; --c-trd:#0e8f8f; --c-sal:#6B7A3A; --c-pre:#2f8a4a; --c-otr:#6b7280; --c-gcn:#123F7A; --c-ocn:#8a5200; --c-cdo:#0e8f8f; --c-due:#c026a3;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#0B0D10; --panel:#15181D; --ink:#EDEDEB; --muted:#9AA0A6; --line:#2C3338;
@@ -169,6 +169,8 @@ dialog input,dialog select{width:100%;padding:7px;border:1px solid var(--line);b
 .catbtn.add,.optbtn.add{padding-right:11px}
 .btnX{position:absolute;top:1px;right:1px;width:16px;height:16px;line-height:14px;text-align:center;border-radius:0 4px 0 4px;background:rgba(0,0,0,.28);color:inherit;cursor:pointer;font-size:12px}
 .catbtn .btnX:hover,.optbtn .btnX:hover{background:var(--red);color:#fff}
+.btnE{position:absolute;top:1px;left:1px;width:16px;height:16px;line-height:16px;text-align:center;border-radius:4px 0 4px 0;background:rgba(0,0,0,.28);color:inherit;cursor:pointer;font-size:11px}
+.catbtn .btnE:hover,.optbtn .btnE:hover{background:var(--ink);color:#fff}
 kbd{border:1px solid var(--line);border-radius:3px;padding:0 4px;font-size:11px}
 @media (prefers-reduced-motion:reduce){.overlay{transition:none}}
 .tabs{display:flex;gap:4px;margin-left:10px}
@@ -180,16 +182,19 @@ kbd{border:1px solid var(--line);border-radius:3px;padding:0 4px;font-size:11px}
 .edsegs{position:absolute;inset:8px 0}
 .edZoomWrap{position:absolute;top:0;bottom:0;left:0;width:100%}
 .edtrack.zoomed{clip-path:inset(-60px 0 -30px 0)}
+.catZoomWrap{position:relative;width:100%}
+.track.zoomed{clip-path:inset(-60px 0 -30px 0)}
 .edZoomBar{display:flex;align-items:center;gap:8px;margin:2px 0 4px}
 .edZoomBar .btn{padding:2px 12px;min-height:0;line-height:1.3}
 .edZoomBar [hidden]{display:none!important}
 .edZoomBar input[type=range]{flex:1;min-width:80px;accent-color:var(--red)}
-#edZoomLbl{font-size:12px;color:var(--muted);min-width:56px;text-align:center}
+#edZoomLbl,#vZoomLbl{font-size:12px;color:var(--muted);min-width:56px;text-align:center}
 .seg{position:absolute;top:0;bottom:0;background:color-mix(in srgb,var(--pitch) 70%,transparent);border-right:2px solid var(--panel);border-radius:3px;cursor:grab}
 .seg.off{background:repeating-linear-gradient(45deg,color-mix(in srgb,var(--red) 55%,transparent) 0 6px,transparent 6px 12px)}
 .seg.sel{outline:3px solid var(--ink);outline-offset:-3px;z-index:1}
 .doneCut{--dc:var(--c-otr);position:absolute;top:0;bottom:0;cursor:grab;z-index:3;background:color-mix(in srgb,var(--dc) 65%,transparent);border:1px solid var(--dc);border-bottom:3px solid var(--dc);box-sizing:border-box}
 .doneCut:hover{background:color-mix(in srgb,var(--dc) 85%,transparent)}
+.doneCut .evLbl{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;overflow:hidden;pointer-events:none;font-family:var(--f-disp);font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;color:#fff;opacity:.8;text-shadow:0 0 4px rgba(0,0,0,.65),0 0 8px rgba(0,0,0,.45)}
 .stillMk{position:absolute;top:-3px;bottom:-3px;width:3px;margin-left:-1px;z-index:5;pointer-events:none;background:var(--red);box-shadow:0 0 0 1px var(--panel)}
 .stillMk::before{content:"";position:absolute;left:50%;top:-20px;width:18px;height:18px;transform:translateX(-50%);background:var(--red) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 20h9'/%3E%3Cpath d='M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z'/%3E%3C/svg%3E") center/12px 12px no-repeat;border:2px solid var(--panel);box-sizing:border-box}
 .shade{position:absolute;top:0;bottom:0;background:color-mix(in srgb,var(--bg) 70%,transparent);pointer-events:none;z-index:2}
@@ -217,6 +222,10 @@ body.markBtnsHidden .hdlTime.markLbl{display:none!important}
 #mlP1Lbl,#vmlP1Lbl,#mlP1ELbl,#vmlP1ELbl,#mlP2Lbl,#vmlP2Lbl,#mlEndLbl,#vmlEndLbl{background:#1c2420}
 .evTicks{position:absolute;inset:8px 0;pointer-events:none;z-index:3}
 .evTick{position:absolute;top:0;bottom:0;min-width:4px;margin-left:-2px;box-shadow:0 0 0 1px rgba(255,255,255,.85),0 0 0 2px rgba(0,0,0,.25)}
+.evTick{overflow:visible;container-type:inline-size}
+.evTick .evLbl{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;overflow:hidden;pointer-events:none;font-family:var(--f-disp);font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;color:#fff;opacity:.8;text-shadow:0 0 4px rgba(0,0,0,.65),0 0 8px rgba(0,0,0,.45)}
+.evTick .evDur{position:absolute;left:50%;bottom:-8px;transform:translateX(-50%);font-size:10px;line-height:1;font-weight:600;color:#fff;background:rgba(0,0,0,.65);border-radius:3px;padding:2px 4px;white-space:nowrap;pointer-events:none;z-index:2}
+@container (max-width:44px){.evTick .evLbl{display:none}}
 .evH{position:absolute;top:-3px;bottom:-3px;width:7px;pointer-events:auto;cursor:ew-resize;background:var(--ink);border-radius:2px;opacity:0;transition:opacity .12s}
 .evH.a{right:100%;margin-right:1px}.evH.b{left:100%;margin-left:1px}
 #vSeekTrack:hover .evH{opacity:.55}.evH:hover,.evH.drag{opacity:1!important;background:var(--red)}
@@ -429,12 +438,6 @@ kbd{border-radius:0;font-family:var(--f-body)}
 /* Botón Reproducir (registro de acciones y editor): fondo negro */
 #play,#edPlay,#cePlay{background:#000;border-color:#000;color:#fff}
 #play:hover,#edPlay:hover,#cePlay:hover{background:#222;border-color:#222;color:#fff}
-/* Editor (escritorio): los botones de reproducción pasan junto a «Velocidad» (ver placeEdPlayback) */
-#edPbBar .lbl,#edPbBar .fsAB{display:none}
-#edPbBar #edMute,#edPbBar #edFull,#edPbBar #edFullEditor{background:var(--acfc-ink);color:#fff;border-color:var(--acfc-ink)}
-#edPbBar #edMute:hover,#edPbBar #edFull:hover,#edPbBar #edFullEditor:hover{background:var(--red);border-color:var(--red)}
-#edPbBar #edPlay .pi{display:inline}
-#edStage .stageControls:not(:has(.btn:not(.fsAB))){display:none}
 @media (prefers-color-scheme:dark){
   #play,#edPlay,#cePlay{border-color:#555}
 }
@@ -775,7 +778,7 @@ kbd{border-radius:0;font-family:var(--f-body)}
    Solo presentación. Debe ir al FINAL del <style> (gana a lo anterior).
    ===================================================================== */
 :root{
-  --c-gol:#D3291E; --c-gcn:#7A1712; --c-oca:#C98A1B; --c-ocn:#8A5E12;
+  --c-gol:#1F6FD1; --c-gcn:#123F7A; --c-oca:#C98A1B; --c-ocn:#8A5E12;
   --c-tra:#3F5568; --c-trd:#7C8FA0; --c-sal:#6B7A3A; --c-pre:#2F6B3C;
   --c-cdo:#6B5B4B; --c-due:#9C4A2F; --c-otr:#8A8F96;
   --glass:rgba(18,21,26,.52); --glass-2:rgba(18,21,26,.78); --glass-bd:rgba(255,255,255,.16);
@@ -975,7 +978,7 @@ html.acfc-imm .stageControls .pi{display:inline!important;font-size:15px;line-he
 html.acfc-imm .stageControls #vMute,html.acfc-imm .stageControls #edMute{background:rgba(255,255,255,.1);color:#fff;font-size:16px}
 html.acfc-imm #vFwd45,html.acfc-imm #vFwd45b,html.acfc-imm #edFwd45,html.acfc-imm #edFwd45b,html.acfc-imm .stageControls #vFwd45,html.acfc-imm .stageControls #edFwd45,html.acfc-imm .stageControls #vFull,html.acfc-imm .stageControls #edFull,
 html.acfc-imm .stageControls #visFullEditor,html.acfc-imm .stageControls #edFullEditor,html.acfc-imm .stageControls .fsAB{display:none!important}
-html.acfc-imm #vSeekTrack,html.acfc-imm #edTrack,html.acfc-imm #edZoomBar,html.acfc-imm .catTimelineWrap,html.acfc-imm .clipEd,html.acfc-imm .edNote,
+html.acfc-imm #vSeekTrack,html.acfc-imm #edTrack,html.acfc-imm #edZoomBar,html.acfc-imm #vZoomBar,html.acfc-imm .catTimelineWrap,html.acfc-imm .clipEd,html.acfc-imm .edNote,
 html.acfc-imm #tabVisor #belowStageWrap>.controls:not(:first-child),html.acfc-imm #edCtl2,html.acfc-imm #tabEditor .row:has(>#edCtlToggle){display:none!important}
 /* acciones: columna translúcida a la derecha */
 html.acfc-imm #belowStageWrap{display:block!important}
@@ -1030,6 +1033,10 @@ html.acfc-imm .empty{inset:0!important;aspect-ratio:auto!important}
 .evPickNew{display:grid;grid-template-columns:1fr auto;gap:3px;margin-top:3px}
 .evPickNew input{min-width:0;box-sizing:border-box;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:0;padding:8px;font:inherit;font-size:14px}
 .evPickNew button{text-align:center;background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.evPickCus{display:grid;grid-template-columns:1fr auto auto;gap:3px}
+.evPickCus[hidden],.evPickCus [hidden]{display:none}
+.evPickRen{grid-column:1 / -1;min-width:0;box-sizing:border-box;border:1px solid var(--red);background:var(--bg);color:var(--ink);border-radius:0;padding:8px 10px;font:inherit;font-size:14px}
+.evPick .evPickDel{text-align:center;padding:8px 12px;color:var(--muted)}
 .evPick .evPickSkip{border:0;text-decoration:underline;color:var(--muted);text-align:center;min-height:30px}
 @media (max-width:640px){
   .evPick button{min-height:44px}
@@ -1081,9 +1088,7 @@ html header .tab[aria-selected="true"],html header .tab[aria-selected="true"]:ho
   <select id="vidSel" hidden aria-label="Vídeo abierto en el registro" title="Cambiar de vídeo"></select>
   <span class="sp"></span>
   <button type="button" class="btn" id="btnInstalar" hidden title="Instalar la app o crear un acceso directo">Instalar app</button>
-  <label class="btn primary" for="file">Cargar vídeo</label>
   <input type="file" id="file" accept="video/*" hidden>
-  <label class="btn" id="btnAddVids" for="fileAdd" title="Añade uno o varios vídeos más (p. ej. la segunda parte) y cambia entre ellos">Añadir vídeos</label>
   <input type="file" id="fileAdd" accept="video/*" multiple hidden>
 </header>
 
@@ -1125,8 +1130,10 @@ html header .tab[aria-selected="true"],html header .tab[aria-selected="true"]:ho
 
     </div>
     <div class="edtrack" id="vSeekTrack" title="Haz clic o arrastra para moverte por el vídeo">
+     <div class="edZoomWrap" id="vZoomWrap">
       <div class="edsegs"><div class="seg" style="left:0;right:0;cursor:pointer"></div></div>
       <div class="evTicks" id="vEvTicks"></div>
+      <div id="vPintMks"></div>
       <div class="halfBand" id="vBandP1"><span>1ª PARTE</span></div>
       <div class="halfBand" id="vBandP2"><span>2ª PARTE</span></div>
       <div class="markLine" id="vmlP1" title="Inicio 1ª parte"></div>
@@ -1139,6 +1146,14 @@ html header .tab[aria-selected="true"],html header .tab[aria-selected="true"]:ho
       <div class="hdlTime markLbl" id="vmlEndLbl"></div>
       <div class="head" id="vSeekHead"></div>
       <div class="headClock" id="vHeadClock" title="Tiempo real de juego"></div>
+     </div>
+    </div>
+    <div class="edZoomBar" id="vZoomBar">
+      <button class="btn" id="vZoomMinus" title="Alejar la línea de tiempo (Ctrl + rueda del ratón)" aria-label="Alejar">−</button>
+      <span class="time" id="vZoomLbl">Zoom ×1</span>
+      <button class="btn" id="vZoomPlus" title="Acercar la línea de tiempo para ser más preciso (Ctrl + rueda del ratón)" aria-label="Acercar">+</button>
+      <input type="range" id="vZoomPan" min="0" max="1000" value="0" hidden aria-label="Desplazar la línea de tiempo ampliada" title="Desplazar la línea de tiempo (también Mayús + rueda)">
+      <button class="btn" id="vZoomReset" hidden title="Volver a ver el vídeo entero">Quitar zoom</button>
     </div>
     <div class="legend" id="legend"></div>
     <div id="belowStageWrap">
@@ -1164,9 +1179,11 @@ html header .tab[aria-selected="true"],html header .tab[aria-selected="true"]:ho
     <div class="catTimelineWrap">
       <div class="catLabels" id="catLabels"></div>
       <div class="track" id="track">
+       <div class="catZoomWrap" id="catZoomWrap">
         <div class="catRows" id="catRows"></div>
         <div class="prog" id="prog"></div>
         <div class="head" id="head"></div>
+       </div>
       </div>
     </div>
     <div class="controls">
@@ -1610,7 +1627,6 @@ html header .tab[aria-selected="true"],html header .tab[aria-selected="true"]:ho
           <button class="btn" id="edMarkEnd" title="Fija el fin del partido en el cabezal actual">Fin de partido</button>
         </span>
         <span style="flex:1"></span>
-        <span id="edPbBar" style="display:contents"></span>
         <label class="row" style="gap:6px"><span style="font-size:13px;color:var(--muted)">Velocidad</span>
           <select id="edRate"><option>0.5</option><option>0.75</option><option selected>1</option><option>1.5</option><option>2</option></select></label>
         <button class="btn" id="edTutorialB" title="Mira paso a paso cómo se usa el editor">❓ Tutorial</button>
@@ -1802,6 +1818,7 @@ html header .tab[aria-selected="true"],html header .tab[aria-selected="true"]:ho
       <div class="row botAdd">
         <input id="botCatName" maxlength="24" placeholder="Nueva categoría" aria-label="Nombre de la nueva categoría">
         <input id="botCatColor" type="color" value="#3D4852" aria-label="Color de la nueva categoría" class="botColor">
+        <button type="button" class="btn" id="botCatCancel" hidden>Cancelar</button>
         <button type="button" class="btn primary" id="botCatAdd">Añadir</button>
       </div>
       <div id="botCatErr" class="botErr"></div>
@@ -1831,6 +1848,7 @@ html header .tab[aria-selected="true"],html header .tab[aria-selected="true"]:ho
 
     <div class="row" style="justify-content:space-between">
       <div class="row">
+        <button type="button" class="btn" id="botNew" title="Empieza una botonera nueva: mantiene las categorías y vacía los detalles y jugadores">Nueva botonera</button>
         <button type="button" class="btn edGreen" id="botSave" title="Descarga la botonera como archivo">💾 Guardar botonera</button>
         <label class="btn" for="impBot" title="Carga una botonera guardada previamente; se añade a la actual">📂 Cargar botonera</label>
       </div>
@@ -2526,8 +2544,38 @@ window.renderHalfBands = function(b1,b2,mk,d){
       const n=String(o&&o.n||"").trim().toUpperCase().slice(0,24), c=/^#[0-9a-f]{6}$/i.test(o&&o.c)?o.c:PALETTE[0];
       if(n&&!CATS[n]) CATS[n]={c,custom:true}; }); }catch(e){} }
   function saveCats(){ try{ localStorage.setItem(CAT_KEY,JSON.stringify(Object.entries(CATS).filter(([,o])=>o.custom).map(([n,o])=>({n,c:o.c})))); }catch(e){} }
-  function removeCat(n){ if(!CATS[n]||!CATS[n].custom) return; delete CATS[n]; saveCats(); }
+  // categorías de serie: se pueden borrar (queda anotado) y recolorear (se guarda el color)
+  const CAT_HID_KEY="visor_cat_ocultas_v1", CAT_COL_KEY="visor_cat_color_v1";
+  const CAT_FIJAS=["OTRO"]; // OTRO es el refugio de los eventos de categorías borradas
+  const CAT_NOMBRE_FIJO=["GOL","OCASIÓN","OTRO"]; // su nombre lo usa la lógica de balón parado
+  let catHid=[], catCol={};
+  try{ const x=JSON.parse(localStorage.getItem(CAT_HID_KEY)); if(Array.isArray(x)) catHid=x.map(String).slice(0,40); }catch(e){}
+  try{ const x=JSON.parse(localStorage.getItem(CAT_COL_KEY)); if(x&&typeof x==="object"&&!Array.isArray(x)) Object.entries(x).slice(0,40).forEach(([k,c])=>{ if(/^#[0-9a-f]{6}$/i.test(c)) catCol[k]=c; }); }catch(e){}
+  function saveCatBase(){ try{ localStorage.setItem(CAT_HID_KEY,JSON.stringify(catHid)); localStorage.setItem(CAT_COL_KEY,JSON.stringify(catCol)); }catch(e){} }
+  function removeCat(n){ if(!CATS[n]||CAT_FIJAS.includes(n)) return;
+    const custom=CATS[n].custom; delete CATS[n];
+    if(custom) saveCats(); else { if(!catHid.includes(n)) catHid.push(n); delete catCol[n]; saveCatBase(); }
+    events.forEach(e=>{ if(e.cat===n) e.cat="OTRO"; }); save(); }
+  // cambia nombre y/o color; los eventos y los detalles de la categoría la siguen
+  function editCat(old,nw,color){
+    const o=CATS[old]; if(!o) return "No existe esa categoría.";
+    if(nw!==old){
+      if(CAT_NOMBRE_FIJO.includes(old)) return "El nombre de esta categoría no se puede cambiar (solo su color).";
+      if(CATS[nw]||nw==="__NEW__") return CATS[nw]?"Ya existe esa categoría.":"Ese nombre no es válido.";
+      const ent=Object.entries(CATS).map(([k,v])=>k===old?[nw,{c:color,custom:true}]:[k,v]);
+      Object.keys(CATS).forEach(k=>delete CATS[k]); ent.forEach(([k,v])=>{ CATS[k]=v; });
+      if(!o.custom){ if(!catHid.includes(old)) catHid.push(old); delete catCol[old]; saveCatBase(); }
+      if(DETS[old]){ DETS[nw]=DETS[old]; delete DETS[old]; saveDets(); }
+      events.forEach(e=>{ if(e.cat===old) e.cat=nw; }); save(); saveCats();
+    } else {
+      o.c=color;
+      if(o.custom) saveCats(); else { catCol[old]=color; saveCatBase(); }
+    }
+    return "";
+  }
   loadCats();
+  catHid.forEach(n=>{ delete CATS[n]; });
+  Object.entries(catCol).forEach(([k,c])=>{ if(CATS[k]&&!CATS[k].custom) CATS[k].c=c; });
   let events=load(), active=null, editId=null;
   // detalles por categoría (se guardan en este navegador)
   const DET_KEY="visor_detalles_v1"; const DETS={};
@@ -2546,10 +2594,13 @@ window.renderHalfBands = function(b1,b2,mk,d){
   try{ const x=JSON.parse(localStorage.getItem(PARADO_KEY)); if(Array.isArray(x)) x.slice(0,100).forEach(d=>{ d=String(d).toLowerCase().slice(0,60); if(d&&!GOL_PARADO.includes(d)) GOL_PARADO.push(d); }); }catch(e){}
   function addParado(d){ d=String(d).toLowerCase(); if(GOL_PARADO.includes(d)) return; GOL_PARADO.push(d);
     try{ localStorage.setItem(PARADO_KEY,JSON.stringify(GOL_PARADO.slice(5))); }catch(e){} }
-  (function loadDets(){ GOL_DETS.forEach(d=>{ addDetTo("GOL",d,false); addDetTo("OCASIÓN",d,false); }); SEED.forEach(e=>addDetTo(e.cat,e.det,false));
+  // «Nueva botonera»: detalles y jugadores vacíos; este indicador evita que se vuelvan a sembrar los de serie al recargar
+  const BOT_NUEVA_KEY="visor_botonera_nueva_v1"; let botNueva=false;
+  try{ botNueva=localStorage.getItem(BOT_NUEVA_KEY)==="1"; }catch(e){}
+  (function loadDets(){ if(!botNueva){ GOL_DETS.forEach(d=>{ addDetTo("GOL",d,false); addDetTo("OCASIÓN",d,false); }); SEED.forEach(e=>addDetTo(e.cat,e.det,false)); }
     try{ const x=JSON.parse(localStorage.getItem(DET_KEY)); if(x&&typeof x==="object"&&!Array.isArray(x))
       Object.entries(x).slice(0,80).forEach(([c,arr])=>{ if(Array.isArray(arr)) arr.slice(0,150).forEach(d=>addDetTo(String(c).toUpperCase().slice(0,24),d,false)); }); }catch(e){}
-    events.forEach(e=>addDetTo(e.cat,e.det,false)); })();
+    if(!botNueva) events.forEach(e=>addDetTo(e.cat,e.det,false)); })();
   // jugadores (se guardan en este navegador)
   const JUG_KEY="visor_jugadores_v2"; let JUGS=[];
   const JUG_DEFAULT=["Jugador 1","Jugador 2"];
@@ -2558,7 +2609,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     JUGS.push(n); JUGS.sort((a,b)=>a.localeCompare(b,'es')); if(persist) saveJugs(); return n; }
   function saveJugs(){ try{ localStorage.setItem(JUG_KEY,JSON.stringify(JUGS)); }catch(e){} }
   function removeJug(n){ const i=JUGS.findIndex(x=>x===n); if(i<0) return; JUGS.splice(i,1); saveJugs(); }
-  (function loadJugs(){ JUG_DEFAULT.forEach(n=>addJugTo(n,false));
+  (function loadJugs(){ if(!botNueva) JUG_DEFAULT.forEach(n=>addJugTo(n,false));
     try{ const x=JSON.parse(localStorage.getItem(JUG_KEY)); if(Array.isArray(x)) x.slice(0,300).forEach(n=>addJugTo(n,false)); }catch(e){}
   })();
   // listas de reproducción (con nombre; se guardan en este navegador)
@@ -2753,6 +2804,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   function renderCatBtns(){
     const wrap=$("fCatBtns"), fc=$("fCat"); wrap.replaceChildren();
     Object.entries(CATS).forEach(([k,o])=>{
+      if(k==="OTRO") return; // «Otro» no se muestra como botón; sigue existiendo como categoría de respaldo
       const b=el("button",{type:"button",className:"catbtn",textContent:k.charAt(0)+k.slice(1).toLowerCase(),style:"background:"+o.c});
       b.dataset.cat=k;
       b.onclick=()=>{ fc.value=k; fc.dispatchEvent(new Event("change")); syncCatBtns(); if(k!=="__new__"){ eqPicked=false; setStage(1); } };
@@ -2918,17 +2970,34 @@ window.renderHalfBands = function(b1,b2,mk,d){
     if(dlgEl.open && $("fCat").value!=="__new__"){ fillDets($("fDet").value); fillJugs($("fJug").value); }
   }
   function nextBotColor(){ return PALETTE[Object.values(CATS).filter(o=>o.custom).length%PALETTE.length]; }
+  let botEditCat=null; // categoría que se está editando (nombre/color) en la fila de «Añadir»
+  const addDetName=s=>String(s||"").trim().replace(/\s+/g," ").slice(0,60);
+  function cssToHex(c){ const t=document.createElement("i"); t.style.color=c; document.body.append(t);
+    const m=getComputedStyle(t).color.match(/\d+/g)||[61,72,82]; t.remove();
+    return "#"+m.slice(0,3).map(x=>(+x).toString(16).padStart(2,"0")).join(""); }
+  function addEditE(btn,label,onEdit){
+    const x=el("span",{className:"btnE",textContent:"✎",title:label});
+    x.onclick=ev=>{ ev.stopPropagation(); onEdit(); };
+    btn.append(x);
+  }
   function renderBot(){
     if(!CATS[botCat]) botCat=Object.keys(CATS)[0];
+    if(botEditCat&&!CATS[botEditCat]) botEditCat=null;
+    $("botCatAdd").textContent=botEditCat?"Guardar":"Añadir"; $("botCatCancel").hidden=!botEditCat;
+    $("botCatName").placeholder=botEditCat?"Nombre de la categoría":"Nueva categoría";
+    $("botCatName").readOnly=!!botEditCat&&CAT_NOMBRE_FIJO.includes(botEditCat);
     const wc=$("botCats"); wc.replaceChildren();
     Object.entries(CATS).forEach(([k,o])=>{
+      if(k==="OTRO") return; // «Otro» no se muestra como botón; sigue existiendo como categoría de respaldo
       const b=el("button",{type:"button",className:"catbtn"+(k===botCat?" active":""),textContent:k.charAt(0)+k.slice(1).toLowerCase(),style:"background:"+o.c,title:"Editar los detalles de «"+k+"»"});
       b.onclick=()=>{ botCat=k; renderBot(); };
-      if(o.custom) addDelX(b,k,()=>{
+      addEditE(b,"Editar nombre y color de «"+k+"»",()=>{ botCat=k; botEditCat=k; $("botCatName").value=k.charAt(0)+k.slice(1).toLowerCase(); $("botCatColor").value=cssToHex(o.c); $("botCatErr").textContent=""; renderBot(); $("botCatName").focus(); });
+      if(!CAT_FIJAS.includes(k)) addDelX(b,k,()=>{
         const n=events.filter(e=>e.cat===k).length;
-        if(!confirm("¿Borrar la categoría «"+k+"»?"+(n?"\n"+n+" evento(s) del registro la usan y dejarán de mostrarse con su color.":""))) return;
+        if(!confirm("¿Borrar la categoría «"+k+"»?"+(n?"\n"+n+" evento(s) del registro pasarán a «Otro».":""))) return;
         if($("fCat").value===k) $("fCat").value="OTRO";
-        removeCat(k); botSync(); renderBot(); });
+        if(botEditCat===k) botEditCat=null;
+        removeCat(k); botSync(); renderBot(); refresh(); });
       wc.append(b);
     });
     $("botDetCat").textContent=botCat.charAt(0)+botCat.slice(1).toLowerCase();
@@ -2938,6 +3007,13 @@ window.renderHalfBands = function(b1,b2,mk,d){
     L.forEach(d=>{
       const g=CAT_GOL(botCat)?(isParado(botCat,d)?"parado":"juego"):null;
       const b=el("button",{type:"button",className:"optbtn"+(g?" g-"+g:""),textContent:d});
+      addEditE(b,"Editar «"+d+"»",()=>{
+        const nv=addDetName(prompt("Nuevo nombre del detalle:",d)); if(!nv||nv===d) return;
+        const L2=DETS[botCat]; if(L2.some(x=>x!==d&&x.toLowerCase()===nv.toLowerCase())){ $("botDetErr").textContent="Ya existe ese detalle."; return; }
+        const par=isParado(botCat,d); L2[L2.indexOf(d)]=nv; saveDets();
+        events.forEach(e=>{ if(e.cat===botCat&&e.det===d) e.det=nv; }); save();
+        if(par) addParado(nv);
+        $("botDetErr").textContent=""; botSync(); renderBot(); refresh(); });
       addDelX(b,d,()=>{ removeDetFrom(botCat,d); botSync(); renderBot(); });
       wd.append(b);
     });
@@ -2946,13 +3022,27 @@ window.renderHalfBands = function(b1,b2,mk,d){
     if(!JUGS.length) wj.append(el("span",{className:"botEmpty",textContent:"Sin jugadores todavía."}));
     JUGS.forEach(n=>{
       const b=el("button",{type:"button",className:"optbtn",textContent:n});
+      addEditE(b,"Editar «"+n+"»",()=>{
+        const nv=String(prompt("Nuevo nombre del jugador:",n)||"").trim().replace(/\s+/g," ").slice(0,40); if(!nv||nv===n) return;
+        if(JUGS.some(x=>x!==n&&x.toLowerCase()===nv.toLowerCase())){ $("botJugErr").textContent="Ya existe ese jugador."; return; }
+        JUGS[JUGS.indexOf(n)]=nv; JUGS.sort((a,b)=>a.localeCompare(b,'es')); saveJugs();
+        events.forEach(e=>{ if(e.jug===n) e.jug=nv; }); save();
+        $("botJugErr").textContent=""; botSync(); renderBot(); refresh(); });
       addDelX(b,n,()=>{ removeJug(n); botSync(); renderBot(); });
       wj.append(b);
     });
   }
+  function botCancelEdit(){ botEditCat=null; $("botCatName").value=""; $("botCatErr").textContent=""; $("botCatColor").value=nextBotColor(); renderBot(); }
   function botAddCat(){
     const n=$("botCatName").value.trim().replace(/\s+/g," ").toUpperCase().slice(0,24);
     if(!n){ $("botCatErr").textContent="Escribe un nombre para la categoría."; return; }
+    if(botEditCat){
+      const err=editCat(botEditCat,n,$("botCatColor").value);
+      if(err){ $("botCatErr").textContent=err; return; }
+      botCat=n; if($("fCat").value===botEditCat) $("fCat").value=n;
+      botEditCat=null; $("botCatName").value=""; $("botCatErr").textContent=""; $("botCatColor").value=nextBotColor();
+      botSync(); renderBot(); refresh(); return;
+    }
     if(n==="__NEW__"||CATS[n]){ $("botCatErr").textContent=CATS[n]?"Ya existe esa categoría.":"Ese nombre no es válido."; return; }
     CATS[n]={c:$("botCatColor").value,custom:true}; saveCats(); botCat=n;
     $("botCatName").value=""; $("botCatErr").textContent=""; $("botCatColor").value=nextBotColor();
@@ -2975,7 +3065,17 @@ window.renderHalfBands = function(b1,b2,mk,d){
     renderBot(); if(!dlgBot.open) dlgBot.showModal();
   };
   $("btnBotoneraMov").onclick=()=>$("btnBotonera").click();
+  // Nueva botonera: mismas categorías (estructura), pero sin detalles ni jugadores
+  $("botNew").onclick=()=>{
+    if(!confirm("¿Crear una botonera nueva?\n\nSe mantienen las categorías, pero se vacían todos los detalles y jugadores. Los eventos ya registrados no se tocan.\n\nSi quieres conservar la actual, pulsa antes «Guardar botonera».")) return;
+    Object.keys(DETS).forEach(k=>{ DETS[k]=[]; }); saveDets();
+    JUGS.length=0; saveJugs();
+    botNueva=true; try{ localStorage.setItem(BOT_NUEVA_KEY,"1"); }catch(e){}
+    $("botDetErr").textContent=$("botJugErr").textContent="";
+    botSync(); renderBot(); refresh();
+  };
   $("botClose").onclick=$("botDone").onclick=()=>dlgBot.close();
+  $("botCatCancel").onclick=botCancelEdit;
   $("botCatAdd").onclick=botAddCat; $("botDetAdd").onclick=botAddDet; $("botJugAdd").onclick=botAddJug;
   [["botCatName",botAddCat],["botDetName",botAddDet],["botJugName",botAddJug]].forEach(([id,fn])=>
     $(id).addEventListener("keydown",k=>{ if(k.key==="Enter"){ k.preventDefault(); fn(); } }));
@@ -3049,7 +3149,8 @@ window.renderHalfBands = function(b1,b2,mk,d){
       const c=clipOf(e); if(!(c.b>0&&c.a<d)) return;
       const t=el("div",{className:"evTick",title:`${e.min} · ${e.cat}${e.det?" · "+e.det:""}`});
       t.style.left=pct(c.a,0,d); t.style.width=Math.max(0,(c.b-c.a)/d*100)+"%"; t.style.background=CATS[e.cat].c;
-      t.append(seekTickHandle(e,t,"a"),seekTickHandle(e,t,"b"));
+      const ds=Math.round(Math.max(0,clipLen(e)));
+      t.append(el("span",{className:"evLbl",textContent:e.cat}),el("span",{className:"evDur",textContent:Math.floor(ds/60)+":"+String(ds%60).padStart(2,"0")}),seekTickHandle(e,t,"a"),seekTickHandle(e,t,"b"));
       box.append(t);
     });
   }
@@ -3059,7 +3160,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     h.addEventListener("pointerdown",ev=>{
       const d=v.duration; if(!d||ev.button>0) return;
       ev.stopPropagation(); ev.preventDefault(); h.setPointerCapture(ev.pointerId); h.classList.add("drag");
-      const tr=$("vSeekTrack"), r=tr.getBoundingClientRect(), c=clipEnsure(e); let moved=false;
+      const r=$("vZoomWrap").getBoundingClientRect(), c=clipEnsure(e); let moved=false;
       const at=x=>Math.min(1,Math.max(0,(x-r.left)/r.width))*d;
       const move=m=>{ moved=true; const t=at(m.clientX);
         if(side==="a"){ c.a=Math.max(0,Math.min(t,c.b-0.2)); if(c.a<c.segs[0].s) c.segs[0].s=c.a; }
@@ -3109,7 +3210,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     handle.addEventListener("pointerdown",ev=>{
       if(ev.button!==0||!v.duration) return;
       ev.preventDefault(); ev.stopPropagation();
-      const d=v.duration, trackEl=$("track"); const rect=trackEl.getBoundingClientRect();
+      const d=v.duration, trackEl=$("catZoomWrap"); const rect=trackEl.getBoundingClientRect();
       const orig=structuredClone(clipOf(e)); const startX=ev.clientX; let moved=false;
       try{ handle.setPointerCapture(ev.pointerId); }catch(err){}
       chip.classList.add("dragging"); bar.classList.add("dragging");
@@ -3366,10 +3467,33 @@ window.renderHalfBands = function(b1,b2,mk,d){
     return fmtHM(2700+(t-halfMarks.p2));
   }
   { const tr=$("vSeekTrack"); let drag=false;
-    const seekTo=ev=>{ const d=isFinite(v.duration)?v.duration:0; if(!d) return; const r=tr.getBoundingClientRect(); v.currentTime=Math.min(1,Math.max(0,(ev.clientX-r.left)/r.width))*d; };
+    const seekTo=ev=>{ const d=isFinite(v.duration)?v.duration:0; if(!d) return; const r=$("vZoomWrap").getBoundingClientRect(); v.currentTime=Math.min(1,Math.max(0,(ev.clientX-r.left)/r.width))*d; };
     tr.addEventListener("pointerdown",ev=>{ drag=true; tr.setPointerCapture(ev.pointerId); seekTo(ev); });
     tr.addEventListener("pointermove",ev=>{ if(drag) seekTo(ev); });
     tr.addEventListener("pointerup",()=>{ drag=false; }); tr.addEventListener("pointercancel",()=>{ drag=false; }); }
+  // Zoom de las líneas de tiempo del registro (la de arriba y la de categorías van juntas)
+  let vZoom=1, vZv=0, vPanTs=0; const VZMAX=64;
+  function vApplyZoom(){
+    vZoom=Math.max(1,Math.min(VZMAX,vZoom)); vZv=Math.max(0,Math.min(1-1/vZoom,vZv));
+    const w=(vZoom*100)+"%", l=(-vZv*vZoom*100)+"%";
+    const zw=$("vZoomWrap"); zw.style.width=w; zw.style.left=l; $("vSeekTrack").classList.toggle("zoomed",vZoom>1);
+    const cw=$("catZoomWrap"); cw.style.width=w; cw.style.left=l; $("track").classList.toggle("zoomed",vZoom>1);
+    $("vZoomLbl").textContent="Zoom ×"+(Math.round(vZoom*10)/10);
+    $("vZoomPan").hidden=$("vZoomReset").hidden=vZoom<=1;
+    $("vZoomPan").value=vZoom>1?Math.round(vZv/(1-1/vZoom)*1000):0; }
+  function vZoomTo(nz,anc){ const d=isFinite(v.duration)?v.duration:0; if(!d) return; nz=Math.max(1,Math.min(VZMAX,nz));
+    if(anc==null){ const f=(v.currentTime||0)/d; anc=(f>=vZv&&f<=vZv+1/vZoom)?f:vZv+0.5/vZoom; }
+    const p=(anc-vZv)*vZoom; vZoom=nz; vZv=anc-p/nz; vPanTs=0; vApplyZoom(); }
+  $("vZoomPlus").onclick=()=>vZoomTo(vZoom*2);
+  $("vZoomMinus").onclick=()=>vZoomTo(vZoom/2);
+  $("vZoomReset").onclick=()=>{ vZoom=1; vZv=0; vApplyZoom(); };
+  $("vZoomPan").addEventListener("input",e=>{ vZv=e.target.value/1000*(1-1/vZoom); vPanTs=Date.now(); vApplyZoom(); });
+  $("vZoomPan").addEventListener("keydown",e=>e.stopPropagation());
+  [["vSeekTrack","vZoomWrap"],["track","catZoomWrap"]].forEach(([tid,wid])=>{ const t=$(tid), w=$(wid);
+    t.addEventListener("wheel",e=>{ if(!v.duration) return;
+      if(e.ctrlKey||e.metaKey){ e.preventDefault(); const r=w.getBoundingClientRect(); vZoomTo(vZoom*(e.deltaY<0?1.25:0.8),(e.clientX-r.left)/r.width); }
+      else if(vZoom>1&&(e.shiftKey||Math.abs(e.deltaX)>Math.abs(e.deltaY))){ e.preventDefault(); vZv+=(e.deltaX||e.deltaY)/t.clientWidth/vZoom; vPanTs=Date.now(); vApplyZoom(); } },{passive:false}); });
+  v.addEventListener("loadedmetadata",()=>{ vZoom=1; vZv=0; vApplyZoom(); });
   let fsSeeking=false;
   { const s=$("fsSeek");
     s.addEventListener("pointerdown",()=>{ fsSeeking=true; });
@@ -3381,6 +3505,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     $("clock").textContent=fmt(t).replace(/\.\d$/,"")+" / "+fmt(d).replace(/\.\d$/,"");    const mc=matchClockText(t); $("matchClock").textContent=mc?("⏱ "+mc):"";
     $("fsClock").textContent=$("clock").textContent; $("fsMatch").textContent=mc?("⏱ "+mc):"";
     if(!fsSeeking) $("fsSeek").value=d?Math.round(t/d*1000):0;
+    if(vZoom>1&&d&&Date.now()-vPanTs>2500){ const f=t/d; if(f<vZv||f>vZv+1/vZoom){ vZv=f-0.5/vZoom; vApplyZoom(); } } // el zoom sigue al cabezal
     const p=d?Math.min(100,t/d*100):0; $("prog").style.width=p+"%"; $("head").style.left=p+"%"; $("vSeekHead").style.left=p+"%"; $("vHeadClock").style.left=p+"%"; $("vHeadClock").textContent=mc?("⏱ "+mc):"";
     { const pl=[halfMarks.p1,halfMarks.p1e,halfMarks.p2,halfMarks.end]; const jug=pl.every(x=>typeof x==="number")?(halfMarks.p1e-halfMarks.p1)+(halfMarks.end-halfMarks.p2):null;
       const fS=x=>{ const q=Math.round(Math.max(0,x||0)); return Math.floor(q/60)+":"+String(q%60).padStart(2,"0"); };
@@ -3556,7 +3681,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   vMute.onclick=()=>{ v.muted=!v.muted; syncVMute(); };
   v.addEventListener("volumechange",syncVMute);
   $("rate").onchange=e=>v.playbackRate=+e.target.value;
-  $("track").onclick=ev=>{ if(!v.duration) return; const r=ev.currentTarget.getBoundingClientRect(); playing=null; v.currentTime=(ev.clientX-r.left)/r.width*v.duration; tick(); };
+  $("track").onclick=ev=>{ if(!v.duration) return; const r=$("catZoomWrap").getBoundingClientRect(); playing=null; v.currentTime=(ev.clientX-r.left)/r.width*v.duration; tick(); };
   ["flt"].forEach(id=>$(id).addEventListener("input",()=>{ refresh(); }));
   $("offRow").style.display="none";
 
@@ -4373,7 +4498,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   const tabs=[["tabBtnVisor","tabVisor"],["tabBtnEditor","tabEditor"]];
   tabs.forEach(([b,p])=>$(b).onclick=()=>{ tabs.forEach(([b2,p2])=>{ $(b2).setAttribute("aria-selected",b2===b); $(p2).hidden=b2!==b; });
     document.querySelectorAll("video").forEach(x=>{ if(!x.closest("#"+p)) x.pause(); });
-    const vis=p==="tabVisor"; ["vidName","vidNote"].forEach(id=>$(id).hidden=!vis); document.querySelector('label[for="file"]').hidden=!vis; $("btnAddVids").hidden=!vis; $("vidSel").hidden=!vis||(window.__regVids||[]).length<2; });
+    const vis=p==="tabVisor"; ["vidName","vidNote"].forEach(id=>$(id).hidden=!vis); $("vidSel").hidden=!vis||(window.__regVids||[]).length<2; });
   $("tabBtnEditor").click(); // el editor de vídeo es la pestaña inicial
 
   // ---------- carga ----------
@@ -4538,19 +4663,6 @@ window.renderHalfBands = function(b1,b2,mk,d){
     function place(){ if(mq.matches) marks.appendChild(btn); else marks.insertBefore(btn,marks.firstChild); row.style.display="none"; }
     place(); (mq.addEventListener?mq.addEventListener("change",place):mq.addListener(place));
   })();
-  // Escritorio: los botones de reproducción van junto a «Velocidad»; en móvil, pantalla completa del vídeo y modo inmersivo vuelven sobre el vídeo
-  (function placeEdPlayback(){
-    const mq=matchMedia("(max-width:640px)"), st=$("edStage"), ctl=st.querySelector(".stageControls"), bar=$("edPbBar");
-    const ids=["edPlay","edBack20","edBack4","edFwd5","edFwd20","edMute","edFull","edFsA","edFsB","edFsAdd","edFullEditor"], out=ids.slice(0,7).concat("edFullEditor");
-    function place(){
-      const over=mq.matches||st.matches(":fullscreen")||document.documentElement.classList.contains("acfc-imm");
-      if(over){ if(bar.firstChild) ids.forEach(id=>ctl.appendChild($(id))); }
-      else if(!bar.firstChild) out.forEach(id=>bar.appendChild($(id)));
-    }
-    place(); (mq.addEventListener?mq.addEventListener("change",place):mq.addListener(place));
-    document.addEventListener("fullscreenchange",place);
-    new MutationObserver(place).observe(document.documentElement,{attributes:true,attributeFilter:["class"]});
-  })();
   // Botones A, B y Añadir de la pantalla completa del vídeo: reenvían el clic a los originales
   (function fsABButtons(){
     [["edFsA","edSetA"],["edFsB","edSetB"],["edFsAdd","edAddSel"]].forEach(([p,o])=>{ $(p).onclick=()=>$(o).click(); });
@@ -4559,11 +4671,11 @@ window.renderHalfBands = function(b1,b2,mk,d){
   })();
   // Lo mismo en el registro: la línea de tiempo va justo debajo del vídeo
   (function placeVisorTrack(){
-    const mq=matchMedia("(max-width:640px)"), st=document.querySelector("#tabVisor .stage"), tr=$("vSeekTrack"), ctl=st.querySelector(".stageControls"), home=tr.nextElementSibling, par=tr.parentNode;
+    const mq=matchMedia("(max-width:640px)"), st=document.querySelector("#tabVisor .stage"), tr=$("vSeekTrack"), zb=$("vZoomBar"), ctl=st.querySelector(".stageControls"), home=zb.nextElementSibling, par=tr.parentNode;
     const tag=$("tagRow"), tagHome=tag.nextElementSibling, tagPar=tag.parentNode;
     function place(){
-      if(mq.matches){ st.insertBefore(tr,ctl); st.insertBefore(tag,ctl.nextSibling); }
-      else{ if(tr.parentNode===st) par.insertBefore(tr,home); if(tag.parentNode===st) tagPar.insertBefore(tag,tagHome); }
+      if(mq.matches){ st.insertBefore(tr,ctl); st.insertBefore(zb,ctl); st.insertBefore(tag,ctl.nextSibling); }
+      else{ if(tr.parentNode===st){ par.insertBefore(tr,home); par.insertBefore(zb,home); } if(tag.parentNode===st) tagPar.insertBefore(tag,tagHome); }
     }
     place(); (mq.addEventListener?mq.addEventListener("change",place):mq.addListener(place));
   })();
@@ -4619,7 +4731,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   function openEditAdded(idx){
     const it=added[idx]; if(!it) return; edtIt=it;
     $("edtNum").textContent="#"+(idx+1); $("edtName").value=it.name||"";
-    $("edtNames").replaceChildren(...EV_NAMES.concat(evCustom).map(n=>{ const o=document.createElement("option"); o.value=n; return o; }));
+    $("edtNames").replaceChildren(...evBase().concat(evCustom).map(n=>{ const o=document.createElement("option"); o.value=n; return o; }));
     const S=$("edtSrc"); S.replaceChildren(...sources.map(s=>{ const o=document.createElement("option"); o.value=s.id; o.textContent=s.name||"Vídeo"; return o; }));
     S.value=it.srcId; $("edtSrcRow").hidden=sources.length<2;
     $("edtS").value=fmtD(it.s); $("edtE").value=fmtD(it.e); $("edtErr").textContent="";
@@ -4651,14 +4763,38 @@ window.renderHalfBands = function(b1,b2,mk,d){
   }
   const EV_NAMES=["Gol a favor","Gol en contra","Ocasión a favor","Ocasión en contra","Salida de balón","Presión","Cambio de orientación","Duelo"];
   let evCustom=[]; try{ evCustom=(JSON.parse(localStorage.getItem("acfcEvCustom")||"[]")||[]).filter(n=>typeof n==="string"&&n&&EV_NAMES.indexOf(n)<0).slice(0,50); }catch(e){}
-  const evKnown=n=>EV_NAMES.indexOf(n)>=0||evCustom.indexOf(n)>=0;
+  // nombres fijos que el usuario ha quitado del selector
+  let evHidden=[]; try{ evHidden=(JSON.parse(localStorage.getItem("acfcEvHidden")||"[]")||[]).filter(n=>EV_NAMES.indexOf(n)>=0); }catch(e){}
+  const saveHidden=()=>{ try{ localStorage.setItem("acfcEvHidden",JSON.stringify(evHidden)); }catch(e){} };
+  const evBase=()=>EV_NAMES.filter(n=>evHidden.indexOf(n)<0);
+  const evKnown=n=>evBase().indexOf(n)>=0||evCustom.indexOf(n)>=0;
   function addCustomName(n){
     n=(n||"").trim(); if(!n||evKnown(n)) return;
+    if(EV_NAMES.indexOf(n)>=0){ evHidden=evHidden.filter(x=>x!==n); saveHidden(); return; }
     evCustom.push(n); try{ localStorage.setItem("acfcEvCustom",JSON.stringify(evCustom)); }catch(e){}
     document.querySelectorAll("#edList select.nm").forEach(sel=>{
       const o=document.createElement("option"); o.value=n; o.textContent=n;
       sel.insertBefore(o,[...sel.options].find(x=>x.value==="__otro")||null);
     });
+  }
+  // Renombra un tipo de evento (fijo o propio) y todos los tramos que ya lo usan
+  function renameEv(old,nw){
+    nw=(nw||"").trim().slice(0,60); if(!nw||nw===old) return false;
+    added.forEach(x=>{ if(x.name===old) x.name=nw; });
+    if(evFilter===old) evFilter=nw;
+    const saveCus=()=>{ try{ localStorage.setItem("acfcEvCustom",JSON.stringify(evCustom)); }catch(e){} };
+    const ci=evCustom.indexOf(old);
+    if(ci>=0){
+      if(evKnown(nw)||EV_NAMES.indexOf(nw)>=0){ evCustom.splice(ci,1); saveCus(); if(!evKnown(nw)){ evHidden=evHidden.filter(x=>x!==nw); saveHidden(); } }
+      else{ evCustom[ci]=nw; saveCus(); }
+    } else {
+      if(evHidden.indexOf(old)<0){ evHidden.push(old); saveHidden(); }
+      if(!evKnown(nw)){
+        if(EV_NAMES.indexOf(nw)>=0){ evHidden=evHidden.filter(x=>x!==nw); saveHidden(); }
+        else{ evCustom.push(nw); saveCus(); }
+      }
+    }
+    return true;
   }
   let evFilter="";  // "" = todos · "__sin" = sin nombre · resto = nombre del evento
   const evKey=it=>it.name||"__sin";
@@ -4753,7 +4889,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
       else {
         nm=document.createElement("select"); nm.className="nm"; nm.setAttribute("aria-label",nmLabel);
         const o0=document.createElement("option"); o0.value=""; o0.textContent="Nombre del tramo (opcional)"; nm.append(o0);
-        EV_NAMES.concat(evCustom).forEach(n=>{ const o=document.createElement("option"); o.value=n; o.textContent=n; nm.append(o); });
+        evBase().concat(evCustom).forEach(n=>{ const o=document.createElement("option"); o.value=n; o.textContent=n; nm.append(o); });
         const oz=document.createElement("option"); oz.value="__otro"; oz.textContent="+ Añadir otro…"; nm.append(oz);
         nm.value=it.name||"";
         nm.onclick=ev=>ev.stopPropagation(); nm.onkeydown=k=>k.stopPropagation();
@@ -4791,6 +4927,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
       if(it!==activeAdded&&(inP>0.05||outP<d-0.05)&&it.s<outP&&it.e>inP&&(it.s<inP||it.e>outP)){
         const w=it.e-it.s, l=Math.max(0,(inP-it.s)/w*100), r=Math.max(0,(it.e-outP)/w*100);
         b.style.clipPath="inset(0 "+r+"% 0 "+l+"%)"; }
+      if(it.name){ const lb=document.createElement("span"); lb.className="evLbl"; lb.textContent=it.name; b.append(lb); }
       b.dataset.add=i; b.title=`Corte añadido${it.name?": "+it.name:" #"+(i+1)} · ${fmt(it.s)}–${fmt(it.e)} (clic para seleccionarlo, arrastra para moverlo)`; wrap.append(b);
     });
     stills.forEach((k,i)=>{ if(k.srcId!==curId) return;
@@ -4997,7 +5134,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   let evPick=null;
   function closeEvPicker(){ if(evPick){ evPick.remove(); evPick=null; document.removeEventListener("pointerdown",evPickOut,true); document.removeEventListener("keydown",evPickKey,true); } }
   function evPickOut(e){ if(evPick&&!evPick.contains(e.target)) closeEvPicker(); }
-  function evPickKey(e){ if(e.key==="Escape"){ e.stopPropagation(); closeEvPicker(); } }
+  function evPickKey(e){ if(e.key==="Escape"&&!(e.target&&e.target.classList&&e.target.classList.contains("evPickRen"))){ e.stopPropagation(); closeEvPicker(); } }
   function openEvPicker(it){
     closeEvPicker();
     const vis=b=>b&&!b.hidden&&b.offsetParent!==null&&b.getClientRects().length;
@@ -5005,7 +5142,28 @@ window.renderHalfBands = function(b1,b2,mk,d){
     const box=document.createElement("div"); box.className="evPick"; box.setAttribute("role","dialog"); box.setAttribute("aria-label","Tipo de evento");
     const h=document.createElement("div"); h.className="evPickH"; h.textContent="Tipo de evento"; box.append(h);
     const pick=n=>{ it.name=(n||"").trim(); addCustomName(it.name); closeEvPicker(); render(); };
-    EV_NAMES.concat(evCustom).forEach(n=>{ const b=document.createElement("button"); b.type="button"; b.textContent=n; b.onclick=()=>pick(n); box.append(b); });
+    // cada nombre (fijo o propio) lleva un botón para eliminarlo de la lista
+    evBase().concat(evCustom).forEach(n=>{
+      const wrap=document.createElement("div"); wrap.className="evPickCus";
+      const b=document.createElement("button"); b.type="button"; b.textContent=n; b.onclick=()=>pick(n);
+      const d=document.createElement("button"); d.type="button"; d.className="evPickDel"; d.textContent="✕"; d.title="Eliminar «"+n+"» de la lista"; d.setAttribute("aria-label","Eliminar "+n);
+      d.onclick=e=>{ e.stopPropagation(); if(EV_NAMES.indexOf(n)>=0){ if(evHidden.indexOf(n)<0) evHidden.push(n); saveHidden(); }
+        else{ const i=evCustom.indexOf(n); if(i>=0) evCustom.splice(i,1); try{ localStorage.setItem("acfcEvCustom",JSON.stringify(evCustom)); }catch(er){} }
+        wrap.remove(); document.querySelectorAll("#edList select.nm option").forEach(o=>{ if(o.value===n&&!added.some(x=>x.name===n)) o.remove(); }); };
+      // ✎ convierte el nombre en un campo editable; Intro o salir del campo guarda, Esc cancela
+      const ed=document.createElement("button"); ed.type="button"; ed.className="evPickDel evPickEdit"; ed.textContent="✎"; ed.title="Renombrar «"+n+"»"; ed.setAttribute("aria-label","Renombrar "+n);
+      ed.onclick=e=>{ e.stopPropagation();
+        const ri=document.createElement("input"); ri.type="text"; ri.maxLength=60; ri.value=n; ri.className="evPickRen"; ri.setAttribute("aria-label","Nuevo nombre para "+n);
+        let done=false;
+        const finish=save=>{ if(done) return; done=true;
+          const v=ri.value.trim();
+          if(save&&v&&v!==n){ renameEv(n,v); if(it.name===n) it.name=v; closeEvPicker(); render(); openEvPicker(it); }
+          else{ ri.replaceWith(b); ed.hidden=false; d.hidden=false; } };
+        ri.onkeydown=k=>{ k.stopPropagation(); if(k.key==="Enter"){ k.preventDefault(); finish(true); } else if(k.key==="Escape"){ k.preventDefault(); finish(false); } };
+        ri.onblur=()=>finish(true);
+        b.replaceWith(ri); ed.hidden=true; d.hidden=true; ri.focus(); ri.select(); };
+      wrap.append(b,ed,d); box.append(wrap);
+    });
     const row=document.createElement("div"); row.className="evPickNew";
     const inp=document.createElement("input"); inp.type="text"; inp.maxLength=60; inp.placeholder="Otro nombre…"; inp.setAttribute("aria-label","Otro nombre de evento");
     inp.onkeydown=k=>{ k.stopPropagation(); if(k.key==="Enter"&&inp.value.trim()) pick(inp.value); };
@@ -5015,12 +5173,16 @@ window.renderHalfBands = function(b1,b2,mk,d){
     (document.fullscreenElement||document.body).append(box);
     // justo encima de la fila de botones; si no cabe, debajo
     const fe=document.fullscreenElement;
-    if(fe&&fe.classList.contains("fsRot")){ box.style.left="50%"; box.style.top="50%"; box.style.transform="translate(-50%,-50%)"; evPick=box;
-      setTimeout(()=>{ document.addEventListener("pointerdown",evPickOut,true); document.addEventListener("keydown",evPickKey,true); },0); return; }
-    const r=anchor.getBoundingClientRect(), row0=anchor.parentElement.getBoundingClientRect();
+    let r=anchor.getBoundingClientRect(), row0=anchor.parentElement.getBoundingClientRect(), W=innerWidth, H=innerHeight;
+    if(fe&&fe.classList.contains("fsRot")){
+      // pantalla completa girada 90°: se pasa a las coordenadas locales del contenedor (x local = y de pantalla, y local = ox - x de pantalla)
+      const fr=fe.getBoundingClientRect(), ox=fr.right, oy=fr.top;
+      const loc=q=>({left:q.top-oy,right:q.bottom-oy,top:ox-q.right,bottom:ox-q.left,width:q.height,height:q.width});
+      r=loc(r); row0=loc(row0); W=fe.offsetWidth; H=fe.offsetHeight;
+    }
     const top0=Math.min(r.top,row0.top), bw=box.offsetWidth, bh=box.offsetHeight;
-    let y=top0-bh-6; if(y<4) y=Math.min(innerHeight-bh-4,Math.max(r.bottom,row0.bottom)+6);
-    let x=r.left+r.width/2-bw/2; x=Math.max(4,Math.min(innerWidth-bw-4,x));
+    let y=top0-bh-6; if(y<4) y=Math.min(H-bh-4,Math.max(r.bottom,row0.bottom)+6);
+    let x=r.left+r.width/2-bw/2; x=Math.max(4,Math.min(W-bw-4,x));
     box.style.left=x+"px"; box.style.top=Math.max(4,y)+"px";
     evPick=box; setTimeout(()=>{ document.addEventListener("pointerdown",evPickOut,true); document.addEventListener("keydown",evPickKey,true); },0);
     const f=box.querySelector("button"); if(f) f.focus({preventScroll:true});
@@ -7699,8 +7861,9 @@ function placeCanvas(){
 toolButtons.forEach(button=>{
   button.addEventListener("click",()=>{
     if(!(v.currentSrc||v.src)){ setStatus("Carga un vídeo para poder pintar sobre él."); return; }
-    // Pulsar de nuevo la herramienta activa la desactiva y deja de pintar.
-    if(state.drawEnabled && state.tool===button.dataset.tool){ setDrawEnabled(false); return; }
+    // Pulsar de nuevo la herramienta activa la mantiene (dejar de pintar: botón «Dibujo: activo»).
+    // Antes la apagaba y, al ir a pintar otra marca, el primer clic parecía no hacer nada.
+    if(state.drawEnabled && state.tool===button.dataset.tool){ setStatus("Herramienta activa. Arrastra sobre el vídeo para pintar."); return; }
     setTool(button.dataset.tool);
     if(!state.drawEnabled) setDrawEnabled(true);
   });
@@ -8030,6 +8193,7 @@ function pintCleanList(arr){
 }
 function pintSaveNow(){
   clearTimeout(pintSaveTimer); pintSaveTimer=0;
+  if(cfg.onChange) cfg.onChange();
   if(!pintSavedName) return;
   try{
     const k=cfg.keyPrefix+pintSavedName;
@@ -8044,6 +8208,7 @@ function pintSetAnnotations(list){
   state.draggingAnnotationIndex=-1; state.dragLastPoint=null;
   state.resizingHandleIndex=-1; state.resizeAnchor=null; state.history=[]; state.redo=[];
   syncSizeControl(); redraw();
+  if(cfg.onChange) cfg.onChange();
 }
 function pintRestore(){
   let list=[];
@@ -8171,9 +8336,23 @@ if(visorBlock&&edAside){
   edAside.appendChild(edBlock);
 }
 const vName=g("vidName");
+// Marca (barra roja + lápiz) en la línea de tiempo del registro en cada instante donde hay pintado
+function pintRenderMarks(){
+  const box=g("vPintMks"), vid=g("v"); if(!box) return;
+  box.replaceChildren();
+  const d=vid&&isFinite(vid.duration)?vid.duration:0;
+  const list=window.acfcPint?window.acfcPint.get():[]; if(!d||!list.length) return;
+  const ts=[...new Set(list.filter(s=>typeof s.appearTime==="number").map(s=>Math.max(0,Math.round((s.appearTime+0.4)*2)/2)))].sort((a,b)=>a-b);
+  const fm=t=>Math.floor(t/60)+":"+String(Math.floor(t%60)).padStart(2,"0");
+  ts.forEach(t=>{ if(t>d) return;
+    const m=document.createElement("div"); m.className="stillMk"; m.style.left=(t/d*100)+"%";
+    m.title="Pintado · "+fm(t); box.append(m); });
+}
+{ const vid=g("v"); if(vid) ["loadedmetadata","durationchange","emptied"].forEach(ev=>vid.addEventListener(ev,pintRenderMarks)); }
 acfcPintMount({
-  video:g("v"), host:document.querySelector("#tabVisor .stage"), block:visorBlock, sfx:"", expose:"acfcPint",
+  video:g("v"), host:document.querySelector("#tabVisor .stage"), block:visorBlock, sfx:"", expose:"acfcPint", onChange:()=>setTimeout(pintRenderMarks,0),
   keyPrefix:"acfcPint:", keyOf:()=>vName?vName.textContent:"",
+  onStill:(cap,t)=>window.acfcEdAddStill?window.acfcEdAddStill(cap,t):"El editor no está listo.",
   watch:fn=>{ if(vName) new MutationObserver(fn).observe(vName,{childList:true,characterData:true,subtree:true}); }
 });
 const edV=g("edV");
@@ -8378,6 +8557,178 @@ acfcPintMount({
     else ayuda();
   });
   document.getElementById("instalarCerrar").addEventListener("click",function(){dlg.close();});
+})();
+</script>
+<!-- ACFC · LICENCIA: versión limitada (6 botones) y versión completa con código -->
+<style>
+/* Versión limitada: los botones sin data-lite siguen visibles pero con corona y bloqueados (los diálogos conservan los suyos) */
+html.acfc-lite button:not([data-lite]):not(dialog button),
+html.acfc-lite label.btn:not([data-lite]){position:relative;opacity:.6;cursor:not-allowed}
+html.acfc-lite button:not([data-lite]):not(dialog button)::after,
+html.acfc-lite label.btn:not([data-lite])::after{content:"";position:absolute;top:3px;right:3px;width:14px;height:14px;background:var(--red);pointer-events:none;
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M2 7l5 4 5-7 5 7 5-4-2 12H4z'/%3E%3C/svg%3E") center/contain no-repeat;
+  mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M2 7l5 4 5-7 5 7 5-4-2 12H4z'/%3E%3C/svg%3E") center/contain no-repeat}
+html.acfc-lite .primary:not([data-lite]):not(dialog .primary)::after{background:#fff}
+#acfcLicBtn.btn,#acfcFreeBtn.btn{font-family:var(--f-disp);font-size:15px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;text-decoration:none;padding:9px 18px;background:transparent;color:#fff;border:2px solid var(--red);border-radius:0;opacity:1;cursor:pointer}
+#acfcFreeBtn.btn{margin-right:-8px}
+#acfcLicBtn.btn,#acfcFreeBtn.btn{white-space:nowrap}
+#acfcLicBtn.btn:hover,#acfcFreeBtn.btn:hover,#acfcLicBtn.btn[aria-pressed="true"],#acfcFreeBtn.btn[aria-pressed="true"]{background:var(--red);color:#fff;border-color:var(--red)}
+@media (max-width:640px){#acfcLicBtn.btn,#acfcFreeBtn.btn{font-size:12px;padding:6px 9px;letter-spacing:1px}#acfcFreeBtn.btn{margin-right:-4px}}
+/* Corona: función solo Premium (se añade con la lista PREMIUM del script) */
+.acfcCrown{position:relative}
+.acfcCrown::after{content:"";position:absolute;top:3px;right:3px;width:14px;height:14px;background:var(--red);pointer-events:none;
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M2 7l5 4 5-7 5 7 5-4-2 12H4z'/%3E%3C/svg%3E") center/contain no-repeat;
+  mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M2 7l5 4 5-7 5 7 5-4-2 12H4z'/%3E%3C/svg%3E") center/contain no-repeat}
+.acfcCrown.is-active::after{background:var(--red)}
+#acfcLicDlg{max-width:min(420px,92vw)}
+#acfcLicDlg input{width:100%;box-sizing:border-box;font:inherit;font-family:var(--f-disp);font-size:20px;letter-spacing:2px;text-transform:uppercase;text-align:center;padding:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:0}
+#acfcLicMsg{min-height:1.4em;font-size:13px;margin:8px 0}
+#acfcLicMsg.err{color:var(--red)}
+</style>
+<dialog id="acfcLicDlg" aria-labelledby="acfcLicT"><h2 id="acfcLicT">Versión completa</h2>
+<p id="acfcLicTxt" style="font-size:14px;color:var(--muted)"></p>
+<input id="acfcLicIn" type="text" autocomplete="off" spellcheck="false" maxlength="14" placeholder="Código" aria-label="Código de activación">
+<div id="acfcLicMsg" role="status"></div>
+<div style="display:flex;gap:8px;justify-content:flex-end">
+<button type="button" class="btn" id="acfcLicClose">Cerrar</button>
+<button type="button" class="btn primary" id="acfcLicGo">Activar</button>
+</div></dialog>
+<script>
+(function(){
+  /* Huellas SHA-256 de los códigos válidos (el código en claro no está aquí). Se generan con generar-codigo.mjs. */
+  var ACFC_LIC_HASHES=[
+    "6529a56058d38843c879561b535beab0c49e403fdfc950965eca60dfb08d8891" /* provisional: «registro» */
+  ];
+  var SAL="acfc-lezama-talks|", KEY="acfcLic";
+  /* Los 6 botones de la versión limitada */
+  /* LIMITAR=true: la versión gratuita oculta todo salvo los botones de LITE.
+     PREMIUM_PARA_TODOS=true: de momento todos arrancan en Premium sin código; «Versión gratuita» sirve para previsualizar
+     las limitaciones y «Premium» vuelve sin pedir código. Poner a false para exigir el código. */
+  var LIMITAR=false;
+  var PREMIUM_PARA_TODOS=true;
+  /* Funciones solo Premium: llevan corona (de momento solo el pintado de acciones, en el registro y en el editor) */
+  var PREMIUM=[".pintTool[data-tool]:not([data-tool=move]):not([data-tool=edit]):not([data-tool=arrow]):not([data-tool=arrowStraight]):not([data-tool=pen]):not([data-tool=text]):not([data-tool=callout]):not([data-tool=rect]):not([data-tool=ellipse]):not([data-tool=triangleZone])","#pintStill","#pintStillEd","#regAddFile","#edAddFile","#botJugAdd","#newJugAdd"];
+  var LITE=["#play","#vBack4","#vFwd5","#vTagNow","#vFull"];
+  var H=document.documentElement, $=function(i){return document.getElementById(i);};
+
+  function norm(s){return String(s||"").toUpperCase().replace(/[^A-Z0-9]/g,"");}
+  async function sha(s){
+    var b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(s));
+    return Array.from(new Uint8Array(b)).map(function(x){return x.toString(16).padStart(2,"0");}).join("");
+  }
+  var ok=async function(code){
+    if(!(window.crypto&&crypto.subtle)) throw new Error("nocrypto");
+    var h=await sha(SAL+norm(code)); return ACFC_LIC_HASHES.indexOf(h)>=0?h:null;
+  };
+  var store={
+    get:function(){try{return localStorage.getItem(KEY)||"";}catch(e){return "";}},
+    set:function(v){try{v?localStorage.setItem(KEY,v):localStorage.removeItem(KEY);}catch(e){}}
+  };
+
+  PREMIUM.forEach(function(q){ document.querySelectorAll(q).forEach(function(el){
+    el.classList.add("acfcCrown"); el.title=(el.title?el.title+" · ":"")+"Solo Premium"; }); });
+  LITE.forEach(function(q){var el=document.querySelector(q); if(el) el.setAttribute("data-lite","");});
+
+  /* Botón de activación en la cabecera (no cuenta entre los 6: es el acceso al código) */
+  var btn=document.createElement("button"); btn.type="button"; btn.className="btn acfcLink"; btn.id="acfcLicBtn"; btn.setAttribute("data-lite","");
+  var hdr=document.querySelector("header"), sp=hdr&&hdr.querySelector(".sp");
+  var free=document.createElement("button"); free.type="button"; free.className="btn acfcLink"; free.id="acfcFreeBtn"; free.setAttribute("data-lite",""); free.textContent="Versión gratuita";
+  if(hdr){ var ref=sp?sp.nextSibling:null; hdr.insertBefore(free,ref); hdr.insertBefore(btn,ref); }
+
+  var dlg=$("acfcLicDlg"), inp=$("acfcLicIn"), msg=$("acfcLicMsg"), txt=$("acfcLicTxt"), go=$("acfcLicGo");
+  var full=false;
+
+  function apply(f){
+    full=f; H.classList.toggle("acfc-lite",LIMITAR&&!f);
+    btn.textContent="Premium"; btn.dataset.on=f?"1":"0";
+    btn.setAttribute("aria-pressed",f); free.setAttribute("aria-pressed",!f);
+    free.title=f?"Volver a la versión gratuita":"Estás en la versión gratuita";
+    btn.title=f?"Premium activado":"Introduce tu código Premium";
+    if(LIMITAR&&!f){ var v=$("tabBtnVisor"); if(v&&$("tabVisor").hidden) v.click(); }   // sin editor: vuelve al registro (clic programático, no se bloquea)
+  }
+  function open(){
+    msg.textContent=""; msg.className=""; inp.value="";
+    if(full){ $("acfcLicT").textContent="Premium activado"; txt.textContent="Premium activado en este navegador."; inp.hidden=true; go.textContent=LIMITAR?"Volver a la versión limitada":"Quitar código"; }
+    else { $("acfcLicT").textContent="Activar Premium"; txt.textContent=LIMITAR?"Introduce tu código para desbloquear todas las funciones (editor de vídeo, listas, importación, pintado…). La versión limitada incluye solo 5 botones.":"Introduce tu código Premium."; inp.hidden=false; go.textContent="Activar"; }
+    if(PREMIUM_PARA_TODOS&&!full){ inp.hidden=true; go.textContent="Activar Premium"; }
+    dlg.showModal(); if(!full) inp.focus();
+  }
+  free.onclick=function(){ if(full){ if(!PREMIUM_PARA_TODOS) store.set(""); apply(false); } };
+  btn.onclick=function(){ if(PREMIUM_PARA_TODOS){ apply(true); return; } open(); }; $("acfcLicClose").onclick=function(){dlg.close();};
+  go.onclick=async function(){
+    if(PREMIUM_PARA_TODOS){ apply(true); dlg.close(); return; }
+    if(full){ store.set(""); apply(false); dlg.close(); return; }
+    msg.className=""; msg.textContent="Comprobando…";
+    try{
+      var h=await ok(inp.value);
+      if(h){ store.set(h); apply(true); dlg.close(); }
+      else { msg.className="err"; msg.textContent="Código no válido. Revisa que lo hayas escrito bien."; }
+    }catch(e){ msg.className="err"; msg.textContent="Este navegador no permite comprobar el código aquí (abre la herramienta desde https)."; }
+  };
+  inp.addEventListener("keydown",function(e){ if(e.key==="Enter") go.click(); });
+
+  /* Versión gratuita: los botones con corona no actúan, avisan de que son Premium */
+  document.addEventListener("click",function(e){
+    if(!H.classList.contains("acfc-lite")||!e.isTrusted||!e.target.closest) return;
+    if(!e.target.closest("button:not([data-lite]):not(dialog button), label.btn:not([data-lite])")) return;
+    e.preventDefault(); e.stopImmediatePropagation();
+    open(); txt.textContent="Esta función es Premium.";
+  },true);
+
+  /* Pintado de acciones sin Premium: solo barra superior (mover, editar…), Flechas y Textos.
+     El resto (Zonas, Varios, números, estilos de foco) avisa de que hay que activar Premium. */
+  var PINT_FREE=["move","edit","arrow","arrowStraight","pen","text","callout","rect","ellipse","triangleZone"];
+  document.addEventListener("click",function(e){
+    if(full||PREMIUM_PARA_TODOS||!e.target.closest) return;
+    var b=e.target.closest(".pintBlock .pintTool[data-tool], .pintBlock .pintNums button, .pintBlock .pintVar");
+    if(!b||(b.dataset.tool&&PINT_FREE.indexOf(b.dataset.tool)>=0)) return;
+    e.preventDefault(); e.stopImmediatePropagation();
+    open(); txt.textContent="Activa el modo premium para usar esta herramienta.";
+  },true);
+
+  /* Añadir un segundo vídeo (registro y editor): solo Premium */
+  document.addEventListener("click",function(e){
+    if(full||PREMIUM_PARA_TODOS||!e.target.closest) return;
+    if(!e.target.closest("#regAddFile, #edAddFile")) return;
+    e.preventDefault(); e.stopImmediatePropagation();
+    open(); txt.textContent="Añadir más de un vídeo es una función Premium. Introduce tu código para activarla.";
+  },true);
+
+  /* Añadir jugadores a la botonera: solo Premium (clic en Añadir o Intro en el campo) */
+  function jugPremium(e){
+    if(full||PREMIUM_PARA_TODOS||!e.target.closest) return;
+    var isKey=e.type==="keydown";
+    if(isKey?(e.key!=="Enter"||!e.target.closest("#botJugName, #newJugName")):!e.target.closest("#botJugAdd, #newJugAdd")) return;
+    e.preventDefault(); e.stopImmediatePropagation();
+    open(); txt.textContent="Añadir jugadores a la botonera es una función Premium. Introduce tu código para activarla.";
+  }
+  document.addEventListener("click",jugPremium,true);
+  document.addEventListener("keydown",jugPremium,true);
+
+  /* Categorías de la botonera: hasta 7 botones gratis; el 8.º es Premium (corona en «Añadir» al llegar a 7) */
+  var MAX_CATS=7, catBox=$("botCats"), catAdd=$("botCatAdd");
+  function catsLlenas(){ return !!catBox&&catBox.querySelectorAll(".catbtn").length>=MAX_CATS&&catAdd.textContent.trim()==="Añadir"; }
+  function catCrown(){
+    var on=catsLlenas(); catAdd.classList.toggle("acfcCrown",on);
+    catAdd.title=on?"Solo Premium · la versión gratuita admite 7 botones":"";
+  }
+  if(catBox&&catAdd){
+    new MutationObserver(catCrown).observe(catBox,{childList:true});
+    catCrown();
+    var catPremium=function(e){
+      if(full||PREMIUM_PARA_TODOS||!e.target.closest||!catsLlenas()) return;
+      if(e.type==="keydown"?(e.key!=="Enter"||!e.target.closest("#botCatName")):!e.target.closest("#botCatAdd")) return;
+      e.preventDefault(); e.stopImmediatePropagation();
+      open(); txt.textContent="La versión gratuita admite 7 botones de categoría. Para añadir más, activa Premium.";
+    };
+    document.addEventListener("click",catPremium,true);
+    document.addEventListener("keydown",catPremium,true);
+  }
+
+  /* Arranque: limitada salvo que haya una activación guardada que siga siendo válida */
+  apply(PREMIUM_PARA_TODOS);
+  var saved=store.get();
+  if(saved&&ACFC_LIC_HASHES.indexOf(saved)>=0) apply(true); else if(saved) store.set("");
 })();
 </script>
 </body>
