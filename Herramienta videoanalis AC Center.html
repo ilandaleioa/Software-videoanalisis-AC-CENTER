@@ -935,6 +935,17 @@ html.acfc-imm .empty{inset:0!important;aspect-ratio:auto!important}
 }
 /* botonera en ventana emergente: ocupa la ventana desde arriba, sin el hueco de la hoja inferior móvil */
 dialog#dlg.enEmergente{position:static!important;width:100%!important;max-height:none!important;border:0;box-shadow:none;margin:0}
+/* botón Instalar app */
+#btnInstalar[hidden]{display:none!important}
+header #btnInstalar{align-self:center;background:transparent;color:#fff;border:1px solid rgba(255,255,255,.45);font-family:var(--f-disp);text-transform:uppercase;letter-spacing:.1em;white-space:nowrap}
+header #btnInstalar:hover{border-color:#fff;background:rgba(255,255,255,.1)}
+@media (max-width:640px){header #btnInstalar{flex:none;padding:7px 10px;font-size:10.5px;min-height:0}}
+dialog#dlgInstalar{max-width:min(420px,94vw);border:1px solid var(--line);border-top:3px solid var(--ink);background:var(--panel);color:var(--ink);padding:18px 20px;font-family:var(--f-body)}
+dialog#dlgInstalar::backdrop{background:rgba(0,0,0,.55)}
+dialog#dlgInstalar h2{font-family:var(--f-disp);text-transform:uppercase;margin:0 0 10px;font-size:20px}
+dialog#dlgInstalar p,dialog#dlgInstalar li{font-size:14px;line-height:1.45;margin:0 0 8px}
+dialog#dlgInstalar ol{padding-left:20px;margin:0 0 12px}
+dialog#dlgInstalar .btn{min-height:42px}
 </style>
 </head>
 <body>
@@ -950,6 +961,7 @@ dialog#dlg.enEmergente{position:static!important;width:100%!important;max-height
 <header>
   <h1 class="acfcBrand"><a href="https://acfootballcenter.eus/" target="_blank" rel="noopener" title="Athletic Club Football Center"><img src="https://acfootballcenter.eus/wp-content/uploads/2022/11/acfc-logo-white.svg" alt="Athletic Club Football Center" width="118" height="32"></a><span class="acfcBrandTxt">Videoanálisis<small>Lezama Talks</small></span></h1><nav class="tabs" role="tablist"><button class="tab" role="tab" id="tabBtnEditor" aria-selected="false">Editor de vídeo</button><button class="tab" role="tab" id="tabBtnVisor" aria-selected="true">Registro de acciones</button></nav><span class="sub" id="vidName">cortes3.mp4</span><span class="sub" id="vidNote" style="font-size:12px"></span>
   <span class="sp"></span>
+  <button type="button" class="btn" id="btnInstalar" hidden title="Instalar la app o crear un acceso directo">Instalar app</button>
   <label class="btn primary" for="file">Cargar vídeo</label>
   <input type="file" id="file" accept="video/*" hidden>
 </header>
@@ -5028,6 +5040,45 @@ window.tutVoz=(()=>{
       if(h&&h.textContent!==t) h.textContent=t;
       if(b&&can&&b.textContent==="Descargar") b.textContent="Guardar en el móvil";
     }).observe(D.body,{subtree:true,childList:true,attributes:true,attributeFilter:["open"]});
+})();
+</script>
+<dialog id="dlgInstalar"><h2>Instalar la app</h2>
+<div id="instalarTxt"></div>
+<div style="text-align:right"><button type="button" class="btn primary" id="instalarCerrar">Entendido</button></div></dialog>
+<script>
+/* Instalar app: acceso directo / PWA (el manifiesto se genera en caliente para seguir siendo un único HTML) */
+(function(){
+  var btn=document.getElementById("btnInstalar"), dlg=document.getElementById("dlgInstalar"), txt=document.getElementById("instalarTxt");
+  if(!btn||!dlg) return;
+  var standalone=(window.matchMedia&&matchMedia("(display-mode: standalone)").matches)||navigator.standalone===true;
+  if(standalone) return;
+  try{
+    var base=location.origin+location.pathname;
+    var m={name:"Videoanálisis ACFC · Lezama Talks",short_name:"Videoanálisis",start_url:base,scope:base.replace(/[^\/]*$/,""),id:base,display:"standalone",background_color:"#15181D",theme_color:"#15181D",lang:"es",
+      icons:[{src:"https://acfootballcenter.eus/wp-content/uploads/2023/05/cropped-ACFC-192x192.webp",sizes:"192x192",type:"image/webp",purpose:"any"}]};
+    if(/^https?:$/.test(location.protocol)){
+      var l=document.createElement("link"); l.rel="manifest";
+      l.href=URL.createObjectURL(new Blob([JSON.stringify(m)],{type:"application/manifest+json"}));
+      document.head.appendChild(l);
+    }
+  }catch(e){}
+  var ev=null, ua=navigator.userAgent||"";
+  var ios=/iPad|iPhone|iPod/.test(ua)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+  btn.hidden=false;
+  window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();ev=e;});
+  window.addEventListener("appinstalled",function(){btn.hidden=true;ev=null;});
+  function ayuda(){
+    var h;
+    if(ios) h="<p>En iPhone o iPad:</p><ol><li>Abre esta página en <b>Safari</b>.</li><li>Pulsa el botón <b>Compartir</b> (cuadrado con flecha).</li><li>Elige <b>Añadir a pantalla de inicio</b>.</li></ol>";
+    else if(/Android/.test(ua)) h="<p>En Android (Chrome):</p><ol><li>Abre el menú <b>⋮</b> del navegador.</li><li>Elige <b>Instalar aplicación</b> o <b>Añadir a la pantalla de inicio</b>.</li></ol>";
+    else h="<p>En el ordenador (Chrome o Edge):</p><ol><li>Pulsa el icono de instalar de la barra de direcciones, o el menú <b>⋮ / …</b></li><li>Elige <b>Instalar Videoanálisis</b> o <b>Guardar y compartir › Crear acceso directo</b>.</li></ol><p>Marca «Abrir como ventana» para usarla como una app.</p>";
+    txt.innerHTML=h; dlg.showModal();
+  }
+  btn.addEventListener("click",function(){
+    if(ev){var e=ev; ev=null; e.prompt(); e.userChoice.then(function(c){if(c&&c.outcome==="accepted")btn.hidden=true;}).catch(function(){});}
+    else ayuda();
+  });
+  document.getElementById("instalarCerrar").addEventListener("click",function(){dlg.close();});
 })();
 </script>
 </body>
