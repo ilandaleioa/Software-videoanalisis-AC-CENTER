@@ -679,6 +679,7 @@ kbd{border-radius:0;font-family:var(--f-body)}
 .pintMsg{margin:0 0 6px;min-height:16px;font-size:12px;color:var(--muted)}
 .pintRail{border:1px solid var(--line);border-top:3px solid var(--ink);background:var(--panel);padding:8px 10px 12px}
 .pintGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.pintGrid4{grid-template-columns:repeat(4,1fr)}
 .pintGrid2{grid-template-columns:repeat(2,1fr)}
 .pintTool{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:60px;padding:6px 4px;background:var(--panel);border:1px solid var(--line);border-radius:0;color:var(--ink);cursor:pointer;font-family:var(--f-body);font-size:11.5px;line-height:1.1}
 .pintTool:hover{border-color:var(--ink)}
@@ -800,6 +801,12 @@ aside h2{font-size:16px;letter-spacing:.06em}
 #closeBotDlg[data-ic="close"]::before,#botClose[data-ic="close"]::before{content:"✕";margin-right:6px;font-size:.9em}
 #acfcFold{display:none}
 #acfcRot,#acfcImmBar{display:none}
+
+/* Escritorio: barra superior + cabecera inmovilizadas arriba al desplazarse */
+@media (min-width:641px){
+  html:not(.acfc-imm) .acfcUtil{position:sticky;top:0;z-index:41;box-sizing:border-box;height:35px}
+  html:not(.acfc-imm) header{position:sticky;top:35px;z-index:40}
+}
 
 /* ---------- 3. Móvil en vertical ---------- */
 @media (max-width:640px){
@@ -1000,6 +1007,10 @@ dialog#dlgInstalar h2{font-family:var(--f-disp);text-transform:uppercase;margin:
 dialog#dlgInstalar p,dialog#dlgInstalar li{font-size:14px;line-height:1.45;margin:0 0 8px}
 dialog#dlgInstalar ol{padding-left:20px;margin:0 0 12px}
 dialog#dlgInstalar .btn{min-height:42px}
+/* Pestaña activa muy marcada: fondo blanco y texto oscuro; la inactiva, apagada */
+html header .tab:not([aria-selected="true"]){background:rgba(255,255,255,.06);color:rgba(255,255,255,.55);border-bottom-color:transparent}
+html header .tab:not([aria-selected="true"]):hover{background:rgba(255,255,255,.14);color:#fff}
+html header .tab[aria-selected="true"],html header .tab[aria-selected="true"]:hover{background:#fff;color:#14171c;border-bottom-color:var(--red);box-shadow:0 -3px 0 var(--red) inset}
 </style>
 </head>
 <body>
@@ -1143,7 +1154,7 @@ dialog#dlgInstalar .btn{min-height:42px}
   <aside>
     <div class="top">
       <div class="row" style="justify-content:space-between;margin:0">
-        <h2 style="margin:0">Ajustes</h2>
+        <h2 style="margin:0">Tiempo del evento</h2>
         <button type="button" class="btn acfcLink" id="ajToggle" title="Ocultar/mostrar los ajustes">Ocultar</button>
       </div>
       <div id="ajBody" style="display:contents">
@@ -1200,6 +1211,10 @@ dialog#dlgInstalar .btn{min-height:42px}
         </span>
       </div>
     </div>
+    <div class="row" id="evSecHead" style="justify-content:space-between;align-items:center;margin:0;padding:10px 14px;border-top:1px solid var(--line)">
+      <h2 style="margin:0">Eventos</h2>
+      <button type="button" class="btn acfcLink" id="evSecToggle" title="Ocultar/mostrar la lista de eventos">Ocultar</button>
+    </div>
     <div class="list" id="list"></div>
     <div style="border-top:1px solid var(--line);padding:10px 14px;display:grid;gap:8px">
       <div class="row" style="justify-content:space-between;margin:0;flex-wrap:wrap">
@@ -1221,31 +1236,6 @@ dialog#dlgInstalar .btn{min-height:42px}
         </div>
         <div id="plOverview" style="display:grid;gap:6px;max-height:260px;overflow:auto"></div>
       </div>
-      <div class="row" style="justify-content:space-between;align-items:center;margin:0;border-top:1px solid var(--line);padding-top:8px">
-        <h2 style="margin:0">Exportación</h2>
-        <button class="btn acfcLink" id="expOptsToggle" title="Ocultar/mostrar las opciones de exportación">Ocultar</button>
-      </div>
-      <div id="expOptsA" style="display:contents">
-        <div class="row" style="flex-wrap:wrap">
-          <select id="vFmt" hidden></select>
-          <label class="row" style="gap:6px"><span style="font-size:13px;color:var(--muted)">Resolución</span>
-            <select id="vRes"><option value="1080">1080p</option><option value="720">720p</option><option value="480" selected>480p</option></select></label>
-          <label class="row" style="gap:6px" title="Menos fotogramas por segundo = exportación más rápida"><span style="font-size:13px;color:var(--muted)">Fotogramas</span>
-            <select id="vFps"><option value="0" selected>30 fps</option><option value="20">20 fps (más rápido)</option><option value="15">15 fps (aún más rápido)</option></select></label>
-        </div>
-        <div class="row">
-          <button class="btn edGreen" id="plExport" disabled title="Descarga en orden los clips añadidos, unidos en un solo vídeo">Descargar lista (1 vídeo)</button>
-          <button class="btn edGreen" id="plExportSep" disabled title="Descarga cada clip de la lista como un archivo de vídeo independiente">Descargar lista (vídeos separados)</button>
-          <button class="btn" id="plClear">Vaciar lista</button>
-        </div>
-        <div class="row" style="flex-wrap:nowrap">
-          <button class="btn edGreen" style="flex:1 1 0;white-space:nowrap;padding-left:6px;padding-right:6px" id="fltExport" disabled title="Descarga en orden los eventos que se ven ahora en el registro (según el filtro «Ver»), unidos en un solo vídeo">Descargar filtrados (1 vídeo)</button>
-          <button class="btn edGreen" style="flex:1 1 0;white-space:nowrap;padding-left:6px;padding-right:6px" id="fltExportSep" disabled title="Descarga cada evento que se ve ahora en el registro (según el filtro «Ver») como un archivo de vídeo independiente">Descargar filtrados (vídeos separados)</button>
-        </div>
-        <div class="row">
-          <button class="btn edGreen" id="expCsv">Exportar CSV</button>
-        </div>
-      </div>
     </div>
     <!-- ACFC · PINTADO DE ACCIONES · panel de herramientas de dibujo sobre el vídeo (ids y clases con prefijo pint) -->
     <div class="pintBlock" id="pintBlock">
@@ -1263,10 +1253,14 @@ dialog#dlgInstalar .btn{min-height:42px}
         </div>
         <p class="pintMsg" id="pintStatus" role="status" aria-live="polite"></p>
         <div class="pintRail">
-          <div class="pintGrid">
+          <div class="pintGrid pintGrid4">
             <button class="pintTool" type="button" data-tool="move" title="Mover y redimensionar lo pintado">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v16"/><path d="M4 12h16"/><path d="M12 4l-2.3 2.3"/><path d="M12 4l2.3 2.3"/><path d="M12 20l-2.3-2.3"/><path d="M12 20l2.3-2.3"/><path d="M4 12l2.3-2.3"/><path d="M4 12l2.3 2.3"/><path d="M20 12l-2.3-2.3"/><path d="M20 12l-2.3 2.3"/></svg>
               <span>Mover</span>
+            </button>
+            <button class="pintTool" type="button" data-tool="edit" title="Editar lo pintado: texto, colores, grosor, opacidad">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9a2.1 2.1 0 0 0-3-3L5 17z"/><path d="M14.5 7.5l3 3"/></svg>
+              <span>Editar</span>
             </button>
             <button class="pintTool" type="button" id="pintDel" title="Borra lo seleccionado (Supr)">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M6 7l1 13a1.5 1.5 0 0 0 1.5 1.4h6a1.5 1.5 0 0 0 1.5-1.4l1-13"/><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7"/></svg>
@@ -1374,6 +1368,33 @@ dialog#dlgInstalar .btn{min-height:42px}
               </select>
             </label>
           </div>
+        </div>
+      </div>
+    </div>
+    <div class="expBlock" id="expBlock" style="flex:none;display:grid;gap:8px;border-top:1px solid var(--line);padding:10px 14px 14px">
+      <div class="row" style="justify-content:space-between;align-items:center;margin:0">
+        <h2 style="margin:0">Exportación</h2>
+        <button class="btn acfcLink" id="expOptsToggle" title="Ocultar/mostrar las opciones de exportación">Ocultar</button>
+      </div>
+      <div id="expOptsA" style="display:contents">
+        <div class="row" style="flex-wrap:wrap">
+          <select id="vFmt" hidden></select>
+          <label class="row" style="gap:6px"><span style="font-size:13px;color:var(--muted)">Resolución</span>
+            <select id="vRes"><option value="1080">1080p</option><option value="720">720p</option><option value="480" selected>480p</option></select></label>
+          <label class="row" style="gap:6px" title="Menos fotogramas por segundo = exportación más rápida"><span style="font-size:13px;color:var(--muted)">Fotogramas</span>
+            <select id="vFps"><option value="0" selected>30 fps</option><option value="20">20 fps (más rápido)</option><option value="15">15 fps (aún más rápido)</option></select></label>
+        </div>
+        <div class="row">
+          <button class="btn edGreen" id="plExport" disabled title="Descarga en orden los clips añadidos, unidos en un solo vídeo">Descargar lista (1 vídeo)</button>
+          <button class="btn edGreen" id="plExportSep" disabled title="Descarga cada clip de la lista como un archivo de vídeo independiente">Descargar lista (vídeos separados)</button>
+          <button class="btn" id="plClear">Vaciar lista</button>
+        </div>
+        <div class="row" style="flex-wrap:nowrap">
+          <button class="btn edGreen" style="flex:1 1 0;white-space:nowrap;padding-left:6px;padding-right:6px" id="fltExport" disabled title="Descarga en orden los eventos que se ven ahora en el registro (según el filtro «Ver»), unidos en un solo vídeo">Descargar filtrados (1 vídeo)</button>
+          <button class="btn edGreen" style="flex:1 1 0;white-space:nowrap;padding-left:6px;padding-right:6px" id="fltExportSep" disabled title="Descarga cada evento que se ve ahora en el registro (según el filtro «Ver») como un archivo de vídeo independiente">Descargar filtrados (vídeos separados)</button>
+        </div>
+        <div class="row">
+          <button class="btn edGreen" id="expCsv">Exportar CSV</button>
         </div>
       </div>
     </div>
@@ -1510,7 +1531,10 @@ dialog#dlgInstalar .btn{min-height:42px}
       <label class="btn" for="edFile" id="edAddFile" style="text-align:center" title="Añade otro vídeo a continuación, para unirlos en la exportación">+ Añadir vídeo</label>
       <div class="row" style="justify-content:space-between;margin:0">
         <h2 style="margin:0">Eventos</h2>
-        <button class="btn" id="edClearAdded" title="Quitar todos los eventos de la lista">Limpiar</button>
+        <span class="row" style="margin:0;gap:10px">
+          <button class="btn acfcLink" id="edEvToggle" title="Ocultar/mostrar la lista de eventos">Ocultar</button>
+          <button class="btn" id="edClearAdded" title="Quitar todos los eventos de la lista">Limpiar</button>
+        </span>
       </div>
       <select id="edFilter" aria-label="Filtrar eventos por tipo" title="Filtrar la lista por tipo de evento" style="width:100%;display:none"></select>
       <div class="row" id="edResultRow" style="font-size:14px">Resultado: <b id="edTotal">0:00.0</b> <span style="color:var(--muted)" id="edOrig"></span></div>
@@ -2643,18 +2667,27 @@ window.renderHalfBands = function(b1,b2,mk,d){
     const cur=$("fDet").value;
     $("fDetBtns").querySelectorAll(".optbtn").forEach(b=>b.classList.toggle("active",b.dataset.det===cur));
   }
+  let detGroup=null; // grupo de detalles de Gol/Ocasión visible: "juego" | "parado" | null
   function renderDetBtns(L,sel){
     const wrap=$("fDetBtns"), s=$("fDet"); wrap.replaceChildren();
     const noneBtn=el("button",{type:"button",className:"optbtn nodet",textContent:"— Sin detalle —"});
     noneBtn.dataset.det=""; noneBtn.onclick=()=>{ s.value=""; s.dispatchEvent(new Event("change")); syncDetBtns(); setStage(2); };
     wrap.append(noneBtn);
     const cat=$("fCat").value;
-    if(CAT_GOL(cat)) L=[...L.filter(d=>!isParado(cat,d)),...L.filter(d=>isParado(cat,d))];
-    let prevG=null;
+    if(CAT_GOL(cat)){
+      // Gol/Ocasión: primero se elige Situación jugada o Acción balón parado; solo se ven los detalles de ese grupo
+      if(sel&&sel!=="__new__"&&!detGroup) detGroup=isParado(cat,sel)?"parado":"juego";
+      const row=el("span"); row.style.cssText="flex-basis:100%;display:flex;flex-wrap:wrap;gap:6px";
+      [["juego","Situación jugada"],["parado","Acción balón parado"]].forEach(([g,t])=>{
+        const gb=el("button",{type:"button",className:"optbtn g-"+g+(detGroup===g?" active":""),textContent:t});
+        gb.onclick=()=>{ detGroup=g; renderDetBtns(DETS[cat]||[],s.value); };
+        row.append(gb);
+      });
+      wrap.append(row);
+      L=detGroup?L.filter(d=>(isParado(cat,d)?"parado":"juego")===detGroup):[];
+    }
     L.forEach(d=>{
       const g=CAT_GOL(cat)?(isParado(cat,d)?"parado":"juego"):null;
-      if(prevG&&g!==prevG){ const br=el("span"); br.style.cssText="flex-basis:100%;height:0"; wrap.append(br); }
-      prevG=g;
       const b=el("button",{type:"button",className:"optbtn"+(g?" g-"+g:""),textContent:d});
       b.dataset.det=d; b.onclick=()=>{ s.value=d; s.dispatchEvent(new Event("change")); syncDetBtns(); setStage(2); };
       addDelX(b,d,()=>{ removeDetFrom(cat,d); if(s.value===d) s.value=""; fillDets(s.value); });
@@ -2674,8 +2707,9 @@ window.renderHalfBands = function(b1,b2,mk,d){
     if(sel&&!L.includes(sel)) s.append(el("option",{value:sel,textContent:sel}));
     s.append(el("option",{value:"__new__",textContent:"+ AÑADIR DETALLE"}));
     s.value=sel||""; $("newDetRow").hidden=true; $("newDetErr").textContent="";
+    if(!sel) detGroup=null;
     renderDetBtns(L,sel); }
-  $("fCat").addEventListener("change",()=>{ if($("fCat").value!=="__new__") fillDets(""); });
+  $("fCat").addEventListener("change",()=>{ if($("fCat").value!=="__new__"){ detGroup=null; fillDets(""); } });
   $("fDet").addEventListener("change",()=>{ const nw=$("fDet").value==="__new__"; $("newDetRow").hidden=!nw; $("newDetErr").textContent="";
     if(nw){ $("newDetName").value=""; $("newDetName").focus(); } });
   function addDet(){
@@ -3059,6 +3093,22 @@ window.renderHalfBands = function(b1,b2,mk,d){
     $("edSrcToggle").onclick=()=>setEdSrcHidden($("edSrcList").style.display!=="none");
   })();
 
+  const ED_EV_HIDE_KEY="edEvHidden";
+  function setEdEvHidden(hidden){
+    document.body.classList.toggle("edEvHid",hidden);
+    $("edEvToggle").textContent=hidden?"Mostrar":"Ocultar";
+    try{ localStorage.setItem(ED_EV_HIDE_KEY, hidden?"1":"0"); }catch(e){}
+  }
+  (function initEdEvToggle(){
+    const st=document.createElement("style");
+    st.textContent="body.edEvHid #edList,body.edEvHid #edFilter,body.edEvHid #edResultRow{display:none !important}";
+    document.head.appendChild(st);
+    let hidden=false;
+    try{ hidden=localStorage.getItem(ED_EV_HIDE_KEY)==="1"; }catch(e){}
+    setEdEvHidden(hidden);
+    $("edEvToggle").onclick=()=>setEdEvHidden(!document.body.classList.contains("edEvHid"));
+  })();
+
   const ED_EXP_HIDE_KEY="edExpHidden";
   function setEdExpHidden(hidden){
     $("edExpBody").style.display=hidden?"none":"flex";
@@ -3130,6 +3180,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   }
   simpleFold("ajToggle","ajHidden",h=>{ $("ajBody").style.display=h?"none":"contents"; });
   simpleFold("fltToggle","fltHidden",h=>{ $("fltBody").style.display=h?"none":""; });
+  simpleFold("evSecToggle","evSecHidden",h=>{ $("list").style.display=h?"none":""; });
   const TIMELINE_HIDE_KEY="timelineHidden";
   function setTimelineHidden(hidden){
     $("belowStageWrap").classList.toggle("hiddenBlock",hidden);
@@ -5182,6 +5233,7 @@ function refreshHint(){
     if(t==="connector") msg="Clic para añadir puntos · doble clic para finalizar · Esc para cancelar";
     else if(t==="polygonZone") msg="Clic para añadir vértices · doble clic para finalizar · Esc para cancelar";
     else if(t==="pen") msg="Arrastra para dibujar · suelta para finalizar";
+    else if(t==="edit") msg="Pulsa una marca para editarla: texto (doble) y ajustes del panel";
     else if(t!=="move" && t!=="text" && t!=="callout") msg="Arrastra para dibujar · suelta para finalizar";
   }
   showHint(msg);
@@ -5708,7 +5760,7 @@ function scaleShapeFromBaseline(shape, factor) {
 }
 
 function syncSizeControl() {
-  const hasSelection = state.tool === "move" && state.selectedAnnotationIndex >= 0 && state.selectedAnnotationIndex < state.annotations.length;
+  const hasSelection = isSelTool() && state.selectedAnnotationIndex >= 0 && state.selectedAnnotationIndex < state.annotations.length;
   sizeControlInput.disabled = !hasSelection;
 
   if (!hasSelection) {
@@ -5747,7 +5799,7 @@ function syncSizeControl() {
 }
 
 function syncOpacityControl() {
-  const hasSelection = state.tool === "move" && state.selectedAnnotationIndex >= 0 && state.selectedAnnotationIndex < state.annotations.length;
+  const hasSelection = isSelTool() && state.selectedAnnotationIndex >= 0 && state.selectedAnnotationIndex < state.annotations.length;
   const opacity = hasSelection
     ? (state.annotations[state.selectedAnnotationIndex].opacity ?? 1)
     : state.opacity;
@@ -6717,7 +6769,7 @@ function redraw() {
       return;
     }
     drawShape(shape, currentTime);
-    if (index === state.selectedAnnotationIndex && state.tool === "move" && state.playerState !== "playing") {
+    if (index === state.selectedAnnotationIndex && isSelTool() && state.playerState !== "playing") {
       drawSelection(shape);
     }
   });
@@ -6749,8 +6801,29 @@ function beginDrawing(event) {
 
   const point = getCanvasPoint(event);
 
-  if (state.tool !== "move" && (findAnnotationAtPoint(point) >= 0 || getSelectedVertexAtPoint(point) >= 0)) {
+  if (state.tool !== "move" && state.tool !== "edit" && (findAnnotationAtPoint(point) >= 0 || getSelectedVertexAtPoint(point) >= 0)) {
     setTool("move");
+  }
+
+  if (state.tool === "edit") {
+    const ei = findAnnotationAtPoint(point);
+    state.selectedAnnotationIndex = ei;
+    state.draggingAnnotationIndex = -1;
+    if (ei >= 0) {
+      const shape = state.annotations[ei];
+      if (shape.type === "focus") { state.focusStyle = shape.focusStyle || "cilindrico"; syncFocusStyleButtons(); }
+      if (shape.type === "spotlight") { state.spotlightStyle = shape.spotlightStyle || "filled"; syncSpotlightStyleButtons(); }
+      if ((shape.type === "text" || shape.type === "callout") && typeof shape.text === "string") {
+        const nt = window.prompt("Editar texto", shape.text);
+        if (nt && nt !== shape.text) { pushHistory(); shape.text = nt; }
+      }
+      setStatus("Editando: cambia color, grosor u opacidad en el panel.");
+    } else {
+      setStatus("No he encontrado una marca en ese punto. Pulsa sobre una anotación existente.");
+    }
+    syncSizeControl();
+    redraw();
+    return;
   }
 
   if (state.tool === "move") {
@@ -7091,8 +7164,10 @@ function paintToolButtons(){
     b.setAttribute("aria-pressed",String(on));
   });
   const sel=state.annotations[state.selectedAnnotationIndex];
-  focusStylePicker.hidden=!(state.drawEnabled && (state.tool==="focus" || (state.tool==="move" && sel && sel.type==="focus")));
+  focusStylePicker.hidden=!(state.drawEnabled && (state.tool==="focus" || (isSelTool() && sel && sel.type==="focus")));
 }
+
+function isSelTool(){ return state.tool==="move" || state.tool==="edit"; }
 
 function setTool(nextTool){
   if(state.tool==="connector" && state.drawing){ state.drawing=null; setConnectorHint(false); redraw(); }
@@ -7101,6 +7176,7 @@ function setTool(nextTool){
   paintToolButtons();
   refreshHint();
   syncSizeControl();
+  if(nextTool==="edit") setStatus("Modo editar: pulsa una marca; cambia sus colores, grosor y demás en el panel. En textos y etiquetas se pide el texto.");
   if(nextTool==="move") setStatus("Modo mover: pulsa una marca y arrástrala; las esquinas la redimensionan.");
 }
 
@@ -7155,7 +7231,7 @@ deleteAnnotationButton.addEventListener("click",()=>{ deleteSelectedAnnotation()
 // Los ajustes del panel solo tocan una marca ya pintada si se ha señalado con «Mover»;
 // con cualquier herramienta de dibujo valen para lo siguiente que se pinte.
 function editableSel(){
-  return state.tool==="move" ? state.annotations[state.selectedAnnotationIndex] : undefined;
+  return isSelTool() ? state.annotations[state.selectedAnnotationIndex] : undefined;
 }
 strokeColorInput.addEventListener("input",e=>{
   state.stroke=e.target.value;
@@ -7185,7 +7261,7 @@ focusStyleButtons.forEach(button=>{
     state.focusStyle=button.dataset.focusStyle||"cilindrico";
     syncFocusStyleButtons();
     const sel=state.annotations[state.selectedAnnotationIndex];
-    if(state.tool==="move" && sel && sel.type==="focus"){ sel.focusStyle=state.focusStyle; redraw(); }
+    if(isSelTool() && sel && sel.type==="focus"){ sel.focusStyle=state.focusStyle; redraw(); }
     else { setTool("focus"); if(!state.drawEnabled) setDrawEnabled(true); }
   });
 });
@@ -7198,7 +7274,7 @@ $("pintFocusInfo").addEventListener("click",e=>{
 
 sizeControlInput.addEventListener("input",e=>{
   const i=state.selectedAnnotationIndex;
-  const ok=state.tool==="move" && i>=0 && i<state.annotations.length && state.resizeBaseline;
+  const ok=isSelTool() && i>=0 && i<state.annotations.length && state.resizeBaseline;
   const f=Number(e.target.value)/100;
   sizeValue.textContent=Math.round(f*100)+"%";
   if(!ok) return;
@@ -7211,7 +7287,7 @@ opacityControlInput.addEventListener("input",e=>{
   const value=Number(e.target.value)/100;
   opacityValueEl.textContent=e.target.value+"%";
   const i=state.selectedAnnotationIndex;
-  if(state.tool==="move" && i>=0 && i<state.annotations.length){
+  if(isSelTool() && i>=0 && i<state.annotations.length){
     if(!opacityHistoryPushed){ pushHistory(); opacityHistoryPushed=true; }
     state.annotations[i].opacity=value; redraw();
   } else state.opacity=value;
@@ -7323,7 +7399,7 @@ pintRestore();
 
 // ---------- puntero sobre el lienzo ----------
 // Al empezar a pintar con el vídeo en marcha, se pausa en ese fotograma.
-canvas.addEventListener("pointerdown",()=>{ if(state.drawEnabled && !v.paused && state.tool!=="move") v.pause(); },true);
+canvas.addEventListener("pointerdown",()=>{ if(state.drawEnabled && !v.paused && !isSelTool()) v.pause(); },true);
 canvas.addEventListener("pointerdown",beginDrawing);
 canvas.addEventListener("pointermove",updateDrawing);
 canvas.addEventListener("pointerup",e=>{ finishDrawing(e); paintToolButtons(); });
@@ -7332,7 +7408,7 @@ canvas.addEventListener("contextmenu",e=>{
   e.preventDefault();
   if(!state.drawEnabled) return;
   const idx=findAnnotationAtPoint(getCanvasPoint(e));
-  if(idx>=0 && state.tool==="move"){ state.selectedAnnotationIndex=idx; deleteSelectedAnnotation(); }
+  if(idx>=0 && isSelTool()){ state.selectedAnnotationIndex=idx; deleteSelectedAnnotation(); }
 });
 
 // ---------- teclado (solo con el dibujo activo) ----------
