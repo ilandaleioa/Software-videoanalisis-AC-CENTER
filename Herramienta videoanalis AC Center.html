@@ -1154,9 +1154,9 @@ html #expOptsToggle:hover,html #pbToggle:hover,html #edCtlToggle:hover,html #edS
 html #fltClear:hover,html #pintClear:hover,html #edClearAdded:hover{filter:brightness(.88);color:#fff}
 html #regSrcToggle:hover,html #evHideToggle:hover,html #ajToggle:hover,html #fltToggle:hover,html #plListToggle:hover,html #pintToggle:hover,html #pintNumsToggle:hover,html #pintStyleToggle:hover,
 html #expOptsToggle:hover,html #pbToggle:hover,html #edCtlToggle:hover,html #edSrcToggle:hover,html #edEvToggle:hover,html #edExpToggle:hover{background:#1F6FD1;border-color:#1F6FD1}
-/* Ocultar = azul claro; Mostrar (contenido oculto) = azul oscuro */
-html button.acfcTgl[data-tgl="mostrar"],html button.acfcTgl[data-tgl="mostrar"]:hover{background:#0B3D80;border-color:#0B3D80;color:#fff}
-html button.acfcTgl[data-tgl="ocultar"],html button.acfcTgl[data-tgl="ocultar"]:hover{background:#4C93E8;border-color:#4C93E8;color:#fff}
+/* Ocultar y Mostrar: el mismo azul */
+html button.acfcTgl[data-tgl="mostrar"],html button.acfcTgl[data-tgl="mostrar"]:hover,
+html button.acfcTgl[data-tgl="ocultar"],html button.acfcTgl[data-tgl="ocultar"]:hover{background:#1F6FD1;border-color:#1F6FD1;color:#fff}
 html #fltClear:hover,html #pintClear:hover,html #edClearAdded:hover{background:var(--red);border-color:var(--red)}
 /* Escritorio: la columna derecha queda fija bajo la cabecera y llega hasta el borde inferior de la ventana */
 @media (min-width:1251px){
@@ -1216,6 +1216,8 @@ html #fltClear:hover,html #pintClear:hover,html #edClearAdded:hover{background:v
         <button class="btn" id="vFwd20" title="Avanzar 10 segundos">+10 seg</button>
         <button class="btn" id="vMute" title="Silenciar / activar sonido" aria-label="Silenciar / activar sonido">🔊<span class="lbl"> Silenciar</span></button>
         <button class="btn" id="vFull" title="Pantalla completa (F)" aria-label="Pantalla completa">⛶<span class="lbl"> Pantalla completa</span></button>
+        <button class="btn primary fsAB" id="vFsAuto" title="Registro automático en el instante actual">REGISTRO AUTO</button>
+        <button class="btn primary fsAB" id="vFsManual" title="Registro manual: marca el inicio y el final del corte">REGISTRO MANUAL</button>
         <button class="btn" id="visFullEditor" title="Pone todo el registro de acciones (vídeo, botonera y listas) a pantalla completa">⛶ Registro a pantalla completa</button>
         <label class="row" style="gap:6px"><span style="font-size:13px;color:var(--muted)">Velocidad</span>
           <select id="rate"><option>0.5</option><option>0.75</option><option selected>1</option><option>1.5</option><option>2</option><option>3</option><option>4</option></select></label>
@@ -3738,8 +3740,8 @@ window.renderHalfBands = function(b1,b2,mk,d){
   }
   function fmtHM(sec){ sec=Math.max(0,Math.round(sec)); return Math.floor(sec/60)+":"+String(sec%60).padStart(2,"0"); }
   function matchClockText(t){
-    if(halfMarks.p1==null) return "";
-    if(t<halfMarks.p1) return "-"+fmtHM(halfMarks.p1-t);
+    if(halfMarks.p1==null) return fmtHM(t);
+    if(t<halfMarks.p1) return "0:00";
     if(halfMarks.p2==null||t<halfMarks.p2) return fmtHM(t-halfMarks.p1);
     return fmtHM(2700+(t-halfMarks.p2));
   }
@@ -4963,7 +4965,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   })();
   // Botones A, B y Añadir de la pantalla completa del vídeo: reenvían el clic a los originales
   (function fsABButtons(){
-    [["edFsA","edSetA"],["edFsB","edSetB"],["edFsAdd","edAddSel"]].forEach(([p,o])=>{ $(p).onclick=()=>$(o).click(); });
+    [["edFsA","edSetA"],["edFsB","edSetB"],["edFsAdd","edAddSel"],["vFsAuto","vTagNow"],["vFsManual","vTagManual"]].forEach(([p,o])=>{ $(p).onclick=()=>$(o).click(); });
     const add=$("edAddSel"), sync=()=>{ $("edFsAdd").hidden=add.hidden; };
     sync(); new MutationObserver(sync).observe(add,{attributes:true,attributeFilter:["hidden"]});
   })();
@@ -5265,8 +5267,8 @@ window.renderHalfBands = function(b1,b2,mk,d){
   var evLblRO=new ResizeObserver(es=>es.forEach(e=>fitEvLbl(e.target)));
   function fmtHM(sec){ sec=Math.max(0,Math.round(sec)); return Math.floor(sec/60)+":"+String(sec%60).padStart(2,"0"); }
   function matchClockText(t){
-    if(marks.p1==null) return "";
-    if(t<marks.p1) return "-"+fmtHM(marks.p1-t);
+    if(marks.p1==null) return fmtHM(t);
+    if(t<marks.p1) return "0:00";
     if(marks.p2==null||t<marks.p2) return fmtHM(t-marks.p1);
     return fmtHM(2700+(t-marks.p2));
   }
@@ -8901,7 +8903,16 @@ html.acfc-lite .primary:not([data-lite]):not(dialog .primary)::after{background:
 #acfcFreeBtn.btn{margin-right:-8px}
 #acfcLicBtn.btn,#acfcFreeBtn.btn{white-space:nowrap}
 #acfcLicBtn.btn:hover,#acfcFreeBtn.btn:hover,#acfcLicBtn.btn[aria-pressed="true"],#acfcFreeBtn.btn[aria-pressed="true"]{background:var(--red);color:#fff;border-color:var(--red)}
-@media (max-width:640px){#acfcLicBtn.btn,#acfcFreeBtn.btn{font-size:12px;padding:6px 9px;letter-spacing:1px}#acfcFreeBtn.btn{margin-right:-4px}}
+@media (max-width:640px){
+  /* en móvil: solo un icono cada uno (estrella = gratuita, corona = Premium) */
+  #acfcLicBtn.btn,#acfcFreeBtn.btn{display:inline-flex!important;align-items:center;justify-content:center;flex:none;width:36px;height:36px;min-height:0;padding:0;margin:0 0 0 4px;font-size:0;letter-spacing:0;line-height:1}
+  #acfcLicBtn.btn::before,#acfcFreeBtn.btn::before{font-size:18px;line-height:1;letter-spacing:0}
+  #acfcFreeBtn.btn::before{content:"\2606"}
+  #acfcLicBtn.btn::before{content:"\265B"}
+  #acfcFreeBtn[aria-pressed="true"]::before{content:"\2605"}
+}
+/* pantalla completa solo del vídeo (editor y registro): botones A/B/Añadir y Registro auto/manual, con cualquier ancho */
+.stage:fullscreen .stageControls .fsAB:not([hidden]),.stage:-webkit-full-screen .stageControls .fsAB:not([hidden]){display:inline-flex!important;align-items:center;justify-content:center}
 /* Corona: función solo Premium (se añade con la lista PREMIUM del script) */
 .acfcCrown{position:relative}
 .acfcCrown::after{content:"";position:absolute;top:3px;right:3px;width:14px;height:14px;background:var(--red);pointer-events:none;
@@ -8972,6 +8983,7 @@ html.acfc-lite .primary:not([data-lite]):not(dialog .primary)::after{background:
     btn.setAttribute("aria-pressed",f); free.setAttribute("aria-pressed",!f);
     free.title=f?"Volver a la versión gratuita":"Estás en la versión gratuita";
     btn.title=f?"Premium activado":"Introduce tu código Premium";
+    btn.setAttribute("aria-label","Premium"); free.setAttribute("aria-label","Versión gratuita");
     if(LIMITAR&&!f){ var v=$("tabBtnVisor"); if(v&&$("tabVisor").hidden) v.click(); }   // sin editor: vuelve al registro (clic programático, no se bloquea)
   }
   function open(){
