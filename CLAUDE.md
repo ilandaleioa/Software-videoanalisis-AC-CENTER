@@ -112,3 +112,12 @@ En el hosting de acfootballcenter.eus (cPanel) hay un cron que ejecuta `~/bin/sy
 3. Deja un registro en `~/logs/videoanalisis-sync.log`.
 
 Desde el repo no hace falta tocar nada del servidor.
+
+---
+
+## 8. Interfaz v2 (ACFC)
+
+- El bloque CSS "ACFC · INTERFAZ v2" va siempre al final del `<style>` y el script "ACFC · CAPA DE INTERFAZ v2" al final del `<body>`. No se borran ni se mueven.
+- Sin emojis en botones: el script los retira solo. Colores: rojo = acción principal; tinta = añadir y descargar; contorno = secundarias; texto subrayado = mostrar/ocultar y acciones menores. Sin rosa, azul, morado ni turquesa.
+- Todo control nuevo debe verse bien en móvil vertical (≤640 px) y en el modo inmersivo (clase `html.acfc-imm`). Si un botón nuevo es imprescindible en apaisado, añádelo a las reglas de `html.acfc-imm`.
+- Las clases e ids que empiezan por `acfc` son de la capa de ACFC.
