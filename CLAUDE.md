@@ -121,3 +121,15 @@ Desde el repo no hace falta tocar nada del servidor.
 - Sin emojis en botones: el script los retira solo. Colores: rojo = acción principal; tinta = añadir y descargar; contorno = secundarias; texto subrayado = mostrar/ocultar y acciones menores. Sin rosa, azul, morado ni turquesa.
 - Todo control nuevo debe verse bien en móvil vertical (≤640 px) y en el modo inmersivo (clase `html.acfc-imm`). Si un botón nuevo es imprescindible en apaisado, añádelo a las reglas de `html.acfc-imm`.
 - Las clases e ids que empiezan por `acfc` son de la capa de ACFC.
+
+---
+
+## 9. Pintado de acciones (dibujo sobre el vídeo)
+
+- Apartado «Pintado de acciones» al final de la columna derecha del registro (`#pintBlock`), con botón **Ocultar/Mostrar** (recuerda el estado en `localStorage`).
+- Motor portado del proyecto «Pintado de acciones» (formas, mover/redimensionar, foco con seguimiento). El CSS va justo antes del bloque «INTERFAZ v2» y el `<script>` justo antes de «CAPA DE INTERFAZ v2».
+- Todo el DOM propio lleva el prefijo `pint`. Los ids `strokeColor`, `fillColor`, `lineWidth`, `sizeControl`, `sizeValue`, `opacityControl`, `opacityValue`, `focusFollowKeyframe` y `focusFollowEnd` los usa el motor; no los reutilices.
+- Las anotaciones se guardan en un espacio lógico de 1280 px de ancho y se escalan al vídeo. Cada elemento nuevo aparece en el instante en que se pinta y dura lo que marca «Visible durante».
+- Las anotaciones se guardan solas en el navegador (localStorage, clave `acfcPint:<nombre del vídeo>`) y viajan en el proyecto exportado (campo `pintado`). API: `window.acfcPint.get()` y `.set(lista)`.
+- El motor es la función `acfcPintMount(cfg)` y se monta dos veces: en el registro (`#pintBlock`, sufijo de ids vacío, `window.acfcPint`) y en el editor de vídeo (copia del panel con ids terminados en `Ed`, `window.acfcPintEd`, clave `acfcPintEd:<nombre del vídeo>`). Cualquier cambio del motor o del panel vale para los dos.
+- En el editor, el pintado no se incluye todavía en los vídeos exportados (solo en el PNG del fotograma).

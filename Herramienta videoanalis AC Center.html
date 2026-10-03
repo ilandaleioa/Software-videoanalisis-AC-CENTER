@@ -667,6 +667,60 @@ kbd{border-radius:0;font-family:var(--f-body)}
 .optbtn[data-eq].active{border-color:#111;box-shadow:0 0 0 2px #fff,0 0 0 4px #111}
 .optbtn.nodet{background:#000;border-color:#000;color:#fff}
 .optbtn.nodet.active{border-color:var(--red);background:#000;box-shadow:0 0 0 2px #fff,0 0 0 4px #000}
+/* ===== ACFC · PINTADO DE ACCIONES (herramientas de dibujo sobre el vídeo) ===== */
+#tabVisor aside,#tabEditor aside{overflow-y:auto}
+#tabVisor aside .list,#tabEditor aside .list{min-height:220px}
+.pintBlock{flex:none;border-top:1px solid var(--line);padding:10px 14px 14px}
+.pintBlock .pbHead{margin-bottom:8px}
+.pintBar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px}
+.pintBar .btn{font-size:12px;padding:6px 10px}
+.pintBar .btn svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vertical-align:-2px;margin-right:5px}
+.pintBar [id^="pintMode"][aria-pressed="true"]{background:var(--red);border-color:var(--red);color:#fff}
+.pintMsg{margin:0 0 6px;min-height:16px;font-size:12px;color:var(--muted)}
+.pintRail{border:1px solid var(--line);border-top:3px solid var(--ink);background:var(--panel);padding:8px 10px 12px}
+.pintGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.pintGrid2{grid-template-columns:repeat(2,1fr)}
+.pintTool{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:60px;padding:6px 4px;background:var(--panel);border:1px solid var(--line);border-radius:0;color:var(--ink);cursor:pointer;font-family:var(--f-body);font-size:11.5px;line-height:1.1}
+.pintTool:hover{border-color:var(--ink)}
+.pintTool:focus-visible,.pintVar:focus-visible,.pintLine:focus-visible,.pintInfo:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+.pintTool.is-active{border-color:var(--red);color:var(--red);background:color-mix(in srgb,var(--red) 8%,var(--panel));box-shadow:inset 0 -3px 0 var(--red)}
+.pintTool svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.pintTool svg .solid{fill:currentColor}
+.pintTool:disabled{opacity:.4;cursor:default}
+.pintDiv{display:flex;align-items:center;gap:7px;margin:12px 0 7px;padding-top:9px;border-top:1px solid var(--line);font-family:var(--f-disp);font-weight:700;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink)}
+.pintDiv i{width:6px;height:6px;background:var(--red);flex:none}
+.pintDivFollow span{flex:1}
+.pintInfo{width:22px;height:22px;border:1px solid var(--line);border-radius:50%;background:var(--panel);color:var(--muted);font:italic 700 12px/1 serif;cursor:pointer;padding:0}
+.pintInfo:hover,.pintInfo[aria-expanded="true"]{border-color:var(--red);color:var(--red)}
+.pintFollow{display:grid;gap:6px}
+.pintFollow .btn{font-size:13px;padding:8px 10px}
+.pintHelp{margin:2px 0 0;font-size:12px;line-height:1.45;color:var(--muted)}
+.pintVariants{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:6px}
+.pintVariants[hidden]{display:none}
+.pintVar{display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px 4px;background:var(--panel);border:1px solid var(--line);border-radius:0;color:var(--ink);cursor:pointer;font-size:11px}
+.pintVar svg{width:22px;height:30px;fill:color-mix(in srgb,currentColor 18%,transparent);stroke:currentColor;stroke-width:2}
+.pintVar.is-active{border-color:var(--red);color:var(--red)}
+.pintStyle{display:grid;gap:8px}
+.pintField{display:grid;grid-template-columns:96px 1fr;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
+.pintField b{color:var(--ink);font-weight:700}
+.pintField input[type=color]{width:100%;height:30px;padding:2px;border:1px solid var(--line);border-radius:0;background:var(--panel);cursor:pointer}
+.pintField input[type=range]{width:100%;accent-color:var(--red)}
+.pintField select{padding:5px 6px;border:1px solid var(--line);border-radius:0;background:var(--panel);color:var(--ink)}
+.pintLines{display:flex;gap:6px}
+.pintLine{flex:1;padding:6px;background:var(--panel);border:1px solid var(--line);border-radius:0;color:var(--ink);cursor:pointer}
+.pintLine svg{width:100%;height:8px;stroke:currentColor;stroke-width:3;stroke-linecap:round}
+.pintLine.is-active{border-color:var(--red);color:var(--red)}
+.pintCanvas{position:absolute;z-index:1;display:none;pointer-events:none;touch-action:none;left:0;top:0}
+.pintCanvas.on{display:block}
+.pintCanvas.drawing{pointer-events:auto;cursor:crosshair}
+.pintHint{position:absolute;z-index:2;left:50%;top:8px;transform:translateX(-50%);max-width:92%;padding:5px 10px;background:rgba(21,24,29,.88);color:#fff;font-size:12px;text-align:center;pointer-events:none}
+.pintHint[hidden]{display:none}
+@media (max-width:640px){
+  .pintTool{min-height:56px}
+  .pintField{grid-template-columns:84px 1fr}
+  .pintBar .btn{min-height:40px;flex:1 1 30%}
+}
+/* ===== fin pintado de acciones ===== */
 /* =====================================================================
    ACFC · INTERFAZ v2 (2026-10-02) · colores de marca, jerarquía y móvil
    Línea visual: acfootballcenter.eus/ia-aplicada-gestion-deportiva/
@@ -1089,7 +1143,7 @@ dialog#dlgInstalar .btn{min-height:42px}
   <aside>
     <div class="top">
       <div class="row" style="justify-content:space-between;margin:0">
-        <h2 style="margin:0">Registro del partido</h2>
+        <h2 style="margin:0">Ajustes</h2>
       </div>
       <div class="row" id="offRow">
         <label for="off">El vídeo empieza en el minuto</label>
@@ -1103,7 +1157,7 @@ dialog#dlgInstalar .btn{min-height:42px}
       <div class="row" style="justify-content:space-between;align-items:flex-end">
         <button class="btn" id="evListToggle" hidden aria-hidden="true" tabindex="-1" style="display:none">Ocultar eventos</button>
       <div style="display:grid;gap:4px">
-        <span style="font-size:12px;font-weight:700;color:var(--ink);text-transform:uppercase;letter-spacing:.04em">Filtros</span>
+        <h2 style="margin:0">Filtros</h2>
       <div class="row" style="align-items:flex-end;margin:0">
         <div style="display:grid;gap:4px">
           <div class="row" style="margin:0">
@@ -1162,7 +1216,7 @@ dialog#dlgInstalar .btn{min-height:42px}
         <div id="plOverview" style="display:grid;gap:6px;max-height:260px;overflow:auto"></div>
       </div>
       <div class="row" style="justify-content:space-between;align-items:center;margin:0;border-top:1px solid var(--line);padding-top:8px">
-        <strong style="font-family:var(--f-disp);text-transform:uppercase;letter-spacing:.04em">Exportación</strong>
+        <h2 style="margin:0">Exportación</h2>
         <button class="btn" id="expOptsToggle" style="font-size:12px" title="Ocultar/mostrar las opciones de exportación">🙈 Ocultar exportación</button>
       </div>
       <div id="expOptsA" style="display:contents">
@@ -1191,7 +1245,7 @@ dialog#dlgInstalar .btn{min-height:42px}
       <button class="btn primary" id="btnImport" hidden style="display:none">Importación</button>
       <div class="pbGroup">
         <div class="pbHead">
-          <div class="pbTitle">Proyectos y botoneras</div>
+          <h2 style="margin:0">Proyectos y botoneras</h2>
           <button class="btn" id="pbToggle" style="font-size:12px" title="Ocultar/mostrar los botones de proyectos y botoneras">🙈 Ocultar proyectos y botoneras</button>
         </div>
         <div class="pbRow">
@@ -1204,6 +1258,136 @@ dialog#dlgInstalar .btn{min-height:42px}
           <input type="file" id="impBot" accept=".json" hidden>
           </div>
           <button class="btn primary" id="btnBotonera" style="font-size:12px" title="Define las categorías, detalles y jugadores que aparecen como botones al registrar una acción">🎛️ Botonera</button>
+        </div>
+      </div>
+    </div>
+    <!-- ACFC · PINTADO DE ACCIONES · panel de herramientas de dibujo sobre el vídeo (ids y clases con prefijo pint) -->
+    <div class="pintBlock" id="pintBlock">
+      <div class="pbHead">
+        <h2 style="margin:0">Pintado de acciones</h2>
+        <button type="button" class="btn acfcLink" id="pintToggle" aria-expanded="true" aria-controls="pintBody" title="Ocultar/mostrar las herramientas de pintado">Ocultar</button>
+      </div>
+      <div id="pintBody">
+        <div class="pintBar">
+          <button type="button" class="btn" id="pintMode" aria-pressed="false" title="Activa o desactiva el dibujo sobre el vídeo">Dibujo: apagado</button>
+          <button type="button" class="btn" id="pintUndo" title="Deshace el último cambio del pintado">Deshacer</button>
+          <button type="button" class="btn" id="pintClear" title="Borra todo lo pintado">Limpiar</button>
+          <button type="button" class="btn" id="pintPng" title="Descarga el fotograma actual con lo pintado en PNG"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 19h14"/></svg>Exportar PNG</button>
+        </div>
+        <p class="pintMsg" id="pintStatus" role="status" aria-live="polite"></p>
+        <div class="pintRail">
+          <div class="pintGrid">
+            <button class="pintTool" type="button" data-tool="move" title="Mover y redimensionar lo pintado">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v16"/><path d="M4 12h16"/><path d="M12 4l-2.3 2.3"/><path d="M12 4l2.3 2.3"/><path d="M12 20l-2.3-2.3"/><path d="M12 20l2.3-2.3"/><path d="M4 12l2.3-2.3"/><path d="M4 12l2.3 2.3"/><path d="M20 12l-2.3-2.3"/><path d="M20 12l-2.3 2.3"/></svg>
+              <span>Mover</span>
+            </button>
+            <button class="pintTool" type="button" id="pintDel" title="Borra lo seleccionado (Supr)">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M6 7l1 13a1.5 1.5 0 0 0 1.5 1.4h6a1.5 1.5 0 0 0 1.5-1.4l1-13"/><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7"/></svg>
+              <span>Papelera</span>
+            </button>
+            <button class="pintTool" type="button" id="pintDup" title="Duplica lo seleccionado">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="12" height="12" rx="1.5"/><path d="M9 20h9a2 2 0 0 0 2-2v-9"/></svg>
+              <span>Duplicar</span>
+            </button>
+          </div>
+
+          <div class="pintDiv"><i></i>Flechas</div>
+          <div class="pintGrid">
+            <button class="pintTool" type="button" data-tool="arrow" title="Flecha curva">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 18 Q4 6 18 6"/><path d="M14.5 3.5 L18 6 L14.5 8.5"/></svg>
+              <span>Curva</span>
+            </button>
+            <button class="pintTool" type="button" data-tool="arrowStraight" title="Flecha recta">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 16.5c4.5-3.8 8.9-6.3 14.2-6.3"/><path d="M15.6 7.4l3.2 2.8-2.2 3.6"/></svg>
+              <span>Recta</span>
+            </button>
+            <button class="pintTool" type="button" data-tool="pen" title="Dibujo libre">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 15 C5 9, 8 9, 11 15 C14 21, 17 21, 21 15"/><path d="M3 10 C5 4, 8 4, 11 10 C14 16, 17 16, 21 10" opacity=".4"/></svg>
+              <span>Libre</span>
+            </button>
+          </div>
+
+          <div class="pintDiv"><i></i>Textos</div>
+          <div class="pintGrid pintGrid2">
+            <button class="pintTool" type="button" data-tool="text" title="Texto">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 8h6"/><path d="M8 8v9"/><path d="M13.5 15.5c0-1.4 1-2.5 2.5-2.5s2.5 1.1 2.5 2.5v1.8"/><path d="M18.5 17.3c-.7.7-1.4 1-2.4 1-1.6 0-2.6-1-2.6-2.3 0-1.2.9-2.1 2.5-2.1h2.4"/></svg>
+              <span>Texto</span>
+            </button>
+            <button class="pintTool" type="button" data-tool="callout" title="Etiqueta">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h8l2 2v7l-6 1.5-4-4V7z"/><circle class="solid" cx="14.5" cy="9.5" r="1"/></svg>
+              <span>Etiqueta</span>
+            </button>
+          </div>
+
+          <div class="pintDiv"><i></i>Zonas</div>
+          <div class="pintGrid">
+            <button class="pintTool" type="button" data-tool="rect" title="Rectángulo">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5.5" y="6" width="13" height="10.5" rx="1.5"/><path d="M8 14l2.5-3 2.2 2.4 2.1-2.6 1.7 3.2"/></svg>
+              <span>Recta.</span>
+            </button>
+            <button class="pintTool" type="button" data-tool="ellipse" title="Círculo">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="5"/><path d="M14.7 14.7L18 18"/></svg>
+              <span>Círculo</span>
+            </button>
+            <button class="pintTool" type="button" data-tool="zone" title="Zona">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="12" rx="8" ry="4.8"/><path d="M12 7.2v9.6"/><path d="M13 16.8c2.1-.2 3.9-.7 5.5-1.6"/></svg>
+              <span>Zona</span>
+            </button>
+            <button class="pintTool" type="button" data-tool="triangleZone" title="Triángulo táctico">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 17L11 7l8 9z"/><path d="M8 15l5-6"/><path d="M11 17l6-7"/><circle class="solid" cx="5" cy="17" r="1.4"/><circle class="solid" cx="11" cy="7" r="1.4"/><circle class="solid" cx="19" cy="16" r="1.4"/></svg>
+              <span>Triángulo</span>
+            </button>
+            <button class="pintTool" type="button" data-tool="polygonZone" title="Zona libre (clic para añadir vértices; doble clic, Intro o clic en el inicio para cerrar)">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 15L9 6L18 9L20 17L11 20Z"/><circle class="solid" cx="4" cy="15" r="1.4"/><circle class="solid" cx="9" cy="6" r="1.4"/><circle class="solid" cx="18" cy="9" r="1.4"/><circle class="solid" cx="20" cy="17" r="1.4"/><circle class="solid" cx="11" cy="20" r="1.4"/></svg>
+              <span>Zona libre</span>
+            </button>
+          </div>
+
+          <div class="pintDiv"><i></i>Varios</div>
+          <div class="pintGrid pintGrid2">
+            <button class="pintTool" type="button" data-tool="connector" title="Conector (clic para añadir puntos, doble clic para terminar)">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle class="solid" cx="4.5" cy="17" r="2"/><circle class="solid" cx="12" cy="7" r="2"/><circle class="solid" cx="19.5" cy="17" r="2"/><line x1="4.5" y1="17" x2="12" y2="7"/><line x1="12" y1="7" x2="19.5" y2="17"/></svg>
+              <span>Conector</span>
+            </button>
+            <button class="pintTool" type="button" data-tool="focus" title="Foco">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4 6.5 19"/><path d="M12 4 17.5 19"/><path d="M8.5 16.8c2.1 1.1 4.9 1.1 7 0"/><path d="M7.4 19h9.2"/></svg>
+              <span>Foco</span>
+            </button>
+          </div>
+          <div class="pintVariants" id="pintFocusStyles" hidden>
+            <button type="button" class="pintVar" data-focus-style="abierto" title="Foco abierto"><svg viewBox="0 0 44 60" aria-hidden="true"><polygon points="22,4 3,56 41,56"/></svg><span>Abierto</span></button>
+            <button type="button" class="pintVar" data-focus-style="estrecho" title="Foco estrecho"><svg viewBox="0 0 44 60" aria-hidden="true"><polygon points="22,4 11,56 33,56"/></svg><span>Estrecho</span></button>
+            <button type="button" class="pintVar is-active" data-focus-style="cilindrico" title="Foco cilíndrico"><svg viewBox="0 0 44 60" aria-hidden="true"><rect x="12" y="6" width="20" height="46"/><ellipse cx="22" cy="52" rx="12" ry="4"/></svg><span>Cilíndrico</span></button>
+          </div>
+
+          <div class="pintDiv pintDivFollow"><i></i><span>Seguimiento del foco</span>
+            <button type="button" class="pintInfo" id="pintFocusInfo" aria-expanded="false" aria-label="Información sobre el seguimiento del foco" title="Información">i</button>
+          </div>
+          <div class="pintFollow">
+            <button type="button" class="btn" id="focusFollowKeyframe" title="Fija la posición actual del foco seleccionado en este instante del vídeo">Fijar posición aquí</button>
+            <button type="button" class="btn" id="focusFollowEnd" title="El foco desaparecerá a partir de este instante del vídeo">Terminar seguimiento aquí</button>
+            <p class="pintHelp" id="pintFollowHint" hidden>Selecciona un foco con Mover, pausa el vídeo en distintos momentos, coloca el foco sobre el jugador y pulsa «Fijar posición aquí» en cada uno. El foco aparecerá desde el primer instante fijado y seguirá esa trayectoria al reproducir. Cuando quieras que deje de seguir al jugador, pausa en ese momento y pulsa «Terminar seguimiento aquí».</p>
+          </div>
+
+          <div class="pintDiv"><i></i>Estilo</div>
+          <div class="pintStyle">
+            <label class="pintField"><span>Color</span><input id="strokeColor" type="color" value="#d3291e"></label>
+            <label class="pintField"><span>Relleno</span><input id="fillColor" type="color" value="#15181d"></label>
+            <label class="pintField"><span>Grosor</span><input id="lineWidth" type="range" min="1" max="14" value="4"></label>
+            <div class="pintField"><span>Línea</span>
+              <div class="pintLines" role="group" aria-label="Tipo de línea">
+                <button type="button" class="pintLine is-active" data-line-style="solid" aria-pressed="true" title="Línea continua"><svg viewBox="0 0 40 8" aria-hidden="true"><line x1="2" y1="4" x2="38" y2="4"/></svg></button>
+                <button type="button" class="pintLine" data-line-style="dashed" aria-pressed="false" title="Línea discontinua"><svg viewBox="0 0 40 8" aria-hidden="true"><line x1="2" y1="4" x2="38" y2="4" stroke-dasharray="7 5"/></svg></button>
+              </div>
+            </div>
+            <label class="pintField"><span>Tamaño <b id="sizeValue">100%</b></span><input id="sizeControl" type="range" min="50" max="200" value="100"></label>
+            <label class="pintField"><span>Transparencia <b id="opacityValue">100%</b></span><input id="opacityControl" type="range" min="0" max="100" value="100"></label>
+            <label class="pintField"><span>Visible durante</span>
+              <select id="pintDur" title="Tiempo que se ve cada elemento nuevo al reproducir el vídeo">
+                <option value="4">4 s</option><option value="8" selected>8 s</option><option value="15">15 s</option><option value="0">Siempre</option>
+              </select>
+            </label>
+          </div>
         </div>
       </div>
     </div>
@@ -3332,6 +3516,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
       project:"visor_eventos_cortes3", version:1, savedAt:new Date().toISOString(),
       videoName:$("vidName").textContent||"", off:$("off").value, pre:$("pre").value, post:$("post").value,
       events, playlists, halfMarks,
+      pintado:window.acfcPint?window.acfcPint.get():[],
       cats:Object.entries(CATS).filter(([,o])=>o.custom).map(([n,o])=>({n,c:o.c})),
       dets:DETS, jugs:JUGS
     };
@@ -3362,6 +3547,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
       Object.keys(HALF_MARK_IDS).forEach(k=>{ halfMarks[k]=typeof data.halfMarks[k]==="number"?data.halfMarks[k]:null; });
       saveHalfMarks();
     }
+    if(Array.isArray(data.pintado)&&window.acfcPint) window.acfcPint.set(data.pintado);
     if(data.off!=null) $("off").value=data.off;
     if(data.pre!=null) $("pre").value=data.pre;
     if(data.post!=null) $("post").value=data.post;
@@ -3910,6 +4096,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   const SRC_COLORS=["#2f6b3c","#3F5568","#D3291E","#C98A1B","#7A1712","#6B5B4B","#5E6B3A","#8A8F96"];
   const srcColor=i=>SRC_COLORS[i%SRC_COLORS.length];
   const dur=()=>isFinite(V.duration)?V.duration:0;
+  window.acfcEdSrcName=()=>{ const s=sources[curSrc]; return s?s.name:""; }; // para guardar el pintado por vídeo
   function fixBrokenDuration(vid){
     if(isFinite(vid.duration)) return;
     const restore=vid.currentTime;
@@ -4884,6 +5071,2306 @@ window.tutVoz=(()=>{
 
   window.openTutorialRegistro=()=>{ document.querySelectorAll("video").forEach(v=>v.pause()); playing=true; D.showModal(); show(0); };
   ["regTutorial","regTutorialB"].forEach(id=>{ const b=document.getElementById(id); if(b) b.onclick=window.openTutorialRegistro; });
+})();
+</script>
+<script>
+/* =====================================================================
+   ACFC · PINTADO DE ACCIONES
+   Herramientas de dibujo (flechas, textos, zonas, conector, foco con
+   seguimiento…) sobre el vídeo del registro de acciones.
+   Motor portado del proyecto «Pintado de acciones» (ilandaleioa): las
+   formas y la edición son las mismas; aquí el reloj es el <video> local.
+   Todo el DOM propio lleva el prefijo «pint». Va en un <script> propio.
+   ===================================================================== */
+function acfcPintMount(cfg){
+const sfx=cfg.sfx||"";
+const $=id=>document.getElementById(id+sfx);
+const v=cfg.video, block=cfg.block, host=cfg.host;
+if(!v||!block||!host) return null;
+
+// ---------- lienzo sobre el vídeo ----------
+const canvas=document.createElement("canvas");
+canvas.id="pintCanvas"+sfx; canvas.className="pintCanvas";
+canvas.setAttribute("aria-label","Lienzo de pintado de acciones");
+v.after(canvas);
+const ctx=canvas.getContext("2d");
+const hintEl=document.createElement("div");
+hintEl.className="pintHint"; hintEl.hidden=true; hintEl.setAttribute("role","status");
+host.appendChild(hintEl);
+
+// Las anotaciones viven en un espacio lógico de LW px de ancho; el lienzo se escala al vídeo.
+const LW=1280; let LH=720;
+
+// ---------- elementos del panel ----------
+const toggleBtn=$("pintToggle"), bodyEl=$("pintBody"), modeBtn=$("pintMode");
+const statusText=$("pintStatus");
+const toolButtons=block.querySelectorAll(".pintTool[data-tool]");
+const duplicateAnnotationButton=$("pintDup"), deleteAnnotationButton=$("pintDel");
+const strokeColorInput=$("strokeColor"), fillColorInput=$("fillColor"), lineWidthInput=$("lineWidth");
+const lineStyleButtons=block.querySelectorAll("[data-line-style]");
+const sizeControlInput=$("sizeControl"), sizeValue=$("sizeValue");
+const opacityControlInput=$("opacityControl"), opacityValueEl=$("opacityValue");
+const focusStyleButtons=block.querySelectorAll("[data-focus-style]");
+const focusStylePicker=$("pintFocusStyles");
+const focusFollowKeyframeButton=$("focusFollowKeyframe"), focusFollowEndButton=$("focusFollowEnd");
+const undoActionButton=$("pintUndo"), clearActionButton=$("pintClear");
+const durSel=$("pintDur");
+
+// ---------- estado ----------
+const state={
+  tool:"pen",
+  stroke:strokeColorInput.value||"#d3291e",
+  fill:fillColorInput.value||"#15181d",
+  lineWidth:Number(lineWidthInput.value||4),
+  lineStyle:"solid",
+  annotations:[],
+  drawing:null,
+  draggingAnnotationIndex:-1,
+  dragLastPoint:null,
+  selectedAnnotationIndex:-1,
+  resizeBaseline:null,
+  selectedQuickInsert:"",
+  focusStyle:"cilindrico",
+  spotlightStyle:"filled",
+  opacity:1,
+  resizingHandleIndex:-1,
+  resizeAnchor:null,
+  history:[],
+  cachedCurrentTime:0,
+  cachedCurrentTimeAt:0,
+  drawEnabled:false,
+  // el reloj del motor es el <video> de la herramienta
+  get playerState(){ return v.paused||v.ended?"paused":"playing"; },
+  get playerReady(){ return !!(v.currentSrc||v.src) && v.readyState>0; },
+  player:{
+    getCurrentTime:()=>v.currentTime||0,
+    getDuration:()=>v.duration||0,
+    seekTo:t=>{ v.currentTime=t; },
+    pauseVideo:()=>v.pause(),
+    playVideo:()=>v.play(),
+  },
+};
+
+// ---------- mensajes ----------
+let statusTimer=0;
+function setStatus(message){
+  clearTimeout(statusTimer);
+  statusText.textContent=message||"";
+  if(message) statusTimer=setTimeout(()=>{ statusText.textContent=""; },3500);
+}
+function showHint(text){ hintEl.textContent=text||""; hintEl.hidden=!text; }
+function setConnectorHint(visible){ showHint(visible?"Clic para añadir puntos · doble clic o Esc para terminar":""); }
+function setPolygonHint(visible){ showHint(visible?"Doble clic, Intro o clic en el inicio para cerrar · Esc para cancelar":""); }
+function syncSpotlightStyleButtons(){}
+
+// ---------- coordenadas ----------
+function getCanvasPoint(event){
+  // offsetX/Y van en coordenadas locales del lienzo (válidas aunque la pantalla completa gire por CSS)
+  const w=canvas.offsetWidth||1, h=canvas.offsetHeight||1;
+  return { x:event.offsetX*LW/w, y:event.offsetY*LH/h };
+}
+
+// ---------- altas con tiempo de visibilidad ----------
+// Cada elemento nuevo aparece en el instante en que se pinta y se ve «Visible durante» segundos.
+function stampTiming(shape){
+  const dur=Number(durSel&&durSel.value);
+  if(!(dur>0) || typeof shape.appearTime==="number") return;
+  const t=v.currentTime||0;
+  shape.appearTime=t-0.4; // puede ser negativo: en t=0 el elemento ya se ve completo
+  shape.disappearTime=t+dur;
+}
+function addAnnotation(shape){
+  stampTiming(shape);
+  return state.annotations.push(shape);
+}
+
+function pushHistory() {
+  state.history.push(state.annotations.map(cloneShape));
+  if (state.history.length > 60) state.history.shift();
+}
+
+function formatTime(totalSeconds) {
+  const safeSeconds = Math.max(0, Math.floor(totalSeconds || 0));
+  const hours = Math.floor(safeSeconds / 3600);
+  const minutes = Math.floor((safeSeconds % 3600) / 60);
+  const seconds = safeSeconds % 60;
+
+  if (hours > 0) {
+    return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+  }
+
+  return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+}
+function syncFocusStyleButtons(style = state.focusStyle) {
+  focusStyleButtons.forEach((button) => {
+    button.classList.toggle("is-active", button.dataset.focusStyle === style);
+  });
+}
+function getSelectedFocusShape() {
+  const shape = state.annotations[state.selectedAnnotationIndex];
+  return shape?.type === "focus" ? shape : null;
+}
+
+function addFollowKeyframe() {
+  const shape = getSelectedFocusShape();
+  if (!shape) {
+    setStatus("Selecciona primero un foco con la herramienta Mover para fijar su seguimiento.");
+    return;
+  }
+
+  if (!state.player || !state.playerReady) {
+    setStatus("Carga un vídeo para poder sincronizar el seguimiento con el tiempo.");
+    return;
+  }
+
+  pushHistory();
+  const time = Number(state.player.getCurrentTime?.() || 0);
+  const keyframes = Array.isArray(shape.keyframes) ? shape.keyframes.filter((k) => Math.abs(k.time - time) > 0.12) : [];
+  keyframes.push({ time, x1: shape.x1, y1: shape.y1, x2: shape.x2, y2: shape.y2 });
+  keyframes.sort((a, b) => a.time - b.time);
+  shape.keyframes = keyframes;
+  if (typeof shape.followEndTime === "number" && time >= shape.followEndTime) {
+    delete shape.followEndTime;
+  }
+  redraw();
+
+  setStatus(
+    keyframes.length >= 2
+      ? `Fotograma clave guardado en ${formatTime(time)} (${keyframes.length} en total). El foco aparecera en ese instante y seguira esta trayectoria al reproducir.`
+      : `Fotograma clave guardado en ${formatTime(time)}. El foco aparecera a partir de aqui. Mueve el foco a otro instante y vuelve a fijarlo para que empiece a moverse.`
+  );
+}
+
+function endFollowHere() {
+  const shape = getSelectedFocusShape();
+  if (!shape) {
+    setStatus("Selecciona primero un foco con la herramienta Mover.");
+    return;
+  }
+
+  if (!shape.keyframes?.length) {
+    setStatus("Anade al menos un fotograma clave antes de marcar donde debe desaparecer el foco.");
+    return;
+  }
+
+  if (!state.player || !state.playerReady) {
+    setStatus("Carga un vídeo para poder sincronizar el final del seguimiento con el tiempo.");
+    return;
+  }
+
+  const time = Number(state.player.getCurrentTime?.() || 0);
+  const lastKeyframeTime = shape.keyframes[shape.keyframes.length - 1].time;
+  if (time < lastKeyframeTime) {
+    setStatus("Marca el final en un instante posterior o igual al ultimo fotograma clave del foco.");
+    return;
+  }
+
+  pushHistory();
+  shape.followEndTime = time;
+  redraw();
+  setStatus(`El foco desaparecera a partir de ${formatTime(time)}.`);
+}
+function isFocusHiddenAt(shape, currentTime) {
+  if (shape.type !== "focus" || !Array.isArray(shape.keyframes) || !shape.keyframes.length) {
+    return false;
+  }
+
+  const appearsAt = shape.keyframes[0].time;
+  if (currentTime < appearsAt - 0.001) {
+    return true;
+  }
+
+  return typeof shape.followEndTime === "number" && currentTime > shape.followEndTime;
+}
+
+const ANIMATION_DURATION = 0.35; // Duración de transición de entrada/salida en segundos
+
+function getAnimationAlpha(shape, currentTime) {
+  const appearTime = typeof shape.appearTime === "number" ? shape.appearTime : null;
+  const disappearTime = typeof shape.disappearTime === "number" ? shape.disappearTime : null;
+
+  // Si estamos en la fase de entrada
+  if (appearTime !== null && currentTime < appearTime + ANIMATION_DURATION) {
+    if (currentTime < appearTime) return 0;
+    const fadeProgress = (currentTime - appearTime) / ANIMATION_DURATION;
+    return Math.min(1, fadeProgress);
+  }
+
+  // Si estamos en la fase de salida
+  if (disappearTime !== null && currentTime > disappearTime - ANIMATION_DURATION && currentTime > disappearTime) {
+    const timeSinceDisappear = currentTime - disappearTime;
+    const fadeProgress = Math.min(1, timeSinceDisappear / ANIMATION_DURATION);
+    return Math.max(0, 1 - fadeProgress);
+  }
+
+  // Estado normal
+  if (appearTime !== null && currentTime < appearTime) return 0;
+  if (disappearTime !== null && currentTime > disappearTime) return 0;
+
+  return 1;
+}
+
+function getStrokeDrawProgress(shape, currentTime) {
+  const appearTime = typeof shape.appearTime === "number" ? shape.appearTime : null;
+
+  if (appearTime === null) return 1;
+  if (currentTime < appearTime) return 0;
+  if (currentTime >= appearTime + ANIMATION_DURATION) return 1;
+
+  const fadeProgress = (currentTime - appearTime) / ANIMATION_DURATION;
+  return Math.min(1, fadeProgress);
+}
+
+function isShapeHiddenAt(shape, currentTime) {
+  // Para focos con keyframes, usar la lógica existente
+  if (shape.type === "focus" && Array.isArray(shape.keyframes) && shape.keyframes.length) {
+    return isFocusHiddenAt(shape, currentTime);
+  }
+
+  // Para todos los elementos, verificar timestamps de visibilidad
+  const appearTime = typeof shape.appearTime === "number" ? shape.appearTime : null;
+  const disappearTime = typeof shape.disappearTime === "number" ? shape.disappearTime : null;
+
+  if (appearTime !== null && currentTime < appearTime - 0.001) {
+    return true;
+  }
+
+  if (disappearTime !== null && currentTime > disappearTime) {
+    return true;
+  }
+
+  return false;
+}
+
+function applyFollowKeyframes(currentTime) {
+  let changed = false;
+
+  state.annotations.forEach((shape) => {
+    if (shape.type !== "focus" || !Array.isArray(shape.keyframes) || shape.keyframes.length < 2) {
+      return;
+    }
+
+    const keyframes = shape.keyframes;
+    const nextIndex = keyframes.findIndex((k) => k.time >= currentTime);
+    let a;
+    let b;
+    let t;
+
+    if (nextIndex === -1) {
+      a = b = keyframes[keyframes.length - 1];
+      t = 0;
+    } else if (nextIndex === 0) {
+      a = b = keyframes[0];
+      t = 0;
+    } else {
+      a = keyframes[nextIndex - 1];
+      b = keyframes[nextIndex];
+      const span = b.time - a.time;
+      t = span > 0 ? (currentTime - a.time) / span : 0;
+    }
+
+    const lerp = (p, q) => p + (q - p) * t;
+    shape.x1 = lerp(a.x1, b.x1);
+    shape.y1 = lerp(a.y1, b.y1);
+    shape.x2 = lerp(a.x2, b.x2);
+    shape.y2 = lerp(a.y2, b.y2);
+    changed = true;
+  });
+
+  return changed;
+}
+
+let followRafId = 0;
+
+function followTick() {
+  followRafId = 0;
+  if (state.playerState !== "playing" || !state.player) {
+    return;
+  }
+
+  const time = Number(state.player.getCurrentTime?.() || 0);
+  if (applyFollowKeyframes(time)) {
+    redraw();
+  }
+  followRafId = requestAnimationFrame(followTick);
+}
+
+function ensureFollowLoop() {
+  if (followRafId) return;
+  followRafId = requestAnimationFrame(followTick);
+}
+function duplicateSelectedAnnotation() {
+  const targetIndex = state.selectedAnnotationIndex;
+  const hasSelection = targetIndex >= 0 && targetIndex < state.annotations.length;
+
+  if (!hasSelection) return;
+
+  pushHistory();
+  const duplicate = cloneShape(state.annotations[targetIndex]);
+  translateShape(duplicate, 18, 18);
+  addAnnotation(duplicate);
+  state.selectedAnnotationIndex = state.annotations.length - 1;
+  syncSizeControl();
+  redraw();
+  setStatus("Anotacion duplicada. Ya puedes recolocarla o editar su tamano.");
+}
+
+function deleteSelectedAnnotation() {
+  const targetIndex = state.selectedAnnotationIndex;
+  const hasSelection = targetIndex >= 0 && targetIndex < state.annotations.length;
+
+  if (!hasSelection) return;
+
+  pushHistory();
+  state.annotations.splice(targetIndex, 1);
+  if (state.selectedAnnotationIndex >= state.annotations.length) {
+    state.selectedAnnotationIndex = state.annotations.length - 1;
+  } else {
+    state.selectedAnnotationIndex = -1;
+  }
+  syncSizeControl();
+  redraw();
+  setStatus("Anotacion borrada.");
+}
+
+function measureTextShape(text, lineWidth) {
+  ctx.save();
+  const fontSize = Math.max(18, lineWidth * 5);
+  const paddingX = Math.max(12, fontSize * 0.45);
+  const paddingY = Math.max(8, fontSize * 0.28);
+  ctx.font = `700 ${fontSize}px Barlow, Arial`;
+  const width = ctx.measureText(text).width;
+  const height = fontSize;
+  ctx.restore();
+  return {
+    width,
+    height,
+    fontSize,
+    paddingX,
+    paddingY,
+    boxWidth: width + paddingX * 2,
+    boxHeight: height + paddingY * 2,
+  };
+}
+
+function measurePlayerShape(shape) {
+  const radius = Math.max(14, (shape.lineWidth || 6) * 3);
+  const nameFontSize = Math.max(11, radius * 0.7);
+  ctx.save();
+  ctx.font = `700 ${nameFontSize}px Barlow, Arial`;
+  const nameWidth = ctx.measureText(shape.nombre || "").width;
+  ctx.restore();
+  return {
+    radius,
+    nameFontSize,
+    nameWidth,
+    nameHeight: nameFontSize + 6,
+    halfWidth: Math.max(radius, nameWidth / 2),
+  };
+}
+
+function drawPlayer(shape) {
+  const m = measurePlayerShape(shape);
+
+  ctx.save();
+  ctx.globalAlpha = shape.opacity ?? 1;
+
+  ctx.beginPath();
+  ctx.arc(shape.x, shape.y, m.radius, 0, Math.PI * 2);
+  ctx.fillStyle = shape.stroke;
+  ctx.fill();
+  ctx.lineWidth = 2;
+  ctx.strokeStyle = "#ffffff";
+  ctx.stroke();
+
+  ctx.font = `700 ${Math.max(12, m.radius)}px Barlow, Arial`;
+  ctx.fillStyle = "#ffffff";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText(String(shape.dorsal), shape.x, shape.y);
+
+  ctx.font = `700 ${m.nameFontSize}px Barlow, Arial`;
+  ctx.textBaseline = "top";
+  ctx.fillText((shape.nombre || "").toUpperCase(), shape.x, shape.y + m.radius + 4);
+
+  ctx.restore();
+}
+
+function cloneShape(shape) {
+  return JSON.parse(JSON.stringify(shape));
+}
+
+function getShapeBounds(shape) {
+  if (shape.type === "pen" || shape.type === "connector" || shape.type === "polygonZone") {
+    const xs = shape.points.map((point) => point.x);
+    const ys = shape.points.map((point) => point.y);
+    return {
+      left: Math.min(...xs),
+      top: Math.min(...ys),
+      right: Math.max(...xs),
+      bottom: Math.max(...ys),
+    };
+  }
+
+  if (shape.type === "text") {
+    const size = measureTextShape(shape.text, shape.lineWidth);
+    return {
+      left: shape.x,
+      top: shape.y - size.boxHeight + size.paddingY,
+      right: shape.x + size.boxWidth,
+      bottom: shape.y + size.paddingY,
+    };
+  }
+
+  if (shape.type === "callout") {
+    const fontSize = Math.max(16, shape.lineWidth * 4);
+    ctx.save();
+    ctx.font = `700 ${fontSize}px Barlow, Arial`;
+    const textWidth = ctx.measureText(shape.text).width;
+    ctx.restore();
+    const boxWidth = textWidth + 32;
+    const boxHeight = fontSize + 24;
+    return {
+      left: shape.x,
+      top: shape.y - boxHeight,
+      right: shape.x + boxWidth,
+      bottom: shape.y + 22,
+    };
+  }
+
+  if (shape.type === "player") {
+    const m = measurePlayerShape(shape);
+    return {
+      left: shape.x - m.halfWidth,
+      top: shape.y - m.radius,
+      right: shape.x + m.halfWidth,
+      bottom: shape.y + m.radius + m.nameHeight,
+    };
+  }
+
+  if (shape.type === "spotlight") {
+    const halfWidth = Math.abs(shape.x2 - shape.x1);
+    return {
+      left: shape.x1 - halfWidth,
+      top: Math.min(shape.y1, shape.y2),
+      right: shape.x1 + halfWidth,
+      bottom: Math.max(shape.y1, shape.y2),
+    };
+  }
+
+  if (shape.type === "arrow" || shape.type === "arrowStraight") {
+    const dx = shape.x2 - shape.x1;
+    const dy = shape.y2 - shape.y1;
+    const distance = Math.hypot(dx, dy);
+    let bounds = {
+      left: Math.min(shape.x1, shape.x2),
+      top: Math.min(shape.y1, shape.y2),
+      right: Math.max(shape.x1, shape.x2),
+      bottom: Math.max(shape.y1, shape.y2),
+    };
+
+    if (shape.type === "arrow" && distance >= 2) {
+      const normalX = -dy / distance;
+      const normalY = dx / distance;
+      const curveDirection = normalY > 0 ? -1 : 1;
+      const curveAmount = Math.max(26, Math.min(distance * 0.35, 120));
+      const controlX = (shape.x1 + shape.x2) / 2 + normalX * curveAmount * curveDirection;
+      const controlY = (shape.y1 + shape.y2) / 2 + normalY * curveAmount * curveDirection;
+      bounds.left = Math.min(bounds.left, controlX);
+      bounds.right = Math.max(bounds.right, controlX);
+      bounds.top = Math.min(bounds.top, controlY);
+      bounds.bottom = Math.max(bounds.bottom, controlY);
+    }
+
+    const headLength = Math.max(14, (shape.lineWidth || 4) * 4.5);
+    bounds.left -= headLength;
+    bounds.right += headLength;
+    bounds.top -= headLength;
+    bounds.bottom += headLength;
+
+    return bounds;
+  }
+
+  return {
+    left: Math.min(shape.x1, shape.x2),
+    top: Math.min(shape.y1, shape.y2),
+    right: Math.max(shape.x1, shape.x2),
+    bottom: Math.max(shape.y1, shape.y2),
+  };
+}
+
+function pointHitsShape(point, shape) {
+  const bounds = getShapeBounds(shape);
+  const padding = Math.max(10, (shape.lineWidth || 2) * 3);
+  return (
+    point.x >= bounds.left - padding &&
+    point.x <= bounds.right + padding &&
+    point.y >= bounds.top - padding &&
+    point.y <= bounds.bottom + padding
+  );
+}
+
+function findAnnotationAtPoint(point) {
+  for (let index = state.annotations.length - 1; index >= 0; index -= 1) {
+    if (pointHitsShape(point, state.annotations[index])) {
+      return index;
+    }
+  }
+  return -1;
+}
+
+function translateShape(shape, dx, dy) {
+  if (shape.type === "pen" || shape.type === "connector" || shape.type === "polygonZone") {
+    shape.points = shape.points.map((point) => ({
+      x: point.x + dx,
+      y: point.y + dy,
+    }));
+    return;
+  }
+
+  if (shape.type === "text" || shape.type === "callout" || shape.type === "player") {
+    shape.x += dx;
+    shape.y += dy;
+    return;
+  }
+
+  shape.x1 += dx;
+  shape.y1 += dy;
+  shape.x2 += dx;
+  shape.y2 += dy;
+}
+
+function scalePoint(point, center, factor) {
+  return {
+    x: center.x + (point.x - center.x) * factor,
+    y: center.y + (point.y - center.y) * factor,
+  };
+}
+
+function scaleShapeFromBaseline(shape, factor) {
+  const scaledShape = cloneShape(shape);
+  const bounds = getShapeBounds(shape);
+  const center = {
+    x: (bounds.left + bounds.right) / 2,
+    y: (bounds.top + bounds.bottom) / 2,
+  };
+
+  if (scaledShape.type === "pen" || scaledShape.type === "connector" || scaledShape.type === "polygonZone") {
+    scaledShape.points = scaledShape.points.map((point) => scalePoint(point, center, factor));
+    scaledShape.lineWidth = Math.max(1, shape.lineWidth * factor);
+    return scaledShape;
+  }
+
+  if (scaledShape.type === "text" || scaledShape.type === "callout" || scaledShape.type === "player") {
+    const anchor = scalePoint({ x: scaledShape.x, y: scaledShape.y }, center, factor);
+    scaledShape.x = anchor.x;
+    scaledShape.y = anchor.y;
+    scaledShape.lineWidth = Math.max(1, shape.lineWidth * factor);
+    return scaledShape;
+  }
+
+  const start = scalePoint({ x: scaledShape.x1, y: scaledShape.y1 }, center, factor);
+  const end = scalePoint({ x: scaledShape.x2, y: scaledShape.y2 }, center, factor);
+  scaledShape.x1 = start.x;
+  scaledShape.y1 = start.y;
+  scaledShape.x2 = end.x;
+  scaledShape.y2 = end.y;
+  scaledShape.lineWidth = Math.max(1, shape.lineWidth * factor);
+  return scaledShape;
+}
+
+function syncSizeControl() {
+  const hasSelection = state.selectedAnnotationIndex >= 0 && state.selectedAnnotationIndex < state.annotations.length;
+  sizeControlInput.disabled = !hasSelection;
+
+  if (!hasSelection) {
+    state.resizeBaseline = null;
+    sizeControlInput.value = "100";
+    sizeValue.textContent = "100%";
+    syncOpacityControl();
+    syncLineStyleButtons();
+    return;
+  }
+
+  const selected = state.annotations[state.selectedAnnotationIndex];
+  state.resizeBaseline = cloneShape(selected);
+  sizeControlInput.value = "100";
+  sizeValue.textContent = "100%";
+  if (typeof selected.lineWidth === "number" && lineWidthInput) {
+    lineWidthInput.value = String(selected.lineWidth);
+  }
+  if (selected.lineStyle) {
+    state.lineStyle = selected.lineStyle;
+  }
+  if (selected.stroke && strokeColorInput) {
+    state.stroke = selected.stroke;
+    strokeColorInput.value = selected.stroke;
+  }
+  if (selected.fill && fillColorInput) {
+    state.fill = selected.fill;
+    fillColorInput.value = selected.fill;
+  }
+  syncOpacityControl();
+  syncLineStyleButtons();
+}
+
+function syncOpacityControl() {
+  const hasSelection = state.selectedAnnotationIndex >= 0 && state.selectedAnnotationIndex < state.annotations.length;
+  const opacity = hasSelection
+    ? (state.annotations[state.selectedAnnotationIndex].opacity ?? 1)
+    : state.opacity;
+  const pct = Math.round(opacity * 100);
+  opacityControlInput.value = String(pct);
+  opacityValueEl.textContent = `${pct}%`;
+}
+
+const HANDLE_PADDING = 10;
+const HANDLE_SIZE = 8;
+
+function getHandlePositions(bounds, padding = HANDLE_PADDING) {
+  return [
+    { x: bounds.left - padding,  y: bounds.top - padding    },
+    { x: bounds.right + padding, y: bounds.top - padding    },
+    { x: bounds.right + padding, y: bounds.bottom + padding },
+    { x: bounds.left - padding,  y: bounds.bottom + padding },
+  ];
+}
+
+function getSelectedVertexAtPoint(point) {
+  const shape = state.annotations[state.selectedAnnotationIndex];
+  if (!shape || shape.type !== "polygonZone" || !shape.points) return -1;
+  const hit = Math.max(5, shape.lineWidth * 1.3) + 6;
+  let best = -1, bestD = Infinity;
+  shape.points.forEach((p, i) => {
+    const d = Math.hypot(point.x - p.x, point.y - p.y);
+    if (d <= hit && d < bestD) { best = i; bestD = d; }
+  });
+  return best;
+}
+
+function getHandleAtPoint(point, shape) {
+  const handles = getHandlePositions(getShapeBounds(shape));
+  const hit = HANDLE_SIZE + 4;
+  for (let i = 0; i < handles.length; i++) {
+    if (Math.hypot(point.x - handles[i].x, point.y - handles[i].y) <= hit) return i;
+  }
+  return -1;
+}
+
+function resizeShapeWithHandle(shape, handleIndex, newPoint, anchor) {
+  const newLeft   = Math.min(newPoint.x, anchor.x);
+  const newTop    = Math.min(newPoint.y, anchor.y);
+  const newRight  = Math.max(newPoint.x, anchor.x);
+  const newBottom = Math.max(newPoint.y, anchor.y);
+
+  if (newRight - newLeft < 8 && newBottom - newTop < 8) return;
+
+  if (shape.type === "pen" || shape.type === "connector" || shape.type === "polygonZone") {
+    const b = getShapeBounds(shape);
+    const oldW = (b.right - b.left) || 1;
+    const oldH = (b.bottom - b.top) || 1;
+    const newW = (newRight - newLeft) || 1;
+    const newH = (newBottom - newTop) || 1;
+    shape.points = shape.points.map((p) => ({
+      x: newLeft + ((p.x - b.left) / oldW) * newW,
+      y: newTop  + ((p.y - b.top)  / oldH) * newH,
+    }));
+    return;
+  }
+
+  if (shape.type === "text" || shape.type === "callout" || shape.type === "player") {
+    const b = getShapeBounds(shape);
+    const oldW = (b.right - b.left) || 1;
+    const factor = ((newRight - newLeft) || 1) / oldW;
+    shape.lineWidth = Math.max(1, shape.lineWidth * factor);
+    shape.x = newLeft;
+    shape.y = newBottom;
+    return;
+  }
+
+  if (shape.type === "spotlight") {
+    const cx = (newLeft + newRight) / 2;
+    const hw = (newRight - newLeft) / 2;
+    const tipAtBottom = shape.y1 >= shape.y2;
+    shape.x1 = cx;
+    shape.x2 = cx + hw;
+    shape.y1 = tipAtBottom ? newBottom : newTop;
+    shape.y2 = tipAtBottom ? newTop    : newBottom;
+    return;
+  }
+
+  shape.x1 = newLeft;
+  shape.y1 = newTop;
+  shape.x2 = newRight;
+  shape.y2 = newBottom;
+}
+
+function drawSelection(shape) {
+  const bounds = getShapeBounds(shape);
+  const p = HANDLE_PADDING;
+
+  ctx.save();
+  ctx.strokeStyle = "rgba(141, 235, 110, 0.9)";
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([6, 4]);
+  ctx.strokeRect(bounds.left - p, bounds.top - p,
+    bounds.right - bounds.left + p * 2, bounds.bottom - bounds.top + p * 2);
+
+  ctx.setLineDash([]);
+  getHandlePositions(bounds).forEach((h) => {
+    ctx.beginPath();
+    ctx.rect(h.x - HANDLE_SIZE / 2, h.y - HANDLE_SIZE / 2, HANDLE_SIZE, HANDLE_SIZE);
+    ctx.fillStyle = "#0b1320";
+    ctx.fill();
+    ctx.strokeStyle = "rgba(141, 235, 110, 0.95)";
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+  });
+  ctx.restore();
+}
+
+function drawArrow(shape, drawProgress = 1) {
+  const dx = shape.x2 - shape.x1;
+  const dy = shape.y2 - shape.y1;
+  const distance = Math.hypot(dx, dy);
+
+  if (distance < 2) {
+    return;
+  }
+
+  const normalX = -dy / distance;
+  const normalY = dx / distance;
+  const curveDirection = normalY > 0 ? -1 : 1;
+  const curveAmount = Math.max(26, Math.min(distance * 0.35, 120));
+  const controlX = (shape.x1 + shape.x2) / 2 + normalX * curveAmount * curveDirection;
+  const controlY = (shape.y1 + shape.y2) / 2 + normalY * curveAmount * curveDirection;
+  const headLength = Math.max(14, shape.lineWidth * 4.5);
+  const tangentAngle = Math.atan2(shape.y2 - controlY, shape.x2 - controlX);
+  const headSpread = Math.PI / 8;
+
+  // Animar el trazo
+  if (drawProgress < 1) {
+    const arrowEnd = { x: shape.x1 + (shape.x2 - shape.x1) * drawProgress, y: shape.y1 + (shape.y2 - shape.y1) * drawProgress };
+    const curveT = drawProgress;
+    const curvePoint = {
+      x: Math.pow(1 - curveT, 2) * shape.x1 + 2 * (1 - curveT) * curveT * controlX + Math.pow(curveT, 2) * shape.x2,
+      y: Math.pow(1 - curveT, 2) * shape.y1 + 2 * (1 - curveT) * curveT * controlY + Math.pow(curveT, 2) * shape.y2,
+    };
+    ctx.beginPath();
+    ctx.moveTo(shape.x1, shape.y1);
+    ctx.quadraticCurveTo(controlX * curveT, controlY * curveT, curvePoint.x, curvePoint.y);
+    ctx.stroke();
+    return;
+  }
+
+  ctx.beginPath();
+  ctx.moveTo(shape.x1, shape.y1);
+  ctx.quadraticCurveTo(controlX, controlY, shape.x2, shape.y2);
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(shape.x2, shape.y2);
+  ctx.lineTo(
+    shape.x2 - headLength * Math.cos(tangentAngle - headSpread),
+    shape.y2 - headLength * Math.sin(tangentAngle - headSpread)
+  );
+  ctx.moveTo(shape.x2, shape.y2);
+  ctx.lineTo(
+    shape.x2 - headLength * Math.cos(tangentAngle + headSpread),
+    shape.y2 - headLength * Math.sin(tangentAngle + headSpread)
+  );
+  ctx.stroke();
+}
+
+function drawStraightArrow(shape, drawProgress = 1) {
+  const dx = shape.x2 - shape.x1;
+  const dy = shape.y2 - shape.y1;
+  const distance = Math.hypot(dx, dy);
+
+  if (distance < 2) {
+    return;
+  }
+
+  const headLength = Math.max(14, shape.lineWidth * 4.5);
+  const angle = Math.atan2(dy, dx);
+  const headSpread = Math.PI / 8;
+
+  // Animar el trazo
+  const endX = shape.x1 + dx * drawProgress;
+  const endY = shape.y1 + dy * drawProgress;
+
+  ctx.beginPath();
+  ctx.moveTo(shape.x1, shape.y1);
+  ctx.lineTo(endX, endY);
+  ctx.stroke();
+
+  // Solo dibujar la cabeza si estamos al 90%+ de progreso
+  if (drawProgress > 0.9) {
+    ctx.beginPath();
+    ctx.moveTo(endX, endY);
+    ctx.lineTo(
+      endX - headLength * Math.cos(angle - headSpread),
+      endY - headLength * Math.sin(angle - headSpread)
+    );
+    ctx.moveTo(endX, endY);
+    ctx.lineTo(
+      endX - headLength * Math.cos(angle + headSpread),
+      endY - headLength * Math.sin(angle + headSpread)
+    );
+    ctx.stroke();
+  }
+}
+
+function drawRectangle(shape) {
+  const width = shape.x2 - shape.x1;
+  const height = shape.y2 - shape.y1;
+  ctx.strokeRect(shape.x1, shape.y1, width, height);
+}
+
+function drawEllipse(shape) {
+  const centerX = (shape.x1 + shape.x2) / 2;
+  const centerY = (shape.y1 + shape.y2) / 2;
+  const radiusX = Math.abs(shape.x2 - shape.x1) / 2;
+  const radiusY = Math.abs(shape.y2 - shape.y1) / 2;
+  ctx.beginPath();
+  ctx.ellipse(centerX, centerY, radiusX, radiusY, 0, 0, Math.PI * 2);
+  ctx.stroke();
+}
+
+function hexToRgba(hex, alpha) {
+  const normalized = hex.replace("#", "");
+  const expanded =
+    normalized.length === 3
+      ? normalized
+          .split("")
+          .map((char) => char + char)
+          .join("")
+      : normalized;
+
+  const red = Number.parseInt(expanded.slice(0, 2), 16);
+  const green = Number.parseInt(expanded.slice(2, 4), 16);
+  const blue = Number.parseInt(expanded.slice(4, 6), 16);
+  return `rgba(${red}, ${green}, ${blue}, ${alpha})`;
+}
+
+function ellipsePath(centerX, centerY, radiusX, radiusY) {
+  ctx.beginPath();
+  ctx.ellipse(centerX, centerY, radiusX, radiusY, 0, 0, Math.PI * 2);
+}
+
+function drawFocusAbierto(shape) {
+  const left = Math.min(shape.x1, shape.x2);
+  const top = Math.min(shape.y1, shape.y2);
+  const width = Math.abs(shape.x2 - shape.x1);
+  const height = Math.abs(shape.y2 - shape.y1);
+  if (width < 8 || height < 12) return;
+
+  const cx = left + width / 2;
+  const bottomY = top + height;
+  const topY = top;
+
+  ctx.save();
+
+  const grad = ctx.createLinearGradient(cx, bottomY, cx, topY);
+  grad.addColorStop(0, hexToRgba(shape.stroke, 0.42));
+  grad.addColorStop(0.5, hexToRgba(shape.stroke, 0.18));
+  grad.addColorStop(1, hexToRgba(shape.stroke, 0.04));
+
+  ctx.beginPath();
+  ctx.moveTo(cx, bottomY);
+  ctx.lineTo(left, topY);
+  ctx.lineTo(left + width, topY);
+  ctx.closePath();
+  ctx.fillStyle = grad;
+  ctx.fill();
+
+  ctx.strokeStyle = hexToRgba(shape.stroke, 0.72);
+  ctx.lineWidth = Math.max(1.5, shape.lineWidth * 0.5);
+  ctx.lineCap = "round";
+  ctx.beginPath();
+  ctx.moveTo(cx, bottomY);
+  ctx.lineTo(left, topY);
+  ctx.moveTo(cx, bottomY);
+  ctx.lineTo(left + width, topY);
+  ctx.stroke();
+
+  const fr = Math.max(5, Math.min(width * 0.1, 12));
+  ctx.beginPath();
+  ctx.arc(cx, bottomY, fr, Math.PI, 0);
+  ctx.fillStyle = shape.stroke;
+  ctx.fill();
+
+  ctx.restore();
+}
+
+function drawFocusEstrecho(shape) {
+  const left = Math.min(shape.x1, shape.x2);
+  const top = Math.min(shape.y1, shape.y2);
+  const width = Math.abs(shape.x2 - shape.x1);
+  const height = Math.abs(shape.y2 - shape.y1);
+  if (width < 8 || height < 12) return;
+
+  const cx = left + width / 2;
+  const bottomY = top + height;
+  const topY = top;
+  const topHW = width * 0.38;
+
+  ctx.save();
+
+  const grad = ctx.createLinearGradient(cx, bottomY, cx, topY);
+  grad.addColorStop(0, hexToRgba(shape.stroke, 0.48));
+  grad.addColorStop(0.5, hexToRgba(shape.stroke, 0.22));
+  grad.addColorStop(1, hexToRgba(shape.stroke, 0.05));
+
+  ctx.beginPath();
+  ctx.moveTo(cx, bottomY);
+  ctx.lineTo(cx - topHW, topY);
+  ctx.lineTo(cx + topHW, topY);
+  ctx.closePath();
+  ctx.fillStyle = grad;
+  ctx.fill();
+
+  ctx.strokeStyle = hexToRgba(shape.stroke, 0.75);
+  ctx.lineWidth = Math.max(1.5, shape.lineWidth * 0.5);
+  ctx.lineCap = "round";
+  ctx.beginPath();
+  ctx.moveTo(cx, bottomY);
+  ctx.lineTo(cx - topHW, topY);
+  ctx.moveTo(cx, bottomY);
+  ctx.lineTo(cx + topHW, topY);
+  ctx.stroke();
+
+  const fr = Math.max(5, Math.min(width * 0.1, 12));
+  ctx.beginPath();
+  ctx.arc(cx, bottomY, fr, Math.PI, 0);
+  ctx.fillStyle = shape.stroke;
+  ctx.fill();
+
+  ctx.restore();
+}
+
+function drawFocusCilindrico(shape) {
+  const left = Math.min(shape.x1, shape.x2);
+  const top = Math.min(shape.y1, shape.y2);
+  const width = Math.abs(shape.x2 - shape.x1);
+  const height = Math.abs(shape.y2 - shape.y1);
+  if (width < 8 || height < 12) return;
+
+  const cx = left + width / 2;
+  const bottomY = top + height;
+  const topY = top;
+  const hw = width * 0.35;
+  const baseRx = Math.max(8, hw * 1.08);
+  const baseRy = Math.max(2.5, height * 0.03);
+  const baseY = bottomY - Math.max(1.5, baseRy * 0.2);
+
+  ctx.save();
+
+  const grad = ctx.createLinearGradient(cx, bottomY, cx, topY);
+  grad.addColorStop(0, hexToRgba(shape.stroke, 0.5));
+  grad.addColorStop(0.45, hexToRgba(shape.stroke, 0.28));
+  grad.addColorStop(1, hexToRgba(shape.stroke, 0.08));
+
+  ctx.beginPath();
+  ctx.rect(cx - hw, topY, hw * 2, height);
+  ctx.fillStyle = grad;
+  ctx.fill();
+
+  ctx.strokeStyle = hexToRgba(shape.stroke, 0.7);
+  ctx.lineWidth = Math.max(1.5, shape.lineWidth * 0.5);
+  ctx.beginPath();
+  ctx.moveTo(cx - hw, topY);
+  ctx.lineTo(cx - hw, bottomY);
+  ctx.moveTo(cx + hw, topY);
+  ctx.lineTo(cx + hw, bottomY);
+  ctx.stroke();
+
+  ctx.globalAlpha = 0.4;
+  ctx.beginPath();
+  ctx.moveTo(cx - hw, topY);
+  ctx.lineTo(cx + hw, topY);
+  ctx.stroke();
+  ctx.globalAlpha = 1;
+
+  ctx.fillStyle = "rgba(255,255,255,0.98)";
+  ctx.beginPath();
+  ctx.ellipse(cx, baseY, baseRx, baseRy, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.strokeStyle = hexToRgba(shape.stroke, 0.5);
+  ctx.lineWidth = Math.max(1, shape.lineWidth * 0.22);
+  ctx.beginPath();
+  ctx.ellipse(cx, baseY - baseRy * 0.12, baseRx * 0.92, baseRy * 0.52, 0, Math.PI, 0, true);
+  ctx.stroke();
+
+  ctx.restore();
+}
+
+function drawFocus(shape) {
+  const focusStyle = shape.focusStyle || "cilindrico";
+
+  if (focusStyle === "estrecho") {
+    drawFocusEstrecho(shape);
+    return;
+  }
+
+  if (focusStyle === "cilindrico") {
+    drawFocusCilindrico(shape);
+    return;
+  }
+
+  drawFocusAbierto(shape);
+}
+
+function drawCone(shape) {
+  const left = Math.min(shape.x1, shape.x2);
+  const top = Math.min(shape.y1, shape.y2);
+  const width = Math.abs(shape.x2 - shape.x1);
+  const height = Math.abs(shape.y2 - shape.y1);
+
+  if (width < 8 || height < 12) {
+    return;
+  }
+
+  const centerX = left + width / 2;
+  const radiusX = width / 2;
+  const ellipseDepth = Math.max(9, Math.min(height * 0.11, width * 0.24));
+  const topY = top + ellipseDepth;
+  const bottomY = top + height - ellipseDepth;
+
+  ctx.save();
+  ctx.lineWidth = Math.max(2, shape.lineWidth);
+  ctx.strokeStyle = shape.stroke;
+
+  const bodyGradient = ctx.createLinearGradient(left, top, left + width, top + height);
+  bodyGradient.addColorStop(0, hexToRgba(shape.stroke, 0.06));
+  bodyGradient.addColorStop(0.55, hexToRgba(shape.stroke, 0.14));
+  bodyGradient.addColorStop(1, hexToRgba(shape.stroke, 0.03));
+  ctx.fillStyle = bodyGradient;
+  ctx.fillRect(left, topY, width, Math.max(0, bottomY - topY));
+
+  ctx.beginPath();
+  ctx.moveTo(left, topY);
+  ctx.lineTo(left, bottomY);
+  ctx.moveTo(left + width, topY);
+  ctx.lineTo(left + width, bottomY);
+  ctx.stroke();
+
+  ellipsePath(centerX, topY, radiusX, ellipseDepth);
+  ctx.stroke();
+
+  ellipsePath(centerX, bottomY, radiusX, ellipseDepth);
+  ctx.stroke();
+
+  ctx.restore();
+}
+
+function drawZone(shape) {
+  const left = Math.min(shape.x1, shape.x2);
+  const top = Math.min(shape.y1, shape.y2);
+  const width = Math.abs(shape.x2 - shape.x1);
+  const height = Math.abs(shape.y2 - shape.y1);
+
+  if (width < 8 || height < 8) {
+    return;
+  }
+
+  const centerX = left + width / 2;
+  const centerY = top + height / 2;
+  const radiusX = width / 2;
+  const radiusY = height / 2;
+
+  ctx.save();
+  ctx.lineWidth = Math.max(1.5, shape.lineWidth * 0.45);
+
+  const baseGradient = ctx.createLinearGradient(left, centerY, left + width, centerY);
+  baseGradient.addColorStop(0, hexToRgba(shape.stroke, 0.9));
+  baseGradient.addColorStop(0.58, hexToRgba(shape.stroke, 0.72));
+  baseGradient.addColorStop(1, hexToRgba("#120204", 0.92));
+
+  ellipsePath(centerX, centerY, radiusX, radiusY);
+  ctx.fillStyle = baseGradient;
+  ctx.fill();
+
+  ctx.strokeStyle = hexToRgba("#f3d8db", 0.34);
+  ctx.stroke();
+
+  const topGlow = ctx.createRadialGradient(centerX, centerY - radiusY * 0.1, radiusX * 0.12, centerX, centerY, radiusX);
+  topGlow.addColorStop(0, hexToRgba("#ffffff", 0.34));
+  topGlow.addColorStop(0.45, hexToRgba("#ffffff", 0.12));
+  topGlow.addColorStop(1, hexToRgba("#ffffff", 0));
+  ellipsePath(centerX, centerY, radiusX, radiusY);
+  ctx.fillStyle = topGlow;
+  ctx.fill();
+
+  ctx.save();
+  ellipsePath(centerX, centerY, radiusX, radiusY);
+  ctx.clip();
+
+  const highlight = ctx.createLinearGradient(centerX, top, centerX + radiusX, top + height);
+  highlight.addColorStop(0, hexToRgba("#ffffff", 0.02));
+  highlight.addColorStop(0.35, hexToRgba("#ffffff", 0.08));
+  highlight.addColorStop(0.58, hexToRgba("#ffffff", 0.44));
+  highlight.addColorStop(1, hexToRgba("#ffffff", 0));
+  ctx.fillStyle = highlight;
+  ctx.beginPath();
+  ctx.moveTo(centerX, top);
+  ctx.lineTo(left + width, top + height * 0.18);
+  ctx.lineTo(left + width, top + height);
+  ctx.lineTo(centerX, top + height);
+  ctx.closePath();
+  ctx.fill();
+
+  const divider = ctx.createLinearGradient(centerX, top, centerX, top + height);
+  divider.addColorStop(0, hexToRgba("#ffffff", 0.1));
+  divider.addColorStop(0.5, hexToRgba("#ffffff", 0.4));
+  divider.addColorStop(1, hexToRgba("#ffffff", 0.08));
+  ctx.strokeStyle = divider;
+  ctx.lineWidth = Math.max(1, shape.lineWidth * 0.3);
+  ctx.beginPath();
+  ctx.moveTo(centerX, top + height * 0.08);
+  ctx.lineTo(centerX, top + height * 0.92);
+  ctx.stroke();
+  ctx.restore();
+
+  ctx.restore();
+}
+
+function triangleVertices(shape) {
+  const left = Math.min(shape.x1, shape.x2);
+  const right = Math.max(shape.x1, shape.x2);
+  const top = Math.min(shape.y1, shape.y2);
+  const bottom = Math.max(shape.y1, shape.y2);
+
+  return [
+    { x: left, y: bottom },
+    { x: left + (right - left) * 0.42, y: top },
+    { x: right, y: bottom - (bottom - top) * 0.06 },
+  ];
+}
+
+function drawTriangleZone(shape) {
+  const width = Math.abs(shape.x2 - shape.x1);
+  const height = Math.abs(shape.y2 - shape.y1);
+
+  if (width < 10 || height < 10) {
+    return;
+  }
+
+  const vertices = triangleVertices(shape);
+  const [a, b, c] = vertices;
+
+  ctx.save();
+  ctx.lineWidth = Math.max(2, shape.lineWidth * 0.55);
+
+  ctx.beginPath();
+  ctx.moveTo(a.x, a.y);
+  ctx.lineTo(b.x, b.y);
+  ctx.lineTo(c.x, c.y);
+  ctx.closePath();
+
+  const fillGradient = ctx.createLinearGradient(a.x, b.y, c.x, c.y);
+  fillGradient.addColorStop(0, hexToRgba(shape.fill, 0.2));
+  fillGradient.addColorStop(0.45, hexToRgba(shape.fill, 0.42));
+  fillGradient.addColorStop(1, hexToRgba(shape.fill, 0.14));
+  ctx.fillStyle = fillGradient;
+  ctx.fill();
+
+  ctx.strokeStyle = hexToRgba("#d4c34f", 0.65);
+  ctx.stroke();
+
+  const nodeRadius = Math.max(7, shape.lineWidth * 1.7);
+  vertices.forEach((vertex) => {
+    const nodeGradient = ctx.createRadialGradient(
+      vertex.x - nodeRadius * 0.25,
+      vertex.y - nodeRadius * 0.35,
+      nodeRadius * 0.4,
+      vertex.x,
+      vertex.y,
+      nodeRadius * 1.05
+    );
+    nodeGradient.addColorStop(0, "#7f3cff");
+    nodeGradient.addColorStop(0.7, "#5b18c6");
+    nodeGradient.addColorStop(1, "#2b0a67");
+    ctx.beginPath();
+    ctx.arc(vertex.x, vertex.y, nodeRadius, 0, Math.PI * 2);
+    ctx.fillStyle = nodeGradient;
+    ctx.fill();
+    ctx.lineWidth = Math.max(2, shape.lineWidth * 0.45);
+    ctx.strokeStyle = hexToRgba("#f3e97c", 0.92);
+    ctx.stroke();
+  });
+
+  ctx.restore();
+}
+
+function drawPen(shape) {
+  if (!shape.points.length) {
+    return;
+  }
+  ctx.beginPath();
+  ctx.moveTo(shape.points[0].x, shape.points[0].y);
+  shape.points.slice(1).forEach((point) => ctx.lineTo(point.x, point.y));
+  ctx.stroke();
+}
+
+function drawText(shape) {
+  const size = measureTextShape(shape.text, shape.lineWidth);
+  const boxX = shape.x;
+  const boxY = shape.y - size.boxHeight + size.paddingY;
+  const radius = Math.max(12, size.fontSize * 0.5);
+
+  ctx.save();
+  ctx.shadowColor = hexToRgba("#000000", 0.24);
+  ctx.shadowBlur = Math.max(12, size.fontSize * 0.7);
+  ctx.shadowOffsetY = Math.max(4, size.fontSize * 0.18);
+
+  const badgeGradient = ctx.createLinearGradient(boxX, boxY, boxX + size.boxWidth, boxY + size.boxHeight);
+  badgeGradient.addColorStop(0, hexToRgba("#08111f", 0.88));
+  badgeGradient.addColorStop(0.55, hexToRgba(shape.fill, 0.78));
+  badgeGradient.addColorStop(1, hexToRgba(shape.stroke, 0.92));
+
+  roundRectPath(boxX, boxY, size.boxWidth, size.boxHeight, radius);
+  ctx.fillStyle = badgeGradient;
+  ctx.fill();
+
+  ctx.shadowColor = "transparent";
+  ctx.lineWidth = Math.max(1.5, shape.lineWidth * 0.32);
+  ctx.strokeStyle = hexToRgba("#ffffff", 0.22);
+  ctx.stroke();
+
+  const sheen = ctx.createLinearGradient(boxX, boxY, boxX, boxY + size.boxHeight);
+  sheen.addColorStop(0, hexToRgba("#ffffff", 0.24));
+  sheen.addColorStop(0.38, hexToRgba("#ffffff", 0.08));
+  sheen.addColorStop(1, hexToRgba("#ffffff", 0));
+  roundRectPath(boxX + 1, boxY + 1, size.boxWidth - 2, size.boxHeight * 0.56, Math.max(10, radius - 2));
+  ctx.fillStyle = sheen;
+  ctx.fill();
+
+  ctx.font = `700 ${size.fontSize}px Barlow, Arial`;
+  ctx.fillStyle = "#ffffff";
+  ctx.fillText(shape.text, shape.x + size.paddingX, shape.y);
+  ctx.restore();
+}
+
+function drawCallout(shape) {
+  const paddingX = 16;
+  const paddingY = 12;
+  const fontSize = Math.max(16, shape.lineWidth * 4);
+  ctx.font = `700 ${fontSize}px Barlow, Arial`;
+  const textWidth = ctx.measureText(shape.text).width;
+  const boxWidth = textWidth + paddingX * 2;
+  const boxHeight = fontSize + paddingY * 2;
+  const radius = 14;
+
+  ctx.fillStyle = shape.fill;
+  ctx.strokeStyle = shape.stroke;
+  ctx.lineWidth = Math.max(2, shape.lineWidth);
+
+  roundRectPath(shape.x, shape.y - boxHeight, boxWidth, boxHeight, radius);
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.moveTo(shape.x + 28, shape.y);
+  ctx.lineTo(shape.x + 16, shape.y + 22);
+  ctx.lineTo(shape.x + 54, shape.y - 2);
+  ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.fillStyle = "#f4f7ff";
+  ctx.fillText(shape.text, shape.x + paddingX, shape.y - paddingY);
+}
+
+function roundRectPath(x, y, width, height, radius) {
+  ctx.beginPath();
+  ctx.moveTo(x + radius, y);
+  ctx.lineTo(x + width - radius, y);
+  ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+  ctx.lineTo(x + width, y + height - radius);
+  ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+  ctx.lineTo(x + radius, y + height);
+  ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+  ctx.lineTo(x, y + radius);
+  ctx.quadraticCurveTo(x, y, x + radius, y);
+  ctx.closePath();
+}
+
+function drawConnector(shape) {
+  const pts = shape.previewEnd
+    ? [...shape.points, shape.previewEnd]
+    : shape.points;
+
+  if (pts.length < 1) return;
+
+  const nodeRadius = Math.max(4, shape.lineWidth * 1.4);
+
+  if (pts.length >= 2) {
+    ctx.beginPath();
+    ctx.moveTo(pts[0].x, pts[0].y);
+    for (let i = 1; i < shape.points.length; i++) {
+      ctx.lineTo(pts[i].x, pts[i].y);
+    }
+    ctx.stroke();
+  }
+
+  if (shape.previewEnd && shape.points.length >= 1) {
+    ctx.save();
+    ctx.setLineDash([6, 5]);
+    ctx.globalAlpha = 0.55;
+    ctx.beginPath();
+    ctx.moveTo(shape.points[shape.points.length - 1].x, shape.points[shape.points.length - 1].y);
+    ctx.lineTo(shape.previewEnd.x, shape.previewEnd.y);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  shape.points.forEach((pt, i) => {
+    ctx.beginPath();
+    ctx.arc(pt.x, pt.y, nodeRadius, 0, Math.PI * 2);
+    ctx.fillStyle = shape.stroke;
+    ctx.fill();
+    if (i === 0 || i === shape.points.length - 1) {
+      ctx.save();
+      ctx.strokeStyle = hexToRgba("#ffffff", 0.7);
+      ctx.lineWidth = Math.max(1.5, shape.lineWidth * 0.4);
+      ctx.stroke();
+      ctx.restore();
+    }
+  });
+}
+
+function drawSpotlightBase(shape) {
+  const tipX = shape.x1;
+  const tipY = shape.y1;
+  const topY = shape.y2;
+  const halfWidth = Math.abs(shape.x2 - shape.x1);
+  return { tipX, tipY, topY, halfWidth, height: Math.abs(topY - tipY) };
+}
+
+function drawSpotlightFilled(shape) {
+  const { tipX, tipY, topY, halfWidth, height } = drawSpotlightBase(shape);
+  if (halfWidth < 4 || height < 8) return;
+  ctx.save();
+  const gradient = ctx.createLinearGradient(tipX, tipY, tipX, topY);
+  gradient.addColorStop(0, hexToRgba(shape.stroke, 0.0));
+  gradient.addColorStop(0.38, hexToRgba(shape.stroke, 0.14));
+  gradient.addColorStop(1, hexToRgba(shape.stroke, 0.42));
+  ctx.beginPath();
+  ctx.moveTo(tipX, tipY);
+  ctx.lineTo(tipX - halfWidth, topY);
+  ctx.lineTo(tipX + halfWidth, topY);
+  ctx.closePath();
+  ctx.fillStyle = gradient;
+  ctx.fill();
+  ctx.strokeStyle = hexToRgba(shape.stroke, 0.78);
+  ctx.lineWidth = Math.max(1.5, shape.lineWidth * 0.55);
+  ctx.setLineDash([]);
+  ctx.beginPath();
+  ctx.moveTo(tipX, tipY);
+  ctx.lineTo(tipX - halfWidth, topY);
+  ctx.moveTo(tipX, tipY);
+  ctx.lineTo(tipX + halfWidth, topY);
+  ctx.stroke();
+  const nodeR = Math.max(5, shape.lineWidth * 1.3);
+  ctx.beginPath();
+  ctx.arc(tipX, tipY, nodeR, 0, Math.PI * 2);
+  ctx.fillStyle = shape.stroke;
+  ctx.fill();
+  ctx.strokeStyle = hexToRgba("#ffffff", 0.65);
+  ctx.lineWidth = Math.max(1.5, shape.lineWidth * 0.35);
+  ctx.stroke();
+  ctx.restore();
+}
+
+function drawSpotlightOutline(shape) {
+  const { tipX, tipY, topY, halfWidth, height } = drawSpotlightBase(shape);
+  if (halfWidth < 4 || height < 8) return;
+  ctx.save();
+  ctx.strokeStyle = shape.stroke;
+  ctx.lineWidth = Math.max(1.5, shape.lineWidth * 0.6);
+  ctx.setLineDash([]);
+  ctx.beginPath();
+  ctx.moveTo(tipX, tipY);
+  ctx.lineTo(tipX - halfWidth, topY);
+  ctx.moveTo(tipX, tipY);
+  ctx.lineTo(tipX + halfWidth, topY);
+  ctx.stroke();
+  const nodeR = Math.max(4, shape.lineWidth * 1.1);
+  ctx.beginPath();
+  ctx.arc(tipX, tipY, nodeR, 0, Math.PI * 2);
+  ctx.fillStyle = shape.stroke;
+  ctx.fill();
+  ctx.restore();
+}
+
+function drawSpotlightBeams(shape) {
+  const { tipX, tipY, topY, halfWidth, height } = drawSpotlightBase(shape);
+  if (halfWidth < 4 || height < 8) return;
+  ctx.save();
+  const gradient = ctx.createLinearGradient(tipX, tipY, tipX, topY);
+  gradient.addColorStop(0, hexToRgba(shape.stroke, 0.0));
+  gradient.addColorStop(1, hexToRgba(shape.stroke, 0.1));
+  ctx.beginPath();
+  ctx.moveTo(tipX, tipY);
+  ctx.lineTo(tipX - halfWidth, topY);
+  ctx.lineTo(tipX + halfWidth, topY);
+  ctx.closePath();
+  ctx.fillStyle = gradient;
+  ctx.fill();
+  ctx.strokeStyle = shape.stroke;
+  ctx.lineWidth = Math.max(1.5, shape.lineWidth * 0.55);
+  ctx.setLineDash([]);
+  ctx.beginPath();
+  ctx.moveTo(tipX, tipY);
+  ctx.lineTo(tipX - halfWidth, topY);
+  ctx.moveTo(tipX, tipY);
+  ctx.lineTo(tipX + halfWidth, topY);
+  ctx.stroke();
+  const beamRatios = [0.3, 0.58, 0.82];
+  ctx.lineWidth = Math.max(1, shape.lineWidth * 0.32);
+  ctx.setLineDash([5, 4]);
+  beamRatios.forEach((r) => {
+    const beamY = tipY + (topY - tipY) * r;
+    const beamHW = halfWidth * r;
+    ctx.globalAlpha = 0.55 + r * 0.2;
+    ctx.beginPath();
+    ctx.moveTo(tipX - beamHW, beamY);
+    ctx.lineTo(tipX + beamHW, beamY);
+    ctx.stroke();
+  });
+  ctx.globalAlpha = 1;
+  ctx.setLineDash([]);
+  const nodeR = Math.max(5, shape.lineWidth * 1.3);
+  ctx.beginPath();
+  ctx.arc(tipX, tipY, nodeR, 0, Math.PI * 2);
+  ctx.fillStyle = shape.stroke;
+  ctx.fill();
+  ctx.strokeStyle = hexToRgba("#ffffff", 0.65);
+  ctx.lineWidth = Math.max(1.5, shape.lineWidth * 0.35);
+  ctx.stroke();
+  ctx.restore();
+}
+
+function drawPolygonZone(shape) {
+  const points = shape.previewEnd ? [...shape.points, shape.previewEnd] : shape.points;
+  if (!points || points.length < 2) {
+    return;
+  }
+
+  const isClosed = !shape.previewEnd && points.length >= 3;
+
+  ctx.save();
+  ctx.lineWidth = Math.max(2, shape.lineWidth * 0.55);
+
+  ctx.beginPath();
+  ctx.moveTo(points[0].x, points[0].y);
+  points.slice(1).forEach((point) => ctx.lineTo(point.x, point.y));
+
+  if (isClosed) {
+    ctx.closePath();
+    ctx.fillStyle = hexToRgba(shape.fill, 0.4);
+    ctx.fill();
+  }
+
+  ctx.strokeStyle = hexToRgba(shape.stroke, 0.9);
+  ctx.setLineDash(shape.lineStyle === "dashed" ? [shape.lineWidth * 2.5, shape.lineWidth * 1.8] : []);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  const nodeRadius = Math.max(5, shape.lineWidth * 1.3);
+  shape.points.forEach((vertex, index) => {
+    ctx.beginPath();
+    ctx.arc(vertex.x, vertex.y, nodeRadius, 0, Math.PI * 2);
+    ctx.fillStyle = index === 0 && !isClosed ? "#f3e97c" : shape.stroke;
+    ctx.fill();
+    ctx.lineWidth = Math.max(1.5, shape.lineWidth * 0.35);
+    ctx.strokeStyle = hexToRgba("#ffffff", 0.65);
+    ctx.stroke();
+  });
+
+  ctx.restore();
+}
+
+function drawSpotlight(shape) {
+  const style = shape.spotlightStyle || "filled";
+  if (style === "outline") { drawSpotlightOutline(shape); return; }
+  if (style === "beams") { drawSpotlightBeams(shape); return; }
+  drawSpotlightFilled(shape);
+}
+
+function drawShape(shape, currentTime = 0) {
+  ctx.save();
+
+  const baseOpacity = shape.opacity ?? 1;
+  const animationAlpha = getAnimationAlpha(shape, currentTime);
+  ctx.globalAlpha = baseOpacity * animationAlpha;
+
+  ctx.strokeStyle = shape.stroke;
+  ctx.fillStyle = shape.stroke;
+  ctx.lineWidth = shape.lineWidth;
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+  ctx.setLineDash(shape.lineStyle === "dashed" ? [shape.lineWidth * 2.5, shape.lineWidth * 1.8] : []);
+
+  const drawProgress = getStrokeDrawProgress(shape, currentTime);
+
+  if (shape.type === "pen") {
+    drawPen(shape);
+  }
+  if (shape.type === "arrow") {
+    drawArrow(shape, drawProgress);
+  }
+  if (shape.type === "arrowStraight") {
+    drawStraightArrow(shape, drawProgress);
+  }
+  if (shape.type === "rect") {
+    drawRectangle(shape);
+  }
+  if (shape.type === "ellipse") {
+    drawEllipse(shape);
+  }
+  if (shape.type === "focus") {
+    drawFocus(shape);
+  }
+  if (shape.type === "cone") {
+    drawCone(shape);
+  }
+  if (shape.type === "zone") {
+    drawZone(shape);
+  }
+  if (shape.type === "triangleZone") {
+    drawTriangleZone(shape);
+  }
+  if (shape.type === "polygonZone") {
+    drawPolygonZone(shape);
+  }
+  if (shape.type === "text") {
+    drawText(shape);
+  }
+  if (shape.type === "callout") {
+    drawCallout(shape);
+  }
+  if (shape.type === "connector") {
+    drawConnector(shape);
+  }
+  if (shape.type === "spotlight") {
+    drawSpotlight(shape);
+  }
+  if (shape.type === "player") {
+    drawPlayer(shape);
+  }
+
+  ctx.restore();
+}
+
+function getThrottledCurrentTime() {
+  const now = Date.now();
+  if (state.playerState === "playing" || now - state.cachedCurrentTimeAt > 150) {
+    state.cachedCurrentTime = Number(state.player?.getCurrentTime?.() || 0);
+    state.cachedCurrentTimeAt = now;
+  }
+  return state.cachedCurrentTime;
+}
+
+function redraw() {
+  ctx.save();
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.restore();
+  const currentTime = getThrottledCurrentTime();
+  state.annotations.forEach((shape, index) => {
+    if (isShapeHiddenAt(shape, currentTime)) {
+      return;
+    }
+    drawShape(shape, currentTime);
+    if (index === state.selectedAnnotationIndex && state.tool === "move" && state.playerState !== "playing") {
+      drawSelection(shape);
+    }
+  });
+  if (state.drawing) {
+    drawShape(state.drawing, currentTime);
+  }
+}
+
+function beginDrawing(event) {
+  if (!state.drawEnabled) {
+    return;
+  }
+
+  if (typeof event.preventDefault === "function") {
+    event.preventDefault();
+  }
+
+  if (typeof canvas.setPointerCapture === "function" && event.pointerId != null) {
+    canvas.setPointerCapture(event.pointerId);
+  }
+
+  if (state.tool === "connector") {
+    return;
+  }
+
+  if (state.tool === "polygonZone") {
+    return;
+  }
+
+  const point = getCanvasPoint(event);
+
+  if (state.tool !== "move" && (findAnnotationAtPoint(point) >= 0 || getSelectedVertexAtPoint(point) >= 0)) {
+    setTool("move");
+  }
+
+  if (state.tool === "move") {
+    state.vertexDrag = null;
+    const vi = getSelectedVertexAtPoint(point);
+    if (vi >= 0) {
+      pushHistory();
+      state.vertexDrag = { shapeIndex: state.selectedAnnotationIndex, vertexIndex: vi };
+      setStatus("Moviendo vértice. Suelta para dejarlo en su sitio.");
+      return;
+    }
+    if (state.selectedAnnotationIndex >= 0 && state.selectedAnnotationIndex < state.annotations.length) {
+      const sel = state.annotations[state.selectedAnnotationIndex];
+      const hi = getHandleAtPoint(point, sel);
+      if (hi >= 0) {
+        pushHistory();
+        const handles = getHandlePositions(getShapeBounds(sel));
+        state.resizingHandleIndex = hi;
+        state.resizeAnchor = handles[(hi + 2) % 4];
+        state.resizeBaseline = cloneShape(sel);
+        return;
+      }
+    }
+
+    const targetIndex = findAnnotationAtPoint(point);
+    state.selectedAnnotationIndex = targetIndex;
+
+    if (targetIndex >= 0) {
+      pushHistory();
+      state.draggingAnnotationIndex = targetIndex;
+      state.dragLastPoint = point;
+      const shape = state.annotations[targetIndex];
+      if (shape?.type === "focus") {
+        state.focusStyle = shape.focusStyle || "cilindrico";
+        syncFocusStyleButtons();
+      }
+      if (shape?.type === "spotlight") {
+        state.spotlightStyle = shape.spotlightStyle || "filled";
+        syncSpotlightStyleButtons();
+      }
+      setStatus("Arrastrando anotacion. Suelta para dejarla en la nueva posicion.");
+    } else {
+      setStatus("No he encontrado una marca en ese punto. Pulsa sobre una anotacion existente.");
+    }
+    syncSizeControl();
+    redraw();
+    return;
+  }
+
+  if (state.tool === "text" || state.tool === "callout") {
+    const label =
+      state.tool === "text" && state.selectedQuickInsert
+        ? state.selectedQuickInsert
+        : window.prompt(
+            state.tool === "text" ? "Texto a insertar" : "Texto de la etiqueta",
+            state.tool === "text" ? "Jugador clave" : "Etiqueta"
+          );
+    if (!label) {
+      return;
+    }
+
+    pushHistory();
+    addAnnotation({
+      type: state.tool,
+      x: point.x,
+      y: point.y,
+      text: label,
+      stroke: state.stroke,
+      fill: state.fill,
+      lineWidth: state.lineWidth,
+      lineStyle: state.lineStyle,
+      opacity: state.opacity,
+    });
+    state.selectedAnnotationIndex = state.annotations.length - 1;
+    syncSizeControl();
+    redraw();
+    return;
+  }
+
+  if (state.tool === "pen") {
+    state.drawing = {
+      type: "pen",
+      points: [point],
+      stroke: state.stroke,
+      lineWidth: state.lineWidth,
+      lineStyle: state.lineStyle,
+      opacity: state.opacity,
+    };
+    redraw();
+    return;
+  }
+
+  state.drawing = {
+    type: state.tool,
+    x1: point.x,
+    y1: point.y,
+    x2: point.x,
+    y2: point.y,
+    stroke: state.stroke,
+    fill: state.fill,
+    lineWidth: state.lineWidth,
+    lineStyle: state.lineStyle,
+    focusStyle: state.focusStyle,
+    spotlightStyle: state.spotlightStyle,
+    opacity: state.opacity,
+    ...(state.tool === "focus" ? { keyframes: [] } : {}),
+  };
+  redraw();
+}
+
+function updateDrawing(event) {
+  if (!state.drawEnabled) {
+    return;
+  }
+
+  if (typeof event.preventDefault === "function") {
+    event.preventDefault();
+  }
+
+  if (state.tool === "connector" && state.drawing) {
+    state.drawing.previewEnd = getCanvasPoint(event);
+    redraw();
+    return;
+  }
+
+  if (state.tool === "polygonZone" && state.drawing) {
+    state.drawing.previewEnd = getCanvasPoint(event);
+    redraw();
+    return;
+  }
+
+  if (state.tool === "move" && state.vertexDrag) {
+    const vd = state.vertexDrag;
+    const shape = state.annotations[vd.shapeIndex];
+    if (shape && shape.points && shape.points[vd.vertexIndex]) {
+      const point = getCanvasPoint(event);
+      shape.points[vd.vertexIndex] = { x: point.x, y: point.y };
+    }
+    redraw();
+    return;
+  }
+
+  if (state.tool === "move" && state.resizingHandleIndex >= 0 && state.resizeAnchor) {
+    const point = getCanvasPoint(event);
+    const idx = state.selectedAnnotationIndex;
+    if (idx >= 0 && state.resizeBaseline) {
+      state.annotations[idx] = cloneShape(state.resizeBaseline);
+      resizeShapeWithHandle(state.annotations[idx], state.resizingHandleIndex, point, state.resizeAnchor);
+    }
+    redraw();
+    return;
+  }
+
+  if (state.tool === "move" && state.draggingAnnotationIndex >= 0 && state.dragLastPoint) {
+    const point = getCanvasPoint(event);
+    const dx = point.x - state.dragLastPoint.x;
+    const dy = point.y - state.dragLastPoint.y;
+    translateShape(state.annotations[state.draggingAnnotationIndex], dx, dy);
+    state.dragLastPoint = point;
+    redraw();
+    return;
+  }
+
+  if (!state.drawing) {
+    return;
+  }
+
+  const point = getCanvasPoint(event);
+  if (state.drawing.type === "pen") {
+    state.drawing.points.push(point);
+  } else {
+    state.drawing.x2 = point.x;
+    state.drawing.y2 = point.y;
+  }
+  redraw();
+}
+
+function finishDrawing(event) {
+  if (!state.drawEnabled) {
+    return;
+  }
+
+  if (typeof event?.preventDefault === "function") {
+    event.preventDefault();
+  }
+
+  if (typeof canvas.releasePointerCapture === "function" && event?.pointerId != null) {
+    try {
+      canvas.releasePointerCapture(event.pointerId);
+    } catch (_error) {}
+  }
+
+  if (state.tool === "connector") {
+    return;
+  }
+
+  if (state.tool === "polygonZone") {
+    return;
+  }
+
+  if (state.tool === "move") {
+    if (state.vertexDrag) {
+      state.vertexDrag = null;
+      setStatus("Vértice movido.");
+    } else if (state.resizingHandleIndex >= 0) {
+      state.resizingHandleIndex = -1;
+      state.resizeAnchor = null;
+      setStatus("Anotacion redimensionada.");
+    } else if (state.draggingAnnotationIndex >= 0) {
+      setStatus("Anotacion recolocada.");
+    }
+    state.draggingAnnotationIndex = -1;
+    state.dragLastPoint = null;
+    syncSizeControl();
+    redraw();
+    return;
+  }
+
+  if (!state.drawing) {
+    return;
+  }
+  pushHistory();
+  addAnnotation(state.drawing);
+  state.selectedAnnotationIndex = state.annotations.length - 1;
+  state.drawing = null;
+  syncSizeControl();
+  redraw();
+  setStatus("Elemento añadido.");
+}
+function syncLineStyleButtons() {
+  lineStyleButtons.forEach((button) => {
+    button.classList.toggle("is-active", button.dataset.lineStyle === state.lineStyle);
+    button.setAttribute("aria-pressed", String(button.dataset.lineStyle === state.lineStyle));
+  });
+}
+canvas.addEventListener("click", (event) => {
+  if (state.tool !== "connector" || !state.drawEnabled) return;
+  const point = getCanvasPoint(event);
+  if (!state.drawing) {
+    state.drawing = {
+      type: "connector",
+      points: [point],
+      previewEnd: point,
+      stroke: state.stroke,
+      lineWidth: state.lineWidth,
+      lineStyle: state.lineStyle,
+      opacity: state.opacity,
+    };
+    setConnectorHint(true);
+  } else {
+    state.drawing.points.push(point);
+  }
+  redraw();
+});
+
+canvas.addEventListener("dblclick", (event) => {
+  if (state.tool !== "connector" || !state.drawEnabled || !state.drawing) return;
+  if (state.drawing.points.length > 1) {
+    state.drawing.points.pop();
+  }
+  if (state.drawing.points.length >= 2) {
+    pushHistory();
+    delete state.drawing.previewEnd;
+    addAnnotation(state.drawing);
+    state.selectedAnnotationIndex = state.annotations.length - 1;
+    syncSizeControl();
+    setStatus("Conector añadido. Doble clic para terminar el siguiente.");
+  }
+  state.drawing = null;
+  setConnectorHint(false);
+  redraw();
+});
+
+const POLYGON_CLOSE_RADIUS = 14;
+
+function finishPolygonZone(statusMessage) {
+  if (!state.drawing) return;
+  if (state.drawing.points.length >= 3) {
+    pushHistory();
+    delete state.drawing.previewEnd;
+    addAnnotation(state.drawing);
+    state.selectedAnnotationIndex = state.annotations.length - 1;
+    syncSizeControl();
+    setStatus(statusMessage || "Zona libre guardada.");
+  } else {
+    setStatus("Zona libre cancelada: necesitas al menos 3 puntos.");
+  }
+  state.drawing = null;
+  setPolygonHint(false);
+  redraw();
+}
+
+canvas.addEventListener("click", (event) => {
+  if (state.tool !== "polygonZone" || !state.drawEnabled) return;
+  const point = getCanvasPoint(event);
+
+  if (!state.drawing) {
+    state.drawing = {
+      type: "polygonZone",
+      points: [point],
+      previewEnd: point,
+      stroke: state.stroke,
+      fill: state.fill,
+      lineWidth: state.lineWidth,
+      lineStyle: state.lineStyle,
+      opacity: state.opacity,
+    };
+    setPolygonHint(true);
+    redraw();
+    return;
+  }
+
+  const first = state.drawing.points[0];
+  const dx = point.x - first.x;
+  const dy = point.y - first.y;
+  if (state.drawing.points.length >= 3 && Math.hypot(dx, dy) <= POLYGON_CLOSE_RADIUS) {
+    finishPolygonZone("Zona libre cerrada.");
+    return;
+  }
+
+  state.drawing.points.push(point);
+  redraw();
+});
+
+canvas.addEventListener("dblclick", (event) => {
+  if (state.tool !== "polygonZone" || !state.drawEnabled || !state.drawing) return;
+  if (state.drawing.points.length > 1) {
+    state.drawing.points.pop();
+  }
+  finishPolygonZone("Zona libre guardada. Doble clic para crear la siguiente.");
+});
+
+// ---------- herramientas ----------
+function paintToolButtons(){
+  toolButtons.forEach(b=>{
+    const on=state.drawEnabled && b.dataset.tool===state.tool;
+    b.classList.toggle("is-active",on);
+    b.setAttribute("aria-pressed",String(on));
+  });
+  const sel=state.annotations[state.selectedAnnotationIndex];
+  focusStylePicker.hidden=!(state.drawEnabled && (state.tool==="focus" || (state.tool==="move" && sel && sel.type==="focus")));
+}
+
+function setTool(nextTool){
+  if(state.tool==="connector" && state.drawing){ state.drawing=null; setConnectorHint(false); redraw(); }
+  if(state.tool==="polygonZone" && state.drawing){ state.drawing=null; setPolygonHint(false); redraw(); }
+  state.tool=nextTool;
+  paintToolButtons();
+  if(nextTool==="move") setStatus("Modo mover: pulsa una marca y arrástrala; las esquinas la redimensionan.");
+}
+
+function setDrawEnabled(enabled){
+  state.drawEnabled=!!enabled;
+  if(!enabled && state.drawing){ state.drawing=null; setConnectorHint(false); setPolygonHint(false); }
+  canvas.classList.toggle("drawing",state.drawEnabled);
+  modeBtn.setAttribute("aria-pressed",String(state.drawEnabled));
+  modeBtn.textContent=state.drawEnabled?"Dibujo: activo":"Dibujo: apagado";
+  paintToolButtons();
+  redraw();
+}
+
+// ---------- colocación del lienzo sobre el vídeo ----------
+function placeCanvas(){
+  const hasVideo=!!(v.currentSrc||v.src);
+  canvas.classList.toggle("on",hasVideo);
+  if(!hasVideo) return;
+  let x=v.offsetLeft, y=v.offsetTop, w=v.offsetWidth, h=v.offsetHeight;
+  if(!w||!h) return;
+  if(getComputedStyle(v).objectFit==="contain" && v.videoWidth && v.videoHeight){
+    const ar=v.videoWidth/v.videoHeight;
+    if(w/h>ar){ const nw=h*ar; x+=(w-nw)/2; w=nw; } else { const nh=w/ar; y+=(h-nh)/2; h=nh; }
+  }
+  x=Math.round(x); y=Math.round(y); w=Math.round(w); h=Math.round(h);
+  canvas.style.left=x+"px"; canvas.style.top=y+"px";
+  canvas.style.width=w+"px"; canvas.style.height=h+"px";
+  const ratio=window.devicePixelRatio||1;
+  const bw=Math.max(1,Math.round(w*ratio)), bh=Math.max(1,Math.round(h*ratio));
+  LH=Math.max(1,Math.round(LW*h/w));
+  if(canvas.width!==bw||canvas.height!==bh){ canvas.width=bw; canvas.height=bh; }
+  ctx.setTransform(bw/LW,0,0,bh/LH,0,0);
+  redraw();
+}
+
+// ---------- botones del panel ----------
+toolButtons.forEach(button=>{
+  button.addEventListener("click",()=>{
+    if(!(v.currentSrc||v.src)){ setStatus("Carga un vídeo para poder pintar sobre él."); return; }
+    setTool(button.dataset.tool);
+    if(!state.drawEnabled) setDrawEnabled(true);
+  });
+});
+modeBtn.addEventListener("click",()=>setDrawEnabled(!state.drawEnabled));
+
+duplicateAnnotationButton.addEventListener("click",()=>{ duplicateSelectedAnnotation(); paintToolButtons(); });
+deleteAnnotationButton.addEventListener("click",()=>{ deleteSelectedAnnotation(); paintToolButtons(); });
+
+strokeColorInput.addEventListener("input",e=>{
+  state.stroke=e.target.value;
+  const sel=state.annotations[state.selectedAnnotationIndex];
+  if(sel){ sel.stroke=state.stroke; redraw(); }
+});
+fillColorInput.addEventListener("input",e=>{
+  state.fill=e.target.value;
+  const sel=state.annotations[state.selectedAnnotationIndex];
+  if(sel && "fill" in sel){ sel.fill=state.fill; redraw(); }
+});
+lineWidthInput.addEventListener("input",e=>{
+  state.lineWidth=Number(e.target.value);
+  const sel=state.annotations[state.selectedAnnotationIndex];
+  if(sel){ sel.lineWidth=state.lineWidth; redraw(); }
+});
+lineStyleButtons.forEach(button=>{
+  button.addEventListener("click",()=>{
+    state.lineStyle=button.dataset.lineStyle||"solid";
+    syncLineStyleButtons();
+    const sel=state.annotations[state.selectedAnnotationIndex];
+    if(sel){ sel.lineStyle=state.lineStyle; redraw(); }
+  });
+});
+focusStyleButtons.forEach(button=>{
+  button.addEventListener("click",()=>{
+    state.focusStyle=button.dataset.focusStyle||"cilindrico";
+    syncFocusStyleButtons();
+    const sel=state.annotations[state.selectedAnnotationIndex];
+    if(state.tool==="move" && sel && sel.type==="focus"){ sel.focusStyle=state.focusStyle; redraw(); }
+    else { setTool("focus"); if(!state.drawEnabled) setDrawEnabled(true); }
+  });
+});
+focusFollowKeyframeButton.addEventListener("click",addFollowKeyframe);
+focusFollowEndButton.addEventListener("click",endFollowHere);
+$("pintFocusInfo").addEventListener("click",e=>{
+  const open=e.currentTarget.getAttribute("aria-expanded")!=="true";
+  e.currentTarget.setAttribute("aria-expanded",String(open));
+  $("pintFollowHint").hidden=!open;
+});
+
+sizeControlInput.addEventListener("input",e=>{
+  const i=state.selectedAnnotationIndex;
+  const ok=i>=0 && i<state.annotations.length && state.resizeBaseline;
+  const f=Number(e.target.value)/100;
+  sizeValue.textContent=Math.round(f*100)+"%";
+  if(!ok) return;
+  state.annotations[i]=scaleShapeFromBaseline(state.resizeBaseline,f);
+  redraw();
+});
+let opacityHistoryPushed=false;
+opacityControlInput.addEventListener("pointerdown",()=>{ opacityHistoryPushed=false; });
+opacityControlInput.addEventListener("input",e=>{
+  const value=Number(e.target.value)/100;
+  opacityValueEl.textContent=e.target.value+"%";
+  const i=state.selectedAnnotationIndex;
+  if(i>=0 && i<state.annotations.length){
+    if(!opacityHistoryPushed){ pushHistory(); opacityHistoryPushed=true; }
+    state.annotations[i].opacity=value; redraw();
+  } else state.opacity=value;
+});
+
+undoActionButton.addEventListener("click",()=>{
+  if(!state.history.length) return;
+  state.annotations=state.history.pop();
+  state.drawing=null;
+  if(state.selectedAnnotationIndex>=state.annotations.length) state.selectedAnnotationIndex=state.annotations.length-1;
+  state.draggingAnnotationIndex=-1; state.dragLastPoint=null;
+  state.resizingHandleIndex=-1; state.resizeAnchor=null;
+  syncSizeControl(); redraw(); paintToolButtons();
+});
+clearActionButton.addEventListener("click",()=>{
+  if(!state.annotations.length) return;
+  pushHistory();
+  state.annotations=[]; state.drawing=null;
+  state.selectedAnnotationIndex=-1; state.draggingAnnotationIndex=-1; state.dragLastPoint=null;
+  syncSizeControl(); redraw(); paintToolButtons();
+  setStatus("Pintado borrado (puedes deshacerlo).");
+});
+
+// ---------- Exportar PNG: fotograma actual + lo pintado ----------
+$("pintPng").addEventListener("click",()=>{
+  if(!(v.currentSrc||v.src) || !v.videoWidth){ setStatus("Carga un vídeo para exportar un fotograma."); return; }
+  const W=v.videoWidth, H=Math.max(1,Math.round(W*LH/LW));
+  const out=document.createElement("canvas"); out.width=W; out.height=H;
+  const o=out.getContext("2d");
+  const sel=state.selectedAnnotationIndex, prevTool=state.tool;
+  try{
+    o.drawImage(v,0,0,W,H);
+    state.selectedAnnotationIndex=-1; state.cachedCurrentTimeAt=0; redraw(); // sin marcas de selección
+    o.drawImage(canvas,0,0,W,H);
+  }catch(e){ setStatus("No se pudo exportar: el navegador bloquea este vídeo."); return; }
+  finally{ state.selectedAnnotationIndex=sel; state.tool=prevTool; redraw(); }
+  out.toBlob(blob=>{
+    if(!blob){ setStatus("No se pudo generar el PNG."); return; }
+    const a=document.createElement("a"), t=Math.floor(v.currentTime||0);
+    a.href=URL.createObjectURL(blob);
+    a.download="pintado-"+String(Math.floor(t/60)).padStart(2,"0")+"m"+String(t%60).padStart(2,"0")+"s.png";
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+    setStatus("PNG descargado.");
+  },"image/png");
+});
+
+// ---------- Ocultar / Mostrar el apartado ----------
+function setPanelHidden(hidden){
+  bodyEl.hidden=hidden;
+  toggleBtn.textContent=hidden?"Mostrar":"Ocultar";
+  toggleBtn.setAttribute("aria-expanded",String(!hidden));
+  try{ localStorage.setItem("acfcPintHidden",hidden?"1":"0"); }catch(e){}
+}
+toggleBtn.addEventListener("click",()=>setPanelHidden(!bodyEl.hidden));
+try{ if(localStorage.getItem("acfcPintHidden")==="1") setPanelHidden(true); }catch(e){}
+
+// ---------- persistencia del pintado ----------
+// Se guarda en el navegador por nombre de vídeo (sobrevive a recargar) y viaja dentro del proyecto exportado.
+const pintName=()=>String(cfg.keyOf?cfg.keyOf():"").trim();
+let pintSaveTimer=0, pintSavedName=pintName();
+function pintCleanList(arr){
+  return (Array.isArray(arr)?arr:[]).filter(s=>s&&typeof s==="object"&&typeof s.type==="string").slice(0,500);
+}
+function pintSaveNow(){
+  clearTimeout(pintSaveTimer); pintSaveTimer=0;
+  if(!pintSavedName) return;
+  try{
+    const k=cfg.keyPrefix+pintSavedName;
+    if(state.annotations.length) localStorage.setItem(k,JSON.stringify(state.annotations));
+    else localStorage.removeItem(k);
+  }catch(e){}
+}
+function pintSaveSoon(){ clearTimeout(pintSaveTimer); pintSaveTimer=setTimeout(pintSaveNow,400); }
+function pintSetAnnotations(list){
+  state.annotations=pintCleanList(list).map(cloneShape);
+  state.drawing=null; state.selectedAnnotationIndex=-1;
+  state.draggingAnnotationIndex=-1; state.dragLastPoint=null;
+  state.resizingHandleIndex=-1; state.resizeAnchor=null; state.history=[];
+  syncSizeControl(); redraw();
+}
+function pintRestore(){
+  let list=[];
+  if(pintSavedName){ try{ list=JSON.parse(localStorage.getItem(cfg.keyPrefix+pintSavedName)||"[]"); }catch(e){} }
+  pintSetAnnotations(list);
+}
+if(cfg.watch) cfg.watch(()=>{
+  const n=pintName(); if(n===pintSavedName) return;
+  pintSaveNow(); pintSavedName=n; pintRestore();
+});
+const api={
+  get:()=>state.annotations.map(cloneShape),
+  set:list=>{ pintSetAnnotations(list); pintSaveNow(); },
+  // true mientras el dibujo está activo (para que otros atajos no actúen a la vez)
+  isDrawing:()=>state.drawEnabled,
+};
+if(cfg.expose) window[cfg.expose]=api;
+// cualquier cambio (pintar, mover, deshacer, borrar, estilos…) termina en pointerup, clic, input o tecla
+["pointerup","pointercancel"].forEach(ev=>canvas.addEventListener(ev,pintSaveSoon));
+["click","input","change"].forEach(ev=>block.addEventListener(ev,pintSaveSoon));
+window.addEventListener("keyup",()=>{ if(state.drawEnabled) pintSaveSoon(); });
+canvas.addEventListener("dblclick",pintSaveSoon);
+window.addEventListener("pagehide",pintSaveNow);
+document.addEventListener("visibilitychange",()=>{ if(document.hidden) pintSaveNow(); });
+pintRestore();
+
+// ---------- puntero sobre el lienzo ----------
+// Al empezar a pintar con el vídeo en marcha, se pausa en ese fotograma.
+canvas.addEventListener("pointerdown",()=>{ if(state.drawEnabled && !v.paused && state.tool!=="move") v.pause(); },true);
+canvas.addEventListener("pointerdown",beginDrawing);
+canvas.addEventListener("pointermove",updateDrawing);
+canvas.addEventListener("pointerup",e=>{ finishDrawing(e); paintToolButtons(); });
+canvas.addEventListener("pointercancel",finishDrawing);
+canvas.addEventListener("contextmenu",e=>{
+  e.preventDefault();
+  if(!state.drawEnabled) return;
+  const idx=findAnnotationAtPoint(getCanvasPoint(e));
+  if(idx>=0 && state.tool==="move"){ state.selectedAnnotationIndex=idx; deleteSelectedAnnotation(); }
+});
+
+// ---------- teclado (solo con el dibujo activo) ----------
+window.addEventListener("keydown",event=>{
+  if(!state.drawEnabled || !v.getClientRects().length) return;
+  const el=document.activeElement, tag=el&&el.tagName;
+  if(tag==="INPUT"||tag==="TEXTAREA"||tag==="SELECT"||(el&&el.isContentEditable)) return;
+  if(event.key==="Delete" && state.selectedAnnotationIndex>=0){
+    event.preventDefault(); event.stopPropagation(); deleteSelectedAnnotation(); paintToolButtons(); return;
+  }
+  if(event.key==="Escape" && state.tool==="connector" && state.drawing){
+    if(state.drawing.points.length>=2){
+      pushHistory(); delete state.drawing.previewEnd; addAnnotation(state.drawing);
+      state.selectedAnnotationIndex=state.annotations.length-1; syncSizeControl(); setStatus("Conector guardado.");
+    } else setStatus("Conector cancelado.");
+    state.drawing=null; setConnectorHint(false); redraw(); return;
+  }
+  if(event.key==="Enter" && state.tool==="polygonZone" && state.drawing){ finishPolygonZone("Zona libre guardada."); return; }
+  if(event.key==="Escape" && state.tool==="polygonZone" && state.drawing){
+    setStatus("Zona libre cancelada."); state.drawing=null; setPolygonHint(false); redraw();
+  }
+});
+
+// ---------- sincronía con el vídeo ----------
+let rafId=0, lastShown=-1;
+function refreshNow(){ state.cachedCurrentTimeAt=0; applyFollowKeyframes(v.currentTime||0); redraw(); }
+function loop(){
+  rafId=0;
+  if(v.paused||v.ended) return;
+  if(state.annotations.length){
+    const t=v.currentTime;
+    if(Math.abs(t-lastShown)>0.01){ lastShown=t; applyFollowKeyframes(t); redraw(); }
+  }
+  rafId=requestAnimationFrame(loop);
+}
+["play","playing"].forEach(ev=>v.addEventListener(ev,()=>{ if(!rafId) rafId=requestAnimationFrame(loop); }));
+["pause","seeked","seeking","timeupdate","ended"].forEach(ev=>v.addEventListener(ev,()=>{
+  if(ev==="timeupdate" && !v.paused) return; // en marcha lo lleva el bucle de animación
+  refreshNow();
+}));
+["loadedmetadata","loadeddata","emptied","resize"].forEach(ev=>v.addEventListener(ev,placeCanvas));
+v.addEventListener("emptied",()=>{ if(state.drawEnabled) setDrawEnabled(false); });
+addEventListener("resize",placeCanvas);
+document.addEventListener("fullscreenchange",()=>setTimeout(placeCanvas,60));
+document.addEventListener("webkitfullscreenchange",()=>setTimeout(placeCanvas,60));
+if(window.ResizeObserver){ const ro=new ResizeObserver(placeCanvas); ro.observe(v); ro.observe(host); }
+new MutationObserver(placeCanvas).observe(document.documentElement,{attributes:true,attributeFilter:["class"]});
+
+// ---------- arranque ----------
+syncSizeControl();
+syncOpacityControl();
+syncFocusStyleButtons();
+paintToolButtons();
+placeCanvas();
+return api;
+}
+
+// ---------- montaje: registro de acciones y editor de vídeo ----------
+(()=>{
+const g=id=>document.getElementById(id);
+const visorBlock=g("pintBlock"), edAside=document.querySelector("#tabEditor aside");
+// El panel del editor es una copia del del registro, con ids propios (sufijo «Ed»).
+let edBlock=null;
+if(visorBlock&&edAside){
+  edBlock=visorBlock.cloneNode(true);
+  edBlock.id+="Ed";
+  edBlock.querySelectorAll("[id]").forEach(el=>{ el.id+="Ed"; });
+  edBlock.querySelectorAll("[aria-controls]").forEach(el=>el.setAttribute("aria-controls",el.getAttribute("aria-controls")+"Ed"));
+  edAside.appendChild(edBlock);
+}
+const vName=g("vidName");
+acfcPintMount({
+  video:g("v"), host:document.querySelector("#tabVisor .stage"), block:visorBlock, sfx:"", expose:"acfcPint",
+  keyPrefix:"acfcPint:", keyOf:()=>vName?vName.textContent:"",
+  watch:fn=>{ if(vName) new MutationObserver(fn).observe(vName,{childList:true,characterData:true,subtree:true}); }
+});
+const edV=g("edV");
+acfcPintMount({
+  video:edV, host:g("edStage"), block:edBlock, sfx:"Ed", expose:"acfcPintEd",
+  keyPrefix:"acfcPintEd:", keyOf:()=>window.acfcEdSrcName?window.acfcEdSrcName():"",
+  watch:fn=>{ if(edV) ["loadedmetadata","emptied"].forEach(ev=>edV.addEventListener(ev,fn)); }
+});
 })();
 </script>
 <script>
