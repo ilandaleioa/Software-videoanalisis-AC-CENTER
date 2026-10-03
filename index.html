@@ -553,7 +553,7 @@ kbd{border-radius:0;font-family:var(--f-body)}
 #plListToggle,#plListSection,#plExport,#plExportSep,#plClear,#bulkPl,.plBtn{display:none!important}
 #edTutorial,#regTutorial{background:#1d5fbf;border-color:#1d5fbf;color:#fff;font-weight:700}
 #edTutorial:hover,#regTutorial:hover{background:#174b98;border-color:#174b98;color:#fff}
-#edUseVisor,#regUseEditor,#edYT,#regYT{color:#000}
+#edUseVisor,#regUseEditor{color:#000}
 /* ===== Tutorial animado del editor (prefijo tut) ===== */
 :is(#tutDlg,#tutDlgR){width:min(980px,96vw);padding:14px;font-family:var(--f-body)}
 :is(#tutDlg,#tutDlgR) [hidden]{display:none!important}
@@ -757,7 +757,7 @@ kbd{border-radius:0;font-family:var(--f-body)}
 #delAllEv:hover,#fltClear:hover,#regTutorialB:hover,#edTutorialB:hover,.acfcLink:hover{background:none;border-color:transparent;color:var(--red);text-decoration-color:var(--red);filter:none}
 #edTutorial,#regTutorial{background:transparent;border-color:rgba(255,255,255,.5);color:#fff;font-weight:400}
 #edTutorial:hover,#regTutorial:hover{background:#fff;border-color:#fff;color:#15181D}
-#edUseVisor,#regUseEditor,#edYT,#regYT{color:#15181D}
+#edUseVisor,#regUseEditor{color:#15181D}
 #edClearAdded{background:none;border-color:transparent;color:var(--muted);font-size:12px;text-decoration:underline;text-underline-offset:4px;text-decoration-color:var(--line)}
 #edClearAdded:hover{color:var(--red);filter:none}
 /* marcas de partido: fichas discretas */
@@ -1017,7 +1017,6 @@ dialog#dlgInstalar .btn{min-height:42px}
   <span class="sp"></span>
   <button type="button" class="btn" id="btnInstalar" hidden title="Instalar la app o crear un acceso directo">Instalar app</button>
   <label class="btn primary" for="file">Cargar vídeo</label>
-  <button type="button" class="btn" id="btnYTvisor" title="Abre un vídeo alojado en YouTube a partir de su URL">Vídeo de YouTube</button>
   <input type="file" id="file" accept="video/*" hidden>
 </header>
 
@@ -1030,7 +1029,6 @@ dialog#dlgInstalar .btn{min-height:42px}
         <div id="emptyMsg">Carga <b>cortes3.mp4</b> para vincularlo con los eventos, o arrástralo aquí.</div>
         <div class="row" style="justify-content:center">
           <label class="btn primary" for="file">Elegir vídeo</label>
-          <button class="btn" id="regYT" title="Abre un vídeo alojado en YouTube a partir de su URL">Vídeo de YouTube</button>
           <button class="btn" id="regUseEditor">Usar el vídeo del editor</button>
           <button class="btn" id="regTutorial" title="Mira paso a paso cómo se usa el registro de acciones">▶ Ver tutorial</button>
         </div>
@@ -1412,7 +1410,6 @@ dialog#dlgInstalar .btn{min-height:42px}
         <div id="edMsg">Sube uno o varios vídeos, realiza cortes, asigna el nombre al evento y descárgalos a tu ordenador.</div>
         <div class="row" style="justify-content:center">
           <label class="btn primary" for="edFile">Subir vídeo</label>
-          <button class="btn" id="edYT" title="Abre un vídeo alojado en YouTube a partir de su URL">Vídeo de YouTube</button>
           <button class="btn" id="edUseVisor">Usar el vídeo del visor</button>
           <button class="btn" id="edTutorial" title="Mira paso a paso cómo se usa el editor">▶ Ver tutorial</button>
         </div>
@@ -1511,7 +1508,6 @@ dialog#dlgInstalar .btn{min-height:42px}
       </div>
       <div id="edSrcList" style="display:grid;grid-template-columns:minmax(0,1fr);grid-auto-flow:row;gap:4px;overflow:visible"></div>
       <label class="btn" for="edFile" id="edAddFile" style="text-align:center" title="Añade otro vídeo a continuación, para unirlos en la exportación">+ Añadir vídeo</label>
-      <button class="btn" id="edAddYT" style="text-align:center" title="Añade un vídeo alojado en YouTube a partir de su URL">+ URL de YouTube</button>
       <div class="row" style="justify-content:space-between;margin:0">
         <h2 style="margin:0">Eventos</h2>
         <button class="btn" id="edClearAdded" title="Quitar todos los eventos de la lista">Limpiar</button>
@@ -1932,151 +1928,6 @@ dialog#dlgInstalar .btn{min-height:42px}
   </div>
 </dialog>
 
-<!-- ACFC · vídeo de YouTube: adaptador que hace que un reproductor de YouTube se comporte como el <video> (currentTime, play, pause, eventos…) -->
-<dialog id="dlgYT" aria-labelledby="ytTitle">
-  <form method="dialog" id="ytForm">
-    <h2 id="ytTitle" style="margin:0;font-family:var(--f-disp)">Vídeo de YouTube</h2>
-    <label style="display:grid;gap:4px">Pega la URL del vídeo
-      <input id="ytUrl" type="url" inputmode="url" autocomplete="off" maxlength="200" placeholder="https://www.youtube.com/watch?v=…">
-    </label>
-    <div style="font-size:12px;color:var(--muted)">Sirve un vídeo público o «no listado». Se puede ver, registrar y cortar tramos; <b>no se puede descargar ni exportar</b> desde YouTube.</div>
-    <div id="ytErr" style="font-size:12px;color:var(--red)" role="alert"></div>
-    <div class="row" style="justify-content:flex-end">
-      <button type="button" class="btn" id="ytCancel">Cancelar</button>
-      <button type="submit" class="btn primary" id="ytOk">Abrir</button>
-    </div>
-  </form>
-</dialog>
-<script>
-window.acfcYT=(()=>{
-  const ID_RE=/^[\w-]{11}$/, PFX="youtube:";
-  // Extrae el identificador (11 caracteres) de cualquier URL habitual de YouTube; si no es válida, devuelve "".
-  function parseId(raw){
-    raw=String(raw||"").trim(); if(ID_RE.test(raw)) return raw;
-    let u; try{ u=new URL(/^[a-z]+:\/\//i.test(raw)?raw:"https://"+raw); }catch(e){ return ""; }
-    if(!/^https?:$/.test(u.protocol)) return "";
-    const h=u.hostname.replace(/^(www\.|m\.|music\.)/,""); let id="";
-    if(h==="youtu.be") id=u.pathname.split("/")[1]||"";
-    else if(h==="youtube.com"||h==="youtube-nocookie.com"){
-      if(u.pathname==="/watch") id=u.searchParams.get("v")||"";
-      else { const m=u.pathname.match(/^\/(embed|shorts|live|v)\/([\w-]{11})/); id=m?m[2]:""; }
-    }
-    return ID_RE.test(id)?id:"";
-  }
-  let apiP=null;
-  function loadApi(){
-    if(window.YT&&YT.Player) return Promise.resolve();
-    if(apiP) return apiP;
-    apiP=new Promise((res,rej)=>{
-      const prev=window.onYouTubeIframeAPIReady;
-      window.onYouTubeIframeAPIReady=()=>{ try{ if(prev) prev(); }catch(e){} res(); };
-      const s=document.createElement("script"); s.src="https://www.youtube.com/iframe_api"; s.async=true;
-      s.onerror=()=>{ apiP=null; rej(new Error("No se pudo cargar el reproductor de YouTube (¿sin conexión o bloqueado?).")); };
-      document.head.append(s);
-    });
-    return apiP;
-  }
-  const ERR={2:"La URL del vídeo no es válida.",5:"YouTube no puede reproducir este vídeo en el navegador.",100:"El vídeo no existe o es privado.",101:"El propietario no permite verlo fuera de YouTube.",150:"El propietario no permite verlo fuera de YouTube."};
-
-  // Hace que el <video> V (sin src) delegue en un reproductor de YouTube mientras esté activo.
-  function mount(V){
-    const natSrc=Object.getOwnPropertyDescriptor(HTMLMediaElement.prototype,"src");
-    const origGet=V.getAttribute, origRem=V.removeAttribute;
-    let pl=null, box=null, id="", ready=false, state=-1, timer=0, seekT=0, seekAt=0, lastDur=0, metaSent=false, wantPlay=false;
-    const fire=n=>V.dispatchEvent(new Event(n));
-    const P=()=>ready&&pl?pl:null;
-    const def=(k,d)=>Object.defineProperty(V,k,Object.assign({configurable:true},d));
-    const props=["currentTime","duration","paused","ended","seeking","playbackRate","muted","volume","readyState","videoWidth","videoHeight","currentSrc","src","error","play","pause","load"];
-    function install(){
-      def("currentTime",{get:()=>{ const p=P(); if(!p) return seekT; if(Date.now()-seekAt<600) return seekT; const t=p.getCurrentTime(); return isFinite(t)?t:0; },
-        set:t=>{ t=Math.max(0,+t||0); const d=V.duration; if(d&&t>d) t=d; seekT=t; seekAt=Date.now(); const p=P(); if(p) p.seekTo(t,true); fire("seeking"); setTimeout(()=>{ fire("seeked"); fire("timeupdate"); },120); }});
-      def("duration",{get:()=>{ const p=P(); const d=p?p.getDuration():0; return d>0?d:NaN; }});
-      def("paused",{get:()=>!(state===1||state===3||(wantPlay&&state===-1))});
-      def("ended",{get:()=>state===0});
-      def("seeking",{get:()=>Date.now()-seekAt<150});
-      def("playbackRate",{get:()=>{ const p=P(); return p?p.getPlaybackRate():1; }, set:r=>{ const p=P(); if(p) p.setPlaybackRate(+r||1); }});
-      def("muted",{get:()=>{ const p=P(); return p?p.isMuted():false; }, set:m=>{ const p=P(); if(p){ m?p.mute():p.unMute(); } setTimeout(()=>fire("volumechange"),0); }});
-      def("volume",{get:()=>{ const p=P(); return p?p.getVolume()/100:1; }, set:x=>{ const p=P(); if(p) p.setVolume(Math.max(0,Math.min(100,x*100))); }});
-      def("readyState",{get:()=>ready?4:0});
-      def("videoWidth",{get:()=>ready?1280:0}); def("videoHeight",{get:()=>ready?720:0});
-      def("currentSrc",{get:()=>PFX+id}); def("error",{get:()=>null});
-      def("src",{get:()=>PFX+id, set:v=>{ api.close(); natSrc.set.call(V,v); }});
-      def("play",{value:()=>{ wantPlay=true; const p=P(); if(p) p.playVideo(); return Promise.resolve(); }});
-      def("pause",{value:()=>{ wantPlay=false; const p=P(); if(p) p.pauseVideo(); }});
-      def("load",{value:()=>{}});
-      V.getAttribute=function(n){ return n==="src"?PFX+id:origGet.call(this,n); };
-      V.removeAttribute=function(n){ if(n==="src") api.close(); return origRem.call(this,n); };
-    }
-    function uninstall(){ props.forEach(k=>{ delete V[k]; }); V.getAttribute=origGet; V.removeAttribute=origRem; }
-    function poll(){
-      const p=P(); if(!p) return;
-      const d=p.getDuration();
-      if(d>0&&d!==lastDur){ lastDur=d; if(!metaSent){ metaSent=true; fire("loadedmetadata"); } fire("durationchange"); }
-      if(state===1) fire("timeupdate");
-    }
-    const api={
-      parseId, PFX,
-      get active(){ return !!box; }, get id(){ return id; },
-      close(){
-        if(!box) return;
-        clearInterval(timer); timer=0;
-        try{ if(pl) pl.destroy(); }catch(e){}
-        box.remove(); box=null; pl=null; ready=false; state=-1; id=""; metaSent=false; lastDur=0; wantPlay=false;
-        V.__acfcYT=false; V.style.visibility=""; uninstall();
-      },
-      // Abre el vídeo; resuelve con {id,title} cuando está listo y rechaza con un mensaje en español si falla.
-      async open(videoId){
-        if(!ID_RE.test(videoId)) throw new Error("La URL del vídeo no es válida.");
-        api.close(); try{ V.pause(); }catch(e){}
-        await loadApi();
-        id=videoId; ready=false; state=-1; metaSent=false; lastDur=0; seekT=0; seekAt=0; V.__acfcYT=true;
-        install();
-        box=document.createElement("div"); box.className="acfcYT"; box.style.cssText="position:absolute;inset:0;z-index:0;background:#000";
-        const inner=document.createElement("div"); inner.style.cssText="width:100%;height:100%"; box.append(inner);
-        V.style.visibility="hidden"; V.after(box);
-        const host=V.parentNode; if(getComputedStyle(host).position==="static") host.style.position="relative";
-        const vars={controls:0,disablekb:1,fs:0,rel:0,modestbranding:1,playsinline:1,iv_load_policy:3};
-        return new Promise((resolve,reject)=>{
-          const mine=box, fail=m=>{ if(box===mine) api.close(); reject(new Error(m)); };
-          // Si el reproductor no se conecta con la herramienta, se muestra el vídeo "a secas" con los controles de YouTube
-          const to=setTimeout(()=>{
-            if(box!==mine||ready) return;
-            try{ pl.destroy(); }catch(e){} pl=null; mine.replaceChildren();
-            const f=document.createElement("iframe"); f.src="https://www.youtube-nocookie.com/embed/"+videoId+"?rel=0&playsinline=1";
-            f.allow="autoplay; fullscreen; encrypted-media; picture-in-picture"; f.allowFullscreen=true; f.title="Vídeo de YouTube"; f.style.cssText="width:100%;height:100%;border:0";
-            mine.append(f); resolve({id:videoId,title:"",basic:true});
-          },10000);
-          pl=new YT.Player(inner,{host:"https://www.youtube-nocookie.com",videoId,playerVars:vars,events:{
-            onReady:()=>{ if(box!==mine) return; clearTimeout(to); ready=true; timer=setInterval(poll,250); poll();
-              let title=""; try{ title=(pl.getVideoData()||{}).title||""; }catch(e){}
-              resolve({id:videoId,title}); },
-            onStateChange:e=>{ if(box!==mine) return; const prev=state; state=e.data;
-              if(state===1&&prev!==1){ fire("play"); fire("playing"); } else if(state===2){ fire("pause"); } else if(state===0){ fire("pause"); fire("ended"); }
-              if(state===1||state===2) poll(); },
-            onPlaybackRateChange:()=>{ if(box===mine) fire("ratechange"); },
-            onError:e=>{ clearTimeout(to); fail(ERR[e.data]||"No se pudo abrir el vídeo de YouTube (código "+e.data+")."); }
-          }});
-        });
-      }
-    };
-    return api;
-  }
-  // Diálogo para pedir la URL; resuelve con el identificador o null si se cancela.
-  function ask(){
-    const d=document.getElementById("dlgYT"), inp=document.getElementById("ytUrl"), err=document.getElementById("ytErr"), form=document.getElementById("ytForm");
-    inp.value=""; err.textContent="";
-    return new Promise(resolve=>{
-      let done=false; const end=v=>{ if(done) return; done=true; form.removeEventListener("submit",onSub); document.getElementById("ytCancel").onclick=null; d.removeEventListener("close",onClose); if(d.open) d.close(); resolve(v); };
-      const onSub=e=>{ e.preventDefault(); const id=parseId(inp.value); if(!id){ err.textContent="No reconozco esa URL. Pega el enlace de un vídeo de YouTube (youtube.com/watch?v=… o youtu.be/…)."; inp.focus(); return; } end(id); };
-      const onClose=()=>end(null);
-      form.addEventListener("submit",onSub); d.addEventListener("close",onClose);
-      document.getElementById("ytCancel").onclick=()=>end(null);
-      d.showModal(); inp.focus();
-    });
-  }
-  return {parseId, mount, ask, PFX, blockedMsg:"Los vídeos de YouTube no se pueden descargar ni exportar desde la herramienta (YouTube no lo permite). Puedes verlos, registrar acciones y marcar tramos, pero para descargar cortes necesitas el archivo de vídeo."};
-})();
-</script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 <script>
@@ -2429,7 +2280,6 @@ window.VidExport=(()=>{
   }
   async function run({video:V, ranges, name, mime, target=720, fps=0, ui, silent}){
     if(running) return false;
-    if(V&&V.__acfcYT){ alert(window.acfcYT.blockedMsg); return false; }
     ranges=(ranges||[]).filter(r=>r.e-r.s>0.05); if(!ranges.length){ alert("No hay ningún tramo que exportar."); return false; }
     if(canFast()&&!(mime&&mime.includes("webm"))){
       const src=V.currentSrc||V.src;
@@ -2446,7 +2296,6 @@ window.VidExport=(()=>{
   }
   async function runMulti({video:V, groups, name, mime, target=720, fps=0, ui}){
     if(running) return false;
-    if((V&&V.__acfcYT)||(groups||[]).some(g=>String(g.src).startsWith(window.acfcYT.PFX))){ alert(window.acfcYT.blockedMsg); return false; }
     groups=(groups||[]).map(g=>({...g, ranges:(g.ranges||[]).filter(r=>r.e-r.s>0.05)})).filter(g=>g.src&&g.ranges.length);
     if(!groups.length){ alert("No hay ningún tramo que exportar."); return false; }
     if(canFast()&&!(mime&&mime.includes("webm"))){
@@ -3392,20 +3241,6 @@ window.renderHalfBands = function(b1,b2,mk,d){
     if(d&&typeof d.id==="string"&&/^[0-9a-f]{32}$/.test(d.id)){ v.src="/_blob/"+d.id; $("vidName").textContent=String(d.name||"vídeo").slice(0,80); }
   }catch(e){} })();
 
-  const YTv=window.acfcYT.mount(v); window.acfcYTv=YTv;
-  function openYT(id,title,fromEditor){
-    if(!window.acfcYT.parseId(id)) return Promise.resolve();
-    v.dataset.user="1"; if(v.dataset.url){ URL.revokeObjectURL(v.dataset.url); v.dataset.url=""; }
-    showMsg("Abriendo el vídeo de YouTube…");
-    return YTv.open(id).then(r=>{
-      if(r.basic){ $("empty").hidden=true; $("vidName").textContent="YouTube: "+id; note("El reproductor de YouTube no se conectó con la herramienta: solo funcionan sus propios controles."); return; }
-      const t=(title||r.title||id).slice(0,80); $("vidName").textContent="YouTube: "+t; note("Vídeo de YouTube: se puede registrar y marcar tramos, pero no descargar.");
-      if(!fromEditor&&window.__edAddYT) try{ window.__edAddYT(id,t); }catch(e){}
-    }).catch(e=>showMsg(String(e.message).replace(/[<>&"]/g,"")));
-  }
-  window.__visorOpenYT=(id,title)=>openYT(id,title,true);
-  async function askYTvisor(){ const id=await window.acfcYT.ask(); if(id) openYT(id,""); }
-  $("btnYTvisor").onclick=askYTvisor; $("regYT").onclick=askYTvisor;
   function openFile(f,fromEditor){ if(!f) return;
     if(!(f.type.startsWith("video/")||/\.(mp4|m4v|mov|webm)$/i.test(f.name))){ showMsg("Ese archivo no es un vídeo."); return; }
     // el mismo vídeo se carga también en el editor (si aún no está allí)
@@ -3418,7 +3253,6 @@ window.renderHalfBands = function(b1,b2,mk,d){
   $("regUseEditor").onclick=()=>{
     const ev=$("edV"), u=ev&&(ev.currentSrc||ev.getAttribute("src"));
     if(!u){ showMsg("El editor no tiene vídeo cargado. Súbelo primero en la pestaña «Editor de vídeo»."); return; }
-    if(u.startsWith(window.acfcYT.PFX)){ openYT(u.slice(window.acfcYT.PFX.length),"",true); return; }
     v.dataset.user="1"; showMsg("Abriendo el vídeo del editor…");
     v.src=u; v.load(); $("vidName").textContent="Vídeo del editor";
   };
@@ -4276,7 +4110,6 @@ window.renderHalfBands = function(b1,b2,mk,d){
   const SRC_COLORS=["#2f6b3c","#3F5568","#D3291E","#C98A1B","#7A1712","#6B5B4B","#5E6B3A","#8A8F96"];
   const srcColor=i=>SRC_COLORS[i%SRC_COLORS.length];
   const dur=()=>isFinite(V.duration)?V.duration:0;
-  const YT=window.acfcYT.mount(V); window.acfcYTed=YT; // vídeos de YouTube: el <video> delega en el reproductor de YouTube
   window.acfcEdSrcName=()=>{ const s=sources[curSrc]; return s?s.name:""; }; // para guardar el pintado por vídeo
   function fixBrokenDuration(vid){
     if(isFinite(vid.duration)) return;
@@ -4290,7 +4123,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   const tabs=[["tabBtnVisor","tabVisor"],["tabBtnEditor","tabEditor"]];
   tabs.forEach(([b,p])=>$(b).onclick=()=>{ tabs.forEach(([b2,p2])=>{ $(b2).setAttribute("aria-selected",b2===b); $(p2).hidden=b2!==b; });
     document.querySelectorAll("video").forEach(x=>{ if(!x.closest("#"+p)) x.pause(); });
-    const vis=p==="tabVisor"; ["vidName","vidNote"].forEach(id=>$(id).hidden=!vis); document.querySelector('label[for="file"]').hidden=!vis; $("btnYTvisor").hidden=!vis; });
+    const vis=p==="tabVisor"; ["vidName","vidNote"].forEach(id=>$(id).hidden=!vis); document.querySelector('label[for="file"]').hidden=!vis; });
   $("tabBtnEditor").click(); // el editor de vídeo es la pestaña inicial
 
   // ---------- carga ----------
@@ -4333,29 +4166,9 @@ window.renderHalfBands = function(b1,b2,mk,d){
     sources.push({id:newSrcId(), name, url, file:f, dur:0, segs:null, inP:0, outP:0, hist:[], marks:emptyMarks()});
     if(sources.length===1) switchSource(sources.length-1); else renderSources();
   }
-  function addSourceFromYT(id,title,savedName){
-    if(!window.acfcYT.parseId(id)) return false;
-    if(sources.some(s=>s.yt===id)) return false;
-    if(edOneOnly()){ msg(ONE_MSG); return false; }
-    const name=(savedName||title||"YouTube "+id).replace(/[^\w\-áéíóúñÁÉÍÓÚÑ ]/g,"").slice(0,50).trim()||"YouTube "+id;
-    sources.push({id:newSrcId(), name, url:window.acfcYT.PFX+id, yt:id, autoName:!savedName&&!title, file:null, dur:0, segs:null, inP:0, outP:0, hist:[], marks:emptyMarks()});
-    if(sources.length===1) switchSource(sources.length-1); else renderSources();
-    return true;
-  }
-  window.__edAddYT=(id,title)=>addSourceFromYT(id,title);
-  async function askYT(){
-    const id=await window.acfcYT.ask(); if(!id) return;
-    const dup=sources.findIndex(s=>s.yt===id); if(dup>=0){ switchSource(dup); return; } // ya está: se vuelve a abrir
-    const first=!sources.length;
-    if(!addSourceFromYT(id,"")) return;
-    // el primer vídeo del editor se abre también en el registro de acciones
-    if(first&&window.__visorOpenYT) try{ window.__visorOpenYT(id,""); }catch(err){}
-  }
-  $("edYT").onclick=askYT; $("edAddYT").onclick=askYT;
   function addSourceFromVisor(){
     if(edOneOnly()){ msg(ONE_MSG); return; }
     const vv=$("v"); const u=vv.currentSrc||vv.src; if(!u){ msg("El visor no tiene vídeo cargado."); return; }
-    if(u.startsWith(window.acfcYT.PFX)){ addSourceFromYT(u.slice(window.acfcYT.PFX.length),$("vidName").textContent.replace(/^YouTube:\s*/,"")); return; }
     const name=($("vidName").textContent||"video").replace(/\.[^.]+$/,"").slice(0,50)||"video";
     sources.push({id:newSrcId(), name, url:u, file:null, dur:0, segs:null, inP:0, outP:0, hist:[], marks:emptyMarks()});
     if(sources.length===1) switchSource(sources.length-1); else renderSources();
@@ -4367,7 +4180,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     syncCur();
     return {
       project:"visor_eventos_cortes3_editor", version:1, savedAt:new Date().toISOString(),
-      sources: sources.map(s=>({name:s.name, yt:s.yt||undefined, dur:s.dur, segs:s.segs, inP:s.inP, outP:s.outP, marks:s.marks})),
+      sources: sources.map(s=>({name:s.name, dur:s.dur, segs:s.segs, inP:s.inP, outP:s.outP, marks:s.marks})),
       added: added.map(it=>({srcIndex: sources.findIndex(x=>x.id===it.srcId), s:it.s, e:it.e, name:it.name||""})),
       edName: $("edName").value, edRes: $("edRes").value, edFmt: $("edFmt").value, edFps: $("edFps").value
     };
@@ -4420,10 +4233,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
       sources=[]; curSrc=-1; added=[]; segs=[]; inP=0; outP=0; hist=[]; sel=-1; marks=emptyMarks();
       V.pause(); V.removeAttribute("src"); V.load();
       pendingEdProject=data;
-      // los vídeos de YouTube se abren solos; el resto hay que volver a subirlos
-      let nYT=0; data.sources.forEach(p=>{ if(p&&window.acfcYT.parseId(p.yt)===p.yt&&p.yt){ nYT++; addSourceFromYT(p.yt,"",String(p.name||"")); } });
-      const n=data.sources.length-nYT;
-      if(!n){ render(); return; }
+      const n=data.sources.length;
       msg("Proyecto cargado: vuelve a subir "+n+" vídeo"+(n===1?"":"s")+" (los mismos, en el mismo orden) con «Subir vídeo» o «+ Añadir vídeo» para recuperar sus tramos."+(n?"\n\nVídeo"+(n===1?"":"s")+" esperado"+(n===1?"":"s")+": "+data.sources.map(s=>s.name).join(", "):""));
       render();
     });
@@ -4435,11 +4245,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     segs=s.segs?s.segs:[]; inP=s.inP||0; outP=s.outP||0; hist=s.hist?s.hist:[]; sel=-1;
     marks=s.marks||(s.marks=emptyMarks());
     pendingFile=s.file||null; V.dataset.fallback=s.file?"1":"";
-    msg("Abriendo "+s.name+"…"); renderSources();
-    if(s.yt){ YT.open(s.yt).then(r=>{ if(r.basic&&sources[curSrc]===s){ $("edEmpty").hidden=true; s.dur=0; renderSources(); alert("El reproductor de YouTube no se ha conectado con la herramienta: se muestra con sus propios controles y no funcionarán los botones de la herramienta (reproducir, A/B, cortes). Prueba a abrir la herramienta desde la web (https://) en Chrome o Edge."); }
-      if(sources[curSrc]===s&&r.title&&s.autoName){ s.name=r.title.slice(0,50); s.autoName=false; renderSources(); } })
-      .catch(e=>{ if(sources[curSrc]!==s) return; msg(e.message); const i=sources.indexOf(s); if(i>=0){ sources.splice(i,1); added=added.filter(it=>it.srcId!==s.id); curSrc=-1; renderSources(); render(); } }); return; }
-    V.src=s.url; V.load();
+    msg("Abriendo "+s.name+"…"); V.src=s.url; V.load(); renderSources();
   }
   function syncCur(){ const s=sources[curSrc]; if(!s) return; s.segs=segs; s.inP=inP; s.outP=outP; s.hist=hist; s.marks=marks; }
   function moveSource(i,dir){ const j=i+dir; if(j<0||j>=sources.length) return; syncCur();
@@ -4893,7 +4699,6 @@ window.renderHalfBands = function(b1,b2,mk,d){
     if(VidExport.running||exporting) return;
     idxs=(idxs||added.map((_,i)=>i).filter(i=>!evFilter||evKey(added[i])===evFilter)).filter(i=>added[i]);
     if(!idxs.length) return note("No hay tramos para descargar con el filtro actual.");
-    if(idxs.some(i=>{ const s=sources.find(x=>x.id===added[i].srcId); return s&&s.yt; })) return alert(window.acfcYT.blockedMsg);
     const base=($("edName").value||"corte").replace(/[\\/:*?"<>|]/g,"").trim()||"corte";
     const pad=String(added.length).length;
     exporting=true; V.pause();
@@ -4917,7 +4722,6 @@ window.renderHalfBands = function(b1,b2,mk,d){
     markGreen("edExport");
     syncCur(); if(!added.length) return note("Añade al menos un tramo con «+ Añadir» antes de exportar.");
     const groups=buildGroups(); if(!groups.length) return;
-    if(groups.some(g=>String(g.src).startsWith(window.acfcYT.PFX))) return alert(window.acfcYT.blockedMsg);
     exporting=true;
     try{
       await VidExport.runMulti({video:V, groups, name:((evFilter&&evFilter!=="__sin")?evFilter.replace(/[\\/:*?"<>|]/g,"").trim():"")||$("edName").value.trim()||(sources[curSrc]&&sources[curSrc].name)||"corte", mime:$("edFmt").value, target:+$("edRes").value, fps:+$("edFps").value, ui:{busy:$("edBusy"),bar:$("edBar"),txt:$("edBusyTxt")}});
