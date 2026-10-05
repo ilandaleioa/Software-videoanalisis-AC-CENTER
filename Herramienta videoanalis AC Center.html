@@ -81,10 +81,9 @@ html.acfc-imm .stageTL{display:none!important}
 .fsBar .fsMatch{color:#fff;font-weight:700}
 .stage:fullscreen .fsBar,.stage:-webkit-full-screen .fsBar{display:flex}
 .stage:fullscreen,.stage:-webkit-full-screen{aspect-ratio:auto;border-radius:0}
-/* en el editor no se usa la barra roja sobre el vídeo: se usa la línea de tiempo verde de debajo */
-#edStage .fsBar,#edStage:fullscreen .fsBar,#edStage:-webkit-full-screen .fsBar{display:none!important}
-/* igual en el registro de acciones: solo la línea de tiempo verde de debajo */
-.stage .fsBar,.stage:fullscreen .fsBar,.stage:-webkit-full-screen .fsBar{display:none!important}
+/* la barra de reproducción (línea de tiempo) se ve en toda pantalla completa del vídeo, en el registro y en el editor */
+.stage .fsBar{display:none!important}
+.stage:fullscreen .fsBar,.stage:-webkit-full-screen .fsBar{display:flex!important}
 #tabEditor:fullscreen,#tabEditor:-webkit-full-screen{background:var(--bg);overflow:auto;padding:10px;box-sizing:border-box}
 #tabEditor:fullscreen .edgrid{max-width:none;height:100%;padding:0;box-sizing:border-box;margin:0}
 #tabEditor:fullscreen .edgrid>section{display:flex;flex-direction:column;min-width:0;min-height:0}
@@ -163,7 +162,7 @@ select{padding:6px;border:1px solid var(--line);border-radius:5px;background:var
 .pbRow{display:flex;gap:8px;flex-wrap:wrap}
 .hint{font-size:12px;color:var(--muted);padding:0 22px 20px;max-width:none;margin:0}
 dialog{border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--ink);width:min(420px,92vw)}
-dialog#dlg{margin:0;overflow:auto;box-shadow:0 8px 28px rgba(0,0,0,.35)}
+dialog#dlg{margin:0;overflow:auto;box-shadow:0 8px 28px rgba(0,0,0,.35);z-index:50}
 dialog#dlg::backdrop{background:rgba(0,0,0,.1)}
 dialog form{display:grid;gap:10px}
 #stEq:not([hidden]),#stDet:not([hidden]),#stJug:not([hidden]){display:contents}
@@ -937,11 +936,23 @@ html #tabEditor aside .pintBlock:has(#pintBodyEd[hidden]) .pbHead{margin-bottom:
 #tabLive .liveCur{font-size:14px;padding:8px 10px;border:1px solid var(--line);border-left:3px solid var(--red)}
 #tabLive .liveCat{display:inline-block;color:#fff;font-family:var(--f-disp);font-weight:600;font-size:12px;padding:1px 7px;border-radius:2px}
 #tabLive .liveList{display:grid;gap:4px;max-height:60vh;overflow:auto}
-#tabLive .liveItem{display:grid;grid-template-columns:52px minmax(0,1fr) auto;gap:8px;align-items:center;padding:8px;border:1px solid var(--line);background:var(--bg);cursor:pointer;text-align:left;font:inherit;color:var(--ink)}
+#tabLive .liveItem{display:grid;grid-template-columns:auto 56px minmax(0,1fr) auto;gap:8px;align-items:center;padding:8px;border:1px solid var(--line);background:var(--bg);cursor:pointer;text-align:left;font:inherit;color:var(--ink)}
 #tabLive .liveItem.sel{border-color:var(--red);box-shadow:inset 3px 0 0 var(--red)}
 #tabLive .liveItem b{font-family:var(--f-disp);font-variant-numeric:tabular-nums}
 #tabLive .liveItem span.liveTxt{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px}
 #tabLive .liveItem .liveX{border:0;background:none;color:var(--muted);font-size:20px;cursor:pointer;padding:0 6px;min-height:32px}
+#tabLive .liveItem small{display:block;font-size:11px;color:var(--muted);font-weight:400}
+#tabLive .liveItem .liveTxt .liveDot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;background:var(--ink)}
+#tabLive .liveItem .liveTxt .liveDot.rival{background:transparent;border:2px solid var(--ink)}
+#tabLive .liveItem .liveActs2{display:flex;gap:4px}
+#tabLive .liveItem .liveActs2 button{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;padding:0;border:1px solid var(--line);background:var(--panel);color:var(--ink);cursor:pointer}
+#tabLive .liveItem .liveActs2 button:disabled{opacity:.35;cursor:not-allowed}
+#tabLive .liveItem.chk{background:color-mix(in srgb,var(--red) 8%,var(--bg))}
+#tabLive .liveItem .liveTxt{white-space:normal;display:block}
+@media (max-width:640px){#tabLive .liveItem{grid-template-columns:auto 50px minmax(0,1fr)}#tabLive .liveItem .liveActs2{grid-column:1/-1;justify-content:flex-end}}
+#liveEvDlg{max-width:min(440px,94vw);border:1px solid var(--line);border-top:3px solid var(--ink);background:var(--panel);color:var(--ink);padding:16px;border-radius:0}
+#liveEvDlg label{display:grid;gap:3px;font-size:12px;margin:8px 0;color:var(--muted)}
+#liveEvDlg input,#liveEvDlg select{padding:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:inherit}
 #tabLive .liveActs{display:grid;gap:8px}
 #tabLive .liveActs .btn{min-height:44px}
 #tabLive input.liveInp{width:100%;padding:9px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:inherit}
@@ -949,6 +960,14 @@ html #tabEditor aside .pintBlock:has(#pintBodyEd[hidden]) .pbHead{margin-bottom:
 #tabLive .liveAdj[hidden]{display:none}
 #tabLive .liveAdj .btn{min-height:36px;padding:4px 10px}
 @media (min-width:900px){#tabLive .liveWrap{grid-template-columns:minmax(0,1.4fr) minmax(320px,1fr)}}
+/* escritorio: botonera compacta, como en la ventana de edición (botones a su tamaño y en fila); en móvil vertical se mantienen los grandes */
+@media (min-width:641px){
+  #tabLive .livePanel .catbtns{gap:4px}
+  #tabLive .livePanel .catbtn,#tabLive .livePanel .optbtn,html.acfc-imm #tabLive .livePanel .catbtn,html.acfc-imm #tabLive .livePanel .optbtn{min-height:30px;padding:3px 22px 3px 9px;font-size:13px;line-height:1.1;flex:0 0 auto}
+  #tabLive .livePanel .catbtn.add,#tabLive .livePanel .optbtn.add{padding-right:9px}
+  #tabLive .liveCats .catbtn,#tabLive .liveEq .optbtn{min-height:34px;font-size:14px;flex:0 0 auto}
+  #tabLive .liveSep{margin:2px 0;opacity:.35}
+}
 @media (max-width:640px){
   #tabLive{padding:10px 12px 24px}
   #tabLive .liveClock{font-size:38px}
@@ -974,10 +993,29 @@ html #tabEditor aside .pintBlock:has(#pintBodyEd[hidden]) .pbHead{margin-bottom:
   #tabLive:fullscreen{padding:10px 12px}
   #liveTutDlg{max-height:90vh;overflow:auto}
 }
+/* Al registrar no se añaden jugadores: se definen en la botonera */
+#tabLive .liveAdj:has(#liveJugName){display:none!important}
+/* Pantalla completa en móvil: solo la botonera (y el minuto + botón de salir) */
+@media (max-width:900px){
+  #tabLive:fullscreen #liveSub,#tabLive:fullscreen #liveVidPanel,#tabLive:fullscreen #liveEvPanel,#tabLive:fullscreen #livePB,#tabLive:fullscreen #liveCompPanel,#tabLive:fullscreen #liveActsPanel,#tabLive:fullscreen #liveBot,
+  #tabLive:fullscreen .liveMain>.livePanel:first-child>h2,#tabLive:fullscreen .liveMain>.livePanel:first-child>.liveHelp,#tabLive:fullscreen #liveTut{display:none!important}
+  #tabLive:fullscreen .liveMain>.livePanel:first-child{padding:8px 12px}
+  #tabLive:fullscreen .liveClockRow{flex-wrap:wrap;align-items:center;gap:6px}
+  #tabLive:fullscreen .liveClockRow>div{flex:1 1 auto}
+  #tabLive:fullscreen .liveClockRow>#liveFull{flex:0 0 auto;min-height:40px!important}
+  #tabLive:fullscreen .liveClockRow>#liveRun,#tabLive:fullscreen .liveClockRow>#liveNew,#tabLive:fullscreen .liveClockRow>#liveEdit{flex:1 1 calc(33% - 6px);min-height:40px!important}
+  #tabLive:fullscreen .liveMarks{grid-template-columns:repeat(2,minmax(0,1fr))}
+  #tabLive:fullscreen .liveMarks .btn{min-height:42px}
+  #tabLive:fullscreen .liveClock{font-size:30px}
+}
 #tabLive .liveSyncRow{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:6px;align-items:center;font-size:13px}
 #tabLive .liveSyncRow .btn{min-height:36px;padding:4px 10px;font-size:12px}
 #tabLive .liveSyncRow small{display:block;color:var(--muted)}
 #tabLive #liveVid{width:100%;aspect-ratio:16/9;background:#000;display:block}
+#tabLive #liveVidPanel{position:relative}
+#tabLive #liveVidPanel .pintBlock{border-top:1px solid var(--line);margin-top:4px;padding:10px 0 0}
+#tabLive #liveVidPanel .pintBlock:has(#pintBodyLv[hidden]){border-top:0;padding-top:0}
+#tabLive #liveVidPanel .pintBlock:has(#pintBodyLv[hidden]) .pbHead{margin-bottom:0}
 #tabLive #liveSyncMsg{font-size:12px;color:var(--muted)}
 /* ===== fin registro sin vídeo ===== */
 /* Registro sin vídeo · vistas en móvil */
@@ -1372,6 +1410,7 @@ html button.acfcTgl[data-tgl="mostrar"],html button.acfcTgl[data-tgl="mostrar"]:
 html button.acfcTgl,html #dlgMinToggle,
 html #regSrcToggle,html #evHideToggle,html #ajToggle,html #fltToggle,html #plListToggle,html #pintToggle,html #pintNumsToggle,html #pintStyleToggle,
 html #pintToggleEd,html #pintNumsToggleEd,html #pintStyleToggleEd,
+html #pintToggleLv,html #pintNumsToggleLv,html #pintStyleToggleLv,
 html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edEvToggle,html #edExpToggle{
   box-sizing:border-box!important;display:inline-flex!important;align-items:center;justify-content:center;
   width:84px!important;min-width:84px!important;max-width:84px!important;height:28px!important;min-height:28px!important;
@@ -1399,6 +1438,7 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
     <a href="https://acfootballcenter.eus/ia-aplicada-gestion-deportiva/?utm_source=lezama-talks&amp;utm_medium=herramienta-videoanalisis&amp;utm_campaign=promo-cursos&amp;utm_content=cabecera" target="_blank" rel="noopener"><b>Curso: IA aplicada a la gestión</b> · 3 nov</a>
   </nav>
   <span class="sp"></span>
+  <button type="button" class="btn" id="acfcClearProj" title="Borra de golpe todos los eventos y pintados de esta pestaña">Limpiar proyecto</button>
   <button type="button" class="btn" id="btnInstalar" hidden title="Instalar la app o crear un acceso directo">Instalar app</button>
   <input type="file" id="file" accept="video/*" hidden>
   <input type="file" id="fileAdd" accept="video/*" multiple hidden>
@@ -2028,10 +2068,9 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
 <p class="hint" style="display:none">Atajos: <kbd>Espacio</kbd> reproducir · <kbd>I</kbd>/<kbd>O</kbd> inicio/fin · <kbd>D</kbd> dividir · <kbd>Supr</kbd> quitar/recuperar el tramo seleccionado en la lista · <kbd>,</kbd>/<kbd>.</kbd> fotograma · <kbd>←</kbd><kbd>→</kbd> ±1 s · <kbd>Ctrl+Z</kbd> deshacer.</p>
 </section>
 
-<section id="tabLive" hidden data-lv="bot">
+<section id="tabLive" hidden data-lv="botev">
   <nav class="liveSub" id="liveSub" role="tablist" aria-label="Vista del registro">
-    <button type="button" role="tab" data-lv="bot" aria-selected="true">Botonera</button>
-    <button type="button" role="tab" data-lv="botev" aria-selected="false">Botonera + eventos</button>
+    <button type="button" role="tab" data-lv="botev" aria-selected="true">Botonera + eventos</button>
     <button type="button" role="tab" data-lv="vid" aria-selected="false">Vídeo + eventos</button>
   </nav>
   <div class="liveWrap">
@@ -2056,7 +2095,7 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
         <div class="catbtns liveCats" id="liveCats" role="group" aria-label="Categoría"></div>
         <div><button type="button" class="btn acfcLink" id="liveBot" title="Define las categorías, detalles y jugadores de la botonera">Editar botonera</button></div>
       </div>
-      <div class="livePanel">
+      <div class="livePanel" id="liveCompPanel">
         <h2>Completar el evento seleccionado</h2>
         <div class="liveCur" id="liveCur">Aún no hay ningún evento.</div>
         <div class="liveAdj" id="liveAdj" hidden>
@@ -2097,6 +2136,16 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
       </div>
       <div class="livePanel" id="liveEvPanel">
         <h2>Eventos <span id="liveCount" style="color:var(--muted);font-weight:400"></span></h2>
+        <div class="liveAdj" style="justify-content:flex-end"><button type="button" class="btn" id="liveDelAll" title="Borrar todos los eventos de este registro">Borrar todos los eventos</button></div>
+        <div class="row bulkbar" id="liveBulk">
+          <span style="font-size:13px;color:var(--muted)" id="liveBulkCount"></span>
+          <span class="row" style="gap:6px;margin:0">
+            <button type="button" class="btn" id="liveBulkDl" title="Descarga los eventos seleccionados, unidos en un solo vídeo">Descargar</button>
+            <button type="button" class="btn" id="liveBulkSep" title="Descarga cada evento seleccionado como un vídeo independiente">Por separado</button>
+            <button type="button" class="btn" id="liveBulkDel">✕ Borrar</button>
+            <button type="button" class="btn" id="liveBulkClear">Cancelar</button>
+          </span>
+        </div>
         <div class="liveList" id="liveList"></div>
       </div>
       <div class="livePanel liveActs" id="liveActsPanel">
@@ -2209,11 +2258,18 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
     <label>Jugador</label>
     <div id="fJugBtns" class="catbtns" role="group" aria-label="Jugador"></div>
     <select id="fJug" hidden aria-hidden="true"></select>
-    <div id="newJugRow" class="row" hidden style="flex-wrap:nowrap">
+    <div id="newJugRow" class="row" style="flex-wrap:nowrap">
       <input id="newJugName" maxlength="40" placeholder="Nombre del jugador" aria-label="Nuevo jugador" style="flex:1">
       <button type="button" class="btn primary" id="newJugAdd">Añadir</button>
     </div>
     <div id="newJugErr" style="font-size:12px;color:var(--red)"></div>
+    </div>
+    <div class="row" id="dlgAdj" role="group" aria-label="Ajustar tiempo" style="gap:6px;align-items:center;margin:6px 0">
+      <span style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em">Ajustar tiempo</span>
+      <button type="button" class="btn" data-d="-10">−10 s</button>
+      <button type="button" class="btn" data-d="-5">−5 s</button>
+      <button type="button" class="btn" data-d="-1">−1 s</button>
+      <button type="button" class="btn" data-d="1">+1 s</button>
     </div>
     <label for="fComent">Comentario</label>
     <input id="fComent" maxlength="200" placeholder="Comentario libre (opcional)">
@@ -3489,10 +3545,9 @@ window.renderHalfBands = function(b1,b2,mk,d){
     JUGS.forEach(n=>s.append(el("option",{value:n,textContent:n})));
     if(sel&&!JUGS.includes(sel)) s.append(el("option",{value:sel,textContent:sel}));
     s.append(el("option",{value:"__new__",textContent:"+ AÑADIR JUGADOR"}));
-    s.value=sel||""; $("newJugRow").hidden=true; $("newJugErr").textContent="";
+    s.value=sel||""; $("newJugErr").textContent="";
     renderJugBtns(sel); }
-  $("fJug").addEventListener("change",()=>{ const nw=$("fJug").value==="__new__"; $("newJugRow").hidden=!nw; $("newJugErr").textContent="";
-    if(nw){ $("newJugName").value=""; $("newJugName").focus(); } });
+  $("fJug").addEventListener("change",()=>{ $("newJugErr").textContent=""; });
   function addJug(){
     const n=addJugTo($("newJugName").value); if(!n){ $("newJugErr").textContent="Escribe el nombre."; return; }
     fillJugs(n); }
@@ -4513,7 +4568,12 @@ window.renderHalfBands = function(b1,b2,mk,d){
     const r=aside.getBoundingClientRect();
     dlg.style.position="fixed";
     // Si el panel lateral está desplazado y su parte alta queda fuera de la pantalla, bajamos la botonera para que se vea entera (incluido el botón de cerrar)
-    const top=Math.min(Math.max(Math.round(r.top),72),Math.max(72,window.innerHeight-200));
+    // La cabecera fija (barra ACFC + cabecera) tapaba el título y el botón EMERGENTE: la botonera arranca por debajo de ella
+    const hdr=document.querySelector("header"), util=document.querySelector(".acfcUtil");
+    let hdrBottom=72;
+    [util,hdr].forEach(el=>{ if(el && getComputedStyle(el).position==="sticky"){ const b=el.getBoundingClientRect().bottom; if(b>hdrBottom) hdrBottom=b; } });
+    hdrBottom=Math.ceil(hdrBottom)+4;
+    const top=Math.min(Math.max(Math.round(r.top),hdrBottom),Math.max(hdrBottom,window.innerHeight-200));
     dlg.style.top=top+"px";
     dlg.style.left=Math.round(r.left)+"px";
     dlg.style.width=Math.round(r.width)+"px";
@@ -4586,6 +4646,20 @@ window.renderHalfBands = function(b1,b2,mk,d){
     if(!v.paused) v.pause();
     manUI();
   };
+  // Ajustar tiempo: con un evento abierto lo desplaza; en uno nuevo mueve el vídeo (el evento se guarda en el instante actual)
+  $("dlgAdj").querySelectorAll("button").forEach(b=>b.onclick=()=>{
+    const d=+b.dataset.d, ev=editId&&events.find(x=>x.id===editId);
+    if(ev){
+      const t=Math.max(0,+(timeOf(ev)+d).toFixed(2)), dt=t-timeOf(ev);
+      ev.fixed=t; ev.min=matchClockText(t)||fmt(t);
+      if(ev.clip){ ev.clip.a=Math.max(0,ev.clip.a+dt); ev.clip.b=Math.max(ev.clip.a+0.2,ev.clip.b+dt); (ev.clip.segs||[]).forEach(g=>{ g.s=Math.max(0,g.s+dt); g.e=Math.max(g.s+0.2,g.e+dt); }); }
+      $("fMin").value=ev.min; save(); refresh();
+    } else if(v.src){
+      v.currentTime=Math.max(0,Math.min(v.duration||Infinity,(v.currentTime||0)+d));
+      $("fMin").value=matchClockText(v.currentTime)||fmt(v.currentTime);
+    }
+    updateClipInfo();
+  });
   $("dlgSave").addEventListener("click",ev=>{
     if(!manualMode||editId) return;
     if(manA===null||manB===null){
@@ -5283,6 +5357,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     if(!confirm("¿Borrar TODOS los eventos del registro ("+events.length+")? Esta acción no se puede deshacer.")) return;
     events=[]; playlists.forEach(p=>{ p.items=[]; }); savePlaylists(); closeClip(); save(); refresh();
   };
+  window.acfcClearVisor=()=>{ events=[]; playlists.forEach(p=>{ p.items=[]; }); savePlaylists(); selectedIds.clear(); closeClip(); save(); refresh(); };
   $("bulkDel").onclick=deleteSelected;
   $("bulkClear").onclick=clearSel;
   $("bulkPl").onclick=()=>{ if(selectedIds.size) openPlDlg([...selectedIds]); };
@@ -5454,19 +5529,94 @@ window.renderHalfBands = function(b1,b2,mk,d){
     const L=[...live.events].sort((a,b)=>b.t-a.t), A=liveAnchors();
     $("liveCount").textContent=L.length?"· "+L.length:"";
     if(!L.length){ w.append(el("div",{className:"liveHelp",textContent:"Todavía no hay eventos."})); return; }
+    const loaded=!!liveVid.getAttribute("src");
     L.forEach(e=>{
-      const c=CATS[e.cat]||{c:"#3D4852"}, vt=liveMap(e.t,A);
-      const r=el("div",{className:"liveItem"+(e.id===liveSel?" sel":""),tabIndex:0,role:"button"});
-      r.append(el("b",{textContent:e.min}),
-        el("span",{className:"liveTxt",textContent:e.cat.charAt(0)+e.cat.slice(1).toLowerCase()+(e.eq==="rival"?" · Rival":"")+(e.det?" · "+e.det:"")+(e.jug?" · "+e.jug:"")+(e.coment?" · "+e.coment:"")+(vt!=null&&liveVid.getAttribute("src")?" · ▶ "+fmt(vt):""),style:"border-left:4px solid "+c.c+";padding-left:8px"}));
-      const x=el("button",{type:"button",className:"liveX",textContent:"×",title:"Borrar el evento"});
-      x.setAttribute("aria-label","Borrar el evento");
-      x.onclick=ev=>{ ev.stopPropagation(); live.events=live.events.filter(y=>y.id!==e.id); if(liveSel===e.id) liveSel=null; liveCommit(); };
-      r.append(x);
-      r.onclick=()=>{ liveSel=e.id; if(vt!=null&&liveVid.getAttribute("src")){ liveVid.currentTime=Math.max(0,vt-5); liveVid.play().catch(()=>{}); } liveRender(); };
+      const c=CATS[e.cat]||{c:"#3D4852"}, vt=liveMap(e.t,A), on=liveChk.has(e.id);
+      const r=el("div",{className:"liveItem"+(e.id===liveSel?" sel":"")+(on?" chk":""),tabIndex:0,role:"button"});
+      const chk=el("input",{type:"checkbox",className:"chk",checked:on,title:"Seleccionar"});
+      chk.onclick=ev=>ev.stopPropagation();
+      chk.onchange=()=>{ if(chk.checked) liveChk.add(e.id); else liveChk.delete(e.id); r.classList.toggle("chk",chk.checked); liveBulkRender(); };
+      r.append(chk,el("b",{},[document.createTextNode(e.min),el("small",{textContent:liveDurTxt(e)})]),
+        el("span",{className:"liveTxt",style:"border-left:4px solid "+c.c+";padding-left:8px"},[
+          el("span",{className:"liveDot"+(e.eq==="rival"?" rival":""),title:e.eq==="rival"?"Rival":"Mi equipo"}),
+          el("b",{textContent:e.cat}),
+          document.createTextNode((e.det?" · "+e.det:"")+(e.jug?" · "+e.jug:"")+(e.coment?" · "+e.coment:"")+(vt!=null&&loaded?" · ▶ "+fmt(vt):""))]));
+      const acts=el("div",{className:"liveActs2"});
+      const bEd=liveIco('<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>',"Editar evento");
+      const bDl=liveIco('<path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/>',loaded&&vt!=null?"Descargar solo este evento como vídeo":"Añade el vídeo y sincroniza para descargar el evento");
+      const bDel=liveIco('<path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/>',"Borrar evento");
+      bDl.disabled=!(loaded&&vt!=null);
+      bEd.onclick=ev=>{ ev.stopPropagation(); liveEditDlg(e); };
+      bDl.onclick=ev=>{ ev.stopPropagation(); liveDownload([e],false); };
+      bDel.onclick=ev=>{ ev.stopPropagation(); live.events=live.events.filter(y=>y.id!==e.id); liveChk.delete(e.id); if(liveSel===e.id) liveSel=null; liveCommit(); };
+      acts.append(bEd,bDl,bDel); r.append(acts);
+      r.onclick=()=>{ liveSel=e.id; if(vt!=null&&loaded){ liveVid.currentTime=Math.max(0,vt-5); liveVid.play().catch(()=>{}); } liveRender(); };
       r.onkeydown=k=>{ if(k.target===r&&(k.key==="Enter"||k.key===" ")){ k.preventDefault(); r.click(); } };
       w.append(r);
     });
+    liveBulkRender();
+  }
+  // ---- selección, edición, descarga y borrado de eventos (igual que en el registro con vídeo) ----
+  const liveChk=new Set();
+  const liveIco=(svg,title)=>{ const x=el("button",{type:"button",title}); x.setAttribute("aria-label",title);
+    x.innerHTML='<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+svg+'</svg>'; return x; };
+  const livePrePost=e=>{ const ct=catT[e.cat]; return {pre:ct?ct.pre:(+$("pre").value||0), post:ct?ct.post:Math.max(0.2,+$("post").value||10)}; };
+  const liveDurTxt=e=>{ const p=livePrePost(e), s=Math.round(p.pre+p.post); return s>=60?Math.floor(s/60)+" min "+String(s%60).padStart(2,"0")+" s":s+" s"; };
+  const liveSlug=t=>String(t).normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^\w]+/g,"_").replace(/^_|_$/g,"").slice(0,60);
+  function liveRanges(e){
+    const vt=liveMap(e.t,liveAnchors()); if(vt==null||!isFinite(liveVid.duration)) return [];
+    const p=livePrePost(e), a=Math.max(0,vt-p.pre), b=Math.min(liveVid.duration,vt+p.post);
+    return b-a>0.05?[{s:a,e:b,ov:ovOf(e)}]:[];
+  }
+  function liveBulkRender(){
+    [...liveChk].forEach(id=>{ if(!live.events.some(e=>e.id===id)) liveChk.delete(id); });
+    const n=liveChk.size, b=$("liveBulk"); b.classList.toggle("on",n>0);
+    $("liveBulkCount").textContent=n+" seleccionado"+(n===1?"":"s");
+    const ok=!!liveVid.getAttribute("src")&&!VidExport.running; $("liveBulkDl").disabled=!ok; $("liveBulkSep").disabled=!ok;
+  }
+  async function liveDownload(items,sep){
+    if(VidExport.running||!liveVid.getAttribute("src")) return;
+    items=items.slice().sort((a,b)=>a.t-b.t); if(!items.length) return;
+    const base=$("liveVidName").textContent.replace(/\.[^.]+$/,""), o={video:liveVid,mime:$("vFmt").value,target:+$("vRes").value,fps:+$("vFps").value,ui:vUI};
+    const nm=e=>liveSlug(e.min.replace(":","m")+"_"+e.cat+"_"+e.det+(e.jug?"_"+e.jug:""));
+    try{
+      if(items.length===1) await VidExport.run({...o,ranges:liveRanges(items[0]),name:nm(items[0])});
+      else if(!sep){ const rs=[]; items.forEach(e=>liveRanges(e).forEach(r=>rs.push(r))); if(rs.length) await VidExport.run({...o,ranges:rs,name:liveSlug("seleccion_"+items.length+"eventos_"+base)}); }
+      else for(let i=0;i<items.length;i++){ const rs=liveRanges(items[i]); if(!rs.length) continue; const ok=await VidExport.run({...o,ranges:rs,name:(i+1)+"_"+nm(items[i]),silent:true}); if(!ok) break; }
+    } finally{ liveBulkRender(); }
+  }
+  $("liveBulkDl").onclick=()=>liveDownload(live.events.filter(e=>liveChk.has(e.id)),false);
+  $("liveBulkSep").onclick=()=>liveDownload(live.events.filter(e=>liveChk.has(e.id)),true);
+  $("liveBulkDel").onclick=()=>{ if(!liveChk.size) return; if(!confirm("¿Borrar los "+liveChk.size+" eventos seleccionados?")) return;
+    live.events=live.events.filter(e=>!liveChk.has(e.id)); if(liveSel&&liveChk.has(liveSel)) liveSel=null; liveChk.clear(); liveCommit(); };
+  $("liveBulkClear").onclick=()=>{ liveChk.clear(); liveRenderList(); };
+  $("liveDelAll").onclick=()=>{ if(!live.events.length) return;
+    if(!confirm("¿Borrar TODOS los eventos del registro sin vídeo ("+live.events.length+")? Esta acción no se puede deshacer.")) return;
+    live.events=[]; liveChk.clear(); liveSel=null; liveCommit(); };
+  // ventana de edición de un evento
+  function liveEditDlg(e){
+    let d=$("liveEvDlg"); if(d) d.remove();
+    d=el("dialog",{id:"liveEvDlg"}); document.body.append(d);
+    const cat=el("select"); Object.keys(CATS).forEach(k=>cat.append(el("option",{value:k,textContent:k,selected:k===e.cat})));
+    const eq=el("select"); EQS.forEach(([k,t])=>eq.append(el("option",{value:k,textContent:t,selected:k===e.eq})));
+    const det=el("input",{value:e.det,maxLength:60}); det.setAttribute("list","liveEvDets");
+    const dl=el("datalist",{id:"liveEvDets"}); const fillDets=()=>{ dl.replaceChildren(); (DETS[cat.value]||[]).forEach(x=>dl.append(el("option",{value:x}))); }; fillDets(); cat.onchange=fillDets;
+    const jug=el("input",{value:e.jug,maxLength:40}); jug.setAttribute("list","liveEvJugs");
+    const jl=el("datalist",{id:"liveEvJugs"}); JUGS.forEach(x=>jl.append(el("option",{value:x})));
+    const com=el("input",{value:e.coment||"",maxLength:200});
+    const tm=el("input",{value:fmt(e.t),maxLength:8});
+    const lab=(t,i)=>el("label",{},[document.createTextNode(t),i]);
+    const ok=el("button",{type:"button",className:"btn primary",textContent:"Guardar"}), no=el("button",{type:"button",className:"btn",textContent:"Cancelar"});
+    const bar=el("div",{className:"liveAdj",style:"justify-content:flex-end;margin-top:10px"},[no,ok]);
+    d.append(el("h2",{textContent:"Editar evento"}),lab("Instante del cronómetro (mm:ss)",tm),lab("Equipo",eq),lab("Categoría",cat),lab("Detalle",det),dl,lab("Jugador",jug),jl,lab("Comentario",com),bar);
+    no.onclick=()=>d.close(); d.addEventListener("close",()=>d.remove());
+    ok.onclick=()=>{
+      const q=tm.value.trim().match(/^(\d{1,3})(?::(\d{1,2}))?$/); if(!q){ alert("Escribe el instante así: 12:30 o 12."); return; }
+      e.t=+q[1]*60+(q[2]?+q[2]:0); e.min=liveMinText(e.t); e.eq=eq.value==="rival"?"rival":"propio"; e.cat=cat.value;
+      e.det=det.value.trim().slice(0,60); e.jug=jug.value.trim().slice(0,40); e.coment=com.value.trim().slice(0,200);
+      d.close(); liveCommit();
+    };
+    d.showModal();
   }
   function liveRender(){ liveRenderMarks(); liveRenderCats(); liveRenderCompl(); liveSyncRender(); liveRenderList(); liveTick(); }
   // vídeo propio de esta pestaña: se elige en el equipo del usuario
@@ -5499,18 +5649,20 @@ window.renderHalfBands = function(b1,b2,mk,d){
   // al cargar una botonera desde esta pestaña, se repintan sus categorías, detalles y jugadores
   $("impBot").addEventListener("change",()=>setTimeout(liveRender,300));
   // guardar / cargar el registro sin vídeo en un archivo propio (para pasarlo del móvil al ordenador)
-  $("liveSave").onclick=()=>download("registro_sin_video_"+new Date().toISOString().slice(0,10)+".json",JSON.stringify({project:"visor_registro_sin_video",version:1,savedAt:new Date().toISOString(),live},null,0),"application/json");
+  $("liveSave").onclick=()=>download("registro_sin_video_"+new Date().toISOString().slice(0,10)+".json",JSON.stringify({project:"visor_registro_sin_video",version:1,savedAt:new Date().toISOString(),live,pintado:window.acfcPintLv?window.acfcPintLv.get():[]},null,0),"application/json");
   $("liveImp").onchange=ev=>{ const f=ev.target.files[0]; ev.target.value=""; if(!f) return; if(f.size>5e6){ alert("Archivo demasiado grande."); return; }
     f.text().then(t=>{
       let d; try{ d=JSON.parse(t); }catch(e){ alert("El archivo no tiene un formato válido."); return; }
       if(!d||d.project!=="visor_registro_sin_video"||!d.live){ alert("El archivo no es un registro sin vídeo."); return; }
       if(live.events.length&&!confirm("Esto reemplazará el registro sin vídeo actual por el de «"+f.name+"». ¿Continuar?")) return;
       livePause(); live=liveNorm(d.live); live.run=false; live.t0=0; liveSel=null; liveCommit();
+      if(Array.isArray(d.pintado)&&window.acfcPintLv) window.acfcPintLv.set(d.pintado);
     }); };
   $("liveNew").onclick=()=>{
     if(!confirm("Se pondrá el cronómetro a cero y se borrarán los eventos y las marcas de este registro sin vídeo. ¿Continuar?")) return;
     livePause(); live=liveBlank(); liveSel=null; liveCommit();
   };
+  window.acfcClearLive=()=>{ livePause(); live.events=[]; liveSel=null; liveCommit(); };
   window.acfcLive={render:liveRender};
   liveRender();
 })();
@@ -5814,6 +5966,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   function clearStills(){ if(stills.length&&!confirm("¿Quitar todas las capturas de pintado?")) return; stills.length=0; render(); }
   function clearAdded(){ if(document.body.classList.contains("edStillsShow")) return clearStills(); if(added.length&&!confirm("¿Quitar todos los eventos de la lista?")) return; added=[]; activeAdded=null; render(); }
   $("edClearAdded").onclick=clearAdded;
+  window.acfcClearEditor=()=>{ added=[]; activeAdded=null; stills.length=0; selAdded.clear(); render(); };
   function halfLabel(s,t){
     const m=s&&s.marks; if(!m||m.p1==null) return "";
     return (m.p2!=null&&t>=m.p2)?"2ª parte":"1ª parte";
@@ -6246,7 +6399,9 @@ window.renderHalfBands = function(b1,b2,mk,d){
       let pk=null;
       // la ventana es pequeña; al abrir el desplegable crece para verlo entero y al cerrarlo vuelve a su tamaño
       const baseW=480, baseH=200, pickH=470;
-      const resize=h=>{ try{ w.resizeTo(baseW,h+(w.outerHeight-w.innerHeight)); }catch(_){} };
+      // en pantalla completa NO se redimensiona (resizeTo sacaba la página de pantalla completa): el selector se superpone ocupando la ventana
+      const inFs=()=>!!(document.fullscreenElement||document.webkitFullscreenElement);
+      const resize=h=>{ if(inFs()) return; try{ w.resizeTo(baseW,h+(w.outerHeight-w.innerHeight)); }catch(_){} };
       const closePk=()=>{ if(pk){ pk.remove(); pk=null; resize(baseH); } };
       const upd=()=>{ t.textContent="Minuto de partido "+matchClockText(V.currentTime); };
       // momentos marcados: A (inicio) y B (fin) del tramo actual del editor
@@ -6264,7 +6419,8 @@ window.renderHalfBands = function(b1,b2,mk,d){
         names.forEach(n=>{ const b=d.createElement("button"); b.type="button"; b.textContent=n; b.onclick=()=>pick(n); pk.appendChild(b); });
         const i=d.createElement("input"); i.placeholder="Otro nombre… (Intro)";
         i.onkeydown=e=>{ if(e.key==="Enter"&&i.value.trim()) pick(i.value); e.stopPropagation(); };
-        pk.appendChild(i); d.body.appendChild(pk); resize(pickH); } };
+        pk.appendChild(i); d.body.appendChild(pk);
+        if(inFs()){ pk.style.cssText="position:fixed;left:0;top:0;right:0;bottom:0;z-index:5;overflow:auto"; } else resize(pickH); } };
       w.addEventListener("pagehide",()=>{ V.removeEventListener("timeupdate",upd); window.acfcABWin=null; w=null; lbl(false); });
       lbl(true);
     }
@@ -9852,6 +10008,42 @@ acfcPintMount({
   onStill:(cap,t)=>window.acfcEdAddStill?window.acfcEdAddStill(cap,t):"El editor no está listo.",
   watch:fn=>{ if(edV) ["loadedmetadata","emptied"].forEach(ev=>edV.addEventListener(ev,fn)); }
 });
+// Registro sin vídeo: el pintado se activa sobre el vídeo que se añade para sincronizar (ids con sufijo «Lv»)
+const lvPanel=g("liveVidPanel"), lvV=g("liveVid"), lvName=g("liveVidName");
+if(visorBlock&&lvPanel&&lvV){
+  const lvBlock=visorBlock.cloneNode(true);
+  lvBlock.id+="Lv";
+  lvBlock.querySelectorAll("[id]").forEach(el=>{ el.id+="Lv"; });
+  lvBlock.querySelectorAll("[aria-controls]").forEach(el=>el.setAttribute("aria-controls",el.getAttribute("aria-controls")+"Lv"));
+  lvPanel.appendChild(lvBlock);
+  acfcPintMount({
+    video:lvV, host:lvPanel, block:lvBlock, sfx:"Lv", expose:"acfcPintLv", freeze:true,
+    keyPrefix:"acfcPintLv:", keyOf:()=>lvName?lvName.textContent:"",
+    watch:fn=>{ if(lvName) new MutationObserver(fn).observe(lvName,{childList:true,characterData:true,subtree:true}); }
+  });
+}
+})();
+</script>
+<style>
+/* Limpiar proyecto: borrado masivo de eventos y pintados de la pestaña activa */
+html #acfcClearProj{background:var(--red);border-color:var(--red);color:#fff}
+html #acfcClearProj:hover{filter:brightness(.88);color:#fff}
+</style>
+<script>
+/* Limpiar proyecto: una sola confirmación y borra eventos + pintados de la pestaña abierta */
+(()=>{
+  const $=id=>document.getElementById(id), btn=$("acfcClearProj"); if(!btn) return;
+  const tab=()=>$("tabBtnEditor").getAttribute("aria-selected")==="true"?"editor":$("tabBtnLive").getAttribute("aria-selected")==="true"?"live":"visor";
+  btn.addEventListener("click",()=>{
+    const t=tab(), nombre={visor:"Registro con vídeo",editor:"Editor básico",live:"Registro sin vídeo"}[t];
+    const incl=t==="live"?"todos los eventos":"todos los eventos y todo el pintado";
+    if(!confirm("Se borrarán "+incl+" de «"+nombre+"». Esta acción no se puede deshacer. ¿Continuar?")) return;
+    try{
+      if(t==="visor"){ window.acfcClearVisor&&window.acfcClearVisor(); const p=window.acfcPint; if(p) p.set([]); }
+      else if(t==="editor"){ window.acfcClearEditor&&window.acfcClearEditor(); const p=window.acfcPintEd; if(p) p.set([]); }
+      else if(window.acfcClearLive) window.acfcClearLive();
+    }catch(e){ console.error(e); alert("No se pudo limpiar el proyecto por completo."); }
+  });
 })();
 </script>
 <script>
@@ -10110,6 +10302,7 @@ html.acfc-premium .acfcCrown::after,html.acfc-premium .acfcCrown.is-active::afte
      PREMIUM_PARA_TODOS=true: de momento todos arrancan en Premium sin código; «Versión gratuita» sirve para previsualizar
      las limitaciones y «Premium» vuelve sin pedir código. Poner a false para exigir el código. */
   var LIMITAR=false;
+  var AVISO_PREMIUM=false;   // true = el botón «Premium» muestra la ventana «Versión Premium»
   var PREMIUM_PARA_TODOS=true;
   /* Funciones solo Premium: llevan corona (de momento solo el pintado de acciones, en el registro y en el editor) */
   var PREMIUM=[".pintTool[data-tool]:not([data-tool=move]):not([data-tool=edit]):not([data-tool=arrow]):not([data-tool=arrowStraight]):not([data-tool=pen]):not([data-tool=text]):not([data-tool=callout]):not([data-tool=rect]):not([data-tool=ellipse]):not([data-tool=triangleZone])","#pintStill","#pintStillEd","#regAddFile","#edAddFile","#edABWin","#botJugTit","#botJugName","#botJugAdd","#newJugAdd","#liveJugAdd","details.pintRoster>summary","details.pintRoster .pintRosterBtns .btn.primary","#tabBtnLive","#liveJugLbl"];
@@ -10305,7 +10498,7 @@ html.acfc-premium .acfcCrown::after,html.acfc-premium .acfcCrown.is-active::afte
 (function(){var t=document.getElementById("tabLive"),n=document.getElementById("liveSub");if(!t||!n)return;
 var KEY="acfcLiveView";function set(v){t.dataset.lv=v;n.querySelectorAll("button").forEach(function(b){b.setAttribute("aria-selected",b.dataset.lv===v?"true":"false")});try{localStorage.setItem(KEY,v)}catch(e){}}
 n.addEventListener("click",function(e){var b=e.target.closest("button[data-lv]");if(b)set(b.dataset.lv)});
-try{var v=localStorage.getItem(KEY);if(v==="bot"||v==="botev"||v==="vid")set(v)}catch(e){}})();
+try{var v=localStorage.getItem(KEY);if(v==="botev"||v==="vid")set(v)}catch(e){}})();
 </script>
 <!-- ACFC · DESHACER / REHACER GLOBAL (cabecera): actúa sobre el apartado en uso. No se borra ni se mueve. -->
 <style>
@@ -10336,7 +10529,7 @@ try{var v=localStorage.getItem(KEY);if(v==="bot"||v==="botev"||v==="vid")set(v)}
 
   function ctx(){
     var edOn=!$("tabEditor").hidden;
-    if(pint) return edOn?{u:"pintUndoEd",r:"pintRedoEd",always:true}:{u:"pintUndo",r:"pintRedo",always:true};
+    if(pint){ var lvOn=!$("tabLive").hidden; return edOn?{u:"pintUndoEd",r:"pintRedoEd",always:true}:lvOn?{u:"pintUndoLv",r:"pintRedoLv",always:true}:{u:"pintUndo",r:"pintRedo",always:true}; }
     if($("clipEd")&&!$("clipEd").hidden) return {u:"ceUndo",r:null};
     if(edOn) return {u:"edUndo2",r:"edRedo"};
     return {u:"vUndo",r:"vRedo"};
