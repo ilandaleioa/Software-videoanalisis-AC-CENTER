@@ -226,6 +226,8 @@ kbd{border:1px solid var(--line);border-radius:3px;padding:0 4px;font-size:11px}
 #vTimelineToggle .tgl,#edCtlToggle .tgl{display:none}
 .fsAB{display:none}
 #edCtl1.ctlHid #edMarkBtns>*:not(#edCtlToggle){display:none!important}
+html:not(.acfc-imm) #edCtl1.ctlAllHid,html:not(.acfc-imm) #edCtl2.ctlAllHid{display:none!important}
+#edCtlAllToggle{margin-left:auto}
 .headClock{position:absolute;top:-19px;transform:translate(-50%,-100%);font-family:var(--f-disp);font-size:16px;font-weight:700;line-height:1;color:var(--red);background:var(--panel);border:1px solid var(--red);padding:2px 6px;white-space:nowrap;pointer-events:none;z-index:7}
 .headClock:empty{display:none}
 .vPintGo{position:absolute;top:50%;transform:translate(10px,-50%);z-index:8;width:30px;height:30px;padding:0;display:flex;align-items:center;justify-content:center;font-size:16px;line-height:1;cursor:pointer;color:#fff;background:var(--red);border:1px solid var(--panel);border-radius:0;box-shadow:0 1px 4px rgba(0,0,0,.45)}
@@ -1145,6 +1147,8 @@ header #btnInstalar{align-self:center;background:transparent;color:#fff;border:1
 header #btnInstalar:hover{border-color:#fff;background:rgba(255,255,255,.1)}
 header #btnAddVids,header #vidSel{align-self:center;background:transparent;color:#fff;border:1px solid rgba(255,255,255,.45);font-family:var(--f-disp);text-transform:uppercase;letter-spacing:.1em;white-space:nowrap;border-radius:0}
 header #btnAddVids:hover{border-color:#fff;background:rgba(255,255,255,.1)}
+/* Cabecera del registro igual que la del editor: sin nombre ni aviso del vídeo (empujaban los botones a una segunda fila; el nombre sigue en la lista «Vídeos») */
+header #vidName,header #vidNote{display:none!important}
 header #vidSel{display:none!important;padding:7px 8px;font-size:12px;max-width:26vw;text-overflow:ellipsis;text-transform:none;letter-spacing:0}
 header #vidSel option{color:#000;background:#fff}
 header #vidSel[hidden]{display:none}
@@ -1180,9 +1184,9 @@ html #expOptsToggle:hover,html #pbToggle:hover,html #edCtlToggle:hover,html #edS
 html #fltClear:hover,html #pintClear:hover,html #edClearAdded:hover{filter:brightness(.88);color:#fff}
 html #regSrcToggle:hover,html #evHideToggle:hover,html #ajToggle:hover,html #fltToggle:hover,html #plListToggle:hover,html #pintToggle:hover,html #pintNumsToggle:hover,html #pintStyleToggle:hover,
 html #expOptsToggle:hover,html #pbToggle:hover,html #edCtlToggle:hover,html #edSrcToggle:hover,html #edEvToggle:hover,html #edExpToggle:hover{background:#1F6FD1;border-color:#1F6FD1}
-/* Ocultar y Mostrar: el mismo azul */
-html button.acfcTgl[data-tgl="mostrar"],html button.acfcTgl[data-tgl="mostrar"]:hover,
+/* Ocultar: azul; Mostrar: azul claro */
 html button.acfcTgl[data-tgl="ocultar"],html button.acfcTgl[data-tgl="ocultar"]:hover{background:#1F6FD1;border-color:#1F6FD1;color:#fff}
+html button.acfcTgl[data-tgl="mostrar"],html button.acfcTgl[data-tgl="mostrar"]:hover{background:#6FB1F5!important;border-color:#6FB1F5!important;color:#0B2545!important}
 html #fltClear:hover,html #pintClear:hover,html #edClearAdded:hover{background:var(--red);border-color:var(--red)}
 /* Escritorio: la columna derecha queda fija bajo la cabecera y llega hasta el borde inferior de la ventana */
 @media (min-width:1251px){
@@ -1303,6 +1307,7 @@ html #fltClear:hover,html #pintClear:hover,html #edClearAdded:hover{background:v
         <button class="btn" id="vMarkEnd" title="Fija el fin del partido en el instante actual">Fin de partido</button>
       </span>
     </div>
+    <div class="row" style="margin:4px 0;justify-content:flex-end"><button type="button" class="btn acfcLink" id="catTlToggle" title="Ocultar/mostrar la lista de eventos de la línea de tiempo">Ocultar</button></div>
     <div class="catTimelineWrap">
       <div class="catLabels" id="catLabels"></div>
       <div class="track" id="track">
@@ -1362,6 +1367,70 @@ html #fltClear:hover,html #pintClear:hover,html #edClearAdded:hover{background:v
         <div id="regSrcList" style="display:grid;grid-template-columns:minmax(0,1fr);grid-auto-flow:row;gap:4px;overflow:visible"></div>
         <label class="btn" for="fileAdd" id="regAddFile" style="text-align:center" title="Añade otro vídeo (p. ej. la segunda parte) y cambia entre ellos">+ Añadir vídeo</label>
       </div>
+      <div class="row" style="justify-content:space-between;margin:0">
+        <h2 style="margin:0">Tiempo del evento</h2>
+        <button type="button" class="btn acfcLink" id="ajToggle" title="Ocultar/mostrar los ajustes">Ocultar</button>
+      </div>
+      <div id="ajBody" style="display:contents">
+      <div class="row" id="offRow">
+        <label for="off">El vídeo empieza en el minuto</label>
+        <input type="number" id="off" step="0.5" value="0">
+      </div>
+      <div class="row">
+        <label for="pre">Arrancar antes</label><input type="number" id="pre" min="0" step="0.5" value="5"><label>s</label>
+        <label for="post" style="margin-left:6px">Finalizar en</label><input type="number" id="post" min="0.2" step="0.5" value="10"><label>s</label>
+      </div>
+      <div class="row" id="botMovRow"><button class="btn" id="btnBotoneraMov" type="button" title="Define las categorías, detalles y jugadores que aparecen como botones al registrar una acción">Editar botonera</button></div>
+      </div>
+      <div class="row" style="justify-content:space-between;align-items:flex-end">
+        <button class="btn" id="evListToggle" hidden aria-hidden="true" tabindex="-1" style="display:none">Ocultar</button>
+      <div style="display:grid;gap:4px">
+        <div class="row" style="justify-content:space-between;align-items:center;margin:0">
+          <h2 style="margin:0">Filtros</h2>
+          <button type="button" class="btn acfcLink" id="fltToggle" title="Ocultar/mostrar los filtros">Ocultar</button>
+        </div>
+      <div class="row" id="fltBody" style="align-items:flex-end;margin:0">
+        <div style="display:grid;gap:4px">
+          <div class="row" style="margin:0">
+            <label>Equipo</label>
+            <div id="fltEqBtns" class="catbtns" role="group" aria-label="Filtrar por equipo">
+              <button type="button" class="optbtn fltEq active" data-eq="ambos" aria-pressed="true" style="padding-right:11px">Ambos</button>
+              <button type="button" class="optbtn fltEq" data-eq="propio" aria-pressed="false" style="padding-right:11px">Mi equipo</button>
+              <button type="button" class="optbtn fltEq" data-eq="rival" aria-pressed="false" style="padding-right:11px">Rival</button>
+            </div>
+          </div>
+        </div>
+        <div style="display:grid;gap:4px">
+          <div class="row" style="margin:0">
+            <label for="flt">Filtros</label>
+            <select id="flt"><option value="">Todas</option></select>
+            <button type="button" class="btn" id="fltClear" title="Quitar todos los filtros">Limpiar</button>
+          </div>
+        </div>
+      </div>
+      </div>
+        <button class="btn" id="delAllEv" title="Borrar todos los eventos del registro">Borrar todos los eventos</button>
+      </div>
+      <div class="row" id="tagRow">
+        <button class="btn primary" id="tagNow" title="Etiquetar en el instante actual (T)" style="flex:1">REGISTRO AUTO</button>
+        <button class="btn primary" id="tagManual" title="Registro manual: tú marcas el inicio (REC) y el final (PAUSE) del corte" style="flex:1">REGISTRO MANUAL</button>
+        <button type="button" class="btn" id="regPintBtn2" style="padding:4px 8px;display:inline-flex;align-items:center" title="Pintar sobre el vídeo: pausa y abre las herramientas de pintado" aria-label="Activar el pintado"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.5 4.2A8.5 8.5 0 1 0 12 20.5c1.6 0 2.4-.9 2.4-2 0-1.5-1.4-1.7-1.4-3 0-1 .8-1.7 1.9-1.7H17a3.5 3.5 0 0 0 3.5-3.4"/><circle cx="7.5" cy="10.5" r="1.2"/><circle cx="9.5" cy="15.5" r="1.2"/><circle cx="13.5" cy="8" r="1.2"/><path d="M20.5 2.5l-5 5 1.5 1.5 5-5z"/></svg></button>
+      </div>
+      <div class="row bulkbar" id="bulkBar">
+        <span style="font-size:13px;color:var(--muted)" id="bulkCount"></span>
+        <span class="row" style="gap:6px;margin:0">
+          <button class="btn" id="bulkDl" title="Descarga los eventos seleccionados, unidos en un solo vídeo">Descargar</button>
+          <button class="btn" id="bulkPl">+ Lista</button>
+          <button class="btn" id="bulkDel">✕ Borrar</button>
+          <button class="btn" id="bulkClear">Cancelar</button>
+        </span>
+      </div>
+    </div>
+    <div class="row" id="evSecHead" style="justify-content:space-between;align-items:center;margin:0;padding:10px 14px;border-top:1px solid var(--line)">
+      <h2 style="margin:0">Eventos</h2>
+      <button type="button" class="btn acfcLink" id="evHideToggle" title="Ocultar/mostrar la lista de eventos">Ocultar</button>
+    </div>
+    <div class="list" id="list"></div>
     <!-- ACFC · PINTADO DE ACCIONES · panel de herramientas de dibujo sobre el vídeo (ids y clases con prefijo pint) -->
     <div class="pintBlock" id="pintBlock">
       <div class="pbHead">
@@ -1535,69 +1604,6 @@ html #fltClear:hover,html #pintClear:hover,html #edClearAdded:hover{background:v
         </div>
       </div>
     </div>
-      <div class="row" style="justify-content:space-between;margin:0">
-        <h2 style="margin:0">Tiempo del evento</h2>
-        <button type="button" class="btn acfcLink" id="ajToggle" title="Ocultar/mostrar los ajustes">Ocultar</button>
-      </div>
-      <div id="ajBody" style="display:contents">
-      <div class="row" id="offRow">
-        <label for="off">El vídeo empieza en el minuto</label>
-        <input type="number" id="off" step="0.5" value="0">
-      </div>
-      <div class="row">
-        <label for="pre">Arrancar antes</label><input type="number" id="pre" min="0" step="0.5" value="5"><label>s</label>
-        <label for="post" style="margin-left:6px">Finalizar en</label><input type="number" id="post" min="0.2" step="0.5" value="10"><label>s</label>
-      </div>
-      <div class="row" id="botMovRow"><button class="btn" id="btnBotoneraMov" type="button" title="Define las categorías, detalles y jugadores que aparecen como botones al registrar una acción">Editar botonera</button></div>
-      </div>
-      <div class="row" style="justify-content:space-between;align-items:flex-end">
-        <button class="btn" id="evListToggle" hidden aria-hidden="true" tabindex="-1" style="display:none">Ocultar</button>
-      <div style="display:grid;gap:4px">
-        <div class="row" style="justify-content:space-between;align-items:center;margin:0">
-          <h2 style="margin:0">Filtros</h2>
-          <button type="button" class="btn acfcLink" id="fltToggle" title="Ocultar/mostrar los filtros">Ocultar</button>
-        </div>
-      <div class="row" id="fltBody" style="align-items:flex-end;margin:0">
-        <div style="display:grid;gap:4px">
-          <div class="row" style="margin:0">
-            <label>Equipo</label>
-            <div id="fltEqBtns" class="catbtns" role="group" aria-label="Filtrar por equipo">
-              <button type="button" class="optbtn fltEq active" data-eq="ambos" aria-pressed="true" style="padding-right:11px">Ambos</button>
-              <button type="button" class="optbtn fltEq" data-eq="propio" aria-pressed="false" style="padding-right:11px">Mi equipo</button>
-              <button type="button" class="optbtn fltEq" data-eq="rival" aria-pressed="false" style="padding-right:11px">Rival</button>
-            </div>
-          </div>
-        </div>
-        <div style="display:grid;gap:4px">
-          <div class="row" style="margin:0">
-            <label for="flt">Filtros</label>
-            <select id="flt"><option value="">Todas</option></select>
-            <button type="button" class="btn" id="fltClear" title="Quitar todos los filtros">Limpiar</button>
-          </div>
-        </div>
-      </div>
-      </div>
-        <button class="btn" id="delAllEv" title="Borrar todos los eventos del registro">Borrar todos los eventos</button>
-      </div>
-      <div class="row" id="tagRow">
-        <button class="btn primary" id="tagNow" title="Etiquetar en el instante actual (T)" style="flex:1">REGISTRO AUTO</button>
-        <button class="btn primary" id="tagManual" title="Registro manual: tú marcas el inicio (REC) y el final (PAUSE) del corte" style="flex:1">REGISTRO MANUAL</button>
-      </div>
-      <div class="row bulkbar" id="bulkBar">
-        <span style="font-size:13px;color:var(--muted)" id="bulkCount"></span>
-        <span class="row" style="gap:6px;margin:0">
-          <button class="btn" id="bulkDl" title="Descarga los eventos seleccionados, unidos en un solo vídeo">Descargar</button>
-          <button class="btn" id="bulkPl">+ Lista</button>
-          <button class="btn" id="bulkDel">✕ Borrar</button>
-          <button class="btn" id="bulkClear">Cancelar</button>
-        </span>
-      </div>
-    </div>
-    <div class="row" id="evSecHead" style="justify-content:space-between;align-items:center;margin:0;padding:10px 14px;border-top:1px solid var(--line)">
-      <h2 style="margin:0">Eventos</h2>
-      <button type="button" class="btn acfcLink" id="evHideToggle" title="Ocultar/mostrar la lista de eventos">Ocultar</button>
-    </div>
-    <div class="list" id="list"></div>
     <div style="border-top:1px solid var(--line);padding:10px 14px;display:grid;gap:8px">
       <div class="row" style="justify-content:space-between;margin:0;flex-wrap:wrap">
         <button class="btn acfcLink" id="plListToggle" title="Ocultar/mostrar todo lo relacionado con las listas de reproducción">Ocultar</button>
@@ -1745,6 +1751,7 @@ html #fltClear:hover,html #pintClear:hover,html #edClearAdded:hover{background:v
       <button class="btn" id="edZoomPlus" title="Acercar la línea de tiempo para ser más preciso (Ctrl + rueda del ratón)" aria-label="Acercar">+</button>
       <button class="btn" id="edZoomReset" hidden title="Volver a ver el vídeo entero">Quitar zoom</button>
       <input type="range" id="edZoomPan" min="0" max="1000" value="0" hidden aria-label="Desplazar la línea de tiempo ampliada" title="Desplazar la línea de tiempo (también Mayús + rueda)">
+      <button type="button" class="btn acfcLink" id="edCtlAllToggle" title="Ocultar/mostrar toda la barra de botones (A/B, marcas de partes) y los datos del evento">Ocultar controles</button>
     </div>
     <div class="row" style="margin:6px 0"><button class="btn acfcLink" id="edCtlToggle" title="Ocultar/mostrar los botones de corte, marcas y datos de este bloque">Ocultar</button></div>
     <div class="controls" id="edCtl1">
@@ -1752,6 +1759,7 @@ html #fltClear:hover,html #pintClear:hover,html #edClearAdded:hover{background:v
         <button class="btn histBtn" id="edRedo" title="Rehacer (Ctrl+Y)" aria-label="Rehacer" disabled>↷</button>
         <button class="btn primary" id="edSetA" title="Fija el punto A (inicio del corte) en el cabezal actual (A)">📍 <span class="abL">Punto </span>A<span class="abL"> · inicio</span></button>
         <button class="btn primary" id="edSetB" title="Fija el punto B (fin del corte) en el cabezal actual (B)">📍 <span class="abL">Punto </span>B<span class="abL"> · fin</span></button>
+        <button class="btn" id="edABWin" title="Abre una mini-ventana aparte solo con Punto A, Punto B y el tipo de evento">⧉<span class="abL"> A/B en ventana</span></button>
         <button class="btn primary" id="edAddSel" hidden title="Muestra este tramo en la lista de la derecha">+ Añadir</button>
         <span id="edMarkBtns" style="display:contents">
           <button class="btn" id="edMarkP1" title="Fija el inicio de la 1ª parte en el cabezal actual">Inicio primera parte</button>
@@ -3620,6 +3628,20 @@ window.renderHalfBands = function(b1,b2,mk,d){
     $("edCtlToggle").onclick=()=>setEdCtlHidden(!$("edCtl1").classList.contains("ctlHid"));
   })();
 
+  const ED_CTL_ALL_KEY="edCtlAllHidden";
+  function setEdCtlAllHidden(hidden){
+    $("edCtl1").classList.toggle("ctlAllHid",hidden);
+    $("edCtl2").classList.toggle("ctlAllHid",hidden);
+    $("edCtlAllToggle").textContent=hidden?"Mostrar controles":"Ocultar controles";
+    try{ localStorage.setItem(ED_CTL_ALL_KEY, hidden?"1":"0"); }catch(e){}
+  }
+  (function initEdCtlAllToggle(){
+    let hidden=false;
+    try{ hidden=localStorage.getItem(ED_CTL_ALL_KEY)==="1"; }catch(e){}
+    setEdCtlAllHidden(hidden);
+    $("edCtlAllToggle").onclick=()=>setEdCtlAllHidden(!$("edCtl1").classList.contains("ctlAllHid"));
+  })();
+
   const ED_SRC_HIDE_KEY="edSrcHidden";
   function setEdSrcHidden(hidden){
     $("edSrcList").style.display=hidden?"none":"grid";
@@ -3662,6 +3684,9 @@ window.renderHalfBands = function(b1,b2,mk,d){
     $("edExpToggle").onclick=()=>setEdExpHidden($("edExpBody").style.display!=="none");
   })();
 
+  // Por defecto todas las secciones del registro van ocultas (salvo Eventos). Una sola vez se borran las preferencias antiguas.
+  window.acfcDefHidden=k=>{ try{ return localStorage.getItem(k)!=="0"; }catch(e){ return true; } };
+  try{ if(!localStorage.getItem("acfcSecDef1")){ ["plListHidden","expOptsHidden","pbHidden","ajHidden","fltHidden","regSrcHidden","acfcPintHidden"].forEach(k=>localStorage.removeItem(k)); localStorage.setItem("acfcSecDef1","1"); } }catch(e){}
   const PL_LIST_HIDE_KEY="plListHidden";
   function setPlListHidden(hidden){
     $("plListSection").style.display=hidden?"none":"contents";
@@ -3669,8 +3694,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     try{ localStorage.setItem(PL_LIST_HIDE_KEY, hidden?"1":"0"); }catch(e){}
   }
   (function initPlListToggle(){
-    let hidden=false;
-    try{ hidden=localStorage.getItem(PL_LIST_HIDE_KEY)==="1"; }catch(e){}
+    let hidden=window.acfcDefHidden(PL_LIST_HIDE_KEY);
     setPlListHidden(hidden);
     $("plListToggle").onclick=()=>setPlListHidden($("plListSection").style.display!=="none");
   })();
@@ -3701,28 +3725,27 @@ window.renderHalfBands = function(b1,b2,mk,d){
     try{ localStorage.setItem(PB_HIDE_KEY, hidden?"1":"0"); }catch(e){}
   }
   (function initPbToggle(){
-    let hidden=false;
-    try{ hidden=localStorage.getItem(PB_HIDE_KEY)==="1"; }catch(e){}
+    let hidden=window.acfcDefHidden(PB_HIDE_KEY);
     setPbHidden(hidden);
     $("pbToggle").onclick=()=>setPbHidden($("pbRow").style.display!=="none");
   })();
   (function initExpOptsToggle(){
-    let hidden=false;
-    try{ hidden=localStorage.getItem(EXP_OPTS_HIDE_KEY)==="1"; }catch(e){}
+    let hidden=window.acfcDefHidden(EXP_OPTS_HIDE_KEY);
     setExpOptsHidden(hidden);
     $("expOptsToggle").onclick=()=>setExpOptsHidden($("expOptsA").style.display!=="none");
   })();
-  function simpleFold(btnId,key,apply){
+  function simpleFold(btnId,key,apply,defHidden){
     const b=$(btnId); let hidden=false;
-    try{ hidden=localStorage.getItem(key)==="1"; }catch(e){}
+    try{ hidden=defHidden?window.acfcDefHidden(key):localStorage.getItem(key)==="1"; }catch(e){}
     const set=h=>{ hidden=h; apply(h); b.textContent=h?"Mostrar":"Ocultar"; try{ localStorage.setItem(key,h?"1":"0"); }catch(e){} };
     set(hidden); b.onclick=()=>set(!hidden);
   }
-  simpleFold("ajToggle","ajHidden",h=>{ $("ajBody").style.display=h?"none":"contents"; });
-  simpleFold("fltToggle","fltHidden",h=>{ $("fltBody").style.display=h?"none":""; });
+  simpleFold("ajToggle","ajHidden",h=>{ $("ajBody").style.display=h?"none":"contents"; },true);
+  simpleFold("fltToggle","fltHidden",h=>{ $("fltBody").style.display=h?"none":""; },true);
   simpleFold("evHideToggle","evHideHidden",h=>{ $("list").style.display=h?"none":""; });
+  simpleFold("catTlToggle","catTlHidden",h=>{ document.querySelector(".catTimelineWrap").style.display=h?"none":""; });
   // Tono azul según estado: Ocultar (claro) / Mostrar (oscuro)
-  ["regSrcToggle","evHideToggle","ajToggle","fltToggle","plListToggle","pintToggle","pintNumsToggle","pintStyleToggle","expOptsToggle","pbToggle","edCtlToggle","edSrcToggle","edEvToggle","edExpToggle"].forEach(id=>{
+  ["catTlToggle","regSrcToggle","evHideToggle","ajToggle","fltToggle","plListToggle","pintToggle","pintNumsToggle","pintStyleToggle","expOptsToggle","pbToggle","edCtlToggle","edSrcToggle","edEvToggle","edExpToggle"].forEach(id=>{
     const el=$(id); if(!el) return;
     el.classList.add("acfcTgl");
     const upd=()=>{ el.dataset.tgl=/mostrar/i.test(el.textContent)?"mostrar":"ocultar"; };
@@ -3787,7 +3810,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     tr.addEventListener("pointerdown",ev=>{ drag=true; tr.setPointerCapture(ev.pointerId); seekTo(ev); });
     tr.addEventListener("pointermove",ev=>{ if(drag) seekTo(ev); });
     tr.addEventListener("pointerup",()=>{ drag=false; }); tr.addEventListener("pointercancel",()=>{ drag=false; }); }
-  { const b=$("regPintBtn"); if(b) b.addEventListener("click",()=>$("vPintGo").click()); }
+  ["regPintBtn","regPintBtn2"].forEach(id=>{ const b=$(id); if(b) b.addEventListener("click",()=>$("vPintGo").click()); });
   { const b=$("vPintGo"); b.addEventListener("pointerdown",ev=>ev.stopPropagation());
     b.addEventListener("click",()=>{ v.pause();
       const body=$("pintBody"); if(body&&body.hidden&&$("pintToggle")) $("pintToggle").click();
@@ -3958,7 +3981,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     if(wasCur){ if(regVids.length){ openFile(regVids[Math.min(i,regVids.length-1)]); return; }
       regCur=null; if(v.dataset.url){ URL.revokeObjectURL(v.dataset.url); v.dataset.url=""; } v.pause(); v.removeAttribute("src"); v.load(); $("vidName").textContent=""; }
     regVidSync(null); }
-  (function(){ const b=$("regSrcToggle"); let h=false; try{ h=localStorage.getItem("regSrcHidden")==="1"; }catch(e){}
+  (function(){ const b=$("regSrcToggle"); let h=window.acfcDefHidden("regSrcHidden");
     const set=x=>{ h=x; $("regSrcBody").style.display=x?"none":"grid"; b.textContent=x?"Mostrar":"Ocultar"; try{ localStorage.setItem("regSrcHidden",x?"1":"0"); }catch(e){} };
     set(h); b.onclick=()=>set(!h); })();
   v.addEventListener("loadedmetadata",()=>regSrcRender());
@@ -4048,7 +4071,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
       const $$=id=>d.getElementById(id);
       const upd=()=>{ $$("p").textContent=video.paused?"▶":"⏸"; $$("m").textContent=video.muted?"🔇":"🔊";
         if(video.duration&&!$$("s").matches(":active")) $$("s").value=Math.round(video.currentTime/video.duration*1000);
-        $$("t").textContent=fmt(video.currentTime)+" / "+fmt(video.duration); };
+        $$("t").textContent=fmt(video.currentTime)+" / "+matchClockText(video.currentTime); };
       if(isEd){
         // Editor: Punto A / Punto B y selector de tipo de evento dentro de la propia ventana emergente
         const ps=d.createElement("style");
@@ -5589,6 +5612,67 @@ window.renderHalfBands = function(b1,b2,mk,d){
     if(!evPick){ const s=sources[curSrc], r=kept(); if(!s||r.length!==1) return;
       const it=added.find(x=>x.srcId===s.id&&Math.abs(x.s-r[0].s)<0.05&&Math.abs(x.e-r[0].e)<0.05); if(it) openEvPicker(it); } }
   $("edSetB").onclick=setBAndAdd;
+  // ---------- mini-ventana aparte solo con Punto A / Punto B y el selector de tipo de evento ----------
+  (function(){
+    const btn=$("edABWin"); if(!btn) return;
+    let w=null;
+    const fmt=t=>{ t=Math.max(0,t||0); return Math.floor(t/60)+":"+String(Math.floor(t%60)).padStart(2,"0"); };
+    const lbl=on=>{ btn.classList.toggle("on",on); btn.innerHTML='⧉<span class="abL"> '+(on?"Cerrar ventana A/B":"A/B en ventana")+'</span>'; };
+    function close(){ if(w){ try{ w.close(); }catch(_){} } }
+    async function open(){
+      // Preferente: ventana flotante del navegador (Document PiP): se arrastra, se redimensiona y queda siempre encima
+      const dpip=window.documentPictureInPicture;
+      if(dpip){
+        if(dpip.window){ alert("Ya hay una ventana flotante abierta (la del reproductor): ya incluye los botones A y B. Ciérrala para abrir esta."); return; }
+        try{ w=await dpip.requestWindow({width:480,height:200}); }catch(e){ console.warn("PiP A/B:",e); w=null; }
+      }
+      if(!w) w=window.open("","acfcABWin","popup=yes,width=480,height=210,left="+Math.max(0,screen.availWidth-500)+",top=80");
+      if(!w){ alert("El navegador ha bloqueado la ventana emergente. Permítela para este sitio."); return; }
+      const d=w.document; d.title="Punto A / Punto B";
+      d.body.innerHTML="";
+      const st=d.createElement("style");
+      st.textContent="html,body{margin:0;height:100%;background:#15181D;color:#fff;font:14px system-ui,sans-serif}body{display:flex;flex-direction:column;box-sizing:border-box;padding:10px;gap:10px}"
+        +".row{display:flex;gap:8px}.row button{flex:1;border:0;background:#D50000;color:#fff;font:700 15px system-ui,sans-serif;letter-spacing:.06em;text-transform:uppercase;padding:16px 8px;cursor:pointer}.row button:hover{background:#b30000}"
+        +"#t{font-variant-numeric:tabular-nums;text-align:center;color:#c9cdd2}#info{display:flex;justify-content:center;gap:28px;font-size:18px;font-variant-numeric:tabular-nums;font-weight:700}#info b{color:#ff5a5a;margin-right:6px}"
+        +".pk{flex:1;min-height:0;overflow:auto;background:#fff;color:#15181D}.pk h4{margin:0;padding:8px 12px;background:#000;color:#fff;font-size:13px;letter-spacing:.08em;text-transform:uppercase;position:sticky;top:0}"
+        +".pk button{display:block;width:100%;text-align:left;border:0;border-top:1px solid #e3e3e3;background:#fff;color:#15181D;padding:9px 12px;cursor:pointer;font:inherit}.pk button:hover{background:#D50000;color:#fff}"
+        +".pk input{box-sizing:border-box;width:100%;border:0;border-top:1px solid #e3e3e3;padding:9px 12px;font:inherit}";
+      d.head.appendChild(st);
+      const row=d.createElement("div"); row.className="row";
+      const bA=d.createElement("button"); bA.textContent="Punto A · inicio";
+      const bB=d.createElement("button"); bB.textContent="Punto B · fin";
+      row.append(bA,bB);
+      const t=d.createElement("div"); t.id="t";
+      const info=d.createElement("div"); info.id="info";
+      d.body.append(row,t,info);
+      let pk=null;
+      // la ventana es pequeña; al abrir el desplegable crece para verlo entero y al cerrarlo vuelve a su tamaño
+      const baseW=480, baseH=200, pickH=470;
+      const resize=h=>{ try{ w.resizeTo(baseW,h+(w.outerHeight-w.innerHeight)); }catch(_){} };
+      const closePk=()=>{ if(pk){ pk.remove(); pk=null; resize(baseH); } };
+      const upd=()=>{ t.textContent=fmt(V.currentTime)+" / "+matchClockText(V.currentTime); };
+      // momentos marcados: A (inicio) y B (fin) del tramo actual del editor
+      const showAB=()=>{ const D=dur(), aSet=bPend||inP>0.05||outP<D-0.05, bSet=!bPend&&outP<D-0.05;
+        info.textContent=""; const mk=(l,v)=>{ const s=d.createElement("span"); const b=d.createElement("b"); b.textContent=l; s.append(b,v); info.appendChild(s); };
+        mk("A",aSet?fmt(inP):"—"); mk("B",bSet?fmt(outP):"—"); };
+      bA.onclick=()=>{ closePk(); $("edSetA").click(); showAB(); };
+      bB.onclick=()=>{ closePk(); $("edSetB").click(); showAB(); };
+      d.addEventListener("keydown",e=>{ if(e.key==="Escape") closePk(); });
+      V.addEventListener("timeupdate",upd); upd(); showAB();
+      window.acfcABWin={ showPicker(names,cb){
+        closePk(); pk=d.createElement("div"); pk.className="pk";
+        const h=d.createElement("h4"); h.textContent="Tipo de evento"; pk.appendChild(h);
+        const pick=n=>{ closePk(); cb(n); };
+        names.forEach(n=>{ const b=d.createElement("button"); b.type="button"; b.textContent=n; b.onclick=()=>pick(n); pk.appendChild(b); });
+        const i=d.createElement("input"); i.placeholder="Otro nombre… (Intro)";
+        i.onkeydown=e=>{ if(e.key==="Enter"&&i.value.trim()) pick(i.value); e.stopPropagation(); };
+        pk.appendChild(i); d.body.appendChild(pk); resize(pickH); } };
+      w.addEventListener("pagehide",()=>{ V.removeEventListener("timeupdate",upd); window.acfcABWin=null; w=null; lbl(false); });
+      lbl(true);
+    }
+    btn.onclick=()=>{ if(w&&!w.closed) close(); else open(); };
+    window.addEventListener("pagehide",close);
+  })();
   $("edSplit").onclick=()=>dur()&&split();
   $("edDel").onclick=()=>toggle(sel>=0?sel:segAt(V.currentTime));
   $("edAddSel").onclick=()=>{ const s=sources[curSrc]; if(!s) return; const ranges=kept();
@@ -5611,7 +5695,8 @@ window.renderHalfBands = function(b1,b2,mk,d){
   function openEvPicker(it){
     closeEvPicker();
     // con la ventana emergente del reproductor abierta, el selector se muestra dentro de ella
-    if(window.acfcPipEd){ window.acfcPipEd.showPicker(evBase().concat(evCustom),n=>{ it.name=(n||"").trim(); addCustomName(it.name); render(); }); return; }
+    const pickWin=window.acfcPipEd||window.acfcABWin;
+    if(pickWin){ pickWin.showPicker(evBase().concat(evCustom),n=>{ it.name=(n||"").trim(); addCustomName(it.name); render(); }); return; }
     const vis=b=>b&&!b.hidden&&b.offsetParent!==null&&b.getClientRects().length;
     const anchor=[$("edFsB"),$("edSetB")].find(vis)||$("edSetB");
     const box=document.createElement("div"); box.className="evPick"; box.setAttribute("role","dialog"); box.setAttribute("aria-label","Tipo de evento");
@@ -8692,7 +8777,7 @@ function setPanelHidden(hidden){
   try{ localStorage.setItem("acfcPintHidden",hidden?"1":"0"); }catch(e){}
 }
 toggleBtn.addEventListener("click",()=>setPanelHidden(!bodyEl.hidden));
-try{ if(localStorage.getItem("acfcPintHidden")==="1") setPanelHidden(true); }catch(e){}
+setPanelHidden(window.acfcDefHidden?window.acfcDefHidden("acfcPintHidden"):true);
 
 // ---------- Ocultar / Mostrar los números ----------
 const numsBtn=$("pintNumsToggle"), numsWrap=$("pintNumsWrap");
