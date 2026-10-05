@@ -972,6 +972,18 @@ html #tabEditor aside .pintBlock:has(#pintBodyEd[hidden]) .pbHead{margin-bottom:
 #tabLive #liveVid{width:100%;aspect-ratio:16/9;background:#000;display:block}
 #tabLive #liveSyncMsg{font-size:12px;color:var(--muted)}
 /* ===== fin registro sin vídeo ===== */
+/* Registro sin vídeo · vistas en móvil */
+.liveSub{display:none}
+@media (max-width:640px){
+  .liveSub{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:10px 12px 0}
+  .liveSub button{font:600 11px var(--f-body);letter-spacing:.06em;text-transform:uppercase;padding:9px 4px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:0;cursor:pointer;line-height:1.2}
+  .liveSub button[aria-selected="true"]{background:var(--red);border-color:var(--red);color:#fff}
+  #tabLive[data-lv="bot"] .liveSide{display:none}
+  #tabLive[data-lv="botev"] #liveVidPanel,#tabLive[data-lv="botev"] #liveActsPanel{display:none}
+  #tabLive[data-lv="vid"] .liveMain{display:none}
+}
+/* ===== fin vistas móvil registro sin vídeo ===== */
+
 /* =====================================================================
    ACFC · INTERFAZ v2 (2026-10-02) · colores de marca, jerarquía y móvil
    Línea visual: acfootballcenter.eus/ia-aplicada-gestion-deportiva/
@@ -1080,9 +1092,9 @@ aside h2{font-size:13px;letter-spacing:.05em}
   header .tab[aria-selected="true"]{background:#1d4ed8;border-color:#fff}
   header .tab[aria-selected="true"]:hover{background:#2554d6}
   header .tab::after{font-size:11.5px;letter-spacing:.12em}
-  #tabBtnEditor::after{content:"Editor básico"}
-  #tabBtnVisor::after{content:"Registro con vídeo"}
-  #tabBtnLive::after{content:"Registro sin vídeo"}
+  #tabBtnEditor::after{content:"";display:block;width:20px;height:20px;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='6' cy='6' r='3'/%3E%3Ccircle cx='6' cy='18' r='3'/%3E%3Cpath d='M20 4 8.1 15.9M14.5 14.5 20 20M8.1 8.1 12 12'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='6' cy='6' r='3'/%3E%3Ccircle cx='6' cy='18' r='3'/%3E%3Cpath d='M20 4 8.1 15.9M14.5 14.5 20 20M8.1 8.1 12 12'/%3E%3C/svg%3E") center/contain no-repeat}
+  #tabBtnVisor::after{content:"";display:block;width:20px;height:20px;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='2' y='6' width='14' height='12' rx='2'/%3E%3Cpath d='m22 8-6 4 6 4z'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='2' y='6' width='14' height='12' rx='2'/%3E%3Cpath d='m22 8-6 4 6 4z'/%3E%3C/svg%3E") center/contain no-repeat}
+  #tabBtnLive::after{content:"";display:block;width:20px;height:20px;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='14' r='8'/%3E%3Cpath d='M12 14V9M9 2h6'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='14' r='8'/%3E%3Cpath d='M12 14V9M9 2h6'/%3E%3C/svg%3E") center/contain no-repeat}
   header .sub,header .sp{display:none!important}
   header label.btn.primary{flex:none;padding:7px 10px;font-size:10.5px;letter-spacing:.1em;white-space:nowrap}
   /* vídeo + mandos fijos arriba: la lista se desliza por debajo */
@@ -1159,9 +1171,9 @@ html.acfc-imm header .tab{height:28px;align-self:center;background:#1e40af}
 html.acfc-imm header .tab:hover{background:#2554d6}
 html.acfc-imm header .tab[aria-selected="true"]{background:#1d4ed8;border-color:#fff}
 html.acfc-imm header .tab::after{font-size:10.5px;letter-spacing:.14em}
-html.acfc-imm #tabBtnEditor::after{content:"Editor básico"}
-html.acfc-imm #tabBtnVisor::after{content:"Registro con vídeo"}
-html.acfc-imm #tabBtnLive::after{content:"Registro sin vídeo"}
+html.acfc-imm #tabBtnEditor::after{content:"";display:block;width:20px;height:20px;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='6' cy='6' r='3'/%3E%3Ccircle cx='6' cy='18' r='3'/%3E%3Cpath d='M20 4 8.1 15.9M14.5 14.5 20 20M8.1 8.1 12 12'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='6' cy='6' r='3'/%3E%3Ccircle cx='6' cy='18' r='3'/%3E%3Cpath d='M20 4 8.1 15.9M14.5 14.5 20 20M8.1 8.1 12 12'/%3E%3C/svg%3E") center/contain no-repeat}
+html.acfc-imm #tabBtnVisor::after{content:"";display:block;width:20px;height:20px;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='2' y='6' width='14' height='12' rx='2'/%3E%3Cpath d='m22 8-6 4 6 4z'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='2' y='6' width='14' height='12' rx='2'/%3E%3Cpath d='m22 8-6 4 6 4z'/%3E%3C/svg%3E") center/contain no-repeat}
+html.acfc-imm #tabBtnLive::after{content:"";display:block;width:20px;height:20px;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='14' r='8'/%3E%3Cpath d='M12 14V9M9 2h6'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='14' r='8'/%3E%3Cpath d='M12 14V9M9 2h6'/%3E%3C/svg%3E") center/contain no-repeat}
 /* el vídeo ocupa toda la pantalla */
 html.acfc-imm #tabVisor main,html.acfc-imm #tabEditor .edgrid{display:block;padding:0;max-width:none}
 html.acfc-imm #tabVisor main>section,html.acfc-imm #tabEditor .edgrid>section{position:fixed;inset:0;z-index:40;background:#000;display:block}
@@ -1341,7 +1353,7 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
   <a class="acfcUtil__site" href="https://acfootballcenter.eus/?utm_source=lezama-talks&amp;utm_medium=herramienta-videoanalisis&amp;utm_campaign=promo-cursos&amp;utm_content=barra" target="_blank" rel="noopener">acfootballcenter.eus ↗</a>
 </div></div>
 <header>
-  <h1 class="acfcBrand"><a href="https://acfootballcenter.eus/" target="_blank" rel="noopener" title="Athletic Club Football Center"><img src="https://acfootballcenter.eus/wp-content/uploads/2022/11/acfc-logo-white.svg" alt="Athletic Club Football Center" width="118" height="32"></a><span class="acfcBrandTxt">Videoanálisis<small>Lezama Talks</small></span></h1><nav class="tabs" role="tablist"><button class="tab" role="tab" id="tabBtnEditor" aria-selected="false">Editor básico</button><button class="tab" role="tab" id="tabBtnVisor" aria-selected="true">Registro con vídeo</button><button class="tab" role="tab" id="tabBtnLive" aria-selected="false">Registro sin vídeo</button></nav><span class="sub" id="vidName">cortes3.mp4</span><span class="sub" id="vidNote" style="font-size:12px"></span>
+  <h1 class="acfcBrand"><a href="https://acfootballcenter.eus/" target="_blank" rel="noopener" title="Athletic Club Football Center"><img src="https://acfootballcenter.eus/wp-content/uploads/2022/11/acfc-logo-white.svg" alt="Athletic Club Football Center" width="118" height="32"></a><span class="acfcBrandTxt">Videoanálisis<small>Lezama Talks</small></span></h1><nav class="tabs" role="tablist"><button class="tab" role="tab" id="tabBtnEditor" aria-label="Editor básico" title="Editor básico" aria-selected="false">Editor básico</button><button class="tab" role="tab" id="tabBtnVisor" aria-label="Registro con vídeo" title="Registro con vídeo" aria-selected="true">Registro con vídeo</button><button class="tab" role="tab" id="tabBtnLive" aria-label="Registro sin vídeo" title="Registro sin vídeo" aria-selected="false">Registro sin vídeo</button></nav><span class="sub" id="vidName">cortes3.mp4</span><span class="sub" id="vidNote" style="font-size:12px"></span>
   <select id="vidSel" hidden aria-label="Vídeo abierto en el registro" title="Cambiar de vídeo"></select>
   <!-- ACFC · formaciones en la cabecera (actualizar fechas cada edición) -->
   <nav class="acfcHdrLinks" aria-label="Próximas formaciones">
@@ -1977,7 +1989,12 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
 <p class="hint" style="display:none">Atajos: <kbd>Espacio</kbd> reproducir · <kbd>I</kbd>/<kbd>O</kbd> inicio/fin · <kbd>D</kbd> dividir · <kbd>Supr</kbd> quitar/recuperar el tramo seleccionado en la lista · <kbd>,</kbd>/<kbd>.</kbd> fotograma · <kbd>←</kbd><kbd>→</kbd> ±1 s · <kbd>Ctrl+Z</kbd> deshacer.</p>
 </section>
 
-<section id="tabLive" hidden>
+<section id="tabLive" hidden data-lv="bot">
+  <nav class="liveSub" id="liveSub" role="tablist" aria-label="Vista del registro">
+    <button type="button" role="tab" data-lv="bot" aria-selected="true">Botonera</button>
+    <button type="button" role="tab" data-lv="botev" aria-selected="false">Botonera + eventos</button>
+    <button type="button" role="tab" data-lv="vid" aria-selected="false">Vídeo + eventos</button>
+  </nav>
   <div class="liveWrap">
     <div class="liveMain">
       <div class="livePanel">
@@ -2039,11 +2056,11 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
         <div id="liveSyncMsg" class="liveHelp" role="status" aria-live="polite"></div>
         <div class="liveAdj"><button type="button" class="btn primary" id="liveView" title="Oculta el registro y deja solo el vídeo con la lista de eventos">Ver solo vídeo</button><button type="button" class="btn" id="liveVidFull" hidden>Pantalla completa</button><button type="button" class="btn" id="liveVidChange">Cambiar vídeo</button></div>
       </div>
-      <div class="livePanel">
+      <div class="livePanel" id="liveEvPanel">
         <h2>Eventos <span id="liveCount" style="color:var(--muted);font-weight:400"></span></h2>
         <div class="liveList" id="liveList"></div>
       </div>
-      <div class="livePanel liveActs">
+      <div class="livePanel liveActs" id="liveActsPanel">
         <button type="button" class="btn primary" id="liveToVideo" title="Elige el vídeo en tu ordenador y sincroniza los eventos con él aquí mismo">Añadir el vídeo y sincronizar</button>
         <input type="file" id="liveFile" accept="video/*" hidden>
       </div>
@@ -9958,8 +9975,20 @@ html.acfc-premium .acfcCrown::after,html.acfc-premium .acfcCrown.is-active::afte
     txt.textContent="Para poder acceder a esta funcionalidad apúntate al curso de análisis de partido en directo y se te entregará el software completo junto a las clases.";
     inp.hidden=true; go.hidden=PREMIUM_PARA_TODOS; $("acfcLicCurso").hidden=false;
   }
-  free.onclick=function(){ if(full){ if(!PREMIUM_PARA_TODOS) store.set(""); apply(false); } };
-  btn.onclick=function(){ if(PREMIUM_PARA_TODOS){ apply(true); return; } open(); }; $("acfcLicClose").onclick=function(){dlg.close();};
+  free.onclick=function(){
+    if(full){ if(!PREMIUM_PARA_TODOS) store.set(""); apply(false); }
+    open(); $("acfcLicT").textContent="Versión gratuita";
+    txt.textContent="Esta versión gratuita tiene funcionalidades limitadas, que se activan como Premium al inscribirte al curso.";
+    inp.hidden=true; go.hidden=true; $("acfcLicCurso").hidden=false;
+  };
+  btn.onclick=function(){
+    if(PREMIUM_PARA_TODOS){
+      apply(true); open(); $("acfcLicT").textContent="Versión Premium";
+      txt.textContent="Todos los alumnos inscritos al curso de análisis en directo de partido tendrán todas las funcionalidades habilitadas.";
+      inp.hidden=true; go.hidden=true; $("acfcLicCurso").hidden=false; return;
+    }
+    open();
+  }; $("acfcLicClose").onclick=function(){dlg.close();};
   go.onclick=async function(){
     if(PREMIUM_PARA_TODOS){ apply(true); dlg.close(); return; }
     if(full){ store.set(""); apply(false); dlg.close(); return; }
@@ -10019,10 +10048,10 @@ html.acfc-premium .acfcCrown::after,html.acfc-premium .acfcCrown.is-active::afte
     aviso();
   },true);
 
-  /* Añadir un segundo vídeo (registro y editor): solo Premium */
+  /* Añadir un segundo vídeo y «A/B en ventana» (registro y editor): solo Premium */
   document.addEventListener("click",function(e){
     if(full||!e.target.closest) return;
-    if(!e.target.closest("#regAddFile, #edAddFile")) return;
+    if(!e.target.closest("#regAddFile, #edAddFile, #edABWin")) return;
     e.preventDefault(); e.stopImmediatePropagation();
     aviso();
   },true);
@@ -10081,6 +10110,12 @@ html.acfc-premium .acfcCrown::after,html.acfc-premium .acfcCrown.is-active::afte
   var saved=store.get();
   if(saved&&ACFC_LIC_HASHES.indexOf(saved)>=0) apply(true); else if(saved) store.set("");
 })();
+</script>
+<script>
+(function(){var t=document.getElementById("tabLive"),n=document.getElementById("liveSub");if(!t||!n)return;
+var KEY="acfcLiveView";function set(v){t.dataset.lv=v;n.querySelectorAll("button").forEach(function(b){b.setAttribute("aria-selected",b.dataset.lv===v?"true":"false")});try{localStorage.setItem(KEY,v)}catch(e){}}
+n.addEventListener("click",function(e){var b=e.target.closest("button[data-lv]");if(b)set(b.dataset.lv)});
+try{var v=localStorage.getItem(KEY);if(v==="bot"||v==="botev"||v==="vid")set(v)}catch(e){}})();
 </script>
 </body>
 </html>
