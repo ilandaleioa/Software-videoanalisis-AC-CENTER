@@ -1283,6 +1283,19 @@ header #btnInstalar:hover{border-color:#fff;background:rgba(255,255,255,.1)}
   .acfcHdrLinks a{padding:0 8px}
   header #btnInstalar{padding:6px 10px;font-size:12px;min-height:0}
 }
+/* pantallas medias: cabecera compacta en una sola fila (el botón «Instalar app» no se corta) y rótulos del vídeo más pequeños */
+@media (min-width:641px) and (max-width:1400px){
+  header{flex-wrap:nowrap;gap:8px;padding-left:14px;padding-right:14px;min-width:0}
+  header .acfcBrandTxt{font-size:13px;padding-left:8px}
+  header h1.acfcBrand{gap:8px}
+  html header .tab{padding:0 9px;font-size:12px;letter-spacing:.5px}
+  header .tabs{gap:2px;flex:0 1 auto;min-width:0}
+  header .sp{flex:1 1 0;min-width:0}
+  .acfcHdrLinks{display:none}
+  header .acfcFreeBtn,header .acfcLicBtn,header #acfcFreeBtn,header #acfcLicBtn,header #btnInstalar,header label.btn.primary{flex:none;padding:6px 8px!important;font-size:11px!important;letter-spacing:.06em;min-height:0;white-space:nowrap}
+  .overlay .cat,.overlay .min{font-size:15px;padding:5px 9px}
+  .overlay .det{padding:4px 9px}.overlay .det b{font-size:13px}.overlay .det span{font-size:11px}
+}
 header #btnAddVids,header #vidSel{align-self:center;background:transparent;color:#fff;border:1px solid rgba(255,255,255,.45);font-family:var(--f-disp);text-transform:uppercase;letter-spacing:.1em;white-space:nowrap;border-radius:0}
 header #btnAddVids:hover{border-color:#fff;background:rgba(255,255,255,.1)}
 /* Cabecera del registro igual que la del editor: sin nombre ni aviso del vídeo (empujaban los botones a una segunda fila; el nombre sigue en la lista «Vídeos») */
@@ -1518,7 +1531,7 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
         <div id="regSrcList" style="display:grid;grid-template-columns:minmax(0,1fr);grid-auto-flow:row;gap:4px;overflow:visible"></div>
         <label class="btn" for="fileAdd" id="regAddFile" style="text-align:center" title="Añade otro vídeo (p. ej. la segunda parte) y cambia entre ellos">+ Añadir vídeo</label>
       </div>
-      <div class="row" style="justify-content:space-between;margin:0">
+      <div class="row" hidden style="display:none;justify-content:space-between;margin:0">
         <h2 style="margin:0">Tiempo del evento</h2>
         <button type="button" class="btn acfcLink" id="ajToggle" title="Ocultar/mostrar los ajustes">Ocultar</button>
       </div>
@@ -1527,7 +1540,7 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
         <label for="off">El vídeo empieza en el minuto</label>
         <input type="number" id="off" step="0.5" value="0">
       </div>
-      <div class="row">
+      <div class="row" hidden style="display:none">
         <label for="pre">Arrancar antes</label><input type="number" id="pre" min="0" step="0.5" value="5"><label>s</label>
         <label for="post" style="margin-left:6px">Finalizar en</label><input type="number" id="post" min="0.2" step="0.5" value="10"><label>s</label>
       </div>
@@ -2021,7 +2034,7 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
         <h2>Completar el evento seleccionado</h2>
         <div class="liveCur" id="liveCur">Aún no hay ningún evento.</div>
         <div class="liveAdj" id="liveAdj" hidden>
-          <span class="liveLbl">Ajustar la hora</span>
+          <span class="liveLbl">Ajustar tiempo</span>
           <button type="button" class="btn" data-d="-10">−10 s</button>
           <button type="button" class="btn" data-d="-5">−5 s</button>
           <button type="button" class="btn" data-d="-1">−1 s</button>
@@ -2214,10 +2227,19 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
     </section>
 
     <section class="botSec">
+      <h3>Tiempo de la acción · <span id="botTCat"></span></h3>
+      <div class="botHelp">Pulsa una categoría de arriba para asignarle su tiempo de corte. Si no lo cambias, usa los valores generales.</div>
+      <div class="row botAdd">
+        <label for="botTPre">Arrancar antes</label><input type="number" id="botTPre" min="0" max="600" step="0.5" value="5"><label>s</label>
+        <label for="botTPost" style="margin-left:6px">Finalizar en</label><input type="number" id="botTPost" min="0.2" max="600" step="0.5" value="10"><label>s</label>
+        <button type="button" class="btn" id="botTReset" title="Vuelve a los valores generales" hidden>Usar generales</button>
+      </div>
+    </section>
+
+    <section class="botSec">
       <h3>2 · Detalles de <span id="botDetCat"></span></h3>
       <div class="botHelp">Pulsa una categoría de arriba para editar sus detalles.</div>
       <div id="botDets" class="catbtns" role="group" aria-label="Detalles"></div>
-      <div class="row"><button type="button" class="btn" id="botCopyDet" title="Añade a esta categoría los detalles que tiene en otra botonera (p. ej. los de Gol y Ocasión de «Partidos»)">Copiar detalles de otra botonera</button></div>
       <div class="row botAdd">
         <input id="botDetName" maxlength="60" placeholder="Nuevo detalle" aria-label="Nuevo detalle">
         <label id="botParadoLbl" class="botChk" hidden><input type="checkbox" id="botParado"> Balón parado</label>
@@ -2227,7 +2249,7 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
     </section>
 
     <section class="botSec">
-      <h3>3 · Jugadores</h3>
+      <h3 id="botJugTit">3 · Jugadores</h3>
       <div id="botJugs" class="catbtns" role="group" aria-label="Jugadores"></div>
       <div class="row botAdd">
         <input id="botJugName" maxlength="40" placeholder="Nuevo jugador" aria-label="Nuevo jugador">
@@ -2537,7 +2559,7 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
       <div class="tutPn">
         <h3>Completar el evento seleccionado</h3>
         <div class="tutCurE" data-k="cur">Aún no hay ningún evento.</div>
-        <div class="tutChips"><span class="tutLbl">Ajustar la hora</span><span class="tutB" data-k="a-10">−10 s</span><span class="tutB" data-k="a-5">−5 s</span><span class="tutB" data-k="a-1">−1 s</span><span class="tutB" data-k="a+1">+1 s</span></div>
+        <div class="tutChips"><span class="tutLbl">Ajustar tiempo</span><span class="tutB" data-k="a-10">−10 s</span><span class="tutB" data-k="a-5">−5 s</span><span class="tutB" data-k="a-1">−1 s</span><span class="tutB" data-k="a+1">+1 s</span></div>
         <div class="tutChips"><span class="tutLbl">Detalle</span><span class="tutB tchip" data-k="det:Situación jugada" style="background:var(--c-tra)">Situación jugada</span><span class="tutB tchip" data-k="det:Balón parado" style="background:var(--c-tra)">Balón parado</span></div>
         <div class="tutChips"><span class="tutLbl">Jugador</span><span class="tutB tchip" data-k="jug:9 · Williams" style="background:var(--c-sal)">9 · Williams</span><span class="tutB tchip" data-k="jug:10 · Sancet" style="background:var(--c-sal)">10 · Sancet</span></div>
         <span class="tutInp" data-k="com">Comentario libre (opcional)</span>
@@ -3035,9 +3057,13 @@ window.renderHalfBands = function(b1,b2,mk,d){
   const CAT_FIJAS=["OTRO"]; // OTRO es el refugio de los eventos de categorías borradas
   const CAT_NOMBRE_FIJO=["GOL","OCASIÓN","OTRO"]; // su nombre lo usa la lógica de balón parado
   let catHid=[], catCol={};
+  const CAT_T_KEY="visor_cat_tiempo_v1";
+  let catT={}; // tiempo de la acción por categoría: {CAT:{pre,post}}; sin entrada = valores generales («Arrancar antes» / «Finalizar en»)
+  const cleanT=x=>{ const o={}; if(x&&typeof x==="object"&&!Array.isArray(x)) Object.entries(x).slice(0,60).forEach(([k,t])=>{ const p=+(t&&t.pre), q=+(t&&t.post); if(isFinite(p)&&isFinite(q)&&p>=0&&q>=0.2) o[String(k).slice(0,24)]={pre:Math.min(p,600),post:Math.min(q,600)}; }); return o; };
+  try{ catT=cleanT(JSON.parse(localStorage.getItem(CAT_T_KEY))); }catch(e){}
   try{ const x=JSON.parse(localStorage.getItem(CAT_HID_KEY)); if(Array.isArray(x)) catHid=x.map(String).slice(0,40); }catch(e){}
   try{ const x=JSON.parse(localStorage.getItem(CAT_COL_KEY)); if(x&&typeof x==="object"&&!Array.isArray(x)) Object.entries(x).slice(0,40).forEach(([k,c])=>{ if(/^#[0-9a-f]{6}$/i.test(c)) catCol[k]=c; }); }catch(e){}
-  function saveCatBase(){ try{ localStorage.setItem(CAT_HID_KEY,JSON.stringify(catHid)); localStorage.setItem(CAT_COL_KEY,JSON.stringify(catCol)); }catch(e){} botSyncActiva(); }
+  function saveCatBase(){ try{ localStorage.setItem(CAT_HID_KEY,JSON.stringify(catHid)); localStorage.setItem(CAT_COL_KEY,JSON.stringify(catCol)); localStorage.setItem(CAT_T_KEY,JSON.stringify(catT)); }catch(e){} botSyncActiva(); }
   function removeCat(n){ if(!CATS[n]||CAT_FIJAS.includes(n)) return;
     const custom=CATS[n].custom; delete CATS[n];
     if(custom) saveCats(); else { if(!catHid.includes(n)) catHid.push(n); delete catCol[n]; saveCatBase(); }
@@ -3252,8 +3278,9 @@ window.renderHalfBands = function(b1,b2,mk,d){
   const sorted=()=>events.map(e=>({e,t:timeOf(e)})).sort((a,b)=>a.t-b.t);
   // ---------- clips de evento ----------
   let playing=null, selEv=null, ceView=null, ceSel=-1, ceHist=[];
-  function clipOf(e){ if(e.clip) return e.clip; const t=timeOf(e), d=v.duration||Infinity, pre=+$("pre").value||0;
-    const post=Math.max(0.2,+$("post").value||10);
+  function clipOf(e){ if(e.clip) return e.clip; const t=timeOf(e), d=v.duration||Infinity, ct=catT[e.cat];
+    const pre=ct?ct.pre:(+$("pre").value||0);
+    const post=ct?ct.post:Math.max(0.2,+$("post").value||10);
     const a=Math.max(0,t-pre), b=Math.max(a+0.2,Math.min(d,t+post)); return {a,b,segs:[{s:a,e:b,off:false}]}; }
   function keptOf(e){ const c=clipOf(e); return c.segs.filter(g=>!g.off).map(g=>({s:Math.max(g.s,c.a),e:Math.min(g.e,c.b)})).filter(r=>r.e-r.s>0.05); }
   // Datos del rótulo del evento para grabarlo dentro del vídeo descargado (el color se resuelve: el lienzo no entiende var(--x))
@@ -3494,6 +3521,8 @@ window.renderHalfBands = function(b1,b2,mk,d){
       wc.append(b);
     });
     $("botDetCat").textContent=botCat.charAt(0)+botCat.slice(1).toLowerCase();
+    $("botTCat").textContent=$("botDetCat").textContent;
+    { const t=catT[botCat]; $("botTPre").value=t?t.pre:(+$("pre").value||0); $("botTPost").value=t?t.post:Math.max(0.2,+$("post").value||10); $("botTReset").hidden=!t; }
     const wd=$("botDets"); wd.replaceChildren();
     const L=DETS[botCat]||[];
     if(!L.length) wd.append(el("span",{className:"botEmpty",textContent:"Sin detalles todavía."}));
@@ -3525,6 +3554,13 @@ window.renderHalfBands = function(b1,b2,mk,d){
       wj.append(b);
     });
   }
+  function botSetT(){
+    const p=+$("botTPre").value, q=+$("botTPost").value;
+    if(!isFinite(p)||!isFinite(q)||p<0||q<0.2) return;
+    catT[botCat]={pre:Math.min(p,600),post:Math.min(q,600)}; saveCatBase(); $("botTReset").hidden=false; refresh();
+  }
+  $("botTPre").onchange=$("botTPost").onchange=botSetT;
+  $("botTReset").onclick=()=>{ delete catT[botCat]; saveCatBase(); renderBot(); refresh(); };
   function botCancelEdit(){ botEditCat=null; $("botCatName").value=""; $("botCatErr").textContent=""; $("botCatColor").value=nextBotColor(); renderBot(); }
   function botAddCat(){
     const n=$("botCatName").value.trim().replace(/\s+/g," ").toUpperCase().slice(0,24);
@@ -3564,11 +3600,11 @@ window.renderHalfBands = function(b1,b2,mk,d){
   const BOTS_KEY="visor_botoneras_v1";
   let BOTS={act:"b1",lista:[{id:"b1",n:"Botonera 1"}]};
   try{ const x=JSON.parse(localStorage.getItem(BOTS_KEY));
-    if(x&&Array.isArray(x.lista)&&x.lista.length){ BOTS={act:String(x.act),lista:x.lista.slice(0,50).map(o=>({id:String(o.id).slice(0,20),n:String(o.n||"Botonera").slice(0,40),dets:o.dets,jugs:o.jugs}))};
+    if(x&&Array.isArray(x.lista)&&x.lista.length){ BOTS={act:String(x.act),lista:x.lista.slice(0,50).map(o=>({id:String(o.id).slice(0,20),n:String(o.n||"Botonera").slice(0,40),dets:o.dets,jugs:o.jugs,cats:o.cats}))};
       if(!BOTS.lista.some(o=>o.id===BOTS.act)) BOTS.act=BOTS.lista[0].id; } }catch(e){}
   const botActual=()=>BOTS.lista.find(o=>o.id===BOTS.act);
   function saveBots(){ try{ localStorage.setItem(BOTS_KEY,JSON.stringify(BOTS)); }catch(e){} }
-  const botCatsSnap=()=>({custom:Object.entries(CATS).filter(([,o])=>o.custom&&!o.ret).map(([n,o])=>({n,c:o.c})),hid:catHid.slice(),col:{...catCol}});
+  const botCatsSnap=()=>({custom:Object.entries(CATS).filter(([,o])=>o.custom&&!o.ret).map(([n,o])=>({n,c:o.c})),hid:catHid.slice(),col:{...catCol},t:JSON.parse(JSON.stringify(catT))});
   let botAplicando=false;
   function botSyncActiva(){ try{ if(botAplicando) return; botGuardaActiva(); saveBots(); }catch(e){} } // antes de que existan BOTS/botAplicando lanza y se ignora
   function botGuardaActiva(){ const a=botActual(); if(!a) return; a.dets=JSON.parse(JSON.stringify(DETS)); a.jugs=JUGS.slice(); a.cats=botCatsSnap(); }
@@ -3576,7 +3612,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     const prev=JSON.parse(JSON.stringify(CATS));
     Object.keys(CATS).forEach(k=>delete CATS[k]);
     Object.entries(JSON.parse(JSON.stringify(CATS_BASE))).forEach(([k,v])=>{ CATS[k]=v; });
-    catHid=Array.isArray(s.hid)?s.hid.map(String).slice(0,40):[]; catCol={};
+    catHid=Array.isArray(s.hid)?s.hid.map(String).slice(0,40):[]; catCol={}; catT=cleanT(s.t);
     if(s.col&&typeof s.col==="object") Object.entries(s.col).slice(0,40).forEach(([k,c])=>{ if(/^#[0-9a-f]{6}$/i.test(c)) catCol[k]=c; });
     catHid.forEach(n=>{ delete CATS[n]; });
     Object.entries(catCol).forEach(([k,c])=>{ if(CATS[k]&&!CATS[k].custom) CATS[k].c=c; });
@@ -3631,19 +3667,6 @@ window.renderHalfBands = function(b1,b2,mk,d){
     const id="b"+Date.now().toString(36); BOTS.lista.push({id,n:"Botonera original",dets,jugs});
     BOTS.act=id; botAplica(BOTS.lista[BOTS.lista.length-1]); saveBots();
     $("botDetErr").textContent=$("botJugErr").textContent=""; botSync(); renderBotSel(); renderBot(); refresh();
-  };
-  // Copia los detalles de la categoría que se está editando desde otra botonera (se suman a los que ya hay, sin repetir)
-  $("botCopyDet").onclick=()=>{
-    const otras=BOTS.lista.filter(o=>o.id!==BOTS.act);
-    if(!otras.length){ $("botDetErr").textContent="No hay otras botoneras de donde copiar."; return; }
-    const r=prompt("Copiar los detalles de «"+botCat+"» desde:\n"+otras.map((o,i)=>(i+1)+" · "+o.n).join("\n")+"\n\nEscribe el número:",otras.length===1?"1":"");
-    if(r===null) return;
-    const o=otras[(parseInt(r,10)||0)-1]; if(!o){ $("botDetErr").textContent="Número no válido."; return; }
-    const L=(o.dets&&o.dets[botCat])||[]; let n=0;
-    L.forEach(d=>{ const antes=(DETS[botCat]||[]).length; addDetTo(botCat,d,false); if((DETS[botCat]||[]).length>antes) n++; });
-    saveDets(); $("botDetErr").textContent=L.length?"":"«"+o.n+"» no tiene detalles en esta categoría.";
-    botSync(); renderBot();
-    if(L.length) $("botDetErr").textContent="Copiados "+n+" detalle(s) de «"+o.n+"».";
   };
   $("botRen").onclick=()=>{
     const a=botActual(), n=String(prompt("Nuevo nombre de la botonera:",a.n)||"").trim().slice(0,40);
@@ -3713,7 +3736,10 @@ window.renderHalfBands = function(b1,b2,mk,d){
       const bDl=ico('<path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/>',"Descargar solo este evento como vídeo");
       const bDel=ico('<path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/>',"Borrar evento");
       const bPaint=ico('<path d="M12 3a9 9 0 1 0 0 18c1.1 0 1.8-.8 1.8-1.7 0-.5-.2-.9-.5-1.2-.3-.3-.5-.7-.5-1.2 0-.9.7-1.6 1.6-1.6H16a5 5 0 0 0 5-5c0-4-4-7.3-9-7.3z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10" cy="7" r="1"/><circle cx="15" cy="7" r="1"/>',"Pintar sobre este evento");
-      bPaint.onclick=ev=>{ev.stopPropagation(); if(!v.src) return; go(e,false); v.currentTime=Math.max(0,t); const g=$("vPintGo"); if(g) g.click();};
+      bPaint.onclick=ev=>{ev.stopPropagation(); if(!v.src) return;
+        // Si el cursor ya está dentro del evento, se pinta justo ahí; si no, en el instante del evento.
+        const cur=v.currentTime, c=clipOf(e), dentro=cur>=c.a-0.05&&cur<=c.b+0.05;
+        go(e,false); v.currentTime=Math.max(0,dentro?cur:t); const g=$("vPintGo"); if(g) g.click();};
       bDl.onclick=ev=>{ev.stopPropagation(); downloadEvent(e);};
       bPl.onclick=ev=>{ev.stopPropagation(); openPlDlg(selectedIds.has(e.id)&&selectedIds.size>1?[...selectedIds]:[e.id]);};
       bEd.onclick=ev=>{ev.stopPropagation(); openDlg(e);};
@@ -4113,7 +4139,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   { const b=$("vPintGo"); b.addEventListener("pointerdown",ev=>ev.stopPropagation());
     b.addEventListener("click",()=>{ v.pause();
       const body=$("pintBody"); if(body&&body.hidden&&$("pintToggle")) $("pintToggle").click();
-      const blk=$("pintBlock"); if(blk){ blk.scrollIntoView({behavior:"smooth",block:"start"}); const t=blk.querySelector('.pintTool[data-tool="pen"]'); if(t) t.focus({preventScroll:true}); } }); }
+      const blk=$("pintBlock"); if(blk){ blk.scrollIntoView({behavior:"smooth",block:"start"}); const t=blk.querySelector('.pintTool[data-tool="pen"]'); if(t){ t.focus({preventScroll:true}); const m=$("pintMode"); if(m&&m.getAttribute("aria-pressed")!=="true") t.click(); } } }); }
   // Zoom de las líneas de tiempo del registro (la de arriba y la de categorías van juntas)
   let vZoom=1, vZv=0, vPanTs=0; const VZMAX=64;
   function vApplyZoom(){
@@ -4681,7 +4707,8 @@ window.renderHalfBands = function(b1,b2,mk,d){
       videoName:$("vidName").textContent||"", off:$("off").value, pre:$("pre").value, post:$("post").value,
       events, playlists, halfMarks,
       pintado:window.acfcPint?window.acfcPint.get():[],
-      cats:Object.entries(CATS).filter(([,o])=>o.custom).map(([n,o])=>({n,c:o.c})),
+      bot:{id:BOTS.act,n:(botActual()||{}).n||""},
+      cats:Object.entries(CATS).filter(([,o])=>o.custom&&!o.ret).map(([n,o])=>({n,c:o.c})),
       dets:DETS, jugs:JUGS
     };
   }
@@ -4691,16 +4718,21 @@ window.renderHalfBands = function(b1,b2,mk,d){
   };
   function loadProject(data){
     events=sanitize(data.events||[]);
-    if(Array.isArray(data.cats)) data.cats.slice(0,40).forEach(o=>{
+    // Cada botonera es independiente: el proyecto solo vuelca categorías, detalles y jugadores en SU botonera (si existe aquí).
+    const bp=data.bot&&typeof data.bot==="object"?data.bot:null;
+    const bo=bp&&(BOTS.lista.find(o=>o.id===String(bp.id))||BOTS.lista.find(o=>o.n===String(bp.n)));
+    if(bo&&bo.id!==BOTS.act) botIr(bo.id);
+    const mezcla=!!bo;
+    if(mezcla&&Array.isArray(data.cats)) data.cats.slice(0,40).forEach(o=>{
       const n=String(o&&o.n||"").trim().toUpperCase().slice(0,24), c=/^#[0-9a-f]{6}$/i.test(o&&o.c)?o.c:PALETTE[0];
       if(n&&!CATS[n]) CATS[n]={c,custom:true};
     });
-    saveCats();
-    if(data.dets&&typeof data.dets==="object"&&!Array.isArray(data.dets))
-      Object.entries(data.dets).slice(0,80).forEach(([c,arr])=>{ if(Array.isArray(arr)) arr.slice(0,150).forEach(d=>addDetTo(String(c).toUpperCase().slice(0,24),d,false)); });
-    events.forEach(e=>addDetTo(e.cat,e.det,false)); saveDets();
-    if(Array.isArray(data.jugs)) data.jugs.slice(0,300).forEach(n=>addJugTo(n,false));
-    events.forEach(e=>addJugTo(e.jug,false)); saveJugs();
+    if(mezcla){ saveCats();
+      if(data.dets&&typeof data.dets==="object"&&!Array.isArray(data.dets))
+        Object.entries(data.dets).slice(0,80).forEach(([c,arr])=>{ if(Array.isArray(arr)) arr.slice(0,150).forEach(d=>addDetTo(String(c).toUpperCase().slice(0,24),d,false)); });
+      events.forEach(e=>addDetTo(e.cat,e.det,false)); saveDets();
+      if(Array.isArray(data.jugs)) data.jugs.slice(0,300).forEach(n=>addJugTo(n,false));
+      events.forEach(e=>addJugTo(e.jug,false)); saveJugs(); }
     if(Array.isArray(data.playlists))
       playlists=data.playlists.filter(p=>p&&typeof p==="object").slice(0,50).map(p=>({
         id:String(p.id||newPlId()).slice(0,24), name:String(p.name||"Lista").slice(0,40),
@@ -5711,8 +5743,9 @@ window.renderHalfBands = function(b1,b2,mk,d){
 
   // ---------- render ----------
   function addedTotal(){ return added.reduce((a,it)=>a+(it.e-it.s),0); }
-  function gotoAdded(idx){ const it=added[idx]; if(!it) return; const si=sources.findIndex(s=>s.id===it.srcId); if(si<0) return;
-    const t=it.s+0.01; activeAdded=it;
+  function gotoAdded(idx,keepCursor){ const it=added[idx]; if(!it) return; const si=sources.findIndex(s=>s.id===it.srcId); if(si<0) return;
+    let t=it.s+0.01; activeAdded=it;
+    if(keepCursor&&si===curSrc){ const c=V.currentTime; if(c>=it.s-0.05&&c<=it.e+0.05) t=c; }
     if(si===curSrc){ inP=it.s; outP=Math.min(it.e,dur()||it.e); V.currentTime=t; render(); } else { pendingSeek={idx:-1,t,a:it}; switchSource(si); } }
   // ventana emergente para modificar todos los datos de un tramo de la lista
   const fmtD=t=>{ t=Math.max(0,t||0); return Math.floor(t/60)+":"+String(Math.floor(t%60)).padStart(2,"0"); };
@@ -5901,9 +5934,15 @@ window.renderHalfBands = function(b1,b2,mk,d){
         x.innerHTML='<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+svg+'</svg>';
         x.style.cssText="display:inline-flex;align-items:center;justify-content:center;padding:6px 8px;line-height:0"; return x; };
       const ed=icoBtn('<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>',"Editar evento"); ed.onclick=ev=>{ev.stopPropagation(); openEditAdded(idx);};
+      const pt=icoBtn('<path d="M12 3a9 9 0 1 0 0 18c1.1 0 1.8-.8 1.8-1.7 0-.5-.2-.9-.5-1.2-.3-.3-.5-.7-.5-1.2 0-.9.7-1.6 1.6-1.6H16a5 5 0 0 0 5-5c0-4-4-7.3-9-7.3z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10" cy="7" r="1"/><circle cx="15" cy="7" r="1"/>',"Pintar sobre este tramo");
+      pt.onclick=ev=>{ev.stopPropagation(); gotoAdded(idx,true);
+        // el salto de fuente es asíncrono: se pausa y se abre el panel de pintado cuando el vídeo ya está colocado
+        setTimeout(()=>{ V.pause();
+          const body=$("pintBodyEd"); if(body&&body.hidden&&$("pintToggleEd")) $("pintToggleEd").click();
+          const blk=$("pintBlockEd"); if(blk){ blk.scrollIntoView({behavior:"smooth",block:"start"}); const t=blk.querySelector('.pintTool[data-tool="pen"]'); if(t){ t.focus({preventScroll:true}); const m=$("pintModeEd"); if(m&&m.getAttribute("aria-pressed")!=="true") t.click(); } } },150); };
       const dl=icoBtn('<path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/>',"Descargar solo este tramo"); dl.onclick=ev=>{ev.stopPropagation(); exportSeparate([idx]);};
       const b=icoBtn('<path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/>',"Quitar tramo"); b.onclick=ev=>{ev.stopPropagation(); removeAdded(idx);};
-      const acts=document.createElement("div"); acts.style.cssText="display:flex;gap:4px"; acts.append(ed,dl,b);
+      const acts=document.createElement("div"); acts.style.cssText="display:flex;gap:4px"; acts.append(ed,pt,dl,b);
       el.append(num,tx,acts); el.onclick=()=>gotoAdded(idx);
       el.onkeydown=k=>{ if(k.key==="Enter") el.click(); }; L.append(el);
     });
@@ -6839,7 +6878,7 @@ window.tutPaint=(()=>{
      d:"En «Completar el evento seleccionado» añade detalle, jugador y comentario. Si llegaste tarde, ajusta la hora con −10 s, −5 s, −1 s o +1 s.",
      pre(){ S.ev=[{t:7,cat:"Gol",eq:"Mi equipo",det:"Situación jugada",jug:"9 · Williams",com:"Buena acción"}]; S.sel=0; S.clock=20; },
      async run(W){ S.sel=0; S.clock=20; draw();
-       await press(W,"a-5","Ajustar la hora: menos 5 segundos"); S.ev[0].t=7; draw(); await W(500);
+       await press(W,"a-5","Ajustar tiempo: menos 5 segundos"); S.ev[0].t=7; draw(); await W(500);
        await press(W,"det:Situación jugada","Detalle"); S.ev[0].det="Situación jugada"; draw(); await W(400);
        await press(W,"jug:9 · Williams","Jugador"); S.ev[0].jug="9 · Williams"; draw(); await W(400);
        await typeCom(W,"Buena acción"); await W(600); }},
@@ -9922,7 +9961,7 @@ html.acfc-premium .acfcCrown::after,html.acfc-premium .acfcCrown.is-active::afte
   var LIMITAR=false;
   var PREMIUM_PARA_TODOS=true;
   /* Funciones solo Premium: llevan corona (de momento solo el pintado de acciones, en el registro y en el editor) */
-  var PREMIUM=[".pintTool[data-tool]:not([data-tool=move]):not([data-tool=edit]):not([data-tool=arrow]):not([data-tool=arrowStraight]):not([data-tool=pen]):not([data-tool=text]):not([data-tool=callout]):not([data-tool=rect]):not([data-tool=ellipse]):not([data-tool=triangleZone])","#pintStill","#pintStillEd","#regAddFile","#edAddFile","#edABWin","#botJugAdd","#newJugAdd","#liveJugAdd","details.pintRoster>summary","details.pintRoster .pintRosterBtns .btn.primary","#tabBtnLive","#liveJugLbl"];
+  var PREMIUM=[".pintTool[data-tool]:not([data-tool=move]):not([data-tool=edit]):not([data-tool=arrow]):not([data-tool=arrowStraight]):not([data-tool=pen]):not([data-tool=text]):not([data-tool=callout]):not([data-tool=rect]):not([data-tool=ellipse]):not([data-tool=triangleZone])","#pintStill","#pintStillEd","#regAddFile","#edABWin","#botJugTit","#botJugName","#botJugAdd","#newJugAdd","#liveJugAdd","details.pintRoster>summary","details.pintRoster .pintRosterBtns .btn.primary","#tabBtnLive","#liveJugLbl"];
   var LITE=["#play","#vBack4","#vFwd5","#vTagNow","#vFull"];
   var H=document.documentElement, $=function(i){return document.getElementById(i);};
 
@@ -9972,19 +10011,19 @@ html.acfc-premium .acfcCrown::after,html.acfc-premium .acfcCrown.is-active::afte
   /* Función Premium en la versión gratuita: mensaje fijo con enlace al curso */
   function aviso(){
     open(); $("acfcLicT").textContent="Función Premium";
-    txt.textContent="Para poder acceder a esta funcionalidad apúntate al curso de análisis de partido en directo y se te entregará el software completo junto a las clases.";
+    txt.innerHTML="Para poder acceder a esta funcionalidad apúntate al curso de <strong style=\"text-transform:uppercase\">Análisis de partido en directo</strong> y se te entregará el software completo junto a las clases.";
     inp.hidden=true; go.hidden=PREMIUM_PARA_TODOS; $("acfcLicCurso").hidden=false;
   }
   free.onclick=function(){
     if(full){ if(!PREMIUM_PARA_TODOS) store.set(""); apply(false); }
     open(); $("acfcLicT").textContent="Versión gratuita";
-    txt.textContent="Esta versión gratuita tiene funcionalidades limitadas, que se activan como Premium al inscribirte al curso.";
+    txt.innerHTML="Esta versión gratuita tiene funcionalidades limitadas, que se activan como Premium al inscribirte al curso <strong style=\"text-transform:uppercase\">Análisis de partido en directo</strong>.";
     inp.hidden=true; go.hidden=true; $("acfcLicCurso").hidden=false;
   };
   btn.onclick=function(){
     if(PREMIUM_PARA_TODOS){
       apply(true); open(); $("acfcLicT").textContent="Versión Premium";
-      txt.textContent="Todos los alumnos inscritos al curso de análisis en directo de partido tendrán todas las funcionalidades habilitadas.";
+      txt.innerHTML="Todos los alumnos inscritos al curso de <strong style=\"text-transform:uppercase\">Análisis de partido en directo</strong> tendrán todas las funcionalidades habilitadas.";
       inp.hidden=true; go.hidden=true; $("acfcLicCurso").hidden=false; return;
     }
     open();
@@ -10048,10 +10087,10 @@ html.acfc-premium .acfcCrown::after,html.acfc-premium .acfcCrown.is-active::afte
     aviso();
   },true);
 
-  /* Añadir un segundo vídeo y «A/B en ventana» (registro y editor): solo Premium */
+  /* Añadir un segundo vídeo en el registro y «A/B en ventana»: solo Premium */
   document.addEventListener("click",function(e){
     if(full||!e.target.closest) return;
-    if(!e.target.closest("#regAddFile, #edAddFile, #edABWin")) return;
+    if(!e.target.closest("#regAddFile, #edABWin")) return;
     e.preventDefault(); e.stopImmediatePropagation();
     aviso();
   },true);
