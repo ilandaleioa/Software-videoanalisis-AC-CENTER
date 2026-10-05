@@ -59,6 +59,12 @@ video{width:100%;height:100%;display:block;background:#000}
 .overlay .min{background:#1c2420;color:#fff;font-family:var(--f-disp);font-size:20px;padding:8px 12px;display:flex;align-items:center}
 .stageControls{position:absolute;left:0;right:0;bottom:0;display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:10px 12px;background:linear-gradient(to top,rgba(0,0,0,.65),rgba(0,0,0,0));z-index:2}
 .stageControls .btn{background:rgba(255,255,255,.92)}
+.stageTL{position:absolute;top:8px;left:8px;z-index:4;display:flex;gap:6px}
+.stageTL .btn{background:rgba(0,0,0,.65);color:#fff;border:0;border-radius:0;padding:6px 10px;min-height:0;font-size:14px;line-height:1.2;cursor:pointer}
+.stageTL .btn:hover,.stageTL .btn.on{background:var(--red);color:#fff}
+.stageTL #vFull .lbl,.stageTL #edFull .lbl{display:none}
+@media (max-width:640px){.stageTL .pipBtn{display:none}}
+html.acfc-imm .stageTL{display:none!important}
 .fsBar{display:flex;flex:1 0 100%;align-items:center;gap:10px;color:#fff;font-size:14px;font-variant-numeric:tabular-nums}
 .fsBar input[type=range]{flex:1;min-width:0;accent-color:var(--red);cursor:pointer}
 .fsBar .fsMatch{color:#fff;font-weight:700}
@@ -199,8 +205,13 @@ kbd{border:1px solid var(--line);border-radius:3px;padding:0 4px;font-size:11px}
 .edTlFlt select{min-width:0;max-width:100%}
 .doneCut:hover{background:color-mix(in srgb,var(--dc) 85%,transparent)}
 .doneCut .evLbl{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;overflow:hidden;pointer-events:none;font-family:var(--f-disp);font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;color:#fff;opacity:.8;text-shadow:0 0 4px rgba(0,0,0,.65),0 0 8px rgba(0,0,0,.45)}
+/* «Insertar en el vídeo» parpadea mientras hay un pintado por terminar */
+@keyframes pintStillBlink{0%,100%{background:var(--red);color:#fff;box-shadow:0 0 0 3px rgba(211,41,30,.35)}50%{background:var(--panel);color:var(--red);box-shadow:0 0 0 0 rgba(211,41,30,0)}}
+.btn.pintStillBlink{border-color:var(--red);animation:pintStillBlink .9s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){.btn.pintStillBlink{animation:none;background:var(--red);color:#fff}}
+.evPint{font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:1px 5px;border:1px solid var(--red);color:var(--red);border-radius:2px;line-height:1.3}
+.evPintMk{position:absolute;top:2px;right:2px;width:9px;height:9px;background:var(--red);border:1.5px solid #fff;border-radius:50%;z-index:6;pointer-events:none}
 .stillMk{position:absolute;top:-3px;bottom:-3px;width:3px;margin-left:-1px;z-index:5;pointer-events:none;background:var(--red);box-shadow:0 0 0 1px var(--panel)}
-.stillMk::before{content:"";position:absolute;left:50%;top:-20px;width:18px;height:18px;transform:translateX(-50%);background:var(--red) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 20h9'/%3E%3Cpath d='M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z'/%3E%3C/svg%3E") center/12px 12px no-repeat;border:2px solid var(--panel);box-sizing:border-box}
 .shade{position:absolute;top:0;bottom:0;background:color-mix(in srgb,var(--bg) 70%,transparent);pointer-events:none;z-index:2}
 .hdl{position:absolute;top:-4px;bottom:-4px;width:6px;margin-left:-3px;background:var(--ink);border-radius:2px;cursor:ew-resize;z-index:4}
 .hdl::after{content:"";position:absolute;left:2px;top:14px;width:2px;height:20px;background:var(--panel)}
@@ -336,6 +347,15 @@ header{position:relative;flex-wrap:wrap;min-height:64px;padding:0 22px;gap:16px;
   background:radial-gradient(90% 180% at 88% -40%,rgba(211,41,30,.42) 0%,rgba(211,41,30,0) 55%),linear-gradient(90deg,#0B0D10 0%,#15181D 55%,#1B2026 100%);color:#fff}
 header h1.acfcBrand{display:flex;align-items:center;gap:14px;font-size:inherit;margin:0;flex:none}
 .acfcBrand a{display:flex;align-items:center;line-height:0}
+.acfcHdrLinks{display:flex;align-items:center;font-family:var(--f-body);font-size:10.5px;font-weight:700;letter-spacing:1.1px;text-transform:uppercase;white-space:nowrap}
+.acfcHdrLinks a{color:rgba(255,255,255,.62);text-decoration:none;padding:0 12px;border-left:1px solid rgba(255,255,255,.22);line-height:14px;transition:color .2s}
+.acfcHdrLinks a b{color:#fff;font-weight:700}
+.acfcHdrLinks a:hover,.acfcHdrLinks a:focus-visible{color:#E9564C}
+.acfcHdrLinks a:hover b,.acfcHdrLinks a:focus-visible b{color:#E9564C}
+.acfcHdrLinks a::after{content:"\2197";display:inline-block;margin-left:7px;padding:1px 4px;background:var(--red);color:#fff;font-size:11px;line-height:12px;transition:transform .2s,background .2s}
+.acfcHdrLinks a:hover::after,.acfcHdrLinks a:focus-visible::after{background:var(--red-2);transform:translate(1px,-1px)}
+@media (max-width:900px){.acfcHdrLinks{display:none}}
+html.acfc-imm .acfcHdrLinks{display:none!important}
 .acfcBrand img{height:32px;width:auto;display:block}
 .acfcBrandTxt{display:flex;flex-direction:column;justify-content:center;padding-left:14px;border-left:1px solid rgba(255,255,255,.28);font-family:var(--f-disp);font-weight:700;font-size:17px;line-height:1;letter-spacing:.6px;text-transform:uppercase;color:#fff}
 .acfcBrandTxt small{font-size:10px;font-weight:700;letter-spacing:1.6px;color:#E9564C;margin-top:4px}
@@ -507,6 +527,7 @@ kbd{border-radius:0;font-family:var(--f-body)}
   .stage:not(:fullscreen) .stageControls #vMute{order:6}
   .stage:not(:fullscreen) .stageControls #vFull{order:7;background:var(--ink);color:var(--bg);border-color:var(--ink)}
   .stage:not(:fullscreen) .stageControls #vMute,.stage:not(:fullscreen) .stageControls #vFull{padding:0;min-width:0;font-size:13px;line-height:1}
+  .stageControls .pipBtn{display:none}
   #tabVisor .stage:not(:fullscreen) .stageControls .btn{min-height:34px;padding:4px 2px;font-size:12px;background:var(--panel);border:1px solid var(--line);color:var(--ink)}
   #tabVisor .stage:not(:fullscreen) .stageControls .btn.primary{background:var(--red);border-color:var(--red);color:#fff}
   #tabVisor .stage:not(:fullscreen) .stageControls #vFull{background:var(--ink);color:var(--bg);border-color:var(--ink)}
@@ -692,6 +713,9 @@ kbd{border-radius:0;font-family:var(--f-body)}
 :is(#tutDlg,#tutDlgR) .tutSelR .tutB{text-align:center}
 :is(#tutDlg,#tutDlgR) .tutPbar{display:flex;gap:4px;flex-wrap:wrap}
 :is(#tutDlg,#tutDlgR) .tutPbar .tutB{padding:3px 7px;font-size:10px}
+:is(#tutDlg,#tutDlgR) .tutPbar .tutTl{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:54px;padding:5px 7px}
+:is(#tutDlg,#tutDlgR) .tutTl svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+:is(#tutDlg,#tutDlgR) .tutTl svg .solid{fill:currentColor}
 :is(#tutDlg,#tutDlgR) .tutMenu .hd{font-size:9px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted)}
 :is(#tutDlg,#tutDlgR) .tutMenu .r{display:flex;justify-content:space-between}
 :is(#tutDlg,#tutDlgR) .tutMenu .r em{font-style:normal;color:var(--muted);font-size:10px}
@@ -713,7 +737,7 @@ kbd{border-radius:0;font-family:var(--f-body)}
 #tutDlgR .tutFr2{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--muted);flex-wrap:wrap}
 #tutDlgR .tutNum{min-width:26px;padding:3px 6px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font-size:11px;text-align:center}
 #tutDlgR .tutNum.hot{outline:2px solid var(--red)}
-#tutDlgR .tutForm{position:absolute;z-index:6;right:12px;top:44px;width:min(320px,62%);padding:10px 12px;background:var(--panel);border:1px solid var(--ink);box-shadow:0 6px 18px rgba(0,0,0,.3);display:flex;flex-direction:column;gap:5px}
+#tutDlgR .tutForm{position:relative;margin-top:8px;width:min(380px,100%);padding:10px 12px;background:var(--panel);border:1px solid var(--ink);box-shadow:0 6px 18px rgba(0,0,0,.3);display:flex;flex-direction:column;gap:5px}
 #tutDlgR .tutFhd{display:flex;justify-content:space-between;align-items:center;gap:6px}
 #tutDlgR .tutFh{font-family:var(--f-disp);font-size:16px;text-transform:uppercase;letter-spacing:.5px}
 #tutDlgR .tutFr{display:flex;gap:4px;flex-wrap:wrap;align-items:center}
@@ -727,7 +751,7 @@ kbd{border-radius:0;font-family:var(--f-body)}
 #tutDlgR .tutForm .tutB.trec.set{background:var(--red);border-color:var(--red);color:#fff}
 #tutDlgR .tutForm .tutB.red{align-self:flex-end}
 #tutDlgR .tutFb{display:flex;gap:6px;justify-content:flex-end;align-items:center}
-@media (max-width:720px){#tutDlgR .tutForm{right:12px;width:calc(100% - 24px)}}
+
 /* ===== fin tutorial ===== */
 /* Botón ojo (mostrar/ocultar botones de marcas): color propio, azul de la herramienta */
 #vMarkToggle,#edMarkToggle{background:var(--c-sal);border-color:var(--c-sal);color:#fff}
@@ -885,7 +909,7 @@ html #tabEditor aside .pintBlock:has(#pintBodyEd[hidden]) .pbHead{margin-bottom:
 /* botonera: grupos y equipo */
 .optbtn.g-juego:not(.active){background:#3D4852;border-color:#3D4852;color:#fff}
 .optbtn.g-parado:not(.active){background:#8A8F96;border-color:#8A8F96;color:#fff}
-.optbtn[data-eq="propio"]{background:#15181D;border-color:#15181D;color:#fff}
+.optbtn[data-eq="propio"]{background:#2e8b4a;border-color:#2e8b4a;color:#fff}
 .optbtn[data-eq="rival"]{background:#D3291E;border-color:#D3291E;color:#fff}
 .optbtn[data-eq="ambos"]{background:#8A8F96;border-color:#8A8F96;color:#fff}
 .optbtn[data-eq].active{border-color:#15181D;box-shadow:0 0 0 2px var(--panel),0 0 0 4px var(--red)}
@@ -1170,15 +1194,17 @@ html #fltClear:hover,html #pintClear:hover,html #edClearAdded:hover{background:v
 <!-- ACFC · barra superior con próximas formaciones (actualizar fechas cada edición) -->
 <div class="acfcUtil"><div class="acfcUtil__in">
   <span class="acfcUtil__live"><i></i>Lezama Talks · Taller de videoanálisis</span>
-  <span class="acfcUtil__lbl">Próximas formaciones</span>
-  <a href="https://acfootballcenter.eus/analisis-de-partido-en-directo-vi/?utm_source=lezama-talks&amp;utm_medium=herramienta-videoanalisis&amp;utm_campaign=promo-cursos&amp;utm_content=barra" target="_blank" rel="noopener"><b>Análisis de partido en directo</b> · 20 oct</a>
-  <a href="https://acfootballcenter.eus/ia-aplicada-gestion-deportiva/?utm_source=lezama-talks&amp;utm_medium=herramienta-videoanalisis&amp;utm_campaign=promo-cursos&amp;utm_content=barra" target="_blank" rel="noopener"><b>IA aplicada a la gestión</b> · 3 nov</a>
   <span class="acfcUtil__sp"></span>
   <a class="acfcUtil__site" href="https://acfootballcenter.eus/?utm_source=lezama-talks&amp;utm_medium=herramienta-videoanalisis&amp;utm_campaign=promo-cursos&amp;utm_content=barra" target="_blank" rel="noopener">acfootballcenter.eus ↗</a>
 </div></div>
 <header>
   <h1 class="acfcBrand"><a href="https://acfootballcenter.eus/" target="_blank" rel="noopener" title="Athletic Club Football Center"><img src="https://acfootballcenter.eus/wp-content/uploads/2022/11/acfc-logo-white.svg" alt="Athletic Club Football Center" width="118" height="32"></a><span class="acfcBrandTxt">Videoanálisis<small>Lezama Talks</small></span></h1><nav class="tabs" role="tablist"><button class="tab" role="tab" id="tabBtnEditor" aria-selected="false">Editor de vídeo</button><button class="tab" role="tab" id="tabBtnVisor" aria-selected="true">Registro de acciones</button></nav><span class="sub" id="vidName">cortes3.mp4</span><span class="sub" id="vidNote" style="font-size:12px"></span>
   <select id="vidSel" hidden aria-label="Vídeo abierto en el registro" title="Cambiar de vídeo"></select>
+  <!-- ACFC · formaciones en la cabecera (actualizar fechas cada edición) -->
+  <nav class="acfcHdrLinks" aria-label="Próximas formaciones">
+    <a href="https://acfootballcenter.eus/analisis-de-partido-en-directo-vi/?utm_source=lezama-talks&amp;utm_medium=herramienta-videoanalisis&amp;utm_campaign=promo-cursos&amp;utm_content=cabecera" target="_blank" rel="noopener"><b>Curso: Análisis de partido en directo</b> · 20 oct</a>
+    <a href="https://acfootballcenter.eus/ia-aplicada-gestion-deportiva/?utm_source=lezama-talks&amp;utm_medium=herramienta-videoanalisis&amp;utm_campaign=promo-cursos&amp;utm_content=cabecera" target="_blank" rel="noopener"><b>Curso: IA aplicada a la gestión</b> · 3 nov</a>
+  </nav>
   <span class="sp"></span>
   <button type="button" class="btn" id="btnInstalar" hidden title="Instalar la app o crear un acceso directo">Instalar app</button>
   <input type="file" id="file" accept="video/*" hidden>
@@ -1218,6 +1244,7 @@ html #fltClear:hover,html #pintClear:hover,html #edClearAdded:hover{background:v
         <button class="btn" id="vFwd20" title="Avanzar 10 segundos">+10 seg</button>
         <button class="btn" id="vMute" title="Silenciar / activar sonido" aria-label="Silenciar / activar sonido">🔊<span class="lbl"> Silenciar</span></button>
         <button class="btn" id="vFull" title="Pantalla completa (F)" aria-label="Pantalla completa">⛶<span class="lbl"> Pantalla completa</span></button>
+        <button class="btn pipBtn" id="vPip" title="Abrir el reproductor en una ventana emergente flotante" aria-label="Ventana emergente">⧉<span class="lbl"> Ventana emergente</span></button>
         <button class="btn primary fsAB" id="vFsAuto" title="Registro automático en el instante actual">REGISTRO AUTO</button>
         <button class="btn primary fsAB" id="vFsManual" title="Registro manual: marca el inicio y el final del corte">REGISTRO MANUAL</button>
         <button class="btn" id="visFullEditor" title="Pone todo el registro de acciones (vídeo, botonera y listas) a pantalla completa">⛶ Registro a pantalla completa</button>
@@ -1230,6 +1257,7 @@ html #fltClear:hover,html #pintClear:hover,html #edClearAdded:hover{background:v
     <div class="edTlFlt" id="regTlFlt">
       <select id="regTlEv" aria-label="Filtrar eventos por tipo" title="Mostrar solo este tipo de evento"></select>
       <select id="regTlEq" aria-label="Filtrar eventos por equipo" title="Mostrar solo los eventos de este equipo"><option value="">Todos los equipos</option><option value="propio">Mi equipo</option><option value="rival">Equipo rival</option></select>
+      <button type="button" class="btn" id="regPintBtn" style="padding:4px 8px;display:inline-flex;align-items:center" title="Pintar sobre el vídeo: pausa y abre las herramientas de pintado" aria-label="Activar el pintado"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.5 4.2A8.5 8.5 0 1 0 12 20.5c1.6 0 2.4-.9 2.4-2 0-1.5-1.4-1.7-1.4-3 0-1 .8-1.7 1.9-1.7H17a3.5 3.5 0 0 0 3.5-3.4"/><circle cx="7.5" cy="10.5" r="1.2"/><circle cx="9.5" cy="15.5" r="1.2"/><circle cx="13.5" cy="8" r="1.2"/><path d="M20.5 2.5l-5 5 1.5 1.5 5-5z"/></svg></button>
     </div>
     <div class="edtrack" id="vSeekTrack" title="Haz clic o arrastra para moverte por el vídeo">
      <div class="edZoomWrap" id="vZoomWrap">
@@ -1600,7 +1628,7 @@ html #fltClear:hover,html #pintClear:hover,html #edClearAdded:hover{background:v
         <div class="row" style="flex-wrap:wrap">
           <select id="vFmt" hidden></select>
           <label class="row" style="gap:6px"><span style="font-size:13px;color:var(--muted)">Resolución</span>
-            <select id="vRes"><option value="1080">1080p</option><option value="720">720p</option><option value="480" selected>480p</option></select></label>
+            <select id="vRes"><option value="1080">1080p</option><option value="720" selected>720p</option><option value="480">480p</option></select></label>
           <label class="row" style="gap:6px" title="Menos fotogramas por segundo = exportación más rápida"><span style="font-size:13px;color:var(--muted)">Fotogramas</span>
             <select id="vFps"><option value="0" selected>30 fps</option><option value="20">20 fps (más rápido)</option><option value="15">15 fps (aún más rápido)</option></select></label>
         </div>
@@ -1675,6 +1703,7 @@ html #fltClear:hover,html #pintClear:hover,html #edClearAdded:hover{background:v
         <button class="btn" id="edFwd20" title="Avanzar 10 segundos">+10 seg</button>
         <button class="btn" id="edMute" title="Silenciar / activar sonido" aria-label="Silenciar / activar sonido">🔊<span class="lbl"> Silenciar</span></button>
         <button class="btn" id="edFull" title="Pantalla completa (F)" aria-label="Pantalla completa">⛶<span class="lbl"> Pantalla completa</span></button>
+        <button class="btn pipBtn" id="edPip" title="Abrir el reproductor en una ventana emergente flotante" aria-label="Ventana emergente">⧉<span class="lbl"> Ventana emergente</span></button>
         <button class="btn primary fsAB" id="edFsA" title="Fija el punto A (inicio del corte) en el cabezal actual">📍 A</button>
         <button class="btn primary fsAB" id="edFsB" title="Fija el punto B (fin del corte) en el cabezal actual">📍 B</button>
         <button class="btn primary fsAB" id="edFsAdd" hidden title="Muestra este tramo en la lista">+ Añadir</button>
@@ -1781,7 +1810,7 @@ html #fltClear:hover,html #pintClear:hover,html #edClearAdded:hover{background:v
       </div>
       <div id="edExpBody" style="display:flex;flex-direction:column;gap:8px">
       <div class="row" style="flex-wrap:nowrap">
-        <select id="edRes" aria-label="Resolución" title="Resolución"><option value="1080">1080p</option><option value="720">720p</option><option value="480" selected>480p</option></select>
+        <select id="edRes" aria-label="Resolución" title="Resolución"><option value="1080">1080p</option><option value="720" selected>720p</option><option value="480">480p</option></select>
         <select id="edFmt" hidden></select>
         <select id="edFps" aria-label="Fotogramas" title="Fotogramas por segundo: menos = exportación más rápida" style="min-width:0;flex:1"><option value="0" selected>30 fps</option><option value="20">20 fps (más rápido)</option><option value="15">15 fps (aún más rápido)</option></select>
       </div>
@@ -2130,7 +2159,7 @@ html #fltClear:hover,html #pintClear:hover,html #edClearAdded:hover{background:v
       <div class="tutRes">Resultado: <b id="tutRes">0:00</b></div>
       <div class="tutList"></div>
       <div class="tutHr"><h3>Exportación</h3><span class="tutOc">Ocultar</span></div>
-      <div class="tutSelR"><span class="tutInp">480p ▾</span><span class="tutInp">30 fps ▾</span></div>
+      <div class="tutSelR"><span class="tutInp">720p ▾</span><span class="tutInp">30 fps ▾</span></div>
       <span class="tutInp">Pon el nombre del vídeo</span>
       <div class="tutExp">
         <span class="tutB tblk" data-k="one">DESCARGA EN UN VIDEO</span>
@@ -2139,8 +2168,8 @@ html #fltClear:hover,html #pintClear:hover,html #edClearAdded:hover{background:v
       <div class="tutHr"><h3>Pintado de acciones</h3><span class="tutOc">Ocultar</span></div>
       <div class="tutPbar">
         <span class="tutB" data-k="pmode">Dibujo: apagado</span><span class="tutB">Deshacer</span><span class="tutB">Rehacer</span>
-        <span class="tutB" data-k="ppng">Exportar PNG</span><span class="tutB">Insertar en el vídeo (5 s)</span>
-        <span class="tutB" data-k="parrow">Flecha</span><span class="tutB" data-k="pcirc">Círculo</span><span class="tutB" data-k="ptext">Texto</span>
+        <span class="tutB" data-k="ppng">Exportar PNG</span><span class="tutB" data-k="pstill">Insertar en el vídeo (5 s)</span>
+        <span class="tutB tutTl" data-k="ppoly"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 15L9 6L18 9L20 17L11 20Z"/><circle class="solid" cx="4" cy="15" r="1.4"/><circle class="solid" cx="9" cy="6" r="1.4"/><circle class="solid" cx="18" cy="9" r="1.4"/><circle class="solid" cx="20" cy="17" r="1.4"/><circle class="solid" cx="11" cy="20" r="1.4"/></svg>Zona libre</span><span class="tutB tutTl" data-k="pfocus"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4 6.5 19"/><path d="M12 4 17.5 19"/><path d="M8.5 16.8c2.1 1.1 4.9 1.1 7 0"/><path d="M7.4 19h9.2"/></svg>Foco</span><span class="tutB tutTl" data-k="pconn"><svg viewBox="0 0 24 24" aria-hidden="true"><circle class="solid" cx="4.5" cy="17" r="2"/><circle class="solid" cx="12" cy="7" r="2"/><circle class="solid" cx="19.5" cy="17" r="2"/><line x1="4.5" y1="17" x2="12" y2="7"/><line x1="12" y1="7" x2="19.5" y2="17"/></svg>Conector</span><span class="tutB tutTl" data-k="pcall"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h8l2 2v7l-6 1.5-4-4V7z"/><circle class="solid" cx="14.5" cy="9.5" r="1"/></svg>Etiqueta</span>
       </div>
     </div>
     <div class="tutMenu" hidden></div>
@@ -2201,6 +2230,7 @@ html #fltClear:hover,html #pintClear:hover,html #edClearAdded:hover{background:v
         <span class="tutB tmk" data-k="end">Fin de partido</span>
       </div>
       <div class="tutLanes"></div>
+      <div class="tutForm" hidden></div>
     </div>
     <div class="tutR">
       <div class="tutHr"><h3>Vídeos</h3><span class="tutOc">Ocultar</span></div>
@@ -2221,11 +2251,10 @@ html #fltClear:hover,html #pintClear:hover,html #edClearAdded:hover{background:v
       <div class="tutHr"><h3>Pintado de acciones</h3><span class="tutOc">Ocultar</span></div>
       <div class="tutPbar">
         <span class="tutB" data-k="pmode">Dibujo: apagado</span><span class="tutB">Deshacer</span><span class="tutB">Rehacer</span>
-        <span class="tutB" data-k="ppng">Exportar PNG</span><span class="tutB">Insertar en el vídeo (5 s)</span>
-        <span class="tutB" data-k="parrow">Flecha</span><span class="tutB" data-k="pcirc">Círculo</span><span class="tutB" data-k="ptext">Texto</span>
+        <span class="tutB" data-k="ppng">Exportar PNG</span><span class="tutB" data-k="pstill">Insertar en el vídeo (5 s)</span>
+        <span class="tutB tutTl" data-k="ppoly"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 15L9 6L18 9L20 17L11 20Z"/><circle class="solid" cx="4" cy="15" r="1.4"/><circle class="solid" cx="9" cy="6" r="1.4"/><circle class="solid" cx="18" cy="9" r="1.4"/><circle class="solid" cx="20" cy="17" r="1.4"/><circle class="solid" cx="11" cy="20" r="1.4"/></svg>Zona libre</span><span class="tutB tutTl" data-k="pfocus"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4 6.5 19"/><path d="M12 4 17.5 19"/><path d="M8.5 16.8c2.1 1.1 4.9 1.1 7 0"/><path d="M7.4 19h9.2"/></svg>Foco</span><span class="tutB tutTl" data-k="pconn"><svg viewBox="0 0 24 24" aria-hidden="true"><circle class="solid" cx="4.5" cy="17" r="2"/><circle class="solid" cx="12" cy="7" r="2"/><circle class="solid" cx="19.5" cy="17" r="2"/><line x1="4.5" y1="17" x2="12" y2="7"/><line x1="12" y1="7" x2="19.5" y2="17"/></svg>Conector</span><span class="tutB tutTl" data-k="pcall"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h8l2 2v7l-6 1.5-4-4V7z"/><circle class="solid" cx="14.5" cy="9.5" r="1"/></svg>Etiqueta</span>
       </div>
     </div>
-    <div class="tutForm" hidden></div>
     <div class="tutMenu" hidden></div>
     <div class="tutToast" hidden></div>
     <i class="tutCur" id="tutrCur"></i>
@@ -2929,6 +2958,11 @@ window.renderHalfBands = function(b1,b2,mk,d){
     return {min:e.min,cat:e.cat,color,det:e.det,jug:e.jug}; }
   const rangesOf=e=>{ const ov=ovOf(e); return keptOf(e).map(r=>({s:Math.max(0,r.s),e:Math.min(v.duration,r.e),ov})); };
   const clipLen=e=>keptOf(e).reduce((x,r)=>x+r.e-r.s,0);
+  // ¿Hay pintado dentro de este evento? (instante congelado dentro de su clip)
+  const pintCount=e=>{ const l=window.acfcPint?window.acfcPint.get():[]; if(!l.length) return 0; const c=clipOf(e);
+    return new Set(l.filter(s=>typeof s.pt==="number"&&s.pt>=c.a-0.05&&s.pt<=c.b+0.05).map(s=>s.pt)).size; };
+  const pintBadge=e=>{ const n=pintCount(e); return n?[el("span",{className:"evPint",textContent:"Pintado",title:"Este evento tiene "+(n>1?n+" pintados":"un pintado")+": se muestra con el vídeo congelado 5 s"})]:[]; };
+  window.acfcRefreshPintMarks=()=>{ renderList(); renderSeekTicks(); renderMarks(); };
   const fmtMS=s=>{ const t=Math.round(s); return Math.floor(t/60)+":"+String(t%60).padStart(2,"0"); };
   function clipMargins(e){ const c=clipOf(e), t=timeOf(e); return {pre:t-c.a, post:c.b-t}; }
   function clipEnsure(e){ if(!e.clip) e.clip=structuredClone(clipOf(e)); return e.clip; }
@@ -3362,7 +3396,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
       row.append(chk);
       row.append(
         el("div",{className:"m"},[el("div",{textContent:e.min}),el("div",{className:"cl",textContent:(s=>s>=60?Math.floor(s/60)+" min "+String(s%60).padStart(2,"0")+" s":s+" s")(Math.round(clipLen(e)))})]),
-        el("div",{className:"t"},[el("div",{style:"display:flex;align-items:center;gap:6px"},[el("span",{className:"eqDot "+(e.eq==="rival"?"rival":"propio"),title:e.eq==="rival"?"Rival":"Mi equipo"}),...(e.man?[el("b",{textContent:"M",title:"Registro manual",style:"color:var(--red)"})]:[]),el("b",{textContent:e.cat})]),el("div",{textContent:e.det+(e.jug?" · "+e.jug:"")}),...(e.coment?[el("div",{textContent:e.coment,style:"font-style:italic"})]:[])])
+        el("div",{className:"t"},[el("div",{style:"display:flex;align-items:center;gap:6px"},[el("span",{className:"eqDot "+(e.eq==="rival"?"rival":"propio"),title:e.eq==="rival"?"Rival":"Mi equipo"}),...(e.man?[el("b",{textContent:"M",title:"Registro manual",style:"color:var(--red)"})]:[]),el("b",{textContent:e.cat}),...pintBadge(e)]),el("div",{textContent:e.det+(e.jug?" · "+e.jug:"")}),...(e.coment?[el("div",{textContent:e.coment,style:"font-style:italic"})]:[])])
       );
       const acts=el("div",{className:"acts"});
       const inPl=inAnyPlaylist(e.id);
@@ -3411,6 +3445,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
       t.style.left=pct(c.a,0,d); t.style.width=Math.max(0,(c.b-c.a)/d*100)+"%"; t.style.background=CATS[e.cat].c;
       const ds=Math.round(Math.max(0,clipLen(e)));
       t.append(el("span",{className:"evLbl",textContent:e.cat}),el("span",{className:"evDur",textContent:Math.floor(ds/60)+":"+String(ds%60).padStart(2,"0")}),seekTickHandle(e,t,"a"),seekTickHandle(e,t,"b"));
+      if(pintCount(e)){ t.classList.add("hasPint"); t.append(el("span",{className:"evPintMk",title:"Contiene pintado (vídeo congelado 5 s)"})); }
       box.append(t); seekLblRO.observe(t);
     });
   }
@@ -3752,6 +3787,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     tr.addEventListener("pointerdown",ev=>{ drag=true; tr.setPointerCapture(ev.pointerId); seekTo(ev); });
     tr.addEventListener("pointermove",ev=>{ if(drag) seekTo(ev); });
     tr.addEventListener("pointerup",()=>{ drag=false; }); tr.addEventListener("pointercancel",()=>{ drag=false; }); }
+  { const b=$("regPintBtn"); if(b) b.addEventListener("click",()=>$("vPintGo").click()); }
   { const b=$("vPintGo"); b.addEventListener("pointerdown",ev=>ev.stopPropagation());
     b.addEventListener("click",()=>{ v.pause();
       const body=$("pintBody"); if(body&&body.hidden&&$("pintToggle")) $("pintToggle").click();
@@ -3965,6 +4001,123 @@ window.renderHalfBands = function(b1,b2,mk,d){
   window.toggleFullscreen=toggleFullscreen;
   document.addEventListener("fullscreenchange",()=>{ if(!document.fullscreenElement && screen.orientation && screen.orientation.unlock){ try{screen.orientation.unlock();}catch(e){} } });
   $("vFull").onclick=()=>toggleFullscreen(stage);
+  // Ventana emergente (Picture-in-Picture): saca el vídeo a una ventana flotante que sigue visible sobre otras aplicaciones
+  // Preferente: Document PiP (Chrome/Edge 116+), ventana grande y redimensionable con controles propios.
+  // Respaldo: PiP nativo del vídeo (tamaño decidido por el navegador).
+  function setupPip(btn,video,ovId){
+    if(!btn||!video) return;
+    const dpip=window.documentPictureInPicture, nat=document.pictureInPictureEnabled&&video.requestPictureInPicture;
+    if(!dpip&&!nat){ btn.hidden=true; return; }
+    let win=null;
+    const label=on=>{ btn.classList.toggle("on",on); btn.innerHTML='⧉<span class="lbl"> '+(on?"Cerrar ventana emergente":"Ventana emergente")+'</span>'; };
+    const fmt=t=>{ t=Math.max(0,t||0); return Math.floor(t/60)+":"+String(Math.floor(t%60)).padStart(2,"0"); };
+    async function openDoc(){
+      const ar=(video.videoWidth&&video.videoHeight)?video.videoWidth/video.videoHeight:16/9, bar=56;
+      let w=Math.min(Math.round(screen.availWidth*0.8),1920), h=Math.round(w/ar)+bar;
+      const maxH=Math.round(screen.availHeight*0.9); if(h>maxH){ h=maxH; w=Math.round((h-bar)*ar); }
+      win=await dpip.requestWindow({width:w,height:h});
+      const d=win.document, mark=document.createComment("pip"), keep=video.style.cssText;
+      video.parentNode.insertBefore(mark,video);
+      const st=d.createElement("style");
+      st.textContent="html,body{margin:0;height:100%;background:#000;color:#fff;font:14px system-ui,sans-serif}body{display:flex;flex-direction:column}"
+        +"video{flex:1 1 0;min-height:0;width:100%;object-fit:contain;background:#000}"
+        +".bar{display:flex;align-items:center;gap:10px;padding:8px 12px;background:#111;box-sizing:border-box}"
+        +".bar button{background:#333;color:#fff;border:0;padding:6px 12px;cursor:pointer;font:inherit}.bar button:hover{background:#D50000}"
+        +".bar input{flex:1;min-width:60px}.bar span{font-variant-numeric:tabular-nums;white-space:nowrap}";
+      d.head.appendChild(st);
+      video.style.cssText="";
+      const wrap=d.createElement("div"); wrap.className="wrap"; wrap.appendChild(video); d.body.appendChild(wrap);
+      // Rótulo con la información de la acción (minuto, categoría, detalle y jugador)
+      const ov=ovId?document.getElementById(ovId):null, ovMark=document.createComment("pipov");
+      if(ov&&ov.parentNode){
+        const ff=getComputedStyle(ov.querySelector(".cat")||ov).fontFamily;
+        const os=d.createElement("style");
+        os.textContent=".wrap{position:relative;flex:1 1 0;min-height:0;display:flex}.wrap video{flex:1 1 0;height:100%}"
+          +".overlay{position:absolute;right:3%;top:4%;max-width:94%;display:flex;align-items:stretch;overflow:hidden;box-shadow:0 4px 18px rgba(0,0,0,.45);opacity:0;transition:.25s;pointer-events:none}"
+          +".overlay.on{opacity:1}.overlay .cat{font-family:"+ff+";font-weight:700;font-size:26px;color:#fff;padding:10px 18px;display:flex;align-items:center}"
+          +".overlay .det{background:rgba(255,255,255,.95);color:#15181D;padding:8px 18px;display:flex;flex-direction:column;justify-content:center}"
+          +".overlay .det b{font-size:20px}.overlay .det span{font-size:15px;color:#4b554f}"
+          +".overlay .min{background:#15181D;color:#fff;font-family:"+ff+";font-size:24px;padding:10px 14px;display:flex;align-items:center}";
+        d.head.appendChild(os);
+        ov.parentNode.insertBefore(ovMark,ov); wrap.appendChild(ov);
+      }
+      const bar_=d.createElement("div"); bar_.className="bar";
+      const isEd=ovId==="edOv";
+      bar_.innerHTML=(isEd?'<button id="pa" title="Punto A: inicio del tramo">A · inicio</button><button id="pb" title="Punto B: fin del tramo y tipo de evento">B · fin</button>':'')+'<button id="p">▶</button><button id="b">−5</button><button id="f">+5</button><input id="s" type="range" min="0" max="1000" value="0"><span id="t">0:00 / 0:00</span><button id="m">🔊</button><button id="z" title="Pantalla completa (F)">⛶</button>';
+      d.body.appendChild(bar_);
+      const $$=id=>d.getElementById(id);
+      const upd=()=>{ $$("p").textContent=video.paused?"▶":"⏸"; $$("m").textContent=video.muted?"🔇":"🔊";
+        if(video.duration&&!$$("s").matches(":active")) $$("s").value=Math.round(video.currentTime/video.duration*1000);
+        $$("t").textContent=fmt(video.currentTime)+" / "+fmt(video.duration); };
+      if(isEd){
+        // Editor: Punto A / Punto B y selector de tipo de evento dentro de la propia ventana emergente
+        const ps=d.createElement("style");
+        ps.textContent=".pk{position:absolute;left:50%;bottom:8px;transform:translateX(-50%);max-height:85%;overflow:auto;background:#fff;color:#15181D;box-shadow:0 6px 24px rgba(0,0,0,.6);min-width:240px;z-index:5}"
+          +".pk h4{margin:0;padding:8px 12px;background:#15181D;color:#fff;font-size:13px;letter-spacing:.08em;text-transform:uppercase}"
+          +".pk button{display:block;width:100%;text-align:left;border:0;border-top:1px solid #e3e3e3;background:#fff;color:#15181D;padding:9px 12px;cursor:pointer;font:inherit}"
+          +".pk button:hover{background:#D50000;color:#fff}.pk input{box-sizing:border-box;width:100%;border:0;border-top:1px solid #e3e3e3;padding:9px 12px;font:inherit}";
+        d.head.appendChild(ps);
+        let pk=null;
+        const closePk=()=>{ if(pk){ pk.remove(); pk=null; } };
+        $$("pa").onclick=()=>{ closePk(); document.getElementById("edSetA").click(); };
+        $$("pb").onclick=()=>{ closePk(); document.getElementById("edSetB").click(); };
+        d.addEventListener("keydown",e=>{ if(e.key==="Escape") closePk(); });
+        d.addEventListener("pointerdown",e=>{ if(pk&&!pk.contains(e.target)) closePk(); },true);
+        window.acfcPipEd={ showPicker(names,cb){
+          closePk(); pk=d.createElement("div"); pk.className="pk";
+          const h=d.createElement("h4"); h.textContent="Tipo de evento"; pk.appendChild(h);
+          const pick=n=>{ closePk(); cb(n); };
+          names.forEach(n=>{ const b=d.createElement("button"); b.type="button"; b.textContent=n; b.onclick=()=>pick(n); pk.appendChild(b); });
+          const i=d.createElement("input"); i.placeholder="Otro nombre… (Intro)";
+          i.onkeydown=e=>{ if(e.key==="Enter"&&i.value.trim()) pick(i.value); e.stopPropagation(); };
+          pk.appendChild(i); wrap.appendChild(pk); } };
+      }
+      $$("p").onclick=()=>video.paused?video.play():video.pause();
+      $$("b").onclick=()=>{ video.currentTime=Math.max(0,video.currentTime-5); };
+      $$("f").onclick=()=>{ video.currentTime=Math.min(video.duration||1e9,video.currentTime+5); };
+      $$("m").onclick=()=>{ video.muted=!video.muted; };
+      // Pantalla completa de la ventana emergente; si el navegador no la permite, la agranda al máximo de la pantalla
+      let prev=null;
+      // Primero se prueba el redimensionado (dentro del gesto del clic); si el tamaño no cambia, se prueba la pantalla completa real
+      $$("z").onclick=()=>{
+        if(d.fullscreenElement){ d.exitFullscreen().catch(()=>{}); return; }
+        if(prev){ try{ win.resizeTo(prev.w,prev.h); win.moveTo(prev.x,prev.y); }catch(_){} prev=null; return; }
+        const w0=win.outerWidth,h0=win.outerHeight;
+        prev={w:w0,h:h0,x:win.screenX,y:win.screenY};
+        const tryFs=()=>{ const el=d.documentElement; (el.requestFullscreen?el.requestFullscreen():Promise.reject()).catch(()=>{ prev=null; console.warn("PiP: el navegador no permite ampliar más esta ventana"); }); };
+        try{ win.moveTo(0,0); win.resizeTo(screen.availWidth,screen.availHeight); }catch(_){ tryFs(); return; }
+        setTimeout(()=>{ if(win&&Math.abs(win.outerWidth-w0)<40&&Math.abs(win.outerHeight-h0)<40) tryFs(); },200);
+      };
+      $$("s").oninput=e=>{ if(video.duration) video.currentTime=e.target.value/1000*video.duration; };
+      d.addEventListener("keydown",e=>{ if(e.code==="Space"){ e.preventDefault(); $$("p").click(); } else if(e.key==="f"||e.key==="F") $$("z").click(); else if(e.key==="ArrowLeft") $$("b").click(); else if(e.key==="ArrowRight") $$("f").click(); });
+      video.addEventListener("timeupdate",upd); video.addEventListener("play",upd); video.addEventListener("pause",upd); video.addEventListener("volumechange",upd); upd();
+      label(true);
+      win.addEventListener("pagehide",()=>{
+        video.removeEventListener("timeupdate",upd); video.removeEventListener("play",upd); video.removeEventListener("pause",upd); video.removeEventListener("volumechange",upd);
+        if(isEd) window.acfcPipEd=null;
+        if(ovMark.parentNode&&ov){ ovMark.parentNode.insertBefore(ov,ovMark); ovMark.remove(); }
+        if(mark.parentNode){ mark.parentNode.insertBefore(video,mark); mark.remove(); }
+        video.style.cssText=keep; win=null; label(false);
+      });
+    }
+    btn.onclick=async()=>{
+      try{
+        if(win){ win.close(); return; }
+        if(nat&&document.pictureInPictureElement===video){ await document.exitPictureInPicture(); return; }
+        if(!(video.currentSrc||video.getAttribute("src"))){ alert("Carga primero un vídeo."); return; }
+        if(dpip) await openDoc(); else await video.requestPictureInPicture();
+      }catch(e){ console.warn("PiP:",e); }
+    };
+    if(nat){ video.addEventListener("enterpictureinpicture",()=>label(true)); video.addEventListener("leavepictureinpicture",()=>label(false)); }
+  }
+  setupPip($("vPip"),v,"ov");
+  setupPip($("edPip"),$("edV"),"edOv");
+  // Pantalla completa y ventana emergente: esquina superior izquierda del reproductor
+  [[stage,"vFull","vPip"],[$("edStage"),"edFull","edPip"]].forEach(([st,a,b])=>{
+    if(!st||!$(a)||!$(b)) return;
+    const box=document.createElement("div"); box.className="stageTL";
+    box.append($(a),$(b)); st.appendChild(box);
+  });
   const vMute=$("vMute"); function syncVMute(){ vMute.innerHTML=v.muted?'🔇<span class="lbl"> Activar sonido</span>':'🔊<span class="lbl"> Silenciar</span>'; }
   vMute.onclick=()=>{ v.muted=!v.muted; syncVMute(); };
   v.addEventListener("volumechange",syncVMute);
@@ -5429,7 +5582,12 @@ window.renderHalfBands = function(b1,b2,mk,d){
   $("edFull").onclick=()=>toggleFullscreen($("edStage"));
   $("edSetA").onclick=()=>dur()&&setIn(V.currentTime);
   // Punto B cierra el tramo y lo añade a la lista (abre el selector de tipo de evento); si el tramo ya está en la lista, solo lo actualiza
-  function setBAndAdd(){ if(!dur()) return; const was=activeAdded; setOut(V.currentTime); if(!was) $("edAddSel").click(); else if(!was.name&&added.indexOf(was)>=0) openEvPicker(was); }
+  // El selector se abre siempre: también si el tramo ya tenía nombre o si ya existía un corte igual en la lista
+  function setBAndAdd(){ if(!dur()) return; const was=activeAdded; setOut(V.currentTime);
+    if(was){ if(added.indexOf(was)>=0) openEvPicker(was); return; }
+    $("edAddSel").click();
+    if(!evPick){ const s=sources[curSrc], r=kept(); if(!s||r.length!==1) return;
+      const it=added.find(x=>x.srcId===s.id&&Math.abs(x.s-r[0].s)<0.05&&Math.abs(x.e-r[0].e)<0.05); if(it) openEvPicker(it); } }
   $("edSetB").onclick=setBAndAdd;
   $("edSplit").onclick=()=>dur()&&split();
   $("edDel").onclick=()=>toggle(sel>=0?sel:segAt(V.currentTime));
@@ -5452,6 +5610,8 @@ window.renderHalfBands = function(b1,b2,mk,d){
   function evPickKey(e){ if(e.key==="Escape"&&!(e.target&&e.target.classList&&e.target.classList.contains("evPickRen"))){ e.stopPropagation(); closeEvPicker(); } }
   function openEvPicker(it){
     closeEvPicker();
+    // con la ventana emergente del reproductor abierta, el selector se muestra dentro de ella
+    if(window.acfcPipEd){ window.acfcPipEd.showPicker(evBase().concat(evCustom),n=>{ it.name=(n||"").trim(); addCustomName(it.name); render(); }); return; }
     const vis=b=>b&&!b.hidden&&b.offsetParent!==null&&b.getClientRects().length;
     const anchor=[$("edFsB"),$("edSetB")].find(vis)||$("edSetB");
     const box=document.createElement("div"); box.className="evPick"; box.setAttribute("role","dialog"); box.setAttribute("aria-label","Tipo de evento");
@@ -5614,12 +5774,14 @@ window.tutVoz=(()=>{
 })();
 </script>
 <script>
-// Pintado de acciones en los tutoriales: dibuja flecha, círculo y texto sobre la maqueta del vídeo. Compartido por los dos tutoriales.
+// Pintado de acciones en los tutoriales: dibuja zona libre, foco y etiqueta sobre la maqueta del vídeo. Compartido por los dos tutoriales.
 window.tutPaint=(()=>{
   const NS="http://www.w3.org/2000/svg";
   const el=(t,a,st)=>{ const e=document.createElementNS(NS,t); for(const k in a) e.setAttribute(k,a[k]); if(st) Object.assign(e.style,st); return e; };
   const blank=()=>({bar:false,on:false,tool:"",shapes:[]});
-  const final=()=>({bar:true,on:true,tool:"ptext",shapes:[{t:"arrow",x1:.25,y1:.72,x2:.5,y2:.45},{t:"ell",cx:.66,cy:.52,rx:.09,ry:.2},{t:"txt",x:.66,y:.16,s:"Marcaje tardío"}]});
+  const CON=[[.79,.56],[.826,.663],[.856,.77]];
+  const POLY=[[.14,.62],[.3,.42],[.5,.48],[.52,.76],[.3,.84]];
+  const final=()=>({bar:true,on:true,tool:"pcall",shapes:[{t:"poly",pts:POLY.map(p=>({x:p[0],y:p[1]})),done:true},{t:"foc",x1:.848,y1:.4,x2:.908,y2:.68},{t:"con",pts:CON.map(p=>({x:p[0],y:p[1]}))},{t:"cal",x:.5,y:.2,s:"Marcaje tardío"}]});
   function draw(D,P){
     const stg=D.querySelector(".tutStg"), svg=stg.querySelector(".tutPaint"), bar=D.querySelector(".tutPbar"); if(!svg||!bar) return;
     const r=stg.getBoundingClientRect(), w=r.width, h=r.height;
@@ -5627,33 +5789,46 @@ window.tutPaint=(()=>{
     bar.querySelector('[data-k="pmode"]').textContent="Dibujo: "+(P.on?"activado":"apagado");
     svg.replaceChildren();
     P.shapes.forEach(s=>{
-      if(s.t==="arrow"){ const x1=s.x1*w,y1=s.y1*h,x2=s.x2*w,y2=s.y2*h, a=Math.atan2(y2-y1,x2-x1), L=14;
-        svg.append(el("line",{x1,y1,x2,y2},{stroke:"var(--red)",strokeWidth:"4",strokeLinecap:"round"}));
-        svg.append(el("polygon",{points:[[x2,y2],[x2-L*Math.cos(a-.45),y2-L*Math.sin(a-.45)],[x2-L*Math.cos(a+.45),y2-L*Math.sin(a+.45)]].map(p=>p.join(",")).join(" ")},{fill:"var(--red)"})); }
-      else if(s.t==="ell") svg.append(el("ellipse",{cx:s.cx*w,cy:s.cy*h,rx:Math.max(.1,s.rx*w),ry:Math.max(.1,s.ry*h)},{stroke:"var(--red)",strokeWidth:"3",fill:"rgba(211,41,30,.22)"}));
-      else if(s.t==="txt"){ const t=el("text",{x:s.x*w,y:s.y*h,"text-anchor":"middle","dominant-baseline":"middle"},{fill:"#fff",fontSize:"13px",fontWeight:"700",fontFamily:"var(--f-body)"}); t.textContent=s.s;
-        const bw=Math.max(8,s.s.length*7.4+14); svg.append(el("rect",{x:s.x*w-bw/2,y:s.y*h-11,width:bw,height:22},{fill:"var(--ink)",stroke:"var(--red)",strokeWidth:"2"})); svg.append(t); }
+      if(s.t==="poly"){ const pts=s.pts.map(p=>[p.x*w,p.y*h]); if(pts.length>=2){
+          svg.append(el(s.done?"polygon":"polyline",{points:pts.map(p=>p.join(",")).join(" ")},{stroke:"var(--red)",strokeWidth:"3",fill:s.done?"rgba(211,41,30,.28)":"none"})); }
+        pts.forEach(p=>svg.append(el("circle",{cx:p[0],cy:p[1],r:"4.5"},{fill:"var(--red)",stroke:"#fff",strokeWidth:"1.5"}))); }
+      else if(s.t==="foc"){ const L=Math.min(s.x1,s.x2)*w, R=Math.max(s.x1,s.x2)*w, T=s.y1*h, B=s.y2*h, cx=(L+R)/2, hw=(R-L)*.35, rx=Math.max(8,hw*1.08), ry=Math.max(2.5,(B-T)*.03);
+        svg.append(el("rect",{x:cx-hw,y:T,width:hw*2,height:B-T},{fill:"rgba(211,41,30,.3)",stroke:"rgba(211,41,30,.8)",strokeWidth:"2"}));
+        svg.append(el("ellipse",{cx,cy:B-ry*.2,rx,ry},{fill:"rgba(255,255,255,.95)",stroke:"var(--red)",strokeWidth:"1.5"})); }
+      else if(s.t==="con"){ const pts=s.pts.map(p=>[p.x*w,p.y*h]);
+        if(pts.length>=2) svg.append(el("polyline",{points:pts.map(p=>p.join(",")).join(" ")},{stroke:"var(--red)",strokeWidth:"3",fill:"none",strokeLinecap:"round",strokeLinejoin:"round"}));
+        pts.forEach(p=>svg.append(el("circle",{cx:p[0],cy:p[1],r:"5"},{fill:"var(--red)",stroke:"#fff",strokeWidth:"1.5"}))); }
+      else if(s.t==="cal"){ const t=el("text",{x:s.x*w+12,y:s.y*h-14,"dominant-baseline":"middle"},{fill:"#fff",fontSize:"13px",fontWeight:"700",fontFamily:"var(--f-body)"}); t.textContent=s.s;
+        const bw=Math.max(24,s.s.length*7.4+24), bh=28, x=s.x*w, y=s.y*h;
+        svg.append(el("path",{d:"M"+x+","+(y-bh)+"h"+bw+"v"+bh+"h"+(-bw+54)+"l-38,14l12,-14h"+(-28)+"z"},{fill:"var(--ink)",stroke:"var(--red)",strokeWidth:"2",strokeLinejoin:"round"})); svg.append(t); }
     });
   }
-  // env: {q,S(),draw,go,tap,wait,at,place} · recorre: activar dibujo, flecha, círculo, texto y exportar PNG
+  // env: {q,S(),draw,go,tap,wait,at,place} · recorre: activar dibujo, zona libre, foco, conector, etiqueta y exportar PNG
   async function run(W,env){
     const {q,S,draw:dr,go,tap,wait,at,place}=env, stg=q(".tutStg"), P=()=>S().paint;
     const key=async(k,txt)=>{ await go(W,q('.tutB[data-k="'+k+'"]'),.5,.5,800,txt); S().hot=k; dr(); await tap(W); S().hot=null; };
     const pos=(fx,fy)=>place(...at(stg,fx,fy));
     P().bar=true; dr(); await W(700);
     await key("pmode","Dibujo: actívalo para pintar sobre el vídeo"); P().on=true; dr(); await W(500);
-    await key("parrow","Flecha"); P().tool="parrow"; dr(); await W(300);
-    const ar={t:"arrow",x1:.25,y1:.72,x2:.25,y2:.72}; pos(.25,.72); await W(800); P().shapes.push(ar);
-    for(let i=1;i<=8;i++){ ar.x2=.25+.25*i/8; ar.y2=.72-.27*i/8; pos(ar.x2,ar.y2); dr(); await W(80); } await wait(W,500,"Arrastra sobre el vídeo para dibujar");
-    await key("pcirc","Círculo"); P().tool="pcirc"; dr(); await W(300);
-    const ce={t:"ell",cx:.66,cy:.52,rx:0,ry:0}; pos(.66,.52); await W(800); P().shapes.push(ce);
-    for(let i=1;i<=8;i++){ ce.rx=.09*i/8; ce.ry=.2*i/8; pos(.66+ce.rx,.52); dr(); await W(80); } await W(500);
-    await key("ptext","Texto"); P().tool="ptext"; dr(); await W(300);
-    pos(.66,.16); await W(800); await tap(W);
-    const tx={t:"txt",x:.66,y:.16,s:""}; P().shapes.push(tx); const T="Marcaje tardío";
-    for(let i=1;i<=T.length;i++){ tx.s=T.slice(0,i); dr(); await W(55); } await W(600);
+    await key("ppoly","Zona libre: clic para cada vértice, doble clic para cerrar"); P().tool="ppoly"; dr(); await W(300);
+    const pl={t:"poly",pts:[],done:false}; P().shapes.push(pl);
+    for(const [fx,fy] of POLY){ pos(fx,fy); await W(500); await tap(W); pl.pts.push({x:fx,y:fy}); dr(); await W(250); }
+    await tap(W); pl.done=true; dr(); await wait(W,600,"Zona libre cerrada");
+    await key("pfocus","Foco"); P().tool="pfocus"; dr(); await W(300);
+    const fo={t:"foc",x1:.878,y1:.68,x2:.878,y2:.68}; pos(.878,.68); await W(800); P().shapes.push(fo);
+    for(let i=1;i<=8;i++){ fo.x1=.878-.03*i/8; fo.x2=.878+.03*i/8; fo.y1=.68-.28*i/8; pos(fo.x2,fo.y1); dr(); await W(80); } await wait(W,500,"Arrastra para abrir el foco");
+    await key("pconn","Conector: clic en cada jugador para unirlos, doble clic para terminar"); P().tool="pconn"; dr(); await W(300);
+    const cn={t:"con",pts:[]}; P().shapes.push(cn);
+    for(const [fx,fy] of CON){ pos(fx,fy); await W(500); await tap(W); cn.pts.push({x:fx,y:fy}); dr(); await W(250); }
+    await tap(W); dr(); await wait(W,600,"Conector terminado");
+    await key("pcall","Etiqueta"); P().tool="pcall"; dr(); await W(300);
+    pos(.5,.2); await W(800); await tap(W);
+    const ca={t:"cal",x:.5,y:.2,s:""}; P().shapes.push(ca); const T="Marcaje tardío";
+    for(let i=1;i<=T.length;i++){ ca.s=T.slice(0,i); dr(); await W(55); } await W(600);
     await key("ppng","Exportar PNG: guarda el fotograma con lo pintado");
-    S().toast="✔ Listo: fotograma descargado en PNG con lo pintado"; dr(); await wait(W,2600,"Listo");
+    S().toast="✔ Listo: fotograma descargado en PNG con lo pintado"; dr(); await wait(W,2600,"Listo"); S().toast=""; dr();
+    await key("pstill","Insertar en el vídeo (5 segundos): mete el fotograma con lo pintado como imagen fija dentro del vídeo descargado");
+    S().toast="✔ Listo: el dibujo se insertará como imagen fija de 5 s en el vídeo descargado"; dr(); await wait(W,2800,"Listo");
   }
   return {blank,final,draw,run};
 })();
@@ -5767,7 +5942,7 @@ window.tutPaint=(()=>{
      pre(){ S.items=[{...G1},{...G2}]; S.inP=62; S.outP=67; S.showH=true; S.head=67; },
      async run(W){ await setPoint(W,"in",62); await setBAndAdd(W,67,"Ocasión a favor"); await W(700); }},
     {s:"Pintado",t:"Pinta sobre el vídeo",opt:true,
-     d:"En «Pintado de acciones» activa «Dibujo», elige flecha, círculo o texto y dibuja sobre el vídeo. «Exportar PNG» guarda el fotograma con lo pintado. Para que salga en el vídeo descargado, usa «Insertar en el vídeo (5 s)»: mete el fotograma pintado como imagen fija de 5 segundos.",
+     d:"En «Pintado de acciones» activa «Dibujo», elige zona libre, foco, conector o etiqueta y dibuja sobre el vídeo. «Exportar PNG» guarda el fotograma con lo pintado. Para que salga en el vídeo descargado, usa «Insertar en el vídeo (5 s)»: mete el fotograma pintado como imagen fija de 5 segundos.",
      pre(){ S.items=[{...G1},{...G2}]; S.inP=62; S.outP=67; S.paint=tutPaint.final(); },
      async run(W){ S.items=[{...G1},{...G2}]; S.inP=62; S.outP=67; S.toast=""; draw();
        await tutPaint.run(W,{q,S:()=>S,draw,go,tap,wait,at,place}); }},
@@ -5831,7 +6006,12 @@ window.tutPaint=(()=>{
   const CATS=[["Gol","var(--c-gol)"],["Ocasión","var(--c-oca)"],["Transición of","var(--c-tra)"],["Transición def","var(--c-trd)"],["Salida balón","var(--c-sal)"],["Presión","var(--c-pre)"]];
   const DET={"Gol":["Situación jugada","Acción balón parado"]};
   const colOf=c=>(CATS.find(x=>x[0]===c)||[0,"var(--c-otr)"])[1];
-  const blank=()=>({vid:false,head:0,marks:{},ev:[],form:null,flt:"",pre:"5",post:"10",busy:false,toast:"",hot:null,paint:tutPaint.blank()});
+  const blank=()=>({vid:false,head:0,marks:{},ev:SEED(),form:null,flt:"",pre:"5",post:"10",busy:false,toast:"",hot:null,paint:tutPaint.blank()});
+  // eventos de ejemplo que ya hay desde el primer paso, en todas las categorías
+  const SEED=()=>[[8,"Ocasión","Mi equipo","",""],[15,"Transición of","Mi equipo","","Contra rápida"],[18,"Presión","Mi equipo","","Presión alta"],
+    [22,"Gol","Mi equipo","Situación jugada","Buena acción"],[26,"Transición def","Mi equipo","","Repliegue tardío"],[35,"Salida balón","Mi equipo","","Salida por el central"],
+    [60,"Ocasión","Rival","","Remate desde fuera del área"],[72,"Presión","Rival","",""]]
+    .map(([p,cat,eq,det,com])=>({p,cat,eq,det,com}));
   const EV1={p:22,cat:"Gol",eq:"Mi equipo",det:"Situación jugada",com:"Buena acción"};
   const EV3={p:40,cat:"Ocasión",eq:"Mi equipo",det:"",com:"",man:true};
   let S=blank(), token=0, cur=0, playing=true, finished=false;
@@ -5879,7 +6059,7 @@ window.tutPaint=(()=>{
     const LN=q(".tutLanes");
     if(!LN.children.length) CATS.forEach(([n,c])=>{ const l=mk("div","tutLane"); l.style.setProperty("--lc",c); l.dataset.cat=n; l.append(mk("span",null,n),mk("div")); LN.append(l); });
     qa(".tutLane").forEach(l=>{ const a=l.lastChild; a.replaceChildren(); S.ev.filter(e=>e.cat===l.dataset.cat).forEach(e=>{ const t=mk("div","tutTick"); t.style.left=e.p+"%"; a.append(t); }); });
-    const vis=S.ev.filter(e=>!S.flt||e.cat===S.flt);
+    const vis=S.ev.filter(e=>!S.flt||e.cat===S.flt).sort((a,b)=>a.p-b.p);
     LIST.replaceChildren();
     vis.forEach(e=>{
       const el=mk("div","tutItem"); el.style.borderLeftColor=colOf(e.cat); if(e.fresh){ el.classList.add("flash"); e.fresh=false; }
@@ -5914,7 +6094,7 @@ window.tutPaint=(()=>{
   async function register(W,p,man){
     await go(W,q(".tutTrack"),p/100,.5,900,""); S.head=p; draw(); await W(600);
     await pressK(W,man?"regman":"reg",man?"Registro manual":"Registro AUTO"); S.form={p,cat:"",eq:"Mi equipo",det:"",com:"",man:!!man}; draw(); await W(700); }
-  async function save(W,ev){ await pressF(W,"save","Guardar"); S.ev.push({...ev,fresh:true}); S.form=null; draw(); await wait(W,1000,"Evento registrado"); }
+  async function save(W,ev){ await pressF(W,"save","Guardar"); const ex=S.ev.find(e=>e.p===ev.p&&e.cat===ev.cat); if(ex) ex.fresh=true; S.form=null; draw(); await wait(W,1000,"Evento registrado"); }
   async function choose(W,name){ const sel=q('[data-k="flt"]'); await go(W,sel,.5,.5,800,"Filtro de categoría"); await tap(W);
     const [x,y]=at(sel,0,1); MENU.style.left=x+"px"; MENU.style.top=(y+2)+"px"; MENU.replaceChildren();
     ["Todas"].concat(CATS.slice(0,3).map(c=>c[0].toUpperCase())).forEach(n=>MENU.append(mk("div",null,n))); MENU.hidden=false; await W(700);
@@ -5936,11 +6116,11 @@ window.tutPaint=(()=>{
          await pressK(W,k,L[k]); S.marks[k]=p; draw(); await W(500); } await W(900); }},
     {s:"Registro AUTO",t:"Registro AUTO",
      d:"Sitúate en la jugada y pulsa «REGISTRO AUTO». En la ventana «Evento» elige categoría, equipo y detalle, añade un comentario y pulsa «GUARDAR». El evento aparece en su carril y en la lista.",
-     pre(){ S.head=22; S.form=null; S.ev=[{...EV1}]; },
+     pre(){ S.head=22; S.form=null; S.ev=SEED(); },
      async run(W){ await register(W,22); await pick(W,"cat","Gol"); await pick(W,"det","Situación jugada"); await typeCom(W,EV1.com); await save(W,EV1); await W(700); }},
     {s:"Manual",t:"Registro manual",
      d:"Pulsa «REGISTRO MANUAL»: «REC» marca el inicio del corte y «PAUSE» el final. Elige la categoría y guarda.",
-     pre(){ S.head=40.4; S.form=null; S.ev=[{...EV1},{...EV3}]; },
+     pre(){ S.head=40.4; S.form=null; S.ev=SEED(); },
      async run(W){ await register(W,40,true);
        await pressF(W,"rec","REC, inicio"); S.form.ma=40; draw(); await W(300); S.head=40.4; draw(); await W(1200);
        await pressF(W,"pause","PAUSE, final"); S.form.mb=40.4; draw(); await W(400);
@@ -5949,16 +6129,16 @@ window.tutPaint=(()=>{
      d:"En «Tiempo del evento» indica cuántos segundos antes de la jugada empieza el corte («Arrancar antes») y cuántos después termina («Finalizar en»).",
      pre(){ S.pre="8"; S.post="15"; },
      async run(W){ await typeNum(W,"pre","8","Arrancar antes: segundos antes de la jugada"); await typeNum(W,"post","15","Finalizar en: segundos después"); await W(600); }},
+    {s:"Pintado",t:"Pinta sobre el vídeo",
+     d:"En «Pintado de acciones» activa «Dibujo», elige zona libre, foco, conector o etiqueta y dibuja sobre el vídeo. «Exportar PNG» guarda el fotograma con lo pintado, y «Insertar en el vídeo (5 s)» lo mete como imagen fija de 5 segundos en el vídeo descargado.",
+     pre(){ S.paint=tutPaint.final(); },
+     async run(W){ S.flt=""; S.toast=""; draw(); await tutPaint.run(W,{q,S:()=>S,draw,go,tap,wait,at,place}); }},
     {s:"Exportar",t:"Filtra los eventos y expórtalos",
      d:"En «Filtros» elige equipo o categoría y descarga: «en 1 vídeo» (todos juntos) o «por separado» (un vídeo por evento).",
-     pre(){ S.flt="Gol"; },
+     pre(){ S.flt="Gol"; S.paint=tutPaint.final(); },
      async run(W){ await choose(W,"Gol"); await go(W,q('[data-k="fltone"]'),.5,.5,800,"Descargar filtrados, un único vídeo"); await W(400); await pressK(W,"fltsep","Descargar filtrados, un vídeo por evento");
        S.busy=true; draw(); const bar=q(".tutBar i"); bar.style.transition="none"; bar.style.width="0"; void bar.offsetWidth; bar.style.transition="width "+(1.6*tutVoz.k)+"s linear"; bar.style.width="100%"; await wait(W,1900,"Exportando");
-       S.busy=false; S.toast="✔ Listo: se ha descargado 1 archivo (Gol)"; draw(); await wait(W,2600,"Listo"); }},
-    {s:"Pintado",t:"Pinta sobre el vídeo",
-     d:"En «Pintado de acciones» activa «Dibujo», elige flecha, círculo o texto y dibuja sobre el vídeo. «Exportar PNG» guarda el fotograma con lo pintado.",
-     pre(){ S.flt="Gol"; S.paint=tutPaint.final(); },
-     async run(W){ S.flt=""; S.toast=""; draw(); await tutPaint.run(W,{q,S:()=>S,draw,go,tap,wait,at,place}); }}
+       S.busy=false; S.toast="✔ Listo: se ha descargado 1 archivo ("+S.ev.filter(e=>e.cat==="Gol").length+(S.ev.filter(e=>e.cat==="Gol").length===1?" evento":" eventos")+" de Gol)"; draw(); await wait(W,2600,"Listo"); }}
   ];
 
   // ---------- control de reproducción ----------
@@ -6043,6 +6223,17 @@ const textOptsEl=$("pintTextOpts"), fontSizeInput=$("pintFontSize"), fontSizeVal
 const boxPadInput=$("pintBoxPad"), boxPadVal=$("pintPadVal");
 const undoActionButton=$("pintUndo"), redoActionButton=$("pintRedo"), clearActionButton=$("pintClear");
 const durSel=$("pintDur");
+// «Insertar en el vídeo» parpadea mientras hay pintado sin insertar (indica dónde se termina)
+const stillBtnEl=$("pintStill");
+let stillDoneCount=0;
+function syncStillBlink(){
+  if(!stillBtnEl) return;
+  const n=state.annotations.length;
+  if(stillDoneCount>n) stillDoneCount=n;
+  stillBtnEl.classList.toggle("pintStillBlink",state.drawEnabled && (n>stillDoneCount || !!state.drawing));
+}
+// En el registro el pintado siempre es una imagen congelada de 5 s: no hay «Visible durante»
+if(cfg.freeze && durSel){ const lb=durSel.closest("label"); if(lb) lb.style.display="none"; }
 
 // ---------- estado ----------
 const state={
@@ -6119,6 +6310,8 @@ function getCanvasPoint(event){
 // ---------- altas con tiempo de visibilidad ----------
 // Cada elemento nuevo aparece en el instante en que se pinta y se ve «Visible durante» segundos.
 function stampTiming(shape){
+  // Registro: el pintado vive en un instante (pt) y solo se ve con el vídeo congelado
+  if(cfg.freeze){ if(typeof shape.pt!=="number") shape.pt=+(v.currentTime||0).toFixed(2); return; }
   const dur=Number(durSel&&durSel.value);
   if(!(dur>0) || typeof shape.appearTime==="number") return;
   const t=v.currentTime||0;
@@ -6268,7 +6461,12 @@ function getStrokeDrawProgress(shape, currentTime) {
   return Math.min(1, fadeProgress);
 }
 
+const FREEZE_MS = 5000; // el pintado se muestra con el vídeo congelado este tiempo
 function isShapeHiddenAt(shape, currentTime) {
+  // Con instante de pintado: solo visible con el vídeo parado en ese fotograma, nunca en marcha
+  if (typeof shape.pt === "number") {
+    return !(v.paused || v.ended) || Math.abs((v.currentTime || 0) - shape.pt) > 0.3;
+  }
   // Tras una captura fija insertada: lo que ya estaba pintado en ese instante no continúa en el vídeo
   if (typeof state.stillCut === "number" && currentTime > state.stillCut + 0.001) {
     const a0 = (shape.type === "focus" && Array.isArray(shape.keyframes) && shape.keyframes.length)
@@ -7749,6 +7947,7 @@ function redraw() {
   if (state.drawing) {
     drawShape(state.drawing, currentTime);
   }
+  syncStillBlink();
 }
 
 function beginDrawing(event) {
@@ -8461,11 +8660,12 @@ function pintCaptureFrame(){
   return out;
 }
 if(cfg.onStill){
-  const stillBtn=$("pintStill");
+  const stillBtn=stillBtnEl;
   if(stillBtn){
     stillBtn.style.display="";
     stillBtn.addEventListener("click",()=>{
       const cap=pintCaptureFrame(); if(!cap) return;
+      stillDoneCount=state.annotations.length; syncStillBlink();
       const msg=cfg.onStill(cap,v.currentTime||0);
       setStatus(msg||"Captura insertada en el vídeo.");
     });
@@ -8521,7 +8721,16 @@ try{ if(localStorage.getItem("acfcPintStyleHidden")==="1") setStyleHidden(true);
 const pintName=()=>String(cfg.keyOf?cfg.keyOf():"").trim();
 let pintSaveTimer=0, pintSavedName=pintName();
 function pintCleanList(arr){
-  return (Array.isArray(arr)?arr:[]).filter(s=>s&&typeof s==="object"&&typeof s.type==="string").slice(0,500);
+  const list=(Array.isArray(arr)?arr:[]).filter(s=>s&&typeof s==="object"&&typeof s.type==="string").slice(0,500);
+  if(cfg.freeze) list.forEach(s=>{
+    // pintados antiguos (con «visible durante»): pasan a ser un instante congelado
+    if(typeof s.pt!=="number"){
+      const k=(s.type==="focus"&&Array.isArray(s.keyframes)&&s.keyframes.length)?s.keyframes[0].time:s.appearTime;
+      if(typeof k==="number") s.pt=+(Math.max(0,k+(k===s.appearTime?0.4:0))).toFixed(2);
+    }
+    if(typeof s.pt==="number"){ delete s.appearTime; delete s.disappearTime; }
+  });
+  return list;
 }
 function pintSaveNow(){
   clearTimeout(pintSaveTimer); pintSaveTimer=0;
@@ -8587,7 +8796,7 @@ pintRestore();
 
 // ---------- puntero sobre el lienzo ----------
 // Al empezar a pintar con el vídeo en marcha, se pausa en ese fotograma.
-canvas.addEventListener("pointerdown",()=>{ if(state.drawEnabled && !v.paused && !isSelTool()) v.pause(); },true);
+canvas.addEventListener("pointerdown",()=>{ if(state.drawEnabled){ if(cfg.freeze) cancelFreeze(); if(!v.paused && !isSelTool()) v.pause(); } },true);
 canvas.addEventListener("pointerdown",beginDrawing);
 canvas.addEventListener("pointermove",updateDrawing);
 canvas.addEventListener("pointerup",e=>{ finishDrawing(e); paintToolButtons(); });
@@ -8623,14 +8832,43 @@ window.addEventListener("keydown",event=>{
 // ---------- sincronía con el vídeo ----------
 let rafId=0, lastShown=-1;
 function refreshNow(){ state.cachedCurrentTimeAt=0; applyFollowKeyframes(v.currentTime||0); redraw(); }
+// Congelado del pintado (solo registro): al llegar al instante pintado el vídeo se para
+// FREEZE_MS con la imagen pintada a la vista y después sigue solo.
+let prevT=-1, freezeTimer=0, ownPlay=false, ownSeek=false;
+function cancelFreeze(){ clearTimeout(freezeTimer); freezeTimer=0; }
+function checkFreeze(t){
+  const p=prevT; prevT=t;
+  if(p<0||t<=p||t-p>0.5) return false; // tras un salto o al empezar no se dispara
+  let hit=null;
+  state.annotations.forEach(s=>{ if(typeof s.pt==="number"&&s.pt>p&&s.pt<=t&&(hit===null||s.pt<hit)) hit=s.pt; });
+  if(hit===null) return false;
+  v.pause(); cancelFreeze();
+  ownSeek=true; v.currentTime=hit; // fotograma exacto del pintado
+  freezeTimer=setTimeout(()=>{
+    freezeTimer=0;
+    if(!v.paused||v.ended||state.drawing) return;
+    ownPlay=true; const r=v.play(); if(r&&r.catch) r.catch(()=>{ ownPlay=false; });
+  },FREEZE_MS);
+  return true;
+}
 function loop(){
   rafId=0;
   if(v.paused||v.ended) return;
   if(state.annotations.length){
     const t=v.currentTime;
+    if(cfg.freeze && checkFreeze(t)){ refreshNow(); return; }
     if(Math.abs(t-lastShown)>0.01){ lastShown=t; applyFollowKeyframes(t); redraw(); }
   }
   rafId=requestAnimationFrame(loop);
+}
+if(cfg.freeze){
+  v.addEventListener("play",()=>{ prevT=-1; if(ownPlay) ownPlay=false; else cancelFreeze(); });
+  v.addEventListener("seeking",()=>{ prevT=-1; if(ownSeek){ ownSeek=false; return; } cancelFreeze(); });
+  v.addEventListener("emptied",()=>{ prevT=-1; cancelFreeze(); });
+  // respaldo del bucle de animación (se detiene en pestañas ocultas)
+  v.addEventListener("timeupdate",()=>{ if(!v.paused&&!v.ended&&state.annotations.length) checkFreeze(v.currentTime); });
+  // al reanudar tras el congelado, lo pintado desaparece de inmediato
+  v.addEventListener("playing",refreshNow);
 }
 ["play","playing"].forEach(ev=>v.addEventListener(ev,()=>{ if(!rafId) rafId=requestAnimationFrame(loop); }));
 ["pause","seeked","seeking","timeupdate","ended"].forEach(ev=>v.addEventListener(ev,()=>{
@@ -8674,7 +8912,7 @@ function pintRenderMarks(){
   box.replaceChildren();
   const d=vid&&isFinite(vid.duration)?vid.duration:0;
   const list=window.acfcPint?window.acfcPint.get():[]; if(!d||!list.length) return;
-  const ts=[...new Set(list.filter(s=>typeof s.appearTime==="number").map(s=>Math.max(0,Math.round((s.appearTime+0.4)*2)/2)))].sort((a,b)=>a-b);
+  const ts=[...new Set(list.filter(s=>typeof s.pt==="number").map(s=>Math.max(0,Math.round(s.pt*2)/2)))].sort((a,b)=>a-b);
   const fm=t=>Math.floor(t/60)+":"+String(Math.floor(t%60)).padStart(2,"0");
   ts.forEach(t=>{ if(t>d) return;
     const m=document.createElement("div"); m.className="stillMk"; m.style.left=(t/d*100)+"%";
@@ -8682,7 +8920,7 @@ function pintRenderMarks(){
 }
 { const vid=g("v"); if(vid) ["loadedmetadata","durationchange","emptied"].forEach(ev=>vid.addEventListener(ev,pintRenderMarks)); }
 acfcPintMount({
-  video:g("v"), host:document.querySelector("#tabVisor .stage"), block:visorBlock, sfx:"", expose:"acfcPint", onChange:()=>setTimeout(pintRenderMarks,0),
+  video:g("v"), host:document.querySelector("#tabVisor .stage"), block:visorBlock, sfx:"", expose:"acfcPint", freeze:true, onChange:()=>setTimeout(()=>{ pintRenderMarks(); if(window.acfcRefreshPintMarks) window.acfcRefreshPintMarks(); },0),
   keyPrefix:"acfcPint:", keyOf:()=>vName?vName.textContent:"",
   onStill:(cap,t)=>window.acfcEdAddStill?window.acfcEdAddStill(cap,t):"El editor no está listo.",
   watch:fn=>{ if(vName) new MutationObserver(fn).observe(vName,{childList:true,characterData:true,subtree:true}); }
