@@ -834,6 +834,7 @@ html #tabEditor aside .pintBlock:has(#pintBodyEd[hidden]) .pbHead{margin-bottom:
 .pintHelp{margin:2px 0 0;font-size:12px;line-height:1.45;color:var(--muted)}
 .pintVariants{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:6px}
 .pintVariants[hidden]{display:none}
+#pintFocusStyles,#pintFocusStylesEd{display:none!important} /* foco único: cilíndrico */
 .pintVar{display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px 4px;background:var(--panel);border:1px solid var(--line);border-radius:0;color:var(--ink);cursor:pointer;font-size:11px}
 .pintVar svg{width:22px;height:30px;fill:color-mix(in srgb,currentColor 18%,transparent);stroke:currentColor;stroke-width:2}
 .pintVar.is-active{border-color:var(--red);color:var(--red)}
@@ -923,7 +924,7 @@ html #tabEditor aside .pintBlock:has(#pintBodyEd[hidden]) .pbHead{margin-bottom:
 :is(#tutDlg,#tutDlgR) .tutMk,:is(#tutDlg,#tutDlgR) .tutMk em{background:var(--ink)}
 /* paneles más ligeros */
 aside{border-top-width:2px}
-aside h2{font-size:16px;letter-spacing:.06em}
+aside h2{font-size:13px;letter-spacing:.05em}
 .row label{font-size:12px;letter-spacing:.02em}
 .seg{background:color-mix(in srgb,var(--ink) 22%,transparent)}
 .edItem{border-left-color:var(--ink)}
@@ -1307,7 +1308,7 @@ html #fltClear:hover,html #pintClear:hover,html #edClearAdded:hover{background:v
         <button class="btn" id="vMarkEnd" title="Fija el fin del partido en el instante actual">Fin de partido</button>
       </span>
     </div>
-    <div class="row" style="margin:4px 0;justify-content:flex-end"><button type="button" class="btn acfcLink" id="catTlToggle" title="Ocultar/mostrar la lista de eventos de la línea de tiempo">Ocultar</button></div>
+    <div class="row" style="margin:4px 0;justify-content:flex-end"><button type="button" class="btn acfcLink" id="catTlToggle" title="Ocultar/mostrar la lista de eventos de la línea de tiempo y la fila de reloj y datos">Ocultar</button></div>
     <div class="catTimelineWrap">
       <div class="catLabels" id="catLabels"></div>
       <div class="track" id="track">
@@ -1540,6 +1541,9 @@ html #fltClear:hover,html #pintClear:hover,html #edClearAdded:hover{background:v
               <span>Orientación</span>
             </button>
           </div>
+          <div class="pintVariants" id="pintFocusStyles" hidden>
+            <button type="button" class="pintVar is-active" data-focus-style="cilindrico" title="Foco cilíndrico"><svg viewBox="0 0 44 60" aria-hidden="true"><rect x="12" y="6" width="20" height="46"/><ellipse cx="22" cy="52" rx="12" ry="4"/></svg><span>Cilíndrico</span></button>
+          </div>
           <div class="pintDiv pintDivFollow"><i></i><span>Números y jugadores</span>
             <button type="button" class="btn acfcLink" id="pintNumsToggle" aria-expanded="true" aria-controls="pintNumsWrap" title="Ocultar/mostrar los números y la plantilla">Ocultar</button>
           </div>
@@ -1558,11 +1562,6 @@ html #fltClear:hover,html #pintClear:hover,html #edClearAdded:hover{background:v
               <div class="pintRosterBtns"><button type="button" class="btn" id="pintRosterSave">Cargar lista</button></div>
             </details>
           </details>
-          </div>
-          <div class="pintVariants" id="pintFocusStyles" hidden>
-            <button type="button" class="pintVar" data-focus-style="abierto" title="Foco abierto"><svg viewBox="0 0 44 60" aria-hidden="true"><polygon points="22,56 3,4 41,4"/></svg><span>Abierto</span></button>
-            <button type="button" class="pintVar" data-focus-style="estrecho" title="Foco estrecho"><svg viewBox="0 0 44 60" aria-hidden="true"><polygon points="22,56 11,4 33,4"/></svg><span>Estrecho</span></button>
-            <button type="button" class="pintVar is-active" data-focus-style="cilindrico" title="Foco cilíndrico"><svg viewBox="0 0 44 60" aria-hidden="true"><rect x="12" y="6" width="20" height="46"/><ellipse cx="22" cy="52" rx="12" ry="4"/></svg><span>Cilíndrico</span></button>
           </div>
 
           <!-- Seguimiento del foco: oculto de momento (quitar style="display:none" para mostrarlo) -->
@@ -3743,7 +3742,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   simpleFold("ajToggle","ajHidden",h=>{ $("ajBody").style.display=h?"none":"contents"; },true);
   simpleFold("fltToggle","fltHidden",h=>{ $("fltBody").style.display=h?"none":""; },true);
   simpleFold("evHideToggle","evHideHidden",h=>{ $("list").style.display=h?"none":""; });
-  simpleFold("catTlToggle","catTlHidden",h=>{ document.querySelector(".catTimelineWrap").style.display=h?"none":""; });
+  simpleFold("catTlToggle","catTlHidden",h=>{ document.querySelector(".catTimelineWrap").style.display=h?"none":""; $("clock").parentNode.style.display=h?"none":""; });
   // Tono azul según estado: Ocultar (claro) / Mostrar (oscuro)
   ["catTlToggle","regSrcToggle","evHideToggle","ajToggle","fltToggle","plListToggle","pintToggle","pintNumsToggle","pintStyleToggle","expOptsToggle","pbToggle","edCtlToggle","edSrcToggle","edEvToggle","edExpToggle"].forEach(id=>{
     const el=$(id); if(!el) return;
@@ -5431,14 +5430,14 @@ window.renderHalfBands = function(b1,b2,mk,d){
     $("shIn").style.left="0"; $("shIn").style.width=(inP/d*100)+"%";
     $("shOut").style.left=(outP/d*100)+"%"; $("shOut").style.right="0";
     $("hIn").style.left=(inP/d*100)+"%"; $("hOut").style.left=(outP/d*100)+"%";
-    $("hInTime").style.left=(inP/d*100)+"%"; $("hInTime").textContent=fmt(inP);
-    $("hOutTime").style.left=(outP/d*100)+"%"; $("hOutTime").textContent=fmt(outP);
+    $("hInTime").style.left=(inP/d*100)+"%"; $("hInTime").textContent=matchClockText(inP);
+    $("hOutTime").style.left=(outP/d*100)+"%"; $("hOutTime").textContent=matchClockText(outP);
     $("trimDur").style.left=((inP+outP)/2/d*100)+"%"; $("trimDur").textContent=fmt(outP-inP);
     { const pl=[marks.p1,marks.p1e,marks.p2,marks.end]; const jug=pl.every(x=>typeof x==="number")?(marks.p1e-marks.p1)+(marks.end-marks.p2):null;
       const fmtS=t=>{ const s=Math.round(Math.max(0,t||0)); return Math.floor(s/60)+":"+String(s%60).padStart(2,"0"); };
-      $("edTrimInfo").textContent=bPend?"· Inicio "+fmtS(inP)+"\n· Marca el punto B para fijar el fin":"· Inicio "+fmtS(inP)+" · Fin "+fmtS(outP)+"\n· Duración "+fmtS(outP-inP);
+      $("edTrimInfo").textContent=bPend?"· Inicio "+matchClockText(inP)+"\n· Marca el punto B para fijar el fin":"· Inicio "+matchClockText(inP)+" · Fin "+matchClockText(outP)+"\n· Duración "+fmtS(outP-inP);
       $("edJug").textContent=jug!=null&&jug>=0?"Tiempo jugado "+fmt(jug):""; }
-    $("edUndo").disabled=$("edUndo2").disabled=!hist.length; $("edRedo").disabled=!redoOf().length; $("edAddSel").hidden=true; renderMarks(d); tick(); // el botón «+ Añadir» ya no se muestra: Punto B añade el tramo
+    $("edUndo").disabled=$("edUndo2").disabled=!hist.length; $("edRedo").disabled=!redoOf().length; $("edAddSel").hidden=true; renderMarks(d); tick(); if(window.acfcABWin&&window.acfcABWin.refresh) window.acfcABWin.refresh(); // el botón «+ Añadir» ya no se muestra: Punto B añade el tramo
   }
   // el rótulo del corte se adapta a su anchura: reduce letra y espaciado hasta que quepa (mínimo 6px; si aun así no cabe, puntos suspensivos)
   function fitEvLbl(b){ if(window.acfcFitEvLbl) window.acfcFitEvLbl(b); }
@@ -5650,16 +5649,16 @@ window.renderHalfBands = function(b1,b2,mk,d){
       const baseW=480, baseH=200, pickH=470;
       const resize=h=>{ try{ w.resizeTo(baseW,h+(w.outerHeight-w.innerHeight)); }catch(_){} };
       const closePk=()=>{ if(pk){ pk.remove(); pk=null; resize(baseH); } };
-      const upd=()=>{ t.textContent=fmt(V.currentTime)+" / "+matchClockText(V.currentTime); };
+      const upd=()=>{ t.textContent="Minuto de partido "+matchClockText(V.currentTime); };
       // momentos marcados: A (inicio) y B (fin) del tramo actual del editor
       const showAB=()=>{ const D=dur(), aSet=bPend||inP>0.05||outP<D-0.05, bSet=!bPend&&outP<D-0.05;
         info.textContent=""; const mk=(l,v)=>{ const s=d.createElement("span"); const b=d.createElement("b"); b.textContent=l; s.append(b,v); info.appendChild(s); };
-        mk("A",aSet?fmt(inP):"—"); mk("B",bSet?fmt(outP):"—"); };
+        mk("A",aSet?matchClockText(inP):"—"); mk("B",bSet?matchClockText(outP):"—"); }; // minuto de partido, no de vídeo
       bA.onclick=()=>{ closePk(); $("edSetA").click(); showAB(); };
       bB.onclick=()=>{ closePk(); $("edSetB").click(); showAB(); };
       d.addEventListener("keydown",e=>{ if(e.key==="Escape") closePk(); });
       V.addEventListener("timeupdate",upd); upd(); showAB();
-      window.acfcABWin={ showPicker(names,cb){
+      window.acfcABWin={ refresh:showAB, showPicker(names,cb){
         closePk(); pk=d.createElement("div"); pk.className="pk";
         const h=d.createElement("h4"); h.textContent="Tipo de evento"; pk.appendChild(h);
         const pick=n=>{ closePk(); cb(n); };
@@ -9244,6 +9243,7 @@ html.acfc-lite .primary:not([data-lite]):not(dialog .primary)::after{background:
   -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M2 7l5 4 5-7 5 7 5-4-2 12H4z'/%3E%3C/svg%3E") center/contain no-repeat;
   mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M2 7l5 4 5-7 5 7 5-4-2 12H4z'/%3E%3C/svg%3E") center/contain no-repeat}
 .acfcCrown.is-active::after{background:var(--red)}
+.btn.primary.acfcCrown::after{background:#fff}
 #acfcLicDlg{max-width:min(420px,92vw)}
 #acfcLicDlg input{width:100%;box-sizing:border-box;font:inherit;font-family:var(--f-disp);font-size:20px;letter-spacing:2px;text-transform:uppercase;text-align:center;padding:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:0}
 #acfcLicMsg{min-height:1.4em;font-size:13px;margin:8px 0}
