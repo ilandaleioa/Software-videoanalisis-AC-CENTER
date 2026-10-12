@@ -997,7 +997,7 @@ html #tabEditor aside .pintBlock:has(#pintBodyEd[hidden]) .pbHead{margin-bottom:
 #tabLive .liveAdj:has(#liveJugName){display:none!important}
 /* Pantalla completa en móvil: solo la botonera (y el minuto + botón de salir) */
 @media (max-width:900px){
-  #tabLive:fullscreen #liveSub,#tabLive:fullscreen #liveVidPanel,#tabLive:fullscreen #liveEvPanel,#tabLive:fullscreen #livePB,#tabLive:fullscreen #liveCompPanel,#tabLive:fullscreen #liveActsPanel,#tabLive:fullscreen #liveBot,
+  #tabLive:fullscreen #liveSub,#tabLive:fullscreen #liveVidPanel,#tabLive:fullscreen #liveEvPanel,#tabLive:fullscreen #livePB,#tabLive:fullscreen #liveActsPanel,
   #tabLive:fullscreen .liveMain>.livePanel:first-child>h2,#tabLive:fullscreen .liveMain>.livePanel:first-child>.liveHelp,#tabLive:fullscreen #liveTut{display:none!important}
   #tabLive:fullscreen .liveMain>.livePanel:first-child{padding:8px 12px}
   #tabLive:fullscreen .liveClockRow{flex-wrap:wrap;align-items:center;gap:6px}
@@ -1368,6 +1368,8 @@ header #vidSel option{color:#000;background:#fff}
 header #vidSel[hidden]{display:none}
 @media (max-width:640px){header #btnAddVids{flex:none;padding:7px 10px;font-size:10.5px;min-height:0}header #vidSel{max-width:40vw;font-size:11px}}
 @media (max-width:640px){header #btnInstalar{flex:none;padding:7px 10px;font-size:10.5px;min-height:0}}
+/* «Limpiar proyecto» e «Instalar app» siempre pegados a la derecha de la cabecera (también si pasa a dos filas) */
+header .hdrRight{display:flex;align-items:center;gap:8px;margin-left:auto;flex:none}
 dialog#dlgInstalar{max-width:min(420px,94vw);border:1px solid var(--line);border-top:3px solid var(--ink);background:var(--panel);color:var(--ink);padding:18px 20px;font-family:var(--f-body)}
 dialog#dlgInstalar::backdrop{background:rgba(0,0,0,.55)}
 dialog#dlgInstalar h2{font-family:var(--f-disp);text-transform:uppercase;margin:0 0 10px;font-size:20px}
@@ -1438,8 +1440,8 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
     <a href="https://acfootballcenter.eus/ia-aplicada-gestion-deportiva/?utm_source=lezama-talks&amp;utm_medium=herramienta-videoanalisis&amp;utm_campaign=promo-cursos&amp;utm_content=cabecera" target="_blank" rel="noopener"><b>Curso: IA aplicada a la gestión</b> · 3 nov</a>
   </nav>
   <span class="sp"></span>
-  <button type="button" class="btn" id="acfcClearProj" title="Borra de golpe todos los eventos y pintados de esta pestaña">Limpiar proyecto</button>
-  <button type="button" class="btn" id="btnInstalar" hidden title="Instalar la app o crear un acceso directo">Instalar app</button>
+  <span class="hdrRight"><button type="button" class="btn" id="acfcClearProj" title="Borra de golpe todos los eventos y pintados de esta pestaña">Limpiar proyecto</button>
+  <button type="button" class="btn" id="btnInstalar" hidden title="Instalar la app o crear un acceso directo">Instalar app</button></span>
   <input type="file" id="file" accept="video/*" hidden>
   <input type="file" id="fileAdd" accept="video/*" multiple hidden>
 </header>
@@ -1701,6 +1703,14 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
             <button class="pintTool" type="button" id="pintRot" title="Rota lo seleccionado 15° (Mays + clic: sentido contrario). Señala antes la flecha con «Mover».">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12a7 7 0 1 1-2.1-5"/><path d="M19.5 3.5v4h-4"/></svg>
               <span>Rotar</span>
+            </button>
+            <button class="pintTool" type="button" id="pintFront" title="Sube lo seleccionado un nivel, por delante de lo que tape (Mays + clic: al frente del todo)">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="11" height="11" rx="1.5" fill="none"/><rect x="10" y="10" width="11" height="11" rx="1.5" fill="currentColor"/></svg>
+              <span>Delante</span>
+            </button>
+            <button class="pintTool" type="button" id="pintBack" title="Baja lo seleccionado un nivel, por detrás de lo que tape (Mays + clic: al fondo del todo)">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="11" height="11" rx="1.5" fill="currentColor"/><rect x="10" y="10" width="11" height="11" rx="1.5" fill="none"/></svg>
+              <span>Detrás</span>
             </button>
           </div>
 
@@ -3670,10 +3680,21 @@ window.renderHalfBands = function(b1,b2,mk,d){
     if(!n){ $("botJugErr").textContent="Escribe el nombre."; return; }
     $("botJugName").value=""; $("botJugErr").textContent=""; botSync(); renderBot();
   }
+  // En pantalla completa solo se ve el elemento a pantalla completa: la ventana de la botonera debe vivir dentro de él
+  function placeBotDlgForFullscreen(){
+    const fs=document.fullscreenElement||document.webkitFullscreenElement;
+    const target=(fs && fs.tagName!=="VIDEO")?fs:document.body;
+    if(dlgBot.parentNode===target) return;
+    const wasOpen=dlgBot.open; if(wasOpen) dlgBot.close();
+    target.appendChild(dlgBot);
+    if(wasOpen) dlgBot.showModal();
+  }
+  document.addEventListener("fullscreenchange",placeBotDlgForFullscreen);
+  document.addEventListener("webkitfullscreenchange",placeBotDlgForFullscreen);
   $("btnBotonera").onclick=()=>{
     $("botCatErr").textContent=$("botDetErr").textContent=$("botJugErr").textContent="";
     $("botCatColor").value=nextBotColor();
-    renderBotSel(); renderBot(); if(!dlgBot.open) dlgBot.showModal();
+    renderBotSel(); renderBot(); placeBotDlgForFullscreen(); if(!dlgBot.open) dlgBot.showModal();
   };
   $("btnBotoneraMov").onclick=()=>$("btnBotonera").click();
   // Nueva botonera: mismas categorías (estructura), pero sin detalles ni jugadores
@@ -7537,6 +7558,21 @@ function duplicateSelectedAnnotation() {
   setStatus("Anotacion duplicada. Ya puedes recolocarla o editar su tamano.");
 }
 
+// Orden de superposición: el orden de state.annotations es el orden de pintado (el último queda delante).
+function reorderSelectedAnnotation(dir, extreme) {
+  const idx = state.selectedAnnotationIndex;
+  const last = state.annotations.length - 1;
+  if (!(idx >= 0 && idx <= last)) { setStatus("Señala primero una marca con «Mover» para cambiar su orden."); return; }
+  const to = dir > 0 ? (extreme ? last : Math.min(last, idx + 1)) : (extreme ? 0 : Math.max(0, idx - 1));
+  if (to === idx) { setStatus(dir > 0 ? "Esa marca ya está delante del todo." : "Esa marca ya está al fondo."); return; }
+  pushHistory();
+  const [shape] = state.annotations.splice(idx, 1);
+  state.annotations.splice(to, 0, shape);
+  state.selectedAnnotationIndex = to;
+  redraw();
+  setStatus(dir > 0 ? "Marca movida hacia delante." : "Marca movida hacia atrás.");
+}
+
 function deleteSelectedAnnotation() {
   const targetIndex = state.selectedAnnotationIndex;
   const hasSelection = targetIndex >= 0 && targetIndex < state.annotations.length;
@@ -7715,12 +7751,7 @@ function getShapeBounds(shape) {
     };
 
     if (shape.type === "arrow" && distance >= 2) {
-      const normalX = -dy / distance;
-      const normalY = dx / distance;
-      const curveDirection = arrowCurveDir(shape);
-      const curveAmount = Math.max(26, Math.min(distance * 0.35, 120));
-      const controlX = (shape.x1 + shape.x2) / 2 + normalX * curveAmount * curveDirection;
-      const controlY = (shape.y1 + shape.y2) / 2 + normalY * curveAmount * curveDirection;
+      const { x: controlX, y: controlY } = arrowControl(shape);
       bounds.left = Math.min(bounds.left, controlX);
       bounds.right = Math.max(bounds.right, controlX);
       bounds.top = Math.min(bounds.top, controlY);
@@ -7769,6 +7800,37 @@ function arrowCurveDir(shape) {
   if (shape.curveDir === 1 || shape.curveDir === -1) return shape.curveDir;
   const dx = shape.x2 - shape.x1, dy = shape.y2 - shape.y1;
   return dx > 0 ? -1 : 1;
+}
+
+// Punto de control de la flecha curva. Si el usuario movió el punto central, se guarda relativo a la cuerda
+// (shape.bu = desplazamiento a lo largo, shape.bv = perpendicular, ambos como fracción de la longitud),
+// así sobrevive a mover, girar y redimensionar la flecha.
+function arrowControl(shape) {
+  const dx = shape.x2 - shape.x1, dy = shape.y2 - shape.y1;
+  const distance = Math.hypot(dx, dy) || 1;
+  const ux = dx / distance, uy = dy / distance, nx = -uy, ny = ux;
+  const mx = (shape.x1 + shape.x2) / 2, my = (shape.y1 + shape.y2) / 2;
+  if (typeof shape.bv === "number" && typeof shape.bu === "number") {
+    return { x: mx + (ux * shape.bu + nx * shape.bv) * distance, y: my + (uy * shape.bu + ny * shape.bv) * distance };
+  }
+  const amount = Math.max(26, Math.min(distance * 0.35, 120)) * arrowCurveDir(shape);
+  return { x: mx + nx * amount, y: my + ny * amount };
+}
+
+// Punto central de la curva (el que se arrastra para cambiar la curvatura)
+function arrowMidHandle(shape) {
+  const c = arrowControl(shape);
+  return { x: (shape.x1 + 2 * c.x + shape.x2) / 4, y: (shape.y1 + 2 * c.y + shape.y2) / 4 };
+}
+
+function setArrowMid(shape, p) {
+  const dx = shape.x2 - shape.x1, dy = shape.y2 - shape.y1;
+  const distance = Math.hypot(dx, dy) || 1;
+  const ux = dx / distance, uy = dy / distance;
+  // control = 2·P − (p1+p2)/2 ; relativo al punto medio de la cuerda: 2·(P − mid)
+  const relX = 2 * (p.x - (shape.x1 + shape.x2) / 2), relY = 2 * (p.y - (shape.y1 + shape.y2) / 2);
+  shape.bu = (relX * ux + relY * uy) / distance;
+  shape.bv = (relX * -uy + relY * ux) / distance;
 }
 
 function rotateShape(shape, angle) {
@@ -8021,6 +8083,17 @@ function drawSelection(shape) {
     ctx.lineWidth = 1.5;
     ctx.stroke();
   });
+  if (shape.type === "arrow" && Math.hypot(shape.x2 - shape.x1, shape.y2 - shape.y1) >= 2) {
+    // punto central desplazable: cambia la curvatura
+    const m = arrowMidHandle(shape);
+    ctx.beginPath();
+    ctx.arc(m.x, m.y, HANDLE_SIZE * 0.8, 0, Math.PI * 2);
+    ctx.fillStyle = "rgba(141, 235, 110, 0.95)";
+    ctx.fill();
+    ctx.strokeStyle = "#0b1320";
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+  }
   ctx.restore();
 }
 
@@ -8033,12 +8106,7 @@ function drawArrow(shape, drawProgress = 1) {
     return;
   }
 
-  const normalX = -dy / distance;
-  const normalY = dx / distance;
-  const curveDirection = arrowCurveDir(shape);
-  const curveAmount = Math.max(26, Math.min(distance * 0.35, 120));
-  const controlX = (shape.x1 + shape.x2) / 2 + normalX * curveAmount * curveDirection;
-  const controlY = (shape.y1 + shape.y2) / 2 + normalY * curveAmount * curveDirection;
+  const { x: controlX, y: controlY } = arrowControl(shape);
   const headLength = Math.max(14, shape.lineWidth * 4.5);
   const tangentAngle = Math.atan2(shape.y2 - controlY, shape.x2 - controlX);
   const headSpread = Math.PI / 8;
@@ -8943,7 +9011,9 @@ function beginDrawing(event) {
 
   const point = getCanvasPoint(event);
 
-  if (state.tool !== "move" && state.tool !== "edit" && (findAnnotationAtPoint(point) >= 0 || getSelectedVertexAtPoint(point) >= 0)) {
+  // La herramienta elegida se respeta siempre: solo pasa a «Mover» con Ctrl/Cmd pulsado sobre una marca.
+  // Antes cambiaba sola al pulsar cerca de otra marca y el primer trazo parecía no funcionar.
+  if (state.tool !== "move" && state.tool !== "edit" && (event.ctrlKey || event.metaKey) && (findAnnotationAtPoint(point) >= 0 || getSelectedVertexAtPoint(point) >= 0)) {
     setTool("move");
   }
 
@@ -8958,6 +9028,15 @@ function beginDrawing(event) {
     }
     if (state.selectedAnnotationIndex >= 0 && state.selectedAnnotationIndex < state.annotations.length) {
       const sel = state.annotations[state.selectedAnnotationIndex];
+      if (sel.type === "arrow") {
+        const m = arrowMidHandle(sel);
+        if (Math.hypot(point.x - m.x, point.y - m.y) <= HANDLE_SIZE + 6) {
+          pushHistory();
+          state.curveDrag = state.selectedAnnotationIndex;
+          setStatus("Moviendo el punto central: cambia la curvatura de la flecha.");
+          return;
+        }
+      }
       const hi = getHandleAtPoint(point, sel);
       if (hi >= 0) {
         pushHistory();
@@ -8995,16 +9074,12 @@ function beginDrawing(event) {
   }
 
   if (state.tool === "text" || state.tool === "callout") {
-    const label =
-      state.tool === "text" && state.selectedQuickInsert
-        ? state.selectedQuickInsert
-        : window.prompt(
-            state.tool === "text" ? "Texto a insertar" : "Texto de la etiqueta",
-            state.tool === "text" ? "Jugador clave" : "Etiqueta"
-          );
-    if (!label) {
-      return;
-    }
+    // Sin cuadro de diálogo: la marca se crea con un texto por defecto y se abre la ventana de ajustes
+    // (texto, tamaño de fuente, color, relleno, grosor…), que permite editarlo todo a la vez.
+    const quick = state.tool === "text" && state.selectedQuickInsert;
+    const label = quick
+      ? state.selectedQuickInsert
+      : state.tool === "text" ? "Jugador clave" : "Etiqueta";
 
     pushHistory();
     addAnnotation({
@@ -9019,6 +9094,10 @@ function beginDrawing(event) {
       opacity: state.opacity,
     });
     state.selectedAnnotationIndex = state.annotations.length - 1;
+    if (!quick) {
+      state.popFocusText = true;
+      setTool("edit");
+    }
     syncSizeControl();
     redraw();
     return;
@@ -9096,6 +9175,13 @@ function updateDrawing(event) {
     return;
   }
 
+  if (isSelTool() && state.curveDrag != null && state.curveDrag >= 0) {
+    const shape = state.annotations[state.curveDrag];
+    if (shape && shape.type === "arrow") setArrowMid(shape, getCanvasPoint(event));
+    redraw();
+    return;
+  }
+
   if (isSelTool() && state.vertexDrag) {
     const vd = state.vertexDrag;
     const shape = state.annotations[vd.shapeIndex];
@@ -9166,7 +9252,10 @@ function finishDrawing(event) {
   }
 
   if (isSelTool()) {
-    if (state.vertexDrag) {
+    if (state.curveDrag != null && state.curveDrag >= 0) {
+      state.curveDrag = -1;
+      setStatus("Curvatura ajustada.");
+    } else if (state.vertexDrag) {
       state.vertexDrag = null;
       setStatus("Vértice movido.");
     } else if (state.resizingHandleIndex >= 0) {
@@ -9512,6 +9601,8 @@ setRoster(roster,false);
 duplicateAnnotationButton.addEventListener("click",()=>{ duplicateSelectedAnnotation(); paintToolButtons(); });
 deleteAnnotationButton.addEventListener("click",()=>{ deleteSelectedAnnotation(); paintToolButtons(); });
 $("pintRot").addEventListener("click",e=>{ rotateSelectedAnnotation((e.shiftKey?-1:1)*Math.PI/12); });
+$("pintFront").addEventListener("click",e=>{ reorderSelectedAnnotation(1,e.shiftKey); });
+$("pintBack").addEventListener("click",e=>{ reorderSelectedAnnotation(-1,e.shiftKey); });
 
 // Los ajustes del panel solo tocan una marca ya pintada si se ha señalado con «Mover»;
 // con cualquier herramienta de dibujo valen para lo siguiente que se pinte.
@@ -9751,8 +9842,10 @@ canvas.addEventListener("dblclick",e=>{
   if(i<0) return;
   const sh=state.annotations[i];
   if((sh.type==="text"||sh.type==="callout") && typeof sh.text==="string"){
-    const nt=window.prompt("Editar texto",sh.text);
-    if(nt && nt!==sh.text){ pushHistory(); sh.text=nt; }
+    // abre la ventana de ajustes con el campo de texto listo para escribir
+    state.selectedAnnotationIndex=i; state.popFocusText=true;
+    popOpen(canvas.offsetLeft+e.offsetX,canvas.offsetTop+e.offsetY);
+    return;
   } else if(sh.type==="player"){
     const nd=window.prompt("Número del jugador (0-99)",String(sh.dorsal??""));
     if(nd!==null && nd.trim()!==""){ const n=Math.round(Number(nd)); if(n>=0 && n<=99 && n!==sh.dorsal){ pushHistory(); sh.dorsal=n; } }
@@ -9793,7 +9886,7 @@ const popTools=document.createElement("div"); popTools.className="pintGrid pintG
 const popToolDefs=[
   {src:block.querySelector('.pintTool[data-tool="move"]'),tool:"move"},
   {src:block.querySelector('.pintTool[data-tool="edit"]'),tool:"edit"},
-  {src:$("pintDel")},{src:$("pintDup")},{src:$("pintRot")}
+  {src:$("pintDel")},{src:$("pintDup")},{src:$("pintRot")},{src:$("pintFront")},{src:$("pintBack")}
 ].filter(d=>d.src);
 popToolDefs.forEach(d=>{
   const b=document.createElement("button"); b.type="button"; b.className="pintTool"; b.title=d.src.title||"";
@@ -9823,6 +9916,19 @@ function popField(label,src,valEl,opts){
   wrap.append(sp,inp); popStyle.appendChild(wrap);
   popFields.push({wrap,inp,src,b,valEl,only:opts&&opts.only});
 }
+// Contenido del texto (solo textos y etiquetas); se aplica mientras se escribe
+const popTextWrap=document.createElement("label"); popTextWrap.className="pintField";
+const popTextInp=document.createElement("input"); popTextInp.type="text"; popTextInp.maxLength=200; popTextInp.setAttribute("aria-label","Contenido del texto");
+{ const sp=document.createElement("span"); sp.textContent="Texto"; popTextWrap.append(sp,popTextInp); popStyle.appendChild(popTextWrap); }
+let popTextHist=false;
+popTextInp.addEventListener("focus",()=>{ popTextHist=false; });
+popTextInp.addEventListener("input",()=>{
+  const sh=popSelected(); if(!sh||(sh.type!=="text"&&sh.type!=="callout")) return;
+  const nt=popTextInp.value; if(!nt.trim()) return; // no deja el texto vacío
+  if(!popTextHist){ pushHistory(); popTextHist=true; }
+  sh.text=nt; redraw(); pintSaveSoon();
+});
+popTextInp.addEventListener("keydown",e=>{ if(e.key==="Enter"){ e.preventDefault(); popTextInp.blur(); } e.stopPropagation(); if(e.key==="Escape") popClosed(); });
 popField("Tamaño de fuente",fontSizeInput,fontSizeVal,{only:["text","callout"]});
 popField("Cajetín",boxPadInput,boxPadVal,{only:["text","callout"]});
 popField("Color",strokeColorInput);
@@ -9851,6 +9957,8 @@ function popSelected(){
 function popSync(){
   const sel=popSelected();
   if(!sel){ pop.hidden=true; return; }
+  { const isTxt=sel.type==="text"||sel.type==="callout"; popTextWrap.hidden=!isTxt;
+    if(isTxt&&document.activeElement!==popTextInp) popTextInp.value=sel.text||""; }
   popFields.forEach(f=>{
     f.inp.value=f.src.value;
     if(f.b&&f.valEl) f.b.textContent=f.valEl.textContent;
@@ -9872,6 +9980,10 @@ function popOpen(x,y){
   const hw=host.clientWidth, hh=host.clientHeight, w=pop.offsetWidth, h=pop.offsetHeight;
   pop.style.left=Math.max(8,Math.min(x+14,hw-w-8))+"px";
   pop.style.top=Math.max(8,Math.min(y-10,hh-h-8))+"px";
+  if(state.popFocusText){
+    state.popFocusText=false;
+    if(!popTextWrap.hidden){ popTextInp.focus(); popTextInp.select(); }
+  }
 }
 function popClosed(){ pop.hidden=true; }
 popClose.addEventListener("click",popClosed);
@@ -10305,7 +10417,7 @@ html.acfc-premium .acfcCrown::after,html.acfc-premium .acfcCrown.is-active::afte
   var AVISO_PREMIUM=false;   // true = el botón «Premium» muestra la ventana «Versión Premium»
   var PREMIUM_PARA_TODOS=true;
   /* Funciones solo Premium: llevan corona (de momento solo el pintado de acciones, en el registro y en el editor) */
-  var PREMIUM=[".pintTool[data-tool]:not([data-tool=move]):not([data-tool=edit]):not([data-tool=arrow]):not([data-tool=arrowStraight]):not([data-tool=pen]):not([data-tool=text]):not([data-tool=callout]):not([data-tool=rect]):not([data-tool=ellipse]):not([data-tool=triangleZone])","#pintStill","#pintStillEd","#regAddFile","#edAddFile","#edABWin","#botJugTit","#botJugName","#botJugAdd","#newJugAdd","#liveJugAdd","details.pintRoster>summary","details.pintRoster .pintRosterBtns .btn.primary","#tabBtnLive","#liveJugLbl"];
+  var PREMIUM=[".pintTool[data-tool]:not([data-tool=move]):not([data-tool=edit]):not([data-tool=arrow]):not([data-tool=arrowStraight]):not([data-tool=pen]):not([data-tool=text]):not([data-tool=callout]):not([data-tool=rect]):not([data-tool=ellipse])","#pintStill","#pintStillEd","#regAddFile","#edAddFile","#edABWin","#botJugTit","#botJugName","#botJugAdd","#newJugAdd","#liveJugAdd","details.pintRoster>summary","details.pintRoster .pintRosterBtns .btn.primary","#tabBtnLive","#liveJugLbl"];
   var LITE=["#play","#vBack4","#vFwd5","#vTagNow","#vFull"];
   var H=document.documentElement, $=function(i){return document.getElementById(i);};
 
@@ -10394,7 +10506,7 @@ html.acfc-premium .acfcCrown::after,html.acfc-premium .acfcCrown.is-active::afte
 
   /* Pintado de acciones sin Premium: solo barra superior (mover, editar…), Flechas y Textos.
      El resto (Zonas, Varios, números, estilos de foco) avisa de que hay que activar Premium. */
-  var PINT_FREE=["move","edit","arrow","arrowStraight","pen","text","callout","rect","ellipse","triangleZone"];
+  var PINT_FREE=["move","edit","arrow","arrowStraight","pen","text","callout","rect","ellipse"];
   document.addEventListener("click",function(e){
     if(full||!e.target.closest) return;
     var b=e.target.closest(".pintBlock .pintTool[data-tool], .pintBlock .pintNums button, .pintBlock .pintVar");
@@ -10519,6 +10631,7 @@ try{var v=localStorage.getItem(KEY);if(v==="botev"||v==="vid")set(v)}catch(e){}}
   var U=mk("acfcGUndo","↶","Deshacer (Ctrl+Z)"), R=mk("acfcGRedo","↷","Rehacer (Ctrl+Y)");
   box.appendChild(U); box.appendChild(R);
   var ref=$("acfcFreeBtn")||$("btnInstalar")||null;
+  if(ref&&ref.parentNode!==hdr&&ref.parentNode.parentNode===hdr) ref=ref.parentNode;
   if(ref&&ref.parentNode===hdr) hdr.insertBefore(box,ref); else hdr.appendChild(box);
 
   var pint=false;
