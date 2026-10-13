@@ -9049,6 +9049,8 @@ function beginDrawing(event) {
     }
 
     const targetIndex = findAnnotationAtPoint(point);
+    // pulsar una marca que ya estaba seleccionada la deselecciona al soltar, si no se arrastró
+    state.toggleOff = targetIndex >= 0 && targetIndex === state.selectedAnnotationIndex ? { index: targetIndex, x: point.x, y: point.y } : null;
     state.selectedAnnotationIndex = targetIndex;
 
     if (targetIndex >= 0) {
@@ -9264,6 +9266,15 @@ function finishDrawing(event) {
       setStatus("Anotacion redimensionada.");
     } else if (state.draggingAnnotationIndex >= 0) {
       setStatus("Anotacion recolocada.");
+    }
+    const toggle = state.toggleOff;
+    state.toggleOff = null;
+    if (toggle && event && state.draggingAnnotationIndex === toggle.index) {
+      const p = getCanvasPoint(event);
+      if (Math.hypot(p.x - toggle.x, p.y - toggle.y) < 4) {
+        state.selectedAnnotationIndex = -1;
+        setStatus("Marca deseleccionada.");
+      }
     }
     state.draggingAnnotationIndex = -1;
     state.dragLastPoint = null;
@@ -10156,6 +10167,144 @@ html #acfcClearProj:hover{filter:brightness(.88);color:#fff}
       else if(window.acfcClearLive) window.acfcClearLive();
     }catch(e){ console.error(e); alert("No se pudo limpiar el proyecto por completo."); }
   });
+})();
+</script>
+<style>
+/* Zoom del vídeo (registro y editor) */
+.acfcZbadge{position:absolute;top:8px;right:8px;z-index:4;display:none;align-items:center;gap:6px;padding:4px 8px;background:rgba(0,0,0,.65);color:#fff;border:1px solid rgba(255,255,255,.3);font:600 12px/1 var(--f-body);cursor:pointer;border-radius:2px}
+.acfcZbadge.on{display:inline-flex}
+.stage.acfcZoomed{cursor:grab}
+.stage.acfcZoomed.acfcPanning{cursor:grabbing}
+.stage .acfcZoomWrap{touch-action:none}
+html.acfc-imm .stageControls .acfcZm{display:none!important}
+</style>
+<script>
+/* =====================================================================
+   ACFC · ZOOM DEL VÍDEO
+   Escala y gira vídeo y lienzo de pintado a la vez (CSS transform), solo en pantalla.
+   Botones − / 100% / + y ↺ / ↻ (90°; con Mayús, 1°) junto a «Silenciar», Ctrl+rueda,
+   pellizco en táctil y arrastre para mover cuando hay zoom (con el pintado activo:
+   Mayús+arrastre o botón central). No afecta a la exportación ni a las coordenadas del pintado.
+   ===================================================================== */
+(()=>{
+  const MAXZ=6, STEP=1.25;
+  function mount(stage, anchorSel){
+    if(!stage) return;
+    const ctrls=stage.querySelector(".stageControls");
+    // z = zoom elegido; ang = giro en grados; (px,py) = desplazamiento del centro de la imagen respecto al del escenario
+    let z=1, ang=0, px=0, py=0, lbl=null;
+    const targets=()=>[...stage.querySelectorAll("video, canvas.pintCanvas")];
+    const badge=document.createElement("button");
+    badge.type="button"; badge.className="acfcZbadge"; badge.title="Volver a 100 % y sin giro";
+    stage.appendChild(badge);
+    // al girar, la imagen se reduce lo justo para no recortarse
+    function fit(){
+      const W=stage.clientWidth||1, H=stage.clientHeight||1, r=ang*Math.PI/180, c=Math.abs(Math.cos(r)), s=Math.abs(Math.sin(r));
+      return Math.min(W/(W*c+H*s), H/(W*s+H*c));
+    }
+    function apply(){
+      ang=((ang%360)+360)%360; if(ang>359.99||ang<0.01) ang=0;
+      if(z<=1.001) z=1;
+      const sc=z*fit(), W=stage.clientWidth, H=stage.clientHeight;
+      const lx=ang?W*sc/2:Math.max(0,W*(sc-1)/2), ly=ang?H*sc/2:Math.max(0,H*(sc-1)/2);
+      px=Math.min(lx,Math.max(-lx,px)); py=Math.min(ly,Math.max(-ly,py));
+      const cx=W/2, cy=H/2, id=z===1&&!ang;
+      targets().forEach(el=>{
+        if(id){ el.style.transform=""; el.style.transformOrigin=""; return; }
+        el.style.transformOrigin=(-el.offsetLeft)+"px "+(-el.offsetTop)+"px";
+        el.style.transform="translate("+px+"px,"+py+"px) translate("+cx+"px,"+cy+"px) scale("+sc+") rotate("+ang+"deg) translate("+(-cx)+"px,"+(-cy)+"px)";
+      });
+      const on=!id;
+      stage.classList.toggle("acfcZoomed",on);
+      stage.style.touchAction=on?"none":"";
+      badge.classList.toggle("on",on);
+      badge.textContent=(z>1?z.toFixed(1).replace(".0","")+"× · ":"")+(ang?Math.round(ang)+"° · ":"")+"restablecer";
+      if(lbl) lbl.textContent=Math.round(z*100)+"%";
+    }
+    const reset=()=>{ z=1; ang=0; px=0; py=0; apply(); };
+    const center=()=>{ const r=stage.getBoundingClientRect(); return [r.width/2,r.height/2]; };
+    // zoom manteniendo fijo el punto (qx,qy) del escenario
+    function zoomAt(nz,qx,qy){
+      nz=Math.min(MAXZ,Math.max(1,nz));
+      const [cx,cy]=center(), k=nz/z;
+      px=qx-cx-(qx-cx-px)*k; py=qy-cy-(qy-cy-py)*k; z=nz; apply();
+    }
+    function turn(deg){ ang+=deg; apply(); }
+    if(ctrls){
+      const mk=(txt,title,fn)=>{ const b=document.createElement("button"); b.type="button"; b.className="btn acfcZm"; b.textContent=txt; b.title=title; b.setAttribute("aria-label",title); b.addEventListener("click",fn); return b; };
+      const out=mk("−","Alejar (zoom −)",()=>zoomAt(z/STEP,...center()));
+      const rst=mk("100%","Volver a 100 % y sin giro",reset);
+      const inn=mk("+","Acercar (zoom +). También Ctrl + rueda, pellizco, y arrastra para mover.",()=>zoomAt(z*STEP,...center()));
+      const rl=mk("↺","Girar 90° a la izquierda (con Mayús: 1°, para enderezar)",e=>turn(e.shiftKey?-1:-90));
+      const rr=mk("↻","Girar 90° a la derecha (con Mayús: 1°, para enderezar)",e=>turn(e.shiftKey?1:90));
+      lbl=rst;
+      const ref=ctrls.querySelector(anchorSel);
+      [out,rst,inn,rl,rr].forEach(b=>ref?ref.before(b):ctrls.appendChild(b));
+    }
+    badge.addEventListener("click",reset);
+    const pos=e=>{ const r=stage.getBoundingClientRect(); return [e.clientX-r.left,e.clientY-r.top]; };
+    stage.addEventListener("wheel",e=>{
+      if(!(e.ctrlKey||e.metaKey)) return;
+      e.preventDefault();
+      const [qx,qy]=pos(e); zoomAt(z*(e.deltaY<0?STEP:1/STEP),qx,qy);
+    },{passive:false});
+    // pellizco y arrastre
+    const ptrs=new Map(); let pan=null, pinch=null, moved=false;
+    const skip=t=>t.closest(".stageControls,.edBusy,.empty,.pintHint,.acfcZbadge,button,input,select,label");
+    stage.addEventListener("pointerdown",e=>{
+      if(skip(e.target)) return;
+      ptrs.set(e.pointerId,[e.clientX,e.clientY]);
+      if(ptrs.size===2){
+        const [a,b]=[...ptrs.values()], r=stage.getBoundingClientRect();
+        pinch={d:Math.hypot(a[0]-b[0],a[1]-b[1])||1,z0:z,m0:[(a[0]+b[0])/2-r.left-r.width/2,(a[1]+b[1])/2-r.top-r.height/2],p0:[px,py]};
+        pan=null; e.stopPropagation(); return;
+      }
+      const drawing=stage.querySelector("canvas.pintCanvas.drawing");
+      const on=z>1||ang;
+      if(on && (!drawing || e.shiftKey || e.button===1)){
+        pan={x:e.clientX,y:e.clientY,p0:[px,py]}; moved=false;
+        if(drawing) e.stopPropagation();
+        try{ stage.setPointerCapture(e.pointerId); }catch(_){}
+        if(e.button===1) e.preventDefault();
+      }
+    },true);
+    stage.addEventListener("pointermove",e=>{
+      if(!ptrs.has(e.pointerId)) return;
+      ptrs.set(e.pointerId,[e.clientX,e.clientY]);
+      if(pinch && ptrs.size>=2){
+        const [a,b]=[...ptrs.values()], r=stage.getBoundingClientRect();
+        const d=Math.hypot(a[0]-b[0],a[1]-b[1])||1;
+        const m=[(a[0]+b[0])/2-r.left-r.width/2,(a[1]+b[1])/2-r.top-r.height/2];
+        const nz=Math.min(MAXZ,Math.max(1,pinch.z0*d/pinch.d)), k=nz/pinch.z0;
+        // el punto bajo los dedos al empezar sigue bajo los dedos
+        px=m[0]-(pinch.m0[0]-pinch.p0[0])*k; py=m[1]-(pinch.m0[1]-pinch.p0[1])*k; z=nz; apply();
+        e.stopPropagation(); return;
+      }
+      if(pan){
+        const dx=e.clientX-pan.x, dy=e.clientY-pan.y;
+        if(!moved && Math.hypot(dx,dy)<4) return;
+        if(!moved){ moved=true; stage.classList.add("acfcPanning"); }
+        px=pan.p0[0]+dx; py=pan.p0[1]+dy; apply(); e.stopPropagation();
+      }
+    },true);
+    const end=e=>{
+      ptrs.delete(e.pointerId);
+      if(ptrs.size<2) pinch=null;
+      if(pan){ pan=null; stage.classList.remove("acfcPanning"); try{ stage.releasePointerCapture(e.pointerId); }catch(_){} }
+    };
+    stage.addEventListener("pointerup",end,true);
+    stage.addEventListener("pointercancel",end,true);
+    // tras arrastrar para mover, el clic final no debe pulsar nada
+    stage.addEventListener("click",e=>{ if(moved){ moved=false; e.stopPropagation(); e.preventDefault(); } },true);
+    // vídeo nuevo → sin zoom ni giro; cambios de tamaño / pantalla completa → reencajar
+    stage.querySelector("video")?.addEventListener("loadedmetadata",reset);
+    window.addEventListener("resize",()=>apply());
+    document.addEventListener("fullscreenchange",()=>setTimeout(apply,60));
+    new ResizeObserver(()=>apply()).observe(stage);
+    apply();
+  }
+  mount(document.querySelector("#tabVisor .stage"),"#vFull");
+  mount(document.getElementById("edStage"),"#edFull");
 })();
 </script>
 <script>
