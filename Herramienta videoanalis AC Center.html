@@ -9462,9 +9462,8 @@ function placeCanvas(){
 toolButtons.forEach(button=>{
   button.addEventListener("click",()=>{
     if(!(v.currentSrc||v.src)){ setStatus("Carga un vídeo para poder pintar sobre él."); return; }
-    // Pulsar de nuevo la herramienta activa la mantiene (dejar de pintar: botón «Dibujo: activo»).
-    // Antes la apagaba y, al ir a pintar otra marca, el primer clic parecía no hacer nada.
-    if(state.drawEnabled && state.tool===button.dataset.tool){ setStatus("Herramienta activa. Arrastra sobre el vídeo para pintar."); return; }
+    // Pulsar la herramienta activa la deselecciona: vuelve a «Mover», que es el comportamiento por defecto sin herramienta.
+    if(state.drawEnabled && state.tool===button.dataset.tool){ if(button.dataset.tool!=="move") setTool("move"); return; }
     setTool(button.dataset.tool);
     if(!state.drawEnabled) setDrawEnabled(true);
   });
@@ -10182,7 +10181,7 @@ html.acfc-imm .stageControls .acfcZm{display:none!important}
 /* =====================================================================
    ACFC · ZOOM DEL VÍDEO
    Escala y gira vídeo y lienzo de pintado a la vez (CSS transform), solo en pantalla.
-   Botones − / 100% / + y ↺ / ↻ (90°; con Mayús, 1°) junto a «Silenciar», Ctrl+rueda,
+   Botones − / 100% / + junto a «Silenciar», Ctrl+rueda,
    pellizco en táctil y arrastre para mover cuando hay zoom (con el pintado activo:
    Mayús+arrastre o botón central). No afecta a la exportación ni a las coordenadas del pintado.
    ===================================================================== */
@@ -10192,7 +10191,7 @@ html.acfc-imm .stageControls .acfcZm{display:none!important}
     if(!stage) return;
     const ctrls=stage.querySelector(".stageControls");
     // z = zoom elegido; ang = giro en grados; (px,py) = desplazamiento del centro de la imagen respecto al del escenario
-    let z=1, ang=0, px=0, py=0, lbl=null;
+    let z=1, ang=0, yaw=0, px=0, py=0, lbl=null;
     const targets=()=>[...stage.querySelectorAll("video, canvas.pintCanvas")];
     const badge=document.createElement("button");
     badge.type="button"; badge.className="acfcZbadge"; badge.title="Volver a 100 % y sin giro";
@@ -10200,28 +10199,28 @@ html.acfc-imm .stageControls .acfcZm{display:none!important}
     // al girar, la imagen se reduce lo justo para no recortarse
     function fit(){
       const W=stage.clientWidth||1, H=stage.clientHeight||1, r=ang*Math.PI/180, c=Math.abs(Math.cos(r)), s=Math.abs(Math.sin(r));
-      return Math.min(W/(W*c+H*s), H/(W*s+H*c));
+      const yr=Math.abs(yaw)*Math.PI/180, fy=(W*1.5-(W/2)*Math.sin(yr))/(W*1.5); /* giro 3D: el lado cercano crece; se compensa para que no se salga por arriba y abajo */ return Math.min(W/(W*c+H*s), H/(W*s+H*c))*fy;
     }
     function apply(){
       ang=((ang%360)+360)%360; if(ang>359.99||ang<0.01) ang=0;
-      if(z<=1.001) z=1;
+      if(z<=1.001) z=1; yaw=Math.max(-70,Math.min(70,yaw)); if(Math.abs(yaw)<0.01) yaw=0;
       const sc=z*fit(), W=stage.clientWidth, H=stage.clientHeight;
       const lx=ang?W*sc/2:Math.max(0,W*(sc-1)/2), ly=ang?H*sc/2:Math.max(0,H*(sc-1)/2);
       px=Math.min(lx,Math.max(-lx,px)); py=Math.min(ly,Math.max(-ly,py));
-      const cx=W/2, cy=H/2, id=z===1&&!ang;
+      const cx=W/2, cy=H/2, id=z===1&&!ang&&!yaw;
       targets().forEach(el=>{
         if(id){ el.style.transform=""; el.style.transformOrigin=""; return; }
         el.style.transformOrigin=(-el.offsetLeft)+"px "+(-el.offsetTop)+"px";
-        el.style.transform="translate("+px+"px,"+py+"px) translate("+cx+"px,"+cy+"px) scale("+sc+") rotate("+ang+"deg) translate("+(-cx)+"px,"+(-cy)+"px)";
+        el.style.transform="translate("+px+"px,"+py+"px) translate("+cx+"px,"+cy+"px)"+(yaw?" perspective("+(W*1.5)+"px) rotateY("+yaw+"deg)":"")+" scale("+sc+") rotate("+ang+"deg) translate("+(-cx)+"px,"+(-cy)+"px)";
       });
       const on=!id;
       stage.classList.toggle("acfcZoomed",on);
       stage.style.touchAction=on?"none":"";
       badge.classList.toggle("on",on);
-      badge.textContent=(z>1?z.toFixed(1).replace(".0","")+"× · ":"")+(ang?Math.round(ang)+"° · ":"")+"restablecer";
+      badge.textContent=(z>1?z.toFixed(1).replace(".0","")+"× · ":"")+(ang?Math.round(ang)+"° · ":"")+(yaw?"3D "+Math.round(yaw*10)/10+"° · ":"")+"restablecer";
       if(lbl) lbl.textContent=Math.round(z*100)+"%";
     }
-    const reset=()=>{ z=1; ang=0; px=0; py=0; apply(); };
+    const reset=()=>{ z=1; ang=0; yaw=0; px=0; py=0; apply(); };
     const center=()=>{ const r=stage.getBoundingClientRect(); return [r.width/2,r.height/2]; };
     // zoom manteniendo fijo el punto (qx,qy) del escenario
     function zoomAt(nz,qx,qy){
@@ -10229,17 +10228,14 @@ html.acfc-imm .stageControls .acfcZm{display:none!important}
       const [cx,cy]=center(), k=nz/z;
       px=qx-cx-(qx-cx-px)*k; py=qy-cy-(qy-cy-py)*k; z=nz; apply();
     }
-    function turn(deg){ ang+=deg; apply(); }
     if(ctrls){
       const mk=(txt,title,fn)=>{ const b=document.createElement("button"); b.type="button"; b.className="btn acfcZm"; b.textContent=txt; b.title=title; b.setAttribute("aria-label",title); b.addEventListener("click",fn); return b; };
       const out=mk("−","Alejar (zoom −)",()=>zoomAt(z/STEP,...center()));
       const rst=mk("100%","Volver a 100 % y sin giro",reset);
       const inn=mk("+","Acercar (zoom +). También Ctrl + rueda, pellizco, y arrastra para mover.",()=>zoomAt(z*STEP,...center()));
-      const rl=mk("↺","Girar 90° a la izquierda (con Mayús: 1°, para enderezar)",e=>turn(e.shiftKey?-1:-90));
-      const rr=mk("↻","Girar 90° a la derecha (con Mayús: 1°, para enderezar)",e=>turn(e.shiftKey?1:90));
       lbl=rst;
       const ref=ctrls.querySelector(anchorSel);
-      [out,rst,inn,rl,rr].forEach(b=>ref?ref.before(b):ctrls.appendChild(b));
+      [out,rst,inn].forEach(b=>ref?ref.before(b):ctrls.appendChild(b));
     }
     badge.addEventListener("click",reset);
     const pos=e=>{ const r=stage.getBoundingClientRect(); return [e.clientX-r.left,e.clientY-r.top]; };
@@ -10260,7 +10256,7 @@ html.acfc-imm .stageControls .acfcZm{display:none!important}
         pan=null; e.stopPropagation(); return;
       }
       const drawing=stage.querySelector("canvas.pintCanvas.drawing");
-      const on=z>1||ang;
+      const on=z>1||ang||yaw;
       if(on && (!drawing || e.shiftKey || e.button===1)){
         pan={x:e.clientX,y:e.clientY,p0:[px,py]}; moved=false;
         if(drawing) e.stopPropagation();
