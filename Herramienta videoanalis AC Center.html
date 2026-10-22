@@ -10528,6 +10528,8 @@ html.acfc-lite .primary:not([data-lite]):not(dialog .primary)::after{background:
 }
 /* pantalla completa solo del vídeo (editor y registro): botones A/B/Añadir y Registro auto/manual, con cualquier ancho */
 .stage:fullscreen .stageControls .fsAB:not([hidden]),.stage:-webkit-full-screen .stageControls .fsAB:not([hidden]){display:inline-flex!important;align-items:center;justify-content:center}
+/* De momento se oculta todo lo de versión gratuita y Premium (botones y coronas). Para volver a mostrarlo, quitar esta regla. */
+#acfcLicBtn,#acfcFreeBtn,.acfcCrown::after{display:none!important}
 /* Corona: función solo Premium (se añade con la lista PREMIUM del script) */
 .acfcCrown{position:relative}
 .acfcCrown::after{content:"";position:absolute;top:3px;right:3px;width:14px;height:14px;background:var(--red);pointer-events:none;
