@@ -219,6 +219,9 @@ kbd{border:1px solid var(--line);border-radius:3px;padding:0 4px;font-size:11px}
 @keyframes pintStillBlink{0%,100%{background:var(--red);color:#fff;box-shadow:0 0 0 3px rgba(211,41,30,.35)}50%{background:var(--panel);color:var(--red);box-shadow:0 0 0 0 rgba(211,41,30,0)}}
 .btn.pintStillBlink{border-color:var(--red);animation:pintStillBlink .9s ease-in-out infinite}
 @media (prefers-reduced-motion:reduce){.btn.pintStillBlink{animation:none;background:var(--red);color:#fff}}
+/* «Insertar en el vídeo» (5 s): siempre rojo y palpitando */
+#pintStill.pintTool{background:var(--red);color:#fff;border-color:var(--red);animation:pintStillBlink .9s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){#pintStill.pintTool{animation:none}}
 .evPint{font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:1px 5px;border:1px solid var(--red);color:var(--red);border-radius:2px;line-height:1.3}
 .evPintMk{position:absolute;top:2px;right:2px;width:9px;height:9px;background:var(--red);border:1.5px solid #fff;border-radius:50%;z-index:6;pointer-events:none}
 .stillMk{position:absolute;top:-3px;bottom:-3px;width:3px;margin-left:-1px;z-index:5;pointer-events:none;background:var(--red);box-shadow:0 0 0 1px var(--panel)}
@@ -1437,7 +1440,6 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
 <body>
 <!-- ACFC · barra superior con próximas formaciones (actualizar fechas cada edición) -->
 <div class="acfcUtil"><div class="acfcUtil__in">
-  <span class="acfcUtil__live"><i></i>Lezama Talks · Taller de videoanálisis</span>
   <span class="acfcUtil__sp"></span>
   <a class="acfcUtil__site" href="https://acfootballcenter.eus/?utm_source=lezama-talks&amp;utm_medium=herramienta-videoanalisis&amp;utm_campaign=promo-cursos&amp;utm_content=barra" target="_blank" rel="noopener">acfootballcenter.eus ↗</a>
 </div></div>
