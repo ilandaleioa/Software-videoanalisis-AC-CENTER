@@ -4026,6 +4026,8 @@ window.renderHalfBands = function(b1,b2,mk,d){
     });
     window.renderHalfBands($("vBandP1"),$("vBandP2"),halfMarks,d);
   }
+  // el editor básico empuja aquí sus marcas (inicio/fin de partes) para que el registro con vídeo use la misma calibración
+  window.acfcRegMarks={ set(m){ Object.keys(HALF_MARK_IDS).forEach(k=>{ halfMarks[k]=typeof m?.[k]==="number"?m[k]:null; }); saveHalfMarks(); renderHalfMarks(); } };
 
   document.querySelectorAll(".markLine").forEach(ln=>{ const lb=$(ln.id+"Lbl"); if(!lb) return;
     ln.addEventListener("mouseenter",()=>lb.classList.add("show")); ln.addEventListener("mouseleave",()=>lb.classList.remove("show")); });
@@ -6246,7 +6248,8 @@ window.renderHalfBands = function(b1,b2,mk,d){
       $("edOvDet").textContent=o.det; $("edOvSub").textContent=o.jug;
       ov.classList.add("on"); }
     else ov.classList.remove("on"); }
-  function setMark(k){ if(!dur()) return; marks[k]=V.currentTime; syncCur(); render(); }
+  function pushRegMarks(){ if(window.acfcRegMarks) window.acfcRegMarks.set(marks); }
+  function setMark(k){ if(!dur()) return; marks[k]=V.currentTime; syncCur(); pushRegMarks(); render(); }
   function renderMarks(d){
     Object.keys(MARK_IDS).forEach(k=>{
       const t=marks[k], id=MARK_IDS[k], ln=$("ml"+id), lb=$("ml"+id+"Lbl"), btn=$("edMark"+id);
