@@ -1436,7 +1436,7 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
   <select id="vidSel" hidden aria-label="Vídeo abierto en el registro" title="Cambiar de vídeo"></select>
   <!-- ACFC · formaciones en la cabecera (actualizar fechas cada edición) -->
   <nav class="acfcHdrLinks" aria-label="Próximas formaciones">
-    <a href="https://acfootballcenter.eus/analisis-de-partido-en-directo-vi/?utm_source=lezama-talks&amp;utm_medium=herramienta-videoanalisis&amp;utm_campaign=promo-cursos&amp;utm_content=cabecera" target="_blank" rel="noopener"><b>Curso: Análisis de partido en directo</b> · 20 oct</a>
+    <a href="https://acfootballcenter.eus/?utm_source=lezama-talks&amp;utm_medium=herramienta-videoanalisis&amp;utm_campaign=promo-cursos&amp;utm_content=cabecera" target="_blank" rel="noopener"><b>Curso: Entrenamiento de porteros/as</b> · 3 dic</a>
     <a href="https://acfootballcenter.eus/ia-aplicada-gestion-deportiva/?utm_source=lezama-talks&amp;utm_medium=herramienta-videoanalisis&amp;utm_campaign=promo-cursos&amp;utm_content=cabecera" target="_blank" rel="noopener"><b>Curso: IA aplicada a la gestión</b> · 3 nov</a>
   </nav>
   <span class="sp"></span>
@@ -2180,16 +2180,6 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
       </nav>
     </div>
     <div class="acfcCards">
-      <a class="acfcCard" href="https://acfootballcenter.eus/analisis-de-partido-en-directo-vi/?utm_source=lezama-talks&amp;utm_medium=herramienta-videoanalisis&amp;utm_campaign=promo-cursos&amp;utm_content=tarjeta" target="_blank" rel="noopener">
-        <span class="acfcCard__img"><img src="https://acfootballcenter.eus/wp-content/uploads/2025/02/PHOTO-2024-11-28-19-25-22.jpg" alt="" loading="lazy" style="object-position:50% 52%"></span>
-        <span class="acfcCard__body">
-          <span class="acfcState acfcState--hot">Solo 16 plazas</span>
-          <h3>Análisis de partido en directo</h3>
-          <span class="acfcMeta"><b>Semipresencial · 15 h</b><br>20, 22 y 25 de octubre</span>
-          <span class="acfcPlus">Da el salto al análisis del partido en tiempo real, con grupos reducidos.</span>
-          <span class="acfcCta"><em>Reserva tu plaza</em><svg width="14" height="10" viewBox="0 0 16 12" fill="none" aria-hidden="true"><path d="M10 1l5 5-5 5M15 6H0" stroke="currentColor" stroke-width="1.8"/></svg></span>
-        </span>
-      </a>
       <a class="acfcCard" href="https://acfootballcenter.eus/ia-aplicada-gestion-deportiva/?utm_source=lezama-talks&amp;utm_medium=herramienta-videoanalisis&amp;utm_campaign=promo-cursos&amp;utm_content=tarjeta" target="_blank" rel="noopener">
         <span class="acfcCard__img"><img src="https://acfootballcenter.eus/wp-content/uploads/2026/09/HERO-WEB-IA-GESTION.webp" alt="" loading="lazy"></span>
         <span class="acfcCard__body">
@@ -3805,6 +3795,8 @@ window.renderHalfBands = function(b1,b2,mk,d){
     if(selEv&&selectedIds.has(selEv)) closeClip();
     selectedIds.clear(); save(); refresh();
   }
+  // rango del corte ajustado a mano (inicio–fin en minuto de partido); los cortes sin ajustar muestran su minuto
+  const cutRangeText=e=>e.clip?(matchClockText(e.clip.a)||fmt(e.clip.a))+"–"+(matchClockText(e.clip.b)||fmt(e.clip.b)):"";
   function renderList(){
     const L=$("list"); L.replaceChildren(); const flt=$("flt").value; const dur=v.duration||0;
     // limpia de la selección los eventos que ya no existen (p.ej. tras un filtro que cambie la lista)
@@ -3824,7 +3816,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
       chk.onchange=()=>{ toggleSel(e.id,chk.checked); row.classList.toggle("sel",chk.checked); };
       row.append(chk);
       row.append(
-        el("div",{className:"m"},[el("div",{textContent:e.min}),el("div",{className:"cl",textContent:(s=>s>=60?Math.floor(s/60)+" min "+String(s%60).padStart(2,"0")+" s":s+" s")(Math.round(clipLen(e)))})]),
+        el("div",{className:"m"},[el("div",{textContent:cutRangeText(e)||e.min,title:e.clip?"Corte ajustado a mano · minuto del evento: "+e.min:""}),el("div",{className:"cl",textContent:(s=>s>=60?Math.floor(s/60)+" min "+String(s%60).padStart(2,"0")+" s":s+" s")(Math.round(clipLen(e)))})]),
         el("div",{className:"t"},[el("div",{style:"display:flex;align-items:center;gap:6px"},[el("span",{className:"eqDot "+(e.eq==="rival"?"rival":"propio"),title:e.eq==="rival"?"Rival":"Mi equipo"}),...(e.man?[el("b",{textContent:"M",title:"Registro manual",style:"color:var(--red)"})]:[]),el("b",{textContent:e.cat}),...pintBadge(e)]),el("div",{textContent:e.det+(e.jug?" · "+e.jug:"")}),...(e.coment?[el("div",{textContent:e.coment,style:"font-style:italic"})]:[])])
       );
       const acts=el("div",{className:"acts"});
@@ -4025,7 +4017,10 @@ window.renderHalfBands = function(b1,b2,mk,d){
         btn.textContent=label; btn.title=label+" · "+fmt(t); }
     });
     window.renderHalfBands($("vBandP1"),$("vBandP2"),halfMarks,d);
+    if(window.acfcEdRenderMarks) window.acfcEdRenderMarks(); // el editor pinta la misma calibración
   }
+  // el editor básico empuja aquí sus marcas (inicio/fin de partes) para que el registro con vídeo use la misma calibración
+  window.acfcRegMarks={ get(){ return {...halfMarks}; }, set(m){ Object.keys(HALF_MARK_IDS).forEach(k=>{ halfMarks[k]=typeof m?.[k]==="number"?m[k]:null; }); saveHalfMarks(); renderHalfMarks(); } };
 
   document.querySelectorAll(".markLine").forEach(ln=>{ const lb=$(ln.id+"Lbl"); if(!lb) return;
     ln.addEventListener("mouseenter",()=>lb.classList.add("show")); ln.addEventListener("mouseleave",()=>lb.classList.remove("show")); });
@@ -4620,7 +4615,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     if(!popoutWin && dlgEl.ownerDocument!==document){ try{ if(dlgEl.open) dlgEl.close("relocate"); }catch(_){} document.body.appendChild(dlgEl); } // la ventana emergente ya no existe: recuperar la botonera
     if(dlgEl.open){ // ya abierta (p. ej. en la ventana emergente, oculta): no relanzar showModal, que lanzaría error y el botón "no haría nada"
       if(popoutWin && !popoutWin.closed){ try{ popoutWin.focus(); }catch(_){} }
-      if(!e) return;
+      if(!e){ $("fMin").value=matchClockText(v.currentTime||0)||fmt(v.currentTime||0); return; } // evento nuevo con la botonera ya abierta: el minuto sigue al vídeo
     }
     if(e) manualMode=false; else manReset();
     placeDlgForFullscreen(); editId=e?e.id:null; const cur=v.currentTime||0;
@@ -4816,8 +4811,15 @@ window.renderHalfBands = function(b1,b2,mk,d){
   }
   $("expCsv").onclick=()=>{
     const q=s=>{ s=String(s); if(/^[=+\-@]/.test(s)) s="'"+s; return '"'+s.replace(/"/g,'""')+'"'; };
-    const rows=[["minuto","categoria","equipo","detalle","jugador","comentario","t_video_s","clip_inicio_s","clip_fin_s","clip_duracion_s"]].concat(sorted().map(({e,t})=>{ const c=clipOf(e); return [e.min,e.cat,e.eq==="rival"?"rival":"propio",e.det,e.jug,e.coment||"",t.toFixed(2),c.a.toFixed(2),c.b.toFixed(2),clipLen(e).toFixed(2)]; }));
-    download("eventos_cortes3.csv","\ufeff"+rows.map(r=>r.map(q).join(";")).join("\n"),"text/csv");
+    // segundos → m:ss (p. ej. 750 → "12:30")
+    const mmss=x=>{ const s=Math.max(0,Math.round(x)); return Math.floor(s/60)+":"+String(s%60).padStart(2,"0"); };
+    // Excel convierte "36:14" en 36 h 14 min; ="36:14" lo deja como texto mm:ss
+    // segundos → h:mm:ss (p. ej. 6372 → "1:46:12"), para los clips
+    const hmss=x=>{ const s=Math.max(0,Math.round(x)); return Math.floor(s/3600)+":"+String(Math.floor(s%3600/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0"); };
+    const tq=s=>({f:'="'+s+'"'});
+    const rows=[["minuto","categoria","equipo","detalle","jugador","comentario","t_video_s","clip_inicio_s","clip_fin_s","clip_duracion_s"]].concat(sorted().map(({e,t})=>{ const c=clipOf(e); return [tq(e.fixed!=null?matchClockText(e.fixed):e.min),e.cat,e.eq==="rival"?"rival":"propio",e.det,e.jug,e.coment||"",tq(mmss(t)),tq(hmss(c.a)),tq(hmss(c.b)),tq(hmss(clipLen(e)))]; }));
+    const cel=v=>v&&v.f!=null?'"'+v.f.replace(/"/g,'""')+'"':q(v);
+    download("eventos_cortes3.csv","\ufeff"+rows.map(r=>r.map(cel).join(";")).join("\n"),"text/csv");
   };
   // ---------- guardar / cargar proyecto completo ----------
   // Un "proyecto" agrupa eventos, categorías/detalles propios, jugadores, listas de reproducción
@@ -6246,8 +6248,12 @@ window.renderHalfBands = function(b1,b2,mk,d){
       $("edOvDet").textContent=o.det; $("edOvSub").textContent=o.jug;
       ov.classList.add("on"); }
     else ov.classList.remove("on"); }
-  function setMark(k){ if(!dur()) return; marks[k]=V.currentTime; syncCur(); render(); }
+  function pushRegMarks(){ if(window.acfcRegMarks) window.acfcRegMarks.set(marks); }
+  function setMark(k){ if(!dur()) return; marks[k]=V.currentTime; syncCur(); pushRegMarks(); render(); }
+  // el editor y el registro comparten una sola calibración: las marcas del editor se igualan a las del registro
+  window.acfcEdRenderMarks=()=>renderMarks(dur());
   function renderMarks(d){
+    if(window.acfcRegMarks) Object.assign(marks,window.acfcRegMarks.get());
     Object.keys(MARK_IDS).forEach(k=>{
       const t=marks[k], id=MARK_IDS[k], ln=$("ml"+id), lb=$("ml"+id+"Lbl"), btn=$("edMark"+id);
       const label=MARK_LABELS[k];
@@ -6454,8 +6460,9 @@ window.renderHalfBands = function(b1,b2,mk,d){
     if(!ranges.length) return note("No hay ninguna franja verde que añadir.");
     const from=added.length;
     ranges.forEach(r=>{ if(!added.some(it=>it.srcId===s.id&&Math.abs(it.s-r.s)<0.05&&Math.abs(it.e-r.e)<0.05)) added.push({srcId:s.id,s:r.s,e:r.e,name:""}); });
-    // el tramo recién añadido queda fijo: mover los marcadores ahora define el siguiente, no modifica este
-    activeAdded=null;
+    // el tramo recién añadido queda vinculado a A/B: al mover Punto A o Punto B, su inicio y fin siguen a los marcadores
+    // (para crear otro corte, fija A a partir del fin de este: syncActive/setIn lo desvinculan)
+    activeAdded=null; if(ranges.length===1) activeAdded=added.find(it=>it.srcId===s.id&&Math.abs(it.s-ranges[0].s)<0.05&&Math.abs(it.e-ranges[0].e)<0.05)||null;
     render();
     const items=$("edList").querySelectorAll(".edItem"); const first=items[from];
     if(first){ first.scrollIntoView({behavior:"smooth",block:"center"});
