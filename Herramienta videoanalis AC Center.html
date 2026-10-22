@@ -3805,6 +3805,8 @@ window.renderHalfBands = function(b1,b2,mk,d){
     if(selEv&&selectedIds.has(selEv)) closeClip();
     selectedIds.clear(); save(); refresh();
   }
+  // rango del corte ajustado a mano (inicio–fin en minuto de partido); los cortes sin ajustar muestran su minuto
+  const cutRangeText=e=>e.clip?(matchClockText(e.clip.a)||fmt(e.clip.a))+"–"+(matchClockText(e.clip.b)||fmt(e.clip.b)):"";
   function renderList(){
     const L=$("list"); L.replaceChildren(); const flt=$("flt").value; const dur=v.duration||0;
     // limpia de la selección los eventos que ya no existen (p.ej. tras un filtro que cambie la lista)
@@ -3824,7 +3826,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
       chk.onchange=()=>{ toggleSel(e.id,chk.checked); row.classList.toggle("sel",chk.checked); };
       row.append(chk);
       row.append(
-        el("div",{className:"m"},[el("div",{textContent:e.min}),el("div",{className:"cl",textContent:(s=>s>=60?Math.floor(s/60)+" min "+String(s%60).padStart(2,"0")+" s":s+" s")(Math.round(clipLen(e)))})]),
+        el("div",{className:"m"},[el("div",{textContent:cutRangeText(e)||e.min,title:e.clip?"Corte ajustado a mano · minuto del evento: "+e.min:""}),el("div",{className:"cl",textContent:(s=>s>=60?Math.floor(s/60)+" min "+String(s%60).padStart(2,"0")+" s":s+" s")(Math.round(clipLen(e)))})]),
         el("div",{className:"t"},[el("div",{style:"display:flex;align-items:center;gap:6px"},[el("span",{className:"eqDot "+(e.eq==="rival"?"rival":"propio"),title:e.eq==="rival"?"Rival":"Mi equipo"}),...(e.man?[el("b",{textContent:"M",title:"Registro manual",style:"color:var(--red)"})]:[]),el("b",{textContent:e.cat}),...pintBadge(e)]),el("div",{textContent:e.det+(e.jug?" · "+e.jug:"")}),...(e.coment?[el("div",{textContent:e.coment,style:"font-style:italic"})]:[])])
       );
       const acts=el("div",{className:"acts"});
