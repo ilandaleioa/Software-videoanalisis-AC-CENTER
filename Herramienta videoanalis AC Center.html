@@ -4622,7 +4622,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     if(!popoutWin && dlgEl.ownerDocument!==document){ try{ if(dlgEl.open) dlgEl.close("relocate"); }catch(_){} document.body.appendChild(dlgEl); } // la ventana emergente ya no existe: recuperar la botonera
     if(dlgEl.open){ // ya abierta (p. ej. en la ventana emergente, oculta): no relanzar showModal, que lanzaría error y el botón "no haría nada"
       if(popoutWin && !popoutWin.closed){ try{ popoutWin.focus(); }catch(_){} }
-      if(!e) return;
+      if(!e){ $("fMin").value=matchClockText(v.currentTime||0)||fmt(v.currentTime||0); return; } // evento nuevo con la botonera ya abierta: el minuto sigue al vídeo
     }
     if(e) manualMode=false; else manReset();
     placeDlgForFullscreen(); editId=e?e.id:null; const cur=v.currentTime||0;
