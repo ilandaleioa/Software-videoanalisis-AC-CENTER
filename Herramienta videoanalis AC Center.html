@@ -4821,8 +4821,15 @@ window.renderHalfBands = function(b1,b2,mk,d){
   }
   $("expCsv").onclick=()=>{
     const q=s=>{ s=String(s); if(/^[=+\-@]/.test(s)) s="'"+s; return '"'+s.replace(/"/g,'""')+'"'; };
-    const rows=[["minuto","categoria","equipo","detalle","jugador","comentario","t_video_s","clip_inicio_s","clip_fin_s","clip_duracion_s"]].concat(sorted().map(({e,t})=>{ const c=clipOf(e); return [e.min,e.cat,e.eq==="rival"?"rival":"propio",e.det,e.jug,e.coment||"",t.toFixed(2),c.a.toFixed(2),c.b.toFixed(2),clipLen(e).toFixed(2)]; }));
-    download("eventos_cortes3.csv","\ufeff"+rows.map(r=>r.map(q).join(";")).join("\n"),"text/csv");
+    // segundos → m:ss (p. ej. 750 → "12:30")
+    const mmss=x=>{ const s=Math.max(0,Math.round(x)); return Math.floor(s/60)+":"+String(s%60).padStart(2,"0"); };
+    // Excel convierte "36:14" en 36 h 14 min; ="36:14" lo deja como texto mm:ss
+    // segundos → h:mm:ss (p. ej. 6372 → "1:46:12"), para los clips
+    const hmss=x=>{ const s=Math.max(0,Math.round(x)); return Math.floor(s/3600)+":"+String(Math.floor(s%3600/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0"); };
+    const tq=s=>({f:'="'+s+'"'});
+    const rows=[["minuto","categoria","equipo","detalle","jugador","comentario","t_video_s","clip_inicio_s","clip_fin_s","clip_duracion_s"]].concat(sorted().map(({e,t})=>{ const c=clipOf(e); return [tq(e.fixed!=null?matchClockText(e.fixed):e.min),e.cat,e.eq==="rival"?"rival":"propio",e.det,e.jug,e.coment||"",tq(mmss(t)),tq(hmss(c.a)),tq(hmss(c.b)),tq(hmss(clipLen(e)))]; }));
+    const cel=v=>v&&v.f!=null?'"'+v.f.replace(/"/g,'""')+'"':q(v);
+    download("eventos_cortes3.csv","\ufeff"+rows.map(r=>r.map(cel).join(";")).join("\n"),"text/csv");
   };
   // ---------- guardar / cargar proyecto completo ----------
   // Un "proyecto" agrupa eventos, categorías/detalles propios, jugadores, listas de reproducción
@@ -6463,8 +6470,9 @@ window.renderHalfBands = function(b1,b2,mk,d){
     if(!ranges.length) return note("No hay ninguna franja verde que añadir.");
     const from=added.length;
     ranges.forEach(r=>{ if(!added.some(it=>it.srcId===s.id&&Math.abs(it.s-r.s)<0.05&&Math.abs(it.e-r.e)<0.05)) added.push({srcId:s.id,s:r.s,e:r.e,name:""}); });
-    // el tramo recién añadido queda fijo: mover los marcadores ahora define el siguiente, no modifica este
-    activeAdded=null;
+    // el tramo recién añadido queda vinculado a A/B: al mover Punto A o Punto B, su inicio y fin siguen a los marcadores
+    // (para crear otro corte, fija A a partir del fin de este: syncActive/setIn lo desvinculan)
+    activeAdded=null; if(ranges.length===1) activeAdded=added.find(it=>it.srcId===s.id&&Math.abs(it.s-ranges[0].s)<0.05&&Math.abs(it.e-ranges[0].e)<0.05)||null;
     render();
     const items=$("edList").querySelectorAll(".edItem"); const first=items[from];
     if(first){ first.scrollIntoView({behavior:"smooth",block:"center"});
