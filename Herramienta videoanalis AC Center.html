@@ -813,6 +813,11 @@ kbd{border-radius:0;font-family:var(--f-body)}
 #tutDlgL .tutToast{left:12px;right:12px;top:auto;bottom:10px}
 #tutDlgL .tutNote{font-size:10px;color:var(--muted)}
 #tutDlgL .tutPaintMk{position:absolute;left:24%;top:26%;width:34%;height:30%;border:3px solid var(--red);background:rgba(200,16,46,.15);box-shadow:0 0 8px rgba(200,16,46,.6);pointer-events:none;z-index:4}
+/* Pintado en ventana flotante del tutorial de registro: sale sobre la columna derecha de la maqueta y se cierra con ✕ */
+#tutDlgR .tutPWin{position:absolute;right:12px;top:12px;width:min(260px,60%);max-height:calc(100% - 24px);overflow:auto;box-sizing:border-box;z-index:6;display:flex;flex-direction:column;gap:6px;padding:8px;background:var(--panel);border:1px solid var(--line);border-top:3px solid var(--ink);box-shadow:0 8px 24px rgba(0,0,0,.35)}
+#tutDlgR .tutPWin[hidden]{display:none}
+#tutDlgR .tutPWh{display:flex;justify-content:space-between;align-items:center;gap:6px;font-family:var(--f-disp);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+#tutDlgR .tutPWh .tutB{padding:1px 6px;font-size:11px}
 /* ===== fin tutorial ===== */
 /* Botón ojo (mostrar/ocultar botones de marcas): color propio, azul de la herramienta */
 #vMarkToggle,#edMarkToggle{background:var(--c-sal);border-color:var(--c-sal);color:#fff}
@@ -2827,7 +2832,7 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
         </div>
         <div class="tutBusy" hidden><b>Exportando…</b><div class="tutBar"><i></i></div><span>Cada evento se guarda como un archivo</span></div>
         <svg class="tutPaint" aria-hidden="true"></svg>
-        <div class="tutSc"><span class="tutB tpl">▶ Reproducir</span><span class="tutB">-10 seg</span><span class="tutB">-5 seg</span><span class="tutB">+5 seg</span><span class="tutB">+10 seg</span><span class="tutB">⛶ Registro a pantalla completa</span><span class="tutB">Velocidad 1 ▾</span><span class="tutB">Tutorial</span></div>
+        <div class="tutSc"><span class="tutB tpl">▶ Reproducir</span><span class="tutB">-10 seg</span><span class="tutB">-5 seg</span><span class="tutB">+5 seg</span><span class="tutB">+10 seg</span><span class="tutB">⛶ Registro a pantalla completa</span><span class="tutB" data-k="ppaint" title="Abre la ventana de pintado">🖌 Pintar</span><span class="tutB">Velocidad 1 ▾</span><span class="tutB">Tutorial</span></div>
       </div>
       <div class="tutSelR" style="margin-top:8px"><span class="tutInp" data-k="evsel">Todos los eventos (0) ▾</span><span class="tutInp">Todos los equipos ▾</span></div>
       <div class="tutTrack" data-k="track">
@@ -2871,7 +2876,12 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
         <span class="tutB tol" data-k="fltsep">Descargar (0) por separado</span>
         <span class="tutB tol">Exportar CSV</span>
       </div>
-      <div class="tutHr"><h3>Pintado de acciones</h3><span class="tutOc">Ocultar</span></div>
+      <div class="tutHr"><h3>Proyectos y botoneras</h3></div>
+      <div class="tutSelR"><span class="tutB tol">Guardar botonera</span><span class="tutB tol">Cargar botonera</span></div>
+      <div class="tutSelR"><span class="tutB red" data-k="bot">Botonera</span></div>
+    </div>
+    <div class="tutPWin" hidden>
+      <div class="tutPWh"><b>Pintado de acciones</b><span class="tutB" data-k="pwclose" title="Cerrar el pintado">✕</span></div>
       <div class="tutPbar">
         <span class="tutB" data-k="pmode">Dibujo: apagado</span><span class="tutB">Deshacer</span><span class="tutB">Rehacer</span>
         <span class="tutB" data-k="ppng">Exportar PNG</span><span class="tutB" data-k="pstill">Insertar en el vídeo (5 s)</span>
@@ -7281,7 +7291,7 @@ window.tutPaint=(()=>{
   const CATS=[["Gol","var(--c-gol)"],["Ocasión","var(--c-oca)"],["Transición of","var(--c-tra)"],["Transición def","var(--c-trd)"],["Salida balón","var(--c-sal)"],["Presión","var(--c-pre)"]];
   const DET={"Gol":["Situación jugada","Acción balón parado"]};
   const colOf=c=>(CATS.find(x=>x[0]===c)||[0,"var(--c-otr)"])[1];
-  const blank=()=>({vid:false,head:0,marks:{},ev:SEED(),form:null,flt:"",pre:"5",post:"10",busy:false,toast:"",hot:null,paint:tutPaint.blank()});
+  const blank=()=>({vid:false,head:0,marks:{},ev:SEED(),form:null,flt:"",pre:"5",post:"10",busy:false,toast:"",hot:null,pwin:false,paint:tutPaint.blank()});
   // eventos de ejemplo que ya hay desde el primer paso, en todas las categorías
   const SEED=()=>[[8,"Ocasión","Mi equipo","",""],[15,"Transición of","Mi equipo","","Contra rápida"],[18,"Presión","Mi equipo","","Presión alta"],
     [22,"Gol","Mi equipo","Situación jugada","Buena acción"],[26,"Transición def","Mi equipo","","Repliegue tardío"],[35,"Salida balón","Mi equipo","","Salida por el central"],
@@ -7321,6 +7331,7 @@ window.tutPaint=(()=>{
     const fb=mk("div","tutFb"); const sv=mk("span","tutB red","GUARDAR"); sv.dataset.f="save"; fb.append(mk("span","tutB","Cancelar"),sv); FORM.append(fb);
   }
   function draw(){
+    q(".tutPWin").hidden=!S.pwin;
     q(".tutVid").hidden=!S.vid; q(".tutEmpty").hidden=S.vid; q(".tutSrc").hidden=!S.vid;
     q(".tutBusy").hidden=!S.busy; TOAST.hidden=!S.toast; TOAST.textContent=S.toast;
     q(".tutPh").style.left=S.head+"%";
@@ -7390,7 +7401,7 @@ window.tutPaint=(()=>{
        for(const [k,p] of Object.entries(MARKS)){ await go(W,q(".tutTrack"),p/100,.5,700,""); S.head=p; draw(); await W(400);
          await pressK(W,k,L[k]); S.marks[k]=p; draw(); await W(500); } await W(900); }},
     {s:"Registro AUTO",t:"Registro AUTO",
-     d:"Sitúate en la jugada y pulsa «REGISTRO AUTO». En la ventana «Evento» elige categoría, equipo y detalle, añade un comentario y pulsa «GUARDAR». El evento aparece en su carril y en la lista. La botonera se abre en ventana emergente; «Fijo» la deja a la derecha, y el minuto de un evento nuevo sigue al vídeo mientras la botonera esté abierta.",
+     d:"Sitúate en la jugada y pulsa «REGISTRO AUTO». En la ventana «Evento» elige categoría, equipo y detalle, añade un comentario y pulsa «GUARDAR». El evento aparece en su carril y en la lista. La botonera se abre en una ventana emergente con el botón «Botonera», en «Proyectos y botoneras» al final de la columna derecha; «Fijo» la deja a la derecha, y el minuto de un evento nuevo sigue al vídeo mientras la botonera esté abierta. En la botonera, cada botón tiene ✎ para renombrarlo y × para borrarlo.",
      pre(){ S.head=22; S.form=null; S.ev=SEED(); },
      async run(W){ await register(W,22); await pick(W,"cat","Gol"); await pick(W,"det","Situación jugada"); await typeCom(W,EV1.com); await save(W,EV1); await W(700); }},
     {s:"Manual",t:"Registro manual",
@@ -7405,12 +7416,14 @@ window.tutPaint=(()=>{
      pre(){ S.pre="8"; S.post="15"; },
      async run(W){ await typeNum(W,"pre","8","Arrancar antes: segundos antes de la jugada"); await typeNum(W,"post","15","Finalizar en: segundos después"); await W(600); }},
     {s:"Pintado",t:"Pinta sobre el vídeo",
-     d:"En «Pintado de acciones» activa «Dibujo» y elige una herramienta: zona libre, foco, conector, etiqueta o flecha curva. Después dibuja sobre el vídeo. «Mover» y «Editar» cambian lo pintado, «Rotar» lo gira 15° y «Delante» / «Detrás» ordenan lo que se tapa. «Exportar PNG» guarda el fotograma con lo pintado, y «Insertar en el vídeo (5 s)» lo mete como imagen fija de 5 segundos en el vídeo descargado.",
-     pre(){ S.paint=tutPaint.final(); },
-     async run(W){ S.flt=""; S.toast=""; draw(); await tutPaint.run(W,{q,S:()=>S,draw,go,tap,wait,at,place}); }},
+     d:"Pulsa «🖌 Pintar» en la barra del vídeo: se abre la ventana «Pintado de acciones», que puedes arrastrar por su cabecera y cerrar con ✕. Activa «Dibujo» y elige una herramienta: zona libre, foco, conector, etiqueta o flecha curva. Después dibuja sobre el vídeo. «Mover» y «Editar» cambian lo pintado, «Rotar» lo gira 15° y «Delante» / «Detrás» ordenan lo que se tapa. «Exportar PNG» guarda el fotograma con lo pintado, y «Insertar en el vídeo (5 s)» lo mete como imagen fija de 5 segundos en el vídeo descargado.",
+     pre(){ S.paint=tutPaint.final(); S.pwin=false; },
+     async run(W){ S.flt=""; S.toast=""; draw(); await press(W,'[data-k="ppaint"]',"ppaint","Botón de pintar: abre la ventana"); S.pwin=true; draw(); await W(500);
+       await tutPaint.run(W,{q,S:()=>S,draw,go,tap,wait,at,place});
+       await press(W,'[data-k="pwclose"]',"pwclose","Se cierra con la X"); S.pwin=false; draw(); await W(400); }},
     {s:"Exportar",t:"Filtra los eventos y expórtalos",
      d:"En «Filtros» elige equipo o categoría y descarga: «en 1 vídeo» (todos juntos) o «por separado» (un vídeo por evento). «Exportar CSV» guarda la lista para una hoja de cálculo, con los tiempos en m:ss y los clips en h:mm:ss.",
-     pre(){ S.flt="Gol"; S.paint=tutPaint.final(); },
+     pre(){ S.flt="Gol"; S.paint=tutPaint.final(); S.pwin=false; },
      async run(W){ await choose(W,"Gol"); await go(W,q('[data-k="fltone"]'),.5,.5,800,"Descargar filtrados, un único vídeo"); await W(400); await pressK(W,"fltsep","Descargar filtrados, un vídeo por evento");
        S.busy=true; draw(); const bar=q(".tutBar i"); bar.style.transition="none"; bar.style.width="0"; void bar.offsetWidth; bar.style.transition="width "+(1.6*tutVoz.k)+"s linear"; bar.style.width="100%"; await wait(W,1900,"Exportando");
        S.busy=false; S.toast="✔ Listo: se ha descargado 1 archivo ("+S.ev.filter(e=>e.cat==="Gol").length+(S.ev.filter(e=>e.cat==="Gol").length===1?" evento":" eventos")+" de Gol)"; draw(); await wait(W,2600,"Listo"); }}
