@@ -1168,6 +1168,9 @@ html.acfc-imm #tabBtnFus::after{content:"";display:block;width:20px;height:20px;
 .stageControls label.row #rate,.stageControls label.row #edRate{border:0;background:transparent;min-height:34px}
 .stageControls #regTutorialB,.stageControls #edTutorialB{background:rgba(255,255,255,.92);border:1px solid transparent;color:#15181D;text-decoration:none;font-size:13px;padding:6px 12px;min-height:34px}
 .stageControls #regTutorialB:hover,.stageControls #edTutorialB:hover{background:var(--red);border-color:var(--red);color:#fff;text-decoration:none}
+/* Todos los botones Tutorial: rojos como acción principal (sobre el vídeo y en cada pestaña) */
+#regTutorialB,#edTutorialB,#regTutorial,#edTutorial,#liveTut,#convTut,#fusTut,#pintTutL,.stageControls #regTutorialB,.stageControls #edTutorialB{background:var(--red)!important;border-color:var(--red)!important;color:#fff!important;font-weight:700;text-decoration:none!important;letter-spacing:.06em;text-transform:uppercase;font-size:12px;min-height:34px;padding:6px 12px}
+#regTutorialB:hover,#edTutorialB:hover,#regTutorial:hover,#edTutorial:hover,#liveTut:hover,#convTut:hover,#fusTut:hover,#pintTutL:hover,.stageControls #regTutorialB:hover,.stageControls #edTutorialB:hover{background:var(--red-2)!important;border-color:var(--red-2)!important;color:#fff!important;text-decoration:none!important}
 #edUseVisor,#regUseEditor{color:#15181D}
 #edClearAdded{background:none;border-color:transparent;color:var(--muted);font-size:12px;text-decoration:underline;text-underline-offset:4px;text-decoration-color:var(--line)}
 #edClearAdded:hover{color:var(--red);filter:none}
@@ -1520,6 +1523,10 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
 /* Escritorio: la columna derecha queda fija bajo la cabecera y llega hasta el borde inferior de la ventana */
 @media (min-width:1251px){
   html:not(.acfc-imm) #tabVisor main>aside,html:not(.acfc-imm) #tabEditor:not(:fullscreen) .edgrid>aside{position:sticky;top:96px;align-self:start;max-height:calc(100vh - 108px);min-height:420px}
+}
+/* Móvil: solo quedan las pestañas Editor básico y Registro con vídeo */
+@media (max-width:640px){
+  header .tab#tabBtnLive,header .tab#tabBtnConv,header .tab#tabBtnFus{display:none!important}
 }
 </style>
 </head>
@@ -10695,15 +10702,28 @@ html.acfc-imm .stageControls .acfcZm{display:none!important}
   btn.hidden=false;
   window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();ev=e;});
   window.addEventListener("appinstalled",function(){btn.hidden=true;ev=null;});
+  /* En ordenador descarga un acceso directo (.url) que se arrastra al escritorio */
+  function descargarAcceso(){
+    var url=/^https?:$/.test(location.protocol)?base:location.href;
+    var a=document.createElement("a");
+    a.href=URL.createObjectURL(new Blob(["[InternetShortcut]\r\nURL="+url+"\r\n"],{type:"application/internet-shortcut"}));
+    a.download="Videoanálisis ACFC.url";
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function(){URL.revokeObjectURL(a.href);},1000);
+  }
   function ayuda(){
-    var h;
-    if(ios) h="<p>En iPhone o iPad:</p><ol><li>Abre esta página en <b>Safari</b>.</li><li>Pulsa el botón <b>Compartir</b> (cuadrado con flecha).</li><li>Elige <b>Añadir a pantalla de inicio</b>.</li></ol>";
-    else if(/Android/.test(ua)) h="<p>En Android (Chrome):</p><ol><li>Abre el menú <b>⋮</b> del navegador.</li><li>Elige <b>Instalar aplicación</b> o <b>Añadir a la pantalla de inicio</b>.</li></ol>";
-    else h="<p>En el ordenador (Chrome o Edge):</p><ol><li>Pulsa el icono de instalar de la barra de direcciones, o el menú <b>⋮ / …</b></li><li>Elige <b>Instalar Videoanálisis</b> o <b>Guardar y compartir › Crear acceso directo</b>.</li></ol><p>Marca «Abrir como ventana» para usarla como una app.</p>";
-    txt.innerHTML=h; dlg.showModal();
+    /* Se muestran las tres opciones; la del dispositivo actual va primero */
+    var pasos={
+      ios:"<p>En iPhone o iPad:</p><ol><li>Abre esta página en <b>Safari</b>.</li><li>Pulsa el botón <b>Compartir</b> (cuadrado con flecha).</li><li>Elige <b>Añadir a pantalla de inicio</b>.</li></ol>",
+      android:"<p>En Android (Chrome):</p><ol><li>Abre el menú <b>⋮</b> del navegador.</li><li>Elige <b>Instalar aplicación</b> o <b>Añadir a la pantalla de inicio</b>.</li></ol>",
+      pc:"<p>En el ordenador (Chrome o Edge):</p><ol><li>Pulsa el icono de instalar de la barra de direcciones, o el menú <b>⋮ / …</b></li><li>Elige <b>Instalar Videoanálisis</b> o <b>Guardar y compartir › Crear acceso directo</b>.</li></ol><p>Marca «Abrir como ventana» para usarla como una app.</p>"
+    };
+    var orden=ios?["ios","android","pc"]:/Android/.test(ua)?["android","pc","ios"]:["pc","android","ios"];
+    txt.innerHTML=orden.map(function(k){return pasos[k];}).join(""); dlg.showModal();
   }
   btn.addEventListener("click",function(){
     if(ev){var e=ev; ev=null; e.prompt(); e.userChoice.then(function(c){if(c&&c.outcome==="accepted")btn.hidden=true;}).catch(function(){});}
+    else if(!ios&&!/Android/.test(ua)) descargarAcceso();
     else ayuda();
   });
   document.getElementById("instalarCerrar").addEventListener("click",function(){dlg.close();});
