@@ -1499,6 +1499,8 @@ header #vidSel option{color:#000;background:#fff}
 header #vidSel[hidden]{display:none}
 @media (max-width:640px){header #btnAddVids{flex:none;padding:7px 10px;font-size:10.5px;min-height:0}header #vidSel{max-width:40vw;font-size:11px}}
 @media (max-width:640px){header #btnInstalar{flex:none;padding:7px 10px;font-size:10.5px;min-height:0}}
+/* Móvil: «Instalar app» pasa a ser un icono cuadrado (↓); el texto sigue en el DOM para lectores de pantalla y en el título */
+@media (max-width:640px){header #btnInstalar{width:36px;height:36px;padding:0!important;margin:0;font-size:0!important;letter-spacing:0;display:inline-flex;align-items:center;justify-content:center}header #btnInstalar::before{content:"\2193";font-size:20px;font-weight:700;line-height:1;font-family:var(--f-body)}}
 /* «Limpiar proyecto» e «Instalar app» siempre pegados a la derecha de la cabecera (también si pasa a dos filas) */
 header .hdrRight{display:flex;align-items:center;gap:8px;margin-left:auto;flex:none}
 dialog#dlgInstalar{max-width:min(420px,94vw);border:1px solid var(--line);border-top:3px solid var(--ink);background:var(--panel);color:var(--ink);padding:18px 20px;font-family:var(--f-body)}
@@ -1562,7 +1564,7 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
 @media (max-width:640px){
   header .tab#tabBtnLive,header .tab#tabBtnConv,header .tab#tabBtnFus{display:none!important}
   /* Móvil: se ocultan «Limpiar proyecto», la estrella (versión gratuita) y la corona (versión premium); siguen en escritorio */
-  header #acfcClearProj,header #acfcFreeBtn,header #acfcLicBtn{display:none!important}
+  html header #acfcClearProj,html header #acfcFreeBtn.btn,html header #acfcLicBtn.btn{display:none!important}
 }
 </style>
 </head>
