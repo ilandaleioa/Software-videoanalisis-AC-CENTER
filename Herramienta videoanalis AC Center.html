@@ -5871,6 +5871,9 @@ window.renderHalfBands = function(b1,b2,mk,d){
     if(p==="tabLive"&&window.acfcLive) window.acfcLive.render();
     const vis=p==="tabVisor"; ["vidName","vidNote"].forEach(id=>$(id).hidden=!vis); $("vidSel").hidden=!vis||(window.__regVids||[]).length<2; });
   $("tabBtnEditor").click(); // el editor de vídeo es la pestaña inicial
+  // Enlaces desde la portada: index.html#editor | #visor | #live | #conv | #fus
+  const tabHash={editor:"tabBtnEditor",visor:"tabBtnVisor",live:"tabBtnLive",conv:"tabBtnConv",fus:"tabBtnFus"};
+  if(tabHash[location.hash.slice(1)]) $(tabHash[location.hash.slice(1)]).click();
 
   // ---------- carga ----------
   function msg(t){ $("edMsg").textContent=t; $("edEmpty").hidden=false; }
