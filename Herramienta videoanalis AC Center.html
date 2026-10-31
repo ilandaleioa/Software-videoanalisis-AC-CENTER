@@ -377,6 +377,10 @@ html.acfc-imm .acfcHdrLinks{display:none!important}
 header h1.acfcBrand{position:relative}
 /* zona invisible sobre el texto «FOOTBALL CENTER» del logo (la derecha de la imagen) */
 .acfcBrandSite{position:absolute;top:0;bottom:0;left:52%;width:48%;display:block;cursor:pointer}
+/* icono ↗ del logo: cuadro rojo más grande que tapa el icono original de la imagen */
+.acfcBrandSite::after{content:"↗";position:absolute;right:0;top:50%;transform:translateY(-50%);width:20px;height:26px;display:flex;align-items:center;justify-content:center;background:var(--red);color:#fff;font-family:var(--f-disp);font-size:17px;font-weight:700;line-height:1;pointer-events:none;transition:background .2s}
+header h1.acfcBrand:hover .acfcBrandSite::after{background:var(--red-2)}
+@media (max-width:640px){.acfcBrandSite::after{width:16px;height:20px;font-size:13px}}
 header .tabs{align-self:stretch;margin-left:6px}
 header .tab{display:flex;align-items:center;margin-bottom:-3px;padding:0 20px;font-size:17px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:rgba(255,255,255,.8);border-bottom-width:4px;background:#1e40af;transition:color .2s,background .2s}
 header .tab:hover{color:#fff;background:#2554d6}
@@ -1557,6 +1561,8 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
 /* Móvil: solo quedan las pestañas Editor básico y Registro con vídeo */
 @media (max-width:640px){
   header .tab#tabBtnLive,header .tab#tabBtnConv,header .tab#tabBtnFus{display:none!important}
+  /* Móvil: se ocultan «Limpiar proyecto», la estrella (versión gratuita) y la corona (versión premium); siguen en escritorio */
+  header #acfcClearProj,header #acfcFreeBtn,header #acfcLicBtn{display:none!important}
 }
 </style>
 </head>
