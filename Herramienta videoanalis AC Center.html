@@ -1084,21 +1084,36 @@ html.acfc-imm #tabBtnFus::after{content:"";display:block;width:20px;height:20px;
 #tabFus .fusTotal{font-size:13px;color:var(--ink);font-weight:700}
 #tabFus .fusList{list-style:none;margin:0;padding:0;display:grid;gap:10px}
 #tabFus .fusClip{border:1px solid var(--line);background:var(--bg);padding:10px;display:grid;gap:8px;min-width:0}
-#tabFus .fusClip.fusDel{display:none}
 #tabFus .fusHead{display:flex;gap:10px;align-items:center;flex-wrap:wrap;min-width:0}
 #tabFus .fusIdx{font-family:var(--f-disp);font-weight:700;color:var(--red);min-width:1.6em}
 #tabFus .fusName{font-weight:700;color:var(--ink);word-break:break-all;flex:1 1 180px;min-width:0}
 #tabFus .fusInfo{font-size:12px;color:var(--muted)}
 #tabFus .fusHead .fusMove{display:flex;gap:6px;margin-left:auto}
 #tabFus .fusClip video{width:100%;max-height:260px;background:#000}
-#tabFus .fusTrim{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px;color:var(--muted)}
-#tabFus .fusTrim label{display:flex;gap:6px;align-items:center}
-#tabFus .fusTrim input[type=number]{width:96px;font:inherit;font-size:13px;padding:5px 6px;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:0}
+/* Barra de tiempo del clip: tramo sombreado, marcas IN/OUT con etiqueta y cabezal de reproducción */
+#tabFus .fusTl{position:relative;height:38px;margin-top:14px;background:var(--panel);border:1px solid var(--line);cursor:pointer;user-select:none}
+#tabFus .fusSeg{position:absolute;top:0;bottom:0;background:var(--red);opacity:.5;pointer-events:none}
+#tabFus .fusMk{position:absolute;top:-8px;bottom:-8px;width:4px;margin-left:-2px;background:var(--ink);cursor:ew-resize;touch-action:none}
+#tabFus .fusMk::after{content:"";position:absolute;top:0;bottom:0;left:-9px;right:-9px}   /* zona de agarre más ancha */
+#tabFus .fusMk::before{content:attr(data-l);position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-size:10px;font-weight:700;letter-spacing:.06em;color:var(--ink);white-space:nowrap}
+#tabFus .fusMkOut{background:var(--red)}
+#tabFus .fusMkOut::before{color:var(--red)}
+#tabFus .fusHd{position:absolute;top:0;bottom:0;width:2px;margin-left:-1px;background:var(--ink);opacity:.45;pointer-events:none}
+/* Cajas de recorte: Inicio, Fin y Tramo, cada una con su etiqueta */
+#tabFus .fusTrim{display:flex;gap:10px;align-items:stretch;flex-wrap:wrap}
+#tabFus .fusBox{display:grid;gap:6px;align-content:start;border:1px solid var(--line);border-top:3px solid var(--ink);background:var(--panel);padding:8px 10px;min-width:0}
+#tabFus .fusBoxOut{border-top-color:var(--red)}
+#tabFus .fusBoxLen{background:var(--bg);align-content:center;justify-items:start}
+#tabFus .fusLbl{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+#tabFus .fusIn{display:flex;gap:6px;align-items:center;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+#tabFus .fusIn input[type=number]{width:96px;font:inherit;font-size:14px;font-weight:700;padding:5px 6px;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:0}
+#tabFus .fusLenVal{font-family:var(--f-disp);font-size:22px;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
+#tabFus .fusTrimBtns{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 #tabFus .fusBar{height:8px;background:var(--line);overflow:hidden}
 #tabFus .fusBar i{display:block;height:100%;width:0;background:var(--red);transition:width .2s}
 #tabFus .fusBar.indet i{width:30%!important;transition:none;animation:fusSlide 1.2s linear infinite}
 @keyframes fusSlide{from{transform:translateX(-100%)}to{transform:translateX(340%)}}
-#tabFus .fusResult video{width:100%;max-height:420px;background:#000}
+#tabFus #fusOut{width:100%;max-height:420px;background:#000}
 @media (max-width:640px){#tabFus{padding:10px 12px 16px}#tabFus .fusHead .fusMove{margin-left:0}}
 /* ===== fin fusiona vídeos ===== */
 
@@ -11031,8 +11046,19 @@ try{var v=localStorage.getItem(KEY);if(v==="botev"||v==="vid")set(v)}catch(e){}}
     }).then(function(buf){
       return inst.writeFile(IN,new Uint8Array(buf));
     }).then(function(){
-      // Altura de salida según la resolución elegida; la anchura se calcula y min(…,ih) evita ampliar vídeos más pequeños
-      return inst.exec(["-i",IN,"-vf","scale=-2:min("+q+"\\,ih)","-c:v","libx264","-preset","veryfast","-crf","23","-pix_fmt","yuv420p","-c:a","aac","-b:a","128k","-movflags","+faststart","-y",OUT]);
+      // Sonda: sin archivo de salida ffmpeg falla, pero deja en el log el códec de vídeo
+      var logs=[], onLog=function(e){ logs.push(e.message); };
+      inst.on("log",onLog);
+      return inst.exec(["-i",IN]).then(function(){ inst.off("log",onLog); },function(){ inst.off("log",onLog); }).then(function(){
+        var vcodec=((logs.join("\n").match(/Video: (\w+)/))||[])[1];
+        var common=["-c:a","aac","-b:a","128k","-movflags","+faststart","-y",OUT];
+        // Altura de salida según la resolución elegida; la anchura se calcula y min(…,ih) evita ampliar vídeos más pequeños
+        var reenc=["-i",IN,"-vf","scale=-2:min("+q+"\\,ih)","-c:v","libx264","-preset","veryfast","-crf","23","-pix_fmt","yuv420p"].concat(common);
+        if(vcodec!=="h264") return inst.exec(reenc);
+        // Ya es H.264: solo cambia el contenedor (segundos, sin perder calidad); si falla, se recodifica
+        msg("Vídeo H.264: solo se cambia el contenedor a MP4, sin recodificar.",false);
+        return inst.exec(["-i",IN,"-c:v","copy"].concat(common)).then(function(code){ return code===0?0:inst.exec(reenc); });
+      });
     }).then(function(code){
       if(code!==0) throw new Error("La conversión ha fallado (código "+code+"). Comprueba que el archivo no esté dañado.");
       return inst.readFile(OUT);
@@ -11129,17 +11155,38 @@ try{var v=localStorage.getItem(KEY);if(v==="botev"||v==="vid")set(v)}catch(e){}}
         '</span>'+
       '</div>'+
       '<video playsinline controls preload="metadata"></video>'+
+      '<div class="fusTl" data-act="seek" title="Pulsa en la barra para ir a ese punto">'+
+        '<i class="fusSeg"></i>'+
+        '<i class="fusMk fusMkIn" data-act="drag" data-w="ini" data-l="INICIO" title="Arrastra para cambiar el inicio"></i>'+
+        '<i class="fusMk fusMkOut" data-act="drag" data-w="fin" data-l="FIN" title="Arrastra para cambiar el fin"></i>'+
+        '<i class="fusHd"></i>'+
+      '</div>'+
       '<div class="fusTrim">'+
-        '<label>Inicio <input type="number" min="0" step="0.01" data-k="ini"> s</label>'+
-        '<button type="button" class="btn" data-act="setIn">Marcar inicio</button>'+
-        '<label>Fin <input type="number" min="0" step="0.01" data-k="fin"> s</label>'+
-        '<button type="button" class="btn" data-act="setOut">Marcar fin</button>'+
-        '<button type="button" class="btn" data-act="play">Ver tramo</button>'+
-        '<button type="button" class="btn" data-act="reset">Quitar recorte</button>'+
+        '<div class="fusBox fusBoxIn">'+
+          '<span class="fusLbl">Inicio (s)</span>'+
+          '<div class="fusIn"><input type="number" min="0" step="0.01" data-k="ini">'+
+          '<button type="button" class="btn" data-act="setIn">Marcar inicio</button></div>'+
+        '</div>'+
+        '<div class="fusBox fusBoxOut">'+
+          '<span class="fusLbl">Fin (s)</span>'+
+          '<div class="fusIn"><input type="number" min="0" step="0.01" data-k="fin">'+
+          '<button type="button" class="btn" data-act="setOut">Marcar fin</button></div>'+
+        '</div>'+
+        '<div class="fusBox fusBoxLen">'+
+          '<span class="fusLbl">Tramo a usar</span>'+
+          '<b class="fusLenVal">--:--</b>'+
+          '<div class="fusTrimBtns">'+
+            '<button type="button" class="btn" data-act="play">Ver tramo</button>'+
+            '<button type="button" class="btn" data-act="reset">Quitar recorte</button>'+
+          '</div>'+
+        '</div>'+
       '</div>';
     li.querySelector(".fusName").textContent=c.name;
     var v=li.querySelector("video");
     v.src=c.url;
+    v.addEventListener("timeupdate",function(){
+      if(c.dur>0) li.querySelector(".fusHd").style.left=(v.currentTime/c.dur*100)+"%";
+    });
     v.addEventListener("loadedmetadata",function(){
       c.dur=isFinite(v.duration)&&v.duration>0?v.duration:0;
       if(c.fin===0) c.fin=c.dur;     // 0 = hasta el final
@@ -11167,6 +11214,14 @@ try{var v=localStorage.getItem(KEY);if(v==="botev"||v==="vid")set(v)}catch(e){}}
     li.querySelector(".fusInfo").textContent=d>0
       ? "Duración del tramo: "+fmt(len)+" de "+fmt(d)
       : "Duración desconocida: se usará el vídeo completo";
+    // Barra de tiempo y caja «Tramo»
+    var seg=li.querySelector(".fusSeg"), mi=li.querySelector(".fusMkIn"), mo=li.querySelector(".fusMkOut");
+    if(d>0){
+      var a=c.ini/d*100, b=(c.fin||d)/d*100;
+      seg.style.left=a+"%"; seg.style.width=(b-a)+"%";
+      mi.style.left=a+"%"; mo.style.left=b+"%";
+    }
+    li.querySelector(".fusLenVal").textContent=d>0?fmt(len):"--:--";
     resetResult();
   }
 
@@ -11174,14 +11229,13 @@ try{var v=localStorage.getItem(KEY);if(v==="botev"||v==="vid")set(v)}catch(e){}}
     var list=$f("fusList");
     clips.forEach(function(c,i){
       c.el.querySelector(".fusIdx").textContent=(i+1)+".";
-      c.el.querySelector('[data-act="up"]').disabled=i===0||working;
-      c.el.querySelector('[data-act="down"]').disabled=i===clips.length-1||working;
-      c.el.querySelectorAll("button,input").forEach(function(x){ if(x.tagName==="INPUT"||x.getAttribute("data-act")!=="up"&&x.getAttribute("data-act")!=="down") x.disabled=working; });
+      c.el.querySelectorAll("button[data-act],input").forEach(function(x){ x.disabled=working; });
+      c.el.querySelector('[data-act="up"]').disabled=working||i===0;
+      c.el.querySelector('[data-act="down"]').disabled=working||i===clips.length-1;
     });
     var total=clips.reduce(function(a,c){ return a+(c.dur>0?(c.fin||c.dur)-c.ini:0); },0);
     $f("fusTotal").textContent=clips.length?"Total: "+clips.length+" clip"+(clips.length>1?"s":"")+" · "+fmt(total)+" de vídeo unido":"";
     $f("fusGo").disabled=!clips.length||working;
-    $f("fusDrop").hidden=false;
     list.hidden=!clips.length;
   }
 
@@ -11190,10 +11244,15 @@ try{var v=localStorage.getItem(KEY);if(v==="botev"||v==="vid")set(v)}catch(e){}}
   }
 
   $f("fusList").addEventListener("click",function(e){
-    var b=e.target.closest("button[data-act]"); if(!b||working) return;
+    var b=e.target.closest("[data-act]"); if(!b||working) return;
     var li=b.closest(".fusClip"); var i=clips.findIndex(function(c){ return c.el===li; }); if(i<0) return;
     var c=clips[i], v=li.querySelector("video");
     var act=b.getAttribute("data-act");
+    if(act==="drag") return;   // las asas se mueven con el arrastre (ver más abajo)
+    if(act==="seek"){
+      if(c.dur>0){ var r=b.getBoundingClientRect(); v.currentTime=Math.min(Math.max((e.clientX-r.left)/r.width,0),1)*c.dur; }
+      return;
+    }
     if(act==="up"&&i>0){ clips.splice(i-1,0,clips.splice(i,1)[0]); $f("fusList").insertBefore(li,li.previousElementSibling); }
     else if(act==="down"&&i<clips.length-1){ clips.splice(i+1,0,clips.splice(i,1)[0]); $f("fusList").insertBefore(li,li.nextElementSibling.nextElementSibling||null); }
     else if(act==="del"){ URL.revokeObjectURL(c.url); v.removeAttribute("src"); v.load(); li.remove(); clips.splice(i,1); }
@@ -11214,6 +11273,28 @@ try{var v=localStorage.getItem(KEY);if(v==="botev"||v==="vid")set(v)}catch(e){}}
     else setTrim(c,c.ini,e.target.value);
     refresh();
   });
+
+  // ---------- arrastre de las asas INICIO / FIN ----------
+  var drag=null;
+  $f("fusList").addEventListener("pointerdown",function(e){
+    var h=e.target.closest&&e.target.closest(".fusMk"); if(!h||working||e.button>0) return;
+    var li=h.closest(".fusClip"), c=clips.find(function(x){ return x.el===li; });
+    if(!c||!(c.dur>0)) return;
+    drag={ c:c, which:h.getAttribute("data-w"), tl:li.querySelector(".fusTl"), v:li.querySelector("video") };
+    e.preventDefault();
+  });
+  document.addEventListener("pointermove",function(e){
+    if(!drag) return;
+    var r=drag.tl.getBoundingClientRect(), c=drag.c;
+    var t=Math.min(Math.max((e.clientX-r.left)/r.width,0),1)*c.dur;
+    // El asa no puede pasar de la otra (mínimo 0,05 s de tramo)
+    if(drag.which==="ini") setTrim(c,Math.min(t,c.fin-0.05),c.fin);
+    else setTrim(c,c.ini,Math.max(t,c.ini+0.05));
+    drag.v.currentTime=drag.which==="ini"?c.ini:c.fin;   // muestra el fotograma del asa
+  });
+  function endDrag(){ if(!drag) return; drag=null; refresh(); }
+  document.addEventListener("pointerup",endDrag);
+  document.addEventListener("pointercancel",endDrag);
 
   // ---------- unión ----------
   // Comprueba si el archivo tiene pista de audio (ffmpeg lo informa en su registro)
