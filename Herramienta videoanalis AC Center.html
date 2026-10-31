@@ -1507,6 +1507,8 @@ html header .tab[aria-selected="true"],html header .tab[aria-selected="true"]:ho
 /* Botón Home (enlace a la portada): azul como el resto de pestañas de cabecera, siempre con texto visible */
 html header .tab.tabHome,html header .tab.tabHome:hover{background:#1e40af;color:#fff;border-bottom-color:transparent;text-decoration:none;font-size:13px}
 html header .tab.tabHome:hover{background:#2554d6}
+/* Cabecera: solo queda Home; las demás pestañas están en la portada. Se ocultan (no se borran) porque el JS las usa para saber qué pestaña está activa */
+html header .tab:not(.tabHome){display:none!important}
 /* Limpiar y Ocultar/Mostrar: mismo fondo, borde y texto en toda la herramienta */
 html #fltClear,html #pintClear,html #edClearAdded,html #delAllEv,
 html #regSrcToggle,html #evHideToggle,html #ajToggle,html #fltToggle,html #plListToggle,html #pintToggle,html #pintNumsToggle,html #pintStyleToggle,
