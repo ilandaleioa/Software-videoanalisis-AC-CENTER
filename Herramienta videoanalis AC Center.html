@@ -1609,6 +1609,12 @@ dialog#dlgBot input::placeholder{color:var(--muted);opacity:1}
 dialog#dlgBot .botSec{border-top-color:var(--line)}
 dialog#dlgBot .btn:not(.primary):not(.edGreen){background:var(--panel);color:var(--ink);border-color:var(--line)}
 dialog#dlgBot .btn:not(.primary):not(.edGreen):hover{background:var(--ink);border-color:var(--ink);color:var(--panel)}
+/* botones de la botonera con el mismo diseño que la ventana EVENTO: grandes, en dos columnas */
+dialog#dlgBot #botCats,dialog#dlgBot #botDets,dialog#dlgBot #botJugs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+dialog#dlgBot #botCats .catbtn,dialog#dlgBot #botDets .optbtn,dialog#dlgBot #botJugs .optbtn{min-height:52px;padding:6px 24px 6px 10px;font-size:16px;font-weight:700;line-height:1.15;display:flex;align-items:center;justify-content:center;text-align:center;border-width:2px;border-radius:2px}
+dialog#dlgBot #botCats>.catbtn:last-child:nth-child(odd),dialog#dlgBot #botDets>.optbtn:last-child:nth-child(odd),dialog#dlgBot #botJugs>.optbtn:last-child:nth-child(odd){grid-column:1/-1}
+dialog#dlgBot #botDets>.optbtn.nodet{grid-column:1/-1}
+dialog#dlgBot .botEmpty{grid-column:1/-1}
 </style>
 </head>
 <body>
