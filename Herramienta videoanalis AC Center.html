@@ -323,7 +323,7 @@ body.markBtnsHidden .hdlTime.markLbl{display:none!important}
 #vxPrev{width:100%;max-width:100%;display:block}
 #vxInfo{overflow-wrap:anywhere;line-height:1.45}
 #vxX{position:absolute;top:8px;right:8px;width:32px;height:32px;padding:0;line-height:1;font-size:18px;display:flex;align-items:center;justify-content:center}
-dialog#dlgBot{width:min(620px,94vw);max-height:92vh;overflow:auto}
+dialog#dlgBot{width:min(620px,94vw);height:calc(100vh - 24px);max-height:calc(100vh - 24px);overflow:auto}
 .botWrap{display:grid;gap:12px}
 .botSec{border-top:1px solid var(--line);padding-top:10px;display:grid;gap:8px}
 .botSec h3{margin:0;font-family:var(--f-disp);font-size:15px;text-transform:uppercase;letter-spacing:.3px}
@@ -6030,6 +6030,11 @@ window.renderHalfBands = function(b1,b2,mk,d){
       "cargar-botonera":()=>resaltaCarga("impBot")
     };
     if(ACCIONES_PORTADA[accionPortada]) ACCIONES_PORTADA[accionPortada]();
+    // Botonera embebida en la portada: solo se ve su ventana; al cerrarla, la portada cierra la suya
+    if(accionPortada==="botonera"&&window.parent!==window){
+      document.documentElement.classList.add("acfc-botonly");
+      document.addEventListener("close",e=>{ if(e.target.id==="dlgBot") parent.postMessage("acfc-tut-close","*"); },true);
+    }
     // «Cargar proyecto» de la portada: el archivo llega desde inicio.html y se carga con el mismo flujo que el botón de aquí
     try{
       const pend=JSON.parse(sessionStorage.getItem("acfcImpPendiente")||"null");
@@ -11756,6 +11761,9 @@ try{var v=localStorage.getItem(KEY);if(v==="botev"||v==="vid")set(v)}catch(e){}}
   html.acfc-tutonly body{visibility:hidden}
   html.acfc-tutonly :is(#tutDlg,#tutDlgR,#tutDlgL,#tutDlgC,#tutDlgF)[open]{visibility:visible!important;width:100vw!important;max-width:100vw!important;height:100vh!important;max-height:100vh!important;margin:0!important;border:0!important;padding:12px!important;box-sizing:border-box}
   html.acfc-tutonly :is(#tutDlg,#tutDlgR,#tutDlgL,#tutDlgC,#tutDlgF) .tutHead button{display:none}
+  /* Portada: «Botonera» abre solo la ventana de la botonera (con Guardar y Cargar botonera) dentro de la ventana de la portada */
+  html.acfc-botonly body{visibility:hidden}
+  html.acfc-botonly #dlgBot[open]{visibility:visible!important;width:100vw!important;max-width:100vw!important;height:100vh!important;max-height:100vh!important;margin:0!important;border:0!important;box-sizing:border-box;overflow:auto}
 </style>
 <script>
 // Portada: con #tut-* abre el tutorial indicado; si está dentro de la ventana de la portada, avisa al cerrarlo

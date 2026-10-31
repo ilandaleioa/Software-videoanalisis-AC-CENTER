@@ -206,14 +206,11 @@
 
   <section class="proyectos" aria-labelledby="proyTit">
     <h2 class="sec-title" id="proyTit">Proyectos y botoneras</h2>
-    <p class="proyHelp">Guarda y carga tus proyectos y botoneras. Cada botón abre la herramienta en el punto correspondiente.</p>
+    <p class="proyHelp">Carga un proyecto guardado o define la botonera de registro. La botonera se abre aquí, con sus opciones de guardar y cargar.</p>
     <div class="instBtns">
-      <a class="btn-ins ink" href="index.html#visor&amp;accion=guardar-proyecto" title="Descarga un archivo con eventos, categorías, jugadores, listas y marcas">Guardar proyecto</a>
       <label class="btn-ins" for="homeImp" title="Carga un proyecto guardado previamente y abre la herramienta con sus datos">Cargar proyecto</label>
       <input type="file" id="homeImp" accept=".json,application/json" hidden>
-      <a class="btn-ins ink" href="index.html#visor&amp;accion=guardar-botonera" title="Descarga solo las categorías, detalles y jugadores (la botonera)">Guardar botonera</a>
-      <a class="btn-ins" href="index.html#visor&amp;accion=cargar-botonera" title="Muestra dónde cargar una botonera guardada">Cargar botonera</a>
-      <a class="btn-ins primary" href="index.html#visor&amp;accion=botonera" title="Define las categorías, detalles y jugadores que aparecen como botones al registrar una acción">Botonera</a>
+      <button type="button" class="btn-ins primary" id="btnBotHome" title="Define las categorías, detalles y jugadores que aparecen como botones al registrar una acción">Botonera</button>
     </div>
   </section>
 
@@ -277,6 +274,11 @@
 
   /* Ventana del tutorial: el botón abre la herramienta con solo ese tutorial, sin entrar en sus opciones */
   var win=document.getElementById("tutWin"), frame=document.getElementById("tutWinF");
+  /* Botonera: se abre embebida aquí (con Guardar y Cargar botonera dentro), sin ir a los tipos de registro */
+  document.getElementById("btnBotHome").addEventListener("click",function(){
+    document.getElementById("tutWinT").textContent="Botonera";
+    frame.src=window.acfcHerramienta+"#visor&accion=botonera"; win.showModal();
+  });
   document.querySelectorAll("a.tut").forEach(function(a){
     a.addEventListener("click",function(e){
       e.preventDefault();
