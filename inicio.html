@@ -122,12 +122,11 @@
 <main>
   <section class="hero">
     <h1>Software de videoanálisis</h1>
-    <p>Este software de videoanálisis es creado por el Athletic Club Football Center.</p>
+    <p class="heroAutor">Realizado por <b>Ibon Landa</b> (responsable de analistas de cantera del Athletic Club / Docente AC Football Center)</p>
     <ul>
       <li><b>No requiere instalación:</b> funciona a través de la web.</li>
       <li><b>Compatible con ordenador, Android e iOS.</b></li>
     </ul>
-    <p class="heroAutor">Realizado por <b>Ibon Landa</b> (responsable de analistas de cantera del Athletic Club / Docente AC Football Center)</p>
   </section>
 
   <h2 class="sec-title">Herramientas</h2>
@@ -284,10 +283,25 @@
     else instrucciones("<p>Para instalarla en el móvil, abre esta misma página desde el teléfono:</p>"+PASOS_IOS+PASOS_AND);
   });
   document.getElementById("insCerrar").addEventListener("click",function(){ dlgIns.close(); });
-  /* Botón dentro del diálogo: instala directamente cuando el navegador lo permite (Chrome, Edge, Android) */
+  /* Acceso directo descargable (.url en Windows/Linux, .webloc en Mac) con la URL de la herramienta */
+  var URL_HERRAMIENTA="https://ilandaleioa.github.io/Software-videoanalisis-AC-CENTER/";
+  function descargarAcceso(){
+    var url=/^https?:$/.test(location.protocol)?location.origin+location.pathname:URL_HERRAMIENTA;
+    var mac=/Mac/.test(navigator.platform||"")||/Macintosh/.test(ua);
+    var nombre=mac?"AC Center - Videoanalisis.webloc":"AC Center - Videoanalisis.url";
+    var contenido=mac
+      ? '<?xml version="1.0" encoding="UTF-8"?>\n<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">\n<plist version="1.0"><dict><key>URL</key><string>'+url+'</string></dict></plist>\n'
+      : "[InternetShortcut]\r\nURL="+url+"\r\n";
+    var blob=new Blob([contenido],{type:"application/octet-stream"});
+    var enlace=document.createElement("a");
+    enlace.href=URL.createObjectURL(blob); enlace.download=nombre;
+    document.body.appendChild(enlace); enlace.click(); enlace.remove();
+    setTimeout(function(){ URL.revokeObjectURL(enlace.href); },1000);
+  }
+  /* Botón dentro del diálogo: instala con el navegador si lo permite (Chrome, Edge, Android); si no, descarga el acceso directo al escritorio */
   insNativo.addEventListener("click",function(){
     if(ev){ dlgIns.close(); lanzar(); }
-    else insNota.textContent="Tu navegador todavía no permite instalarla con un clic. Sigue los pasos de arriba.";
+    else { descargarAcceso(); insNota.textContent="Se ha descargado el acceso directo. Ábrelo desde tu carpeta de descargas o muévelo al escritorio."; }
   });
   if(!standalone){ bPc.hidden=movil; bMov.hidden=false; }
   /* Detalle de cada herramienta: ventana con su descripción, sin entrar en la herramienta */
