@@ -51,6 +51,8 @@
   .card span.desc{font-size:13px;color:var(--muted);line-height:1.35}
   .tut{display:block;margin:0 20px 18px;padding:7px 10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font-family:var(--f-disp);font-weight:700;text-transform:uppercase;letter-spacing:.6px;font-size:13px;text-align:center;text-decoration:none}
   .tut:hover{border-color:var(--red);color:var(--red)}
+  .tut.det{margin-bottom:8px}
+  .tut.det:hover{border-color:var(--red);color:var(--red)}
 
   /* ===== Curso ===== */
   .curso{margin-top:32px;display:flex;align-items:center;gap:18px;padding:20px;background:var(--panel);border:1px solid var(--line);border-left:6px solid var(--red);text-decoration:none;color:var(--ink)}
@@ -63,6 +65,26 @@
   .curso em{display:block;font-style:normal;color:var(--muted);font-size:14px;margin-top:4px}
   .curso .go{font-family:var(--f-disp);font-weight:700;text-transform:uppercase;font-size:14px;letter-spacing:.6px;color:var(--red);white-space:nowrap}
 
+  /* ===== Ventana del tutorial y botones de instalar ===== */
+  .tutWin{width:min(1000px,96vw);height:min(720px,88vh);max-width:96vw;max-height:88vh;padding:0;margin:auto;border:1px solid var(--line);border-top:3px solid var(--red);background:var(--panel);color:var(--ink)}
+  .tutWin::backdrop{background:rgba(21,24,29,.7)}
+  .tutWinHd{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 12px;border-bottom:1px solid var(--line)}
+  .tutWinHd b{font-family:var(--f-disp);font-weight:700;text-transform:uppercase;letter-spacing:.6px;font-size:14px}
+  .tutWinX,.btn-ins{font-family:var(--f-disp);font-weight:700;text-transform:uppercase;letter-spacing:.6px;font-size:13px;padding:8px 14px;border:1px solid var(--ink);background:var(--panel);color:var(--ink);cursor:pointer;border-radius:0}
+  .tutWinX:hover,.btn-ins:hover{border-color:var(--red);color:var(--red)}
+  .tutWin iframe{display:block;width:100%;height:calc(100% - 44px);border:0;background:var(--bg)}
+  .instalar{margin:0 0 32px}
+  .instBtns{display:flex;gap:10px;flex-wrap:wrap}
+  .btn-ins.primary{background:var(--red);border-color:var(--red);color:#fff}
+  .btn-ins.primary:hover{background:var(--red-2);border-color:var(--red-2);color:#fff}
+  .insTxt{font-size:15px;line-height:1.45}
+  .insTxt ol,.insTxt ul{padding-left:20px}
+  .insTxt li{margin:6px 0}
+  .insTxt p{margin:0 0 8px}
+  .insCerrar{margin-top:14px;text-align:right}
+  .dlgIns{width:min(520px,94vw);padding:18px;border:1px solid var(--line);border-top:3px solid var(--red);background:var(--panel);color:var(--ink)}
+  .dlgIns::backdrop{background:rgba(21,24,29,.6)}
+  @media (max-width:640px){.tutWin{width:100vw;max-width:100vw;height:100vh;max-height:100vh;border:0}}
   footer{padding:18px 16px;text-align:center;font-size:12px;color:var(--muted);border-top:1px solid var(--line)}
   footer a{color:var(--muted)}
 
@@ -81,6 +103,9 @@
     .curso .go{width:100%;text-align:right}
   }
 </style>
+<link rel="apple-touch-icon" href="https://acfootballcenter.eus/wp-content/uploads/2023/05/cropped-ACFC-180x180.webp">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="AC Center">
 </head>
 <body>
 
@@ -93,7 +118,8 @@
 <main>
   <section class="hero">
     <h1>Software de videoanálisis</h1>
-    <p>Registra acciones, corta clips y prepara tus vídeos en un solo lugar.</p>
+    <p>Realizado por Ivonne Landa (responsable de analistas de cantera del Athletic Club y técnico de desarrollo tecnológico)</p>
+    <button type="button" class="btn-ins" id="btnDetalles" aria-haspopup="dialog">Más detalles</button>
   </section>
 
   <h2 class="sec-title">Herramientas</h2>
@@ -105,6 +131,7 @@
         <h2>Editor básico</h2>
         <span class="desc">Sube vídeos, corta, nombra eventos y descarga.</span>
       </a>
+      <button type="button" class="tut det" data-det="editor">Detalle</button>
       <a class="tut" href="index.html#tut-editor">▶ Tutorial</a>
     </div>
 
@@ -114,6 +141,7 @@
         <h2>Registro con vídeo</h2>
         <span class="desc">Marca acciones mientras reproduces el partido.</span>
       </a>
+      <button type="button" class="tut det" data-det="visor">Detalle</button>
       <a class="tut" href="index.html#tut-visor">▶ Tutorial</a>
     </div>
 
@@ -123,6 +151,7 @@
         <h2>Registro sin vídeo</h2>
         <span class="desc">Registra acciones en directo sin tener el vídeo.</span>
       </a>
+      <button type="button" class="tut det" data-det="live">Detalle</button>
       <a class="tut" href="index.html#tut-live">▶ Tutorial</a>
     </div>
 
@@ -132,6 +161,7 @@
         <h2>Conversión de vídeos</h2>
         <span class="desc">Convierte cualquier vídeo a MP4 compatible.</span>
       </a>
+      <button type="button" class="tut det" data-det="conv">Detalle</button>
       <a class="tut" href="index.html#tut-conv">▶ Tutorial</a>
     </div>
 
@@ -141,10 +171,19 @@
         <h2>Fusionar vídeos</h2>
         <span class="desc">Une, recorta y ordena varios vídeos.</span>
       </a>
+      <button type="button" class="tut det" data-det="fus">Detalle</button>
       <a class="tut" href="index.html#tut-fus">▶ Tutorial</a>
     </div>
 
   </nav>
+
+  <section class="instalar" aria-labelledby="instTit">
+    <h2 class="sec-title" id="instTit">Instalar</h2>
+    <div class="instBtns">
+      <button type="button" class="btn-ins primary" id="btnInsPc">Instalar en el ordenador</button>
+      <button type="button" class="btn-ins" id="btnInsMov">Instalar en el móvil</button>
+    </div>
+  </section>
 
   <a class="curso" href="https://acfootballcenter.eus/ia-aplicada-gestion-deportiva/?utm_source=lezama-talks&amp;utm_medium=herramienta-videoanalisis&amp;utm_campaign=promo-cursos&amp;utm_content=home" target="_blank" rel="noopener">
     <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11.2V16c0 1.2 2.7 3 6 3s6-1.8 6-3v-4.8"/><path d="M22 9v5"/></svg></span>
@@ -156,6 +195,35 @@
     <span class="go">Más información →</span>
   </a>
 </main>
+
+<dialog class="tutWin" id="tutWin" aria-labelledby="tutWinT">
+  <div class="tutWinHd"><b id="tutWinT">Tutorial</b><button type="button" class="tutWinX" id="tutWinX">✕ Cerrar</button></div>
+  <iframe id="tutWinF" title="Tutorial"></iframe>
+</dialog>
+
+<dialog class="dlgIns" id="dlgDetalle" aria-labelledby="detaTit">
+  <h2 class="sec-title" id="detaTit"></h2>
+  <div class="insTxt"><p id="detaTxt"></p></div>
+  <div class="insCerrar"><button type="button" class="btn-ins primary" id="detaCerrar">Entendido</button></div>
+</dialog>
+
+<dialog class="dlgIns" id="dlgDet" aria-labelledby="detTit">
+  <h2 class="sec-title" id="detTit">Software de videoanálisis</h2>
+  <div class="insTxt">
+    <p>Este software de videoanálisis es creado por el Athletic Club Football Center.</p>
+    <ul>
+      <li><b>No requiere instalación:</b> funciona a través de la web.</li>
+      <li><b>Compatible con ordenador, Android e iOS.</b></li>
+    </ul>
+  </div>
+  <div class="insCerrar"><button type="button" class="btn-ins primary" id="detCerrar">Entendido</button></div>
+</dialog>
+
+<dialog class="dlgIns" id="dlgIns" aria-labelledby="insTit">
+  <h2 class="sec-title" id="insTit">Cómo instalarla</h2>
+  <div class="insTxt" id="insTxt"></div>
+  <div class="insCerrar"><button type="button" class="btn-ins primary" id="insCerrar">Entendido</button></div>
+</dialog>
 
 <footer>
   Athletic Club Football Center · Software de videoanálisis
@@ -170,6 +238,74 @@
       a.href = tool + a.getAttribute("href").slice("index.html".length);
     });
   })();
+
+  /* Ventana del tutorial: el botón abre la herramienta con solo ese tutorial, sin entrar en sus opciones */
+  var win=document.getElementById("tutWin"), frame=document.getElementById("tutWinF");
+  document.querySelectorAll("a.tut").forEach(function(a){
+    a.addEventListener("click",function(e){
+      e.preventDefault();
+      document.getElementById("tutWinT").textContent=a.closest(".card").querySelector("h2").textContent;
+      frame.src=a.href; win.showModal();
+    });
+  });
+  document.getElementById("tutWinX").onclick=function(){ win.close(); };
+  win.addEventListener("click",function(e){ if(e.target===win) win.close(); });
+  win.addEventListener("close",function(){ frame.src="about:blank"; });
+  window.addEventListener("message",function(e){ if(e.source===frame.contentWindow && e.data==="acfc-tut-close") win.close(); });
+
+  /* Instalar: en Chrome, Edge y Android se usa la instalación nativa con un clic; en Safari y el resto se muestran los pasos */
+  var ev=null, ua=navigator.userAgent||"";
+  var standalone=(window.matchMedia&&matchMedia("(display-mode: standalone)").matches)||navigator.standalone===true;
+  var ios=/iPad|iPhone|iPod/.test(ua)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+  var android=/Android/.test(ua), movil=ios||android;
+  var dlgIns=document.getElementById("dlgIns"), insTxt=document.getElementById("insTxt");
+  var bPc=document.getElementById("btnInsPc"), bMov=document.getElementById("btnInsMov");
+  if(standalone){ bPc.hidden=true; bMov.hidden=true; }
+  try{
+    if(/^https?:$/.test(location.protocol)){
+      var base=location.origin+location.pathname;
+      var m={name:"AC Center · Videoanálisis",short_name:"AC Center",start_url:base,scope:base.replace(/[^\/]*$/,""),id:base,display:"standalone",background_color:"#15181D",theme_color:"#15181D",lang:"es",
+        icons:[{src:"https://acfootballcenter.eus/wp-content/uploads/2023/05/cropped-ACFC-192x192.webp",sizes:"192x192",type:"image/webp",purpose:"any"}]};
+      var l=document.createElement("link"); l.rel="manifest";
+      l.href=URL.createObjectURL(new Blob([JSON.stringify(m)],{type:"application/manifest+json"}));
+      document.head.appendChild(l);
+    }
+  }catch(e){}
+  window.addEventListener("beforeinstallprompt",function(e){ e.preventDefault(); ev=e; });
+  window.addEventListener("appinstalled",function(){ ev=null; bPc.hidden=true; bMov.hidden=true; });
+  function instrucciones(html){ insTxt.innerHTML=html; dlgIns.showModal(); }
+  function lanzar(){ var e=ev; ev=null; e.prompt(); e.userChoice.catch(function(){}); }
+  var PASOS_PC="<p>En el ordenador:</p><ul><li><b>Chrome o Edge:</b> pulsa el icono <b>Instalar</b> de la barra de direcciones (o ⋮ › Guardar y compartir › Instalar página como aplicación) y confirma. Suele crear el icono en el escritorio.</li><li><b>Safari (Mac):</b> menú Archivo › <b>Añadir al Dock</b>.</li></ul>";
+  var PASOS_IOS="<p>En iPhone o iPad (Safari):</p><ol><li>Abre esta página en <b>Safari</b>. Chrome en iOS no permite instalarla.</li><li>Pulsa <b>Compartir</b> (cuadrado con flecha, en la barra inferior).</li><li>Baja y elige <b>Añadir a la pantalla de inicio</b>.</li><li>Pulsa <b>Añadir</b>. El icono de AC Center aparecerá en tu pantalla de inicio.</li></ol>";
+  var PASOS_AND="<p>En Android (Chrome):</p><ol><li>Pulsa el menú <b>⋮</b> del navegador.</li><li>Elige <b>Instalar aplicación</b> o <b>Añadir a la pantalla de inicio</b>.</li><li>Confirma con <b>Instalar</b>.</li></ol>";
+  bPc.addEventListener("click",function(){ if(ev) lanzar(); else instrucciones(PASOS_PC); });
+  bMov.addEventListener("click",function(){
+    if(ev) lanzar();
+    else if(ios) instrucciones(PASOS_IOS);
+    else if(android) instrucciones(PASOS_AND);
+    else instrucciones("<p>Para instalarla en el móvil, abre esta misma página desde el teléfono:</p>"+PASOS_IOS+PASOS_AND);
+  });
+  document.getElementById("insCerrar").addEventListener("click",function(){ dlgIns.close(); });
+  if(!standalone){ bPc.hidden=movil; bMov.hidden=false; }
+  document.getElementById("btnDetalles").addEventListener("click",function(){ document.getElementById("dlgDet").showModal(); });
+  document.getElementById("detCerrar").addEventListener("click",function(){ document.getElementById("dlgDet").close(); });
+  /* Detalle de cada herramienta: ventana con su descripción, sin entrar en la herramienta */
+  var DETALLES={
+    editor:"Recorta fragmentos de uno o varios vídeos con una botonera sencilla y personalizable. Las acciones registradas se pueden exportar en formato MP4.",
+    visor:"Videoanálisis completo con una botonera totalmente personalizable para registrar acciones mientras reproduces el partido. Organiza los eventos en listas de reproducción, dibuja sobre el vídeo (pintado de acciones) y descarga el resultado.",
+    live:"Registra los eventos en directo aunque todavía no tengas el vídeo del partido. Cuando lo tengas, sincronízalo con los eventos ya registrados.",
+    conv:"Sube vídeos de cualquier formato, conviértelos a MP4 y expórtalos en la calidad y el peso que necesites.",
+    fus:"Une varios clips ya recortados en un único vídeo, en el orden que elijas."
+  };
+  var dlgDetalle=document.getElementById("dlgDetalle");
+  document.querySelectorAll("button.det").forEach(function(b){
+    b.addEventListener("click",function(){
+      document.getElementById("detaTit").textContent=b.closest(".card").querySelector("h2").textContent;
+      document.getElementById("detaTxt").textContent=DETALLES[b.dataset.det];
+      dlgDetalle.showModal();
+    });
+  });
+  document.getElementById("detaCerrar").addEventListener("click",function(){ dlgDetalle.close(); });
 </script>
 </body>
 </html>
