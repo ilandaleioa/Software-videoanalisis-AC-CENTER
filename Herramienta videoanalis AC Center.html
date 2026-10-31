@@ -71,7 +71,7 @@ html.acfc-imm .stageControls #regTlFlt select{display:none}
 @media (max-width:640px){#tabEditor #edStage:not(:fullscreen) .stageControls #edTlFlt{grid-column:1/-1;order:0}#tabEditor #edStage:not(:fullscreen) .stageControls #edTlFlt:not([style*="none"]){display:flex}#tabEditor #edStage:not(:fullscreen) .stageControls #edTlFlt select{flex:1;min-width:0;border:1px solid var(--line);background:var(--panel);color:var(--ink)}}
 html.acfc-imm .stageControls #edTlFlt select{display:none}
 .stageTL{position:absolute;top:8px;left:8px;z-index:4;display:flex;gap:6px}
-.stageTL .btn{background:rgba(0,0,0,.65);color:#fff;border:0;border-radius:0;padding:6px 10px;min-height:0;font-size:14px;line-height:1.2;cursor:pointer}
+.stageTL .btn{background:rgba(0,0,0,.65);color:#fff;border:0;border-radius:0;padding:10px 16px;min-height:44px;font-size:18px;line-height:1.2;cursor:pointer}
 .stageTL .btn:hover,.stageTL .btn.on{background:var(--red);color:#fff}
 .stageTL #vFull .lbl,.stageTL #edFull .lbl{display:none}
 @media (max-width:640px){.stageTL .pipBtn{display:none}}
@@ -1508,7 +1508,7 @@ html header .tab:not([aria-selected="true"]){background:rgba(255,255,255,.06);co
 html header .tab:not([aria-selected="true"]):hover{background:rgba(255,255,255,.14);color:#fff}
 html header .tab[aria-selected="true"],html header .tab[aria-selected="true"]:hover{background:#fff;color:#14171c;border-bottom-color:var(--red);box-shadow:0 -3px 0 var(--red) inset}
 /* Botón Home (enlace a la portada): azul como el resto de pestañas de cabecera, siempre con texto visible */
-html header .tab.tabHome,html header .tab.tabHome:hover{background:#1e40af;color:#fff;border-bottom-color:transparent;text-decoration:none;font-size:13px}
+html header .tab.tabHome,html header .tab.tabHome:hover{background:#1e40af;color:#fff;border-bottom-color:transparent;text-decoration:none;font-size:17px;margin-left:28px;padding:0 24px}
 html header .tab.tabHome:hover{background:#2554d6}
 /* Cabecera: solo queda Home; las demás pestañas están en la portada. Se ocultan (no se borran) porque el JS las usa para saber qué pestaña está activa */
 html header .tab:not(.tabHome){display:none!important}
@@ -1569,10 +1569,6 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
 <header>
   <h1 class="acfcBrand"><a href="inicio.html" title="Ir a la portada"><img src="https://acfootballcenter.eus/wp-content/uploads/2022/11/acfc-logo-white.svg" alt="Athletic Club Football Center" width="118" height="32"></a><a class="acfcBrandSite" href="https://acfootballcenter.eus/?utm_source=lezama-talks&amp;utm_medium=herramienta-videoanalisis&amp;utm_campaign=promo-cursos&amp;utm_content=cabecera-logo" target="_blank" rel="noopener" title="Athletic Club Football Center" aria-label="Athletic Club Football Center (acfootballcenter.eus)"></a></h1><nav class="tabs" role="tablist"><a class="tab tabHome" href="inicio.html" title="Ir a la portada">Home</a><button class="tab" role="tab" id="tabBtnEditor" aria-label="Editor básico" title="Editor básico" aria-selected="false">Editor básico</button><button class="tab" role="tab" id="tabBtnVisor" aria-label="Registro con vídeo" title="Registro con vídeo" aria-selected="true">Registro con vídeo</button><button class="tab" role="tab" id="tabBtnLive" aria-label="Registro sin vídeo" title="Registro sin vídeo" aria-selected="false">Registro sin vídeo</button><button class="tab" role="tab" id="tabBtnConv" aria-label="Conversión vídeos" title="Convertir vídeos a MP4" aria-selected="false">Conversión vídeos</button><button class="tab" role="tab" id="tabBtnFus" aria-label="Fusiona vídeos" title="Fusiona, recorta y une varios vídeos" aria-selected="false">Fusiona vídeos</button></nav><span class="sub" id="vidName">cortes3.mp4</span><span class="sub" id="vidNote" style="font-size:12px"></span>
   <select id="vidSel" hidden aria-label="Vídeo abierto en el registro" title="Cambiar de vídeo"></select>
-  <!-- ACFC · formaciones en la cabecera (actualizar fechas cada edición) -->
-  <nav class="acfcHdrLinks" aria-label="Próximas formaciones">
-    <a href="https://acfootballcenter.eus/ia-aplicada-gestion-deportiva/?utm_source=lezama-talks&amp;utm_medium=herramienta-videoanalisis&amp;utm_campaign=promo-cursos&amp;utm_content=cabecera" target="_blank" rel="noopener"><b>Curso: IA aplicada a la gestión</b> · 3 nov</a>
-  </nav>
   <span class="sp"></span>
   <span class="hdrRight"><button type="button" class="btn" id="acfcClearProj" title="Borra de golpe todos los eventos y pintados de esta pestaña">Limpiar proyecto</button>
   <button type="button" class="btn" id="btnInstalar" hidden title="Instalar la app o crear un acceso directo">Instalar app</button></span>
