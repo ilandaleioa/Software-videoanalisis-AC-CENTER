@@ -940,7 +940,7 @@ html #regPintBtn svg{width:26px;height:26px}
   .pintField{grid-template-columns:84px 1fr}
   .pintBar{grid-template-columns:repeat(auto-fill,minmax(44px,1fr))}
 }
-/* ventana embebida del pintado: flota junto al reproductor al pulsar el botón de pintar */
+/* ventana embebida del pintado: se abre centrada en la pantalla al pulsar el botón de pintar */
 #pintWin{position:fixed;z-index:60;box-sizing:border-box;overflow-y:auto;background:var(--panel);border:1px solid var(--line);border-top:3px solid var(--ink);box-shadow:0 8px 24px rgba(0,0,0,.35)}
 #pintWin[hidden]{display:none}
 #pintWin .pintBlock{border-top:0;padding:10px 12px 12px}
@@ -4514,7 +4514,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     tr.addEventListener("pointermove",ev=>{ if(drag) seekTo(ev); });
     tr.addEventListener("pointerup",()=>{ drag=false; }); tr.addEventListener("pointercancel",()=>{ drag=false; }); }
   ["regPintBtn","regPintBtn2"].forEach(id=>{ const b=$(id); if(b) b.addEventListener("click",()=>$("vPintGo").click()); });
-  // Ventana embebida del pintado: el panel sale de la columna y flota junto al reproductor; al cerrarla vuelve a su sitio
+  // Ventana embebida del pintado: el panel sale de la columna y se abre centrada en la pantalla; al cerrarla vuelve a su sitio
   // El panel del pintado vive solo dentro de esta ventana: ya no aparece en la columna derecha del registro
   const pwBlk=$("pintBlock");
   const pwWin=document.createElement("div"), pwX=document.createElement("button");
@@ -4530,17 +4530,15 @@ window.renderHalfBands = function(b1,b2,mk,d){
     pwWin.style.left=l+"px"; pwWin.style.top=t+"px";
     pwWin.style.maxHeight=Math.max(120,innerHeight-t-8)+"px";
   }
-  let pwPos=null; // posición elegida por el usuario; se conserva al reabrir
-  function pintWinOpen(anchor){
-    const r=anchor&&anchor.getBoundingClientRect(), a=r&&r.width?r:v.getBoundingClientRect();
+  // Se abre siempre centrada en la pantalla
+  function pintWinOpen(){
     const small=innerWidth<=640, W=small?innerWidth-16:Math.min(440,innerWidth-16);
-    const top=Math.max(8,Math.min(a.bottom+6,innerHeight-160));
     pwWin.style.width=W+"px";
-    pwWin.style.left=(small?8:Math.max(8,Math.min(a.left,innerWidth-W-8)))+"px";
-    pwWin.style.top=top+"px";
-    pwWin.style.maxHeight=Math.max(120,innerHeight-top-8)+"px";
+    pwWin.style.maxHeight=(innerHeight-16)+"px";
     pwWin.hidden=false;
-    if(pwPos){ pwWin.style.left=pwPos.left+"px"; pwWin.style.top=pwPos.top+"px"; pwFit(); }
+    const H=Math.min(pwWin.offsetHeight,innerHeight-16);
+    pwWin.style.left=Math.max(8,(innerWidth-W)/2)+"px";
+    pwWin.style.top=Math.max(8,(innerHeight-H)/2)+"px";
   }
   pwX.addEventListener("click",pintWinClose);
   // Arrastre desde la cabecera «Pintado de acciones» (ratón, lápiz y dedo); los botones y controles no arrastran
@@ -4552,13 +4550,13 @@ window.renderHalfBands = function(b1,b2,mk,d){
     pwWin.addEventListener("pointermove",ev=>{
       if(!d||ev.pointerId!==d.id) return;
       pwWin.style.left=(ev.clientX-d.dx)+"px"; pwWin.style.top=(ev.clientY-d.dy)+"px"; pwFit(); });
-    const pwEnd=ev=>{ if(!d||ev.pointerId!==d.id) return; const r=pwWin.getBoundingClientRect(); pwPos={left:r.left,top:r.top}; d=null; };
+    const pwEnd=ev=>{ if(!d||ev.pointerId!==d.id) return; d=null; };
     pwWin.addEventListener("pointerup",pwEnd); pwWin.addEventListener("pointercancel",pwEnd);
     addEventListener("resize",()=>{ if(!pwWin.hidden) pwFit(); }); }
   { const b=$("vPintGo"); b.addEventListener("pointerdown",ev=>ev.stopPropagation());
     b.addEventListener("click",()=>{ v.pause();
       const body=$("pintBody"); if(body&&body.hidden&&$("pintToggle")) $("pintToggle").click();
-      pintWinOpen(b.hidden?$("regPintBtn"):b);
+      pintWinOpen();
       const t=pwBlk.querySelector('.pintTool[data-tool="pen"]'); if(t){ t.focus({preventScroll:true}); const m=$("pintMode"); if(m&&m.getAttribute("aria-pressed")!=="true") t.click(); } }); }
   // Zoom de las líneas de tiempo del registro (la de arriba y la de categorías van juntas)
   let vZoom=1, vZv=0, vPanTs=0; const VZMAX=64;
