@@ -48,6 +48,8 @@ button,select,input{font:inherit;color:inherit}
 main{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:18px;padding:18px 22px;max-width:none;margin:0}
 @media (max-width:1250px){main{grid-template-columns:1fr} aside{max-height:none}}
 .stage{position:relative;background:#000;border-radius:8px;overflow:hidden;aspect-ratio:16/9}
+/* nombre de la pestaña activa, en la fila de la cabecera (junto a HOME) */
+header .hdrOpt{font-family:var(--f-disp);font-size:17px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:#fff;white-space:nowrap;align-self:center;padding-left:6px}
 video{width:100%;height:100%;display:block;background:#000}
 .empty{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:#cfd6d1;text-align:center;padding:20px}
 .empty[hidden]{display:none}
@@ -243,6 +245,9 @@ html:not(.acfc-imm) #edCtl1.ctlAllHid,html:not(.acfc-imm) #edCtl2.ctlAllHid{disp
 #edCtlAllToggle{margin-left:auto}
 .headClock{position:absolute;top:-19px;transform:translate(-50%,-100%);font-family:var(--f-disp);font-size:16px;font-weight:700;line-height:1;color:var(--red);background:var(--panel);border:1px solid var(--red);padding:2px 6px;white-space:nowrap;pointer-events:none;z-index:7}
 .headClock:empty{display:none}
+.headClock .hcV{color:var(--muted)}
+#matchClock .hcV{color:var(--muted);font-size:15px;font-weight:600}
+.fsBar .fsMatch .hcV{color:#ccc;font-size:.8em;font-weight:600}
 .vPintGo{position:absolute;top:50%;transform:translate(10px,-50%);z-index:8;width:30px;height:30px;padding:0;display:flex;align-items:center;justify-content:center;font-size:16px;line-height:1;cursor:pointer;color:#fff;background:var(--red);border:1px solid var(--panel);border-radius:0;box-shadow:0 1px 4px rgba(0,0,0,.45)}
 .vPintGo:hover{background:var(--red-2,var(--red))}
 .vPintGo[hidden]{display:none}
@@ -377,6 +382,10 @@ html.acfc-imm .acfcHdrLinks{display:none!important}
 header h1.acfcBrand{position:relative}
 /* zona invisible sobre el texto «FOOTBALL CENTER» del logo (la derecha de la imagen) */
 .acfcBrandSite{position:absolute;top:0;bottom:0;left:52%;width:48%;display:block;cursor:pointer}
+/* icono ↗ del logo: cuadro rojo más grande que tapa el icono original de la imagen */
+.acfcBrandSite::after{content:"↗";position:absolute;right:0;top:50%;transform:translateY(-50%);width:20px;height:26px;display:flex;align-items:center;justify-content:center;background:var(--red);color:#fff;font-family:var(--f-disp);font-size:17px;font-weight:700;line-height:1;pointer-events:none;transition:background .2s}
+header h1.acfcBrand:hover .acfcBrandSite::after{background:var(--red-2)}
+@media (max-width:640px){.acfcBrandSite::after{width:16px;height:20px;font-size:13px}}
 header .tabs{align-self:stretch;margin-left:6px}
 header .tab{display:flex;align-items:center;margin-bottom:-3px;padding:0 20px;font-size:17px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:rgba(255,255,255,.8);border-bottom-width:4px;background:#1e40af;transition:color .2s,background .2s}
 header .tab:hover{color:#fff;background:#2554d6}
@@ -1459,6 +1468,12 @@ dialog#dlg.enEmergente{position:static!important;width:100%!important;max-height
   dialog#dlg #dlgClipInfo{margin:2px 0;padding:3px 6px;gap:4px 12px;font-size:12px}
   dialog#dlg #manInfo{font-size:12px;margin-top:3px}
 }
+/* botonera de la ventana EVENTO (equipo, categoría, detalle y jugador): mismo diseño, con botones grandes en dos columnas */
+#dlg #fCatBtns,#dlg #fEqBtns,#dlg #fDetBtns,#dlg #fJugBtns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+#dlg #fCatBtns .catbtn,#dlg #fEqBtns .optbtn,#dlg #fDetBtns .optbtn,#dlg #fJugBtns .optbtn{min-height:52px;padding:6px 24px 6px 10px;font-size:16px;font-weight:700;line-height:1.15;display:flex;align-items:center;justify-content:center;text-align:center;border-width:2px;border-radius:2px}
+#dlg #fCatBtns>.catbtn:last-child:nth-child(odd),#dlg #fDetBtns>.optbtn:last-child:nth-child(odd),#dlg #fJugBtns>.optbtn:last-child:nth-child(odd){grid-column:1/-1}
+#dlg #fDetBtns>.optbtn.nodet{grid-column:1/-1}
+#dlg #fEqBtns .optbtn[data-eq]:not(.active){background:var(--panel);border-color:var(--line);color:var(--ink)}
 /* botón Instalar app */
 #btnInstalar[hidden]{display:none!important}
 header #btnInstalar{align-self:center;background:transparent;color:#fff;border:1px solid rgba(255,255,255,.45);font-family:var(--f-disp);text-transform:uppercase;letter-spacing:.1em;white-space:nowrap}
@@ -1495,6 +1510,8 @@ header #vidSel option{color:#000;background:#fff}
 header #vidSel[hidden]{display:none}
 @media (max-width:640px){header #btnAddVids{flex:none;padding:7px 10px;font-size:10.5px;min-height:0}header #vidSel{max-width:40vw;font-size:11px}}
 @media (max-width:640px){header #btnInstalar{flex:none;padding:7px 10px;font-size:10.5px;min-height:0}}
+/* Móvil: «Instalar app» pasa a ser un icono cuadrado (↓); el texto sigue en el DOM para lectores de pantalla y en el título */
+@media (max-width:640px){header #btnInstalar{width:36px;height:36px;padding:0!important;margin:0;font-size:0!important;letter-spacing:0;display:inline-flex;align-items:center;justify-content:center}header #btnInstalar::before{content:"\2193";font-size:20px;font-weight:700;line-height:1;font-family:var(--f-body)}}
 /* «Limpiar proyecto» e «Instalar app» siempre pegados a la derecha de la cabecera (también si pasa a dos filas) */
 header .hdrRight{display:flex;align-items:center;gap:8px;margin-left:auto;flex:none}
 dialog#dlgInstalar{max-width:min(420px,94vw);border:1px solid var(--line);border-top:3px solid var(--ink);background:var(--panel);color:var(--ink);padding:18px 20px;font-family:var(--f-body)}
@@ -1557,6 +1574,8 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
 /* Móvil: solo quedan las pestañas Editor básico y Registro con vídeo */
 @media (max-width:640px){
   header .tab#tabBtnLive,header .tab#tabBtnConv,header .tab#tabBtnFus{display:none!important}
+  /* Móvil: se ocultan «Limpiar proyecto», la estrella (versión gratuita) y la corona (versión premium); siguen en escritorio */
+  html header #acfcClearProj,html header #acfcFreeBtn.btn,html header #acfcLicBtn.btn{display:none!important}
 }
 </style>
 </head>
@@ -1567,7 +1586,7 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
   <a class="acfcUtil__site" href="https://acfootballcenter.eus/?utm_source=lezama-talks&amp;utm_medium=herramienta-videoanalisis&amp;utm_campaign=promo-cursos&amp;utm_content=barra" target="_blank" rel="noopener">acfootballcenter.eus ↗</a>
 </div></div>
 <header>
-  <h1 class="acfcBrand"><a href="inicio.html" title="Ir a la portada"><img src="https://acfootballcenter.eus/wp-content/uploads/2022/11/acfc-logo-white.svg" alt="Athletic Club Football Center" width="118" height="32"></a><a class="acfcBrandSite" href="https://acfootballcenter.eus/?utm_source=lezama-talks&amp;utm_medium=herramienta-videoanalisis&amp;utm_campaign=promo-cursos&amp;utm_content=cabecera-logo" target="_blank" rel="noopener" title="Athletic Club Football Center" aria-label="Athletic Club Football Center (acfootballcenter.eus)"></a></h1><nav class="tabs" role="tablist"><a class="tab tabHome" href="inicio.html" title="Ir a la portada">Home</a><button class="tab" role="tab" id="tabBtnEditor" aria-label="Editor básico" title="Editor básico" aria-selected="false">Editor básico</button><button class="tab" role="tab" id="tabBtnVisor" aria-label="Registro con vídeo" title="Registro con vídeo" aria-selected="true">Registro con vídeo</button><button class="tab" role="tab" id="tabBtnLive" aria-label="Registro sin vídeo" title="Registro sin vídeo" aria-selected="false">Registro sin vídeo</button><button class="tab" role="tab" id="tabBtnConv" aria-label="Conversión vídeos" title="Convertir vídeos a MP4" aria-selected="false">Conversión vídeos</button><button class="tab" role="tab" id="tabBtnFus" aria-label="Fusiona vídeos" title="Fusiona, recorta y une varios vídeos" aria-selected="false">Fusiona vídeos</button></nav><span class="sub" id="vidName">cortes3.mp4</span><span class="sub" id="vidNote" style="font-size:12px"></span>
+  <h1 class="acfcBrand"><a href="inicio.html" title="Ir a la portada"><img src="https://acfootballcenter.eus/wp-content/uploads/2022/11/acfc-logo-white.svg" alt="Athletic Club Football Center" width="118" height="32"></a><a class="acfcBrandSite" href="https://acfootballcenter.eus/?utm_source=lezama-talks&amp;utm_medium=herramienta-videoanalisis&amp;utm_campaign=promo-cursos&amp;utm_content=cabecera-logo" target="_blank" rel="noopener" title="Athletic Club Football Center" aria-label="Athletic Club Football Center (acfootballcenter.eus)"></a></h1><nav class="tabs" role="tablist"><a class="tab tabHome" href="inicio.html" title="Ir a la portada">Home</a><button class="tab" role="tab" id="tabBtnEditor" aria-label="Editor básico" title="Editor básico" aria-selected="false">Editor básico</button><button class="tab" role="tab" id="tabBtnVisor" aria-label="Registro con vídeo" title="Registro con vídeo" aria-selected="true">Registro con vídeo</button><button class="tab" role="tab" id="tabBtnLive" aria-label="Registro sin vídeo" title="Registro sin vídeo" aria-selected="false">Registro sin vídeo</button><button class="tab" role="tab" id="tabBtnConv" aria-label="Conversión vídeos" title="Convertir vídeos a MP4" aria-selected="false">Conversión vídeos</button><button class="tab" role="tab" id="tabBtnFus" aria-label="Fusiona vídeos" title="Fusiona, recorta y une varios vídeos" aria-selected="false">Fusiona vídeos</button></nav><span class="hdrOpt" id="hdrOpt">Registro con vídeo</span><span class="sub" id="vidName">cortes3.mp4</span><span class="sub" id="vidNote" style="font-size:12px"></span>
   <select id="vidSel" hidden aria-label="Vídeo abierto en el registro" title="Cambiar de vídeo"></select>
   <span class="sp"></span>
   <span class="hdrRight"><button type="button" class="btn" id="acfcClearProj" title="Borra de golpe todos los eventos y pintados de esta pestaña">Limpiar proyecto</button>
@@ -1575,6 +1594,16 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
   <input type="file" id="file" accept="video/*" hidden>
   <input type="file" id="fileAdd" accept="video/*" multiple hidden>
 </header>
+<script>
+// nombre de la pestaña activa en la cabecera (sigue a aria-selected de las pestañas)
+(function(){
+  const opt=document.getElementById("hdrOpt");
+  const tabs=document.querySelectorAll('header .tab[role="tab"]');
+  const pick=()=>{ const s=[...tabs].find(t=>t.getAttribute("aria-selected")==="true"); if(opt&&s) opt.textContent=s.getAttribute("aria-label")||s.textContent.trim(); };
+  tabs.forEach(t=>new MutationObserver(pick).observe(t,{attributes:true,attributeFilter:["aria-selected"]}));
+  pick();
+})();
+</script>
 
 <div id="tabVisor">
 <main>
@@ -1613,7 +1642,7 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
         <button class="btn" id="vFwd5" title="Avanzar 5 segundos">+5 seg</button>
         <button class="btn" id="vFwd20" title="Avanzar 10 segundos">+10 seg</button>
         <button class="btn" id="vMute" title="Silenciar / activar sonido" aria-label="Silenciar / activar sonido">🔊<span class="lbl"> Silenciar</span></button>
-        <button class="btn" id="vFull" title="Pantalla completa (F)" aria-label="Pantalla completa">⛶<span class="lbl"> Pantalla completa</span></button>
+        <button class="btn" id="vFull" title="Pone el registro a pantalla completa (F)" aria-label="Pantalla completa">⛶<span class="lbl"> Pantalla completa</span></button>
         <button class="btn pipBtn" id="vPip" title="Abrir el reproductor en una ventana emergente flotante" aria-label="Ventana emergente">⧉<span class="lbl"> Ventana emergente</span></button>
         <button class="btn primary fsAB" id="vFsAuto" title="Registro automático en el instante actual">REGISTRO AUTO</button>
         <button class="btn primary fsAB" id="vFsManual" title="Registro manual: marca el inicio y el final del corte">REGISTRO MANUAL</button>
@@ -1784,6 +1813,33 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
           <button class="btn" id="bulkDel">✕ Borrar</button>
           <button class="btn" id="bulkClear">Cancelar</button>
         </span>
+      </div>
+    </div>
+    <div class="expBlock" id="expBlock" style="flex:none;display:grid;gap:8px;border-top:1px solid var(--line);padding:10px 14px 14px">
+      <div class="row" style="justify-content:space-between;align-items:center;margin:0">
+        <h2 style="margin:0">Exportación</h2>
+        <button class="btn acfcLink" id="expOptsToggle" title="Ocultar/mostrar las opciones de exportación">Ocultar</button>
+      </div>
+      <div id="expOptsA" style="display:contents">
+        <div class="row" style="flex-wrap:wrap">
+          <select id="vFmt" hidden></select>
+          <label class="row" style="gap:6px"><span style="font-size:13px;color:var(--muted)">Resolución</span>
+            <select id="vRes"><option value="1080">1080p</option><option value="720" selected>720p</option><option value="480">480p</option></select></label>
+          <label class="row" style="gap:6px" title="Menos fotogramas por segundo = exportación más rápida"><span style="font-size:13px;color:var(--muted)">Fotogramas</span>
+            <select id="vFps"><option value="0" selected>30 fps</option><option value="20">20 fps (más rápido)</option><option value="15">15 fps (aún más rápido)</option></select></label>
+        </div>
+        <div class="row">
+          <button class="btn edGreen" id="plExport" disabled title="Descarga en orden los clips añadidos, unidos en un solo vídeo">Descargar lista (1 vídeo)</button>
+          <button class="btn edGreen" id="plExportSep" disabled title="Descarga cada clip de la lista como un archivo de vídeo independiente">Descargar lista (vídeos separados)</button>
+          <button class="btn" id="plClear">Vaciar lista</button>
+        </div>
+        <div class="row" style="flex-wrap:nowrap">
+          <button class="btn edGreen" style="flex:1 1 0;white-space:nowrap;padding-left:6px;padding-right:6px" id="fltExport" disabled title="Descarga en orden los eventos que se ven ahora en el registro (según el filtro «Ver»), unidos en un solo vídeo">Descargar filtrados (1 vídeo)</button>
+          <button class="btn edGreen" style="flex:1 1 0;white-space:nowrap;padding-left:6px;padding-right:6px" id="fltExportSep" disabled title="Descarga cada evento que se ve ahora en el registro (según el filtro «Ver») como un archivo de vídeo independiente">Descargar filtrados (vídeos separados)</button>
+        </div>
+        <div class="row">
+          <button class="btn edGreen" id="expCsv">Exportar CSV</button>
+        </div>
       </div>
     </div>
     <div class="row" id="evSecHead" style="justify-content:space-between;align-items:center;margin:0;padding:10px 14px;border-top:1px solid var(--line)">
@@ -1974,33 +2030,6 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
           <strong style="font-family:var(--f-disp);text-transform:uppercase;letter-spacing:.04em">Listas</strong>
         </div>
         <div id="plOverview" style="display:grid;gap:6px;max-height:260px;overflow:auto"></div>
-      </div>
-    </div>
-    <div class="expBlock" id="expBlock" style="flex:none;display:grid;gap:8px;border-top:1px solid var(--line);padding:10px 14px 14px">
-      <div class="row" style="justify-content:space-between;align-items:center;margin:0">
-        <h2 style="margin:0">Exportación</h2>
-        <button class="btn acfcLink" id="expOptsToggle" title="Ocultar/mostrar las opciones de exportación">Ocultar</button>
-      </div>
-      <div id="expOptsA" style="display:contents">
-        <div class="row" style="flex-wrap:wrap">
-          <select id="vFmt" hidden></select>
-          <label class="row" style="gap:6px"><span style="font-size:13px;color:var(--muted)">Resolución</span>
-            <select id="vRes"><option value="1080">1080p</option><option value="720" selected>720p</option><option value="480">480p</option></select></label>
-          <label class="row" style="gap:6px" title="Menos fotogramas por segundo = exportación más rápida"><span style="font-size:13px;color:var(--muted)">Fotogramas</span>
-            <select id="vFps"><option value="0" selected>30 fps</option><option value="20">20 fps (más rápido)</option><option value="15">15 fps (aún más rápido)</option></select></label>
-        </div>
-        <div class="row">
-          <button class="btn edGreen" id="plExport" disabled title="Descarga en orden los clips añadidos, unidos en un solo vídeo">Descargar lista (1 vídeo)</button>
-          <button class="btn edGreen" id="plExportSep" disabled title="Descarga cada clip de la lista como un archivo de vídeo independiente">Descargar lista (vídeos separados)</button>
-          <button class="btn" id="plClear">Vaciar lista</button>
-        </div>
-        <div class="row" style="flex-wrap:nowrap">
-          <button class="btn edGreen" style="flex:1 1 0;white-space:nowrap;padding-left:6px;padding-right:6px" id="fltExport" disabled title="Descarga en orden los eventos que se ven ahora en el registro (según el filtro «Ver»), unidos en un solo vídeo">Descargar filtrados (1 vídeo)</button>
-          <button class="btn edGreen" style="flex:1 1 0;white-space:nowrap;padding-left:6px;padding-right:6px" id="fltExportSep" disabled title="Descarga cada evento que se ve ahora en el registro (según el filtro «Ver») como un archivo de vídeo independiente">Descargar filtrados (vídeos separados)</button>
-        </div>
-        <div class="row">
-          <button class="btn edGreen" id="expCsv">Exportar CSV</button>
-        </div>
       </div>
     </div>
     <div class="foot" id="expOptsB">
@@ -2220,13 +2249,6 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
       <div class="livePanel" id="liveCompPanel">
         <h2>Completar el evento seleccionado</h2>
         <div class="liveCur" id="liveCur">Aún no hay ningún evento.</div>
-        <div class="liveAdj" id="liveAdj" hidden>
-          <span class="liveLbl">Ajustar tiempo</span>
-          <button type="button" class="btn" data-d="-10">−10 s</button>
-          <button type="button" class="btn" data-d="-5">−5 s</button>
-          <button type="button" class="btn" data-d="-1">−1 s</button>
-          <button type="button" class="btn" data-d="1">+1 s</button>
-        </div>
         <div class="liveLbl">Detalle</div>
         <div class="catbtns" id="liveDets" role="group" aria-label="Detalle"></div>
         <div class="liveLbl" id="liveJugLbl" style="justify-self:start;padding-right:22px">Jugador</div>
@@ -2509,13 +2531,6 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
       <button type="button" class="btn primary" id="newJugAdd">Añadir</button>
     </div>
     <div id="newJugErr" style="font-size:12px;color:var(--red)"></div>
-    </div>
-    <div class="row" id="dlgAdj" role="group" aria-label="Ajustar tiempo" style="gap:6px;align-items:center;margin:6px 0">
-      <span style="font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em">Ajustar tiempo</span>
-      <button type="button" class="btn" data-d="-10">−10 s</button>
-      <button type="button" class="btn" data-d="-5">−5 s</button>
-      <button type="button" class="btn" data-d="-1">−1 s</button>
-      <button type="button" class="btn" data-d="1">+1 s</button>
     </div>
     <label for="fComent">Comentario</label>
     <input id="fComent" maxlength="200" placeholder="Comentario libre (opcional)">
@@ -2887,7 +2902,6 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
       <div class="tutPn">
         <h3>Completar el evento seleccionado</h3>
         <div class="tutCurE" data-k="cur">Aún no hay ningún evento.</div>
-        <div class="tutChips"><span class="tutLbl">Ajustar tiempo</span><span class="tutB" data-k="a-10">−10 s</span><span class="tutB" data-k="a-5">−5 s</span><span class="tutB" data-k="a-1">−1 s</span><span class="tutB" data-k="a+1">+1 s</span></div>
         <div class="tutChips"><span class="tutLbl">Detalle</span><span class="tutB tchip" data-k="det:Situación jugada" style="background:var(--c-tra)">Situación jugada</span><span class="tutB tchip" data-k="det:Balón parado" style="background:var(--c-tra)">Balón parado</span></div>
         <div class="tutChips"><span class="tutLbl">Jugador</span><span class="tutB tchip" data-k="jug:9 · Williams" style="background:var(--c-sal)">9 · Williams</span><span class="tutB tchip" data-k="jug:10 · Sancet" style="background:var(--c-sal)">10 · Sancet</span></div>
         <span class="tutInp" data-k="com">Comentario libre (opcional)</span>
@@ -3740,7 +3754,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     if(CAT_GOL(cat)){
       // Gol/Ocasión: primero se elige Situación jugada o Acción balón parado; solo se ven los detalles de ese grupo
       if(sel&&sel!=="__new__"&&!detGroup) detGroup=isParado(cat,sel)?"parado":"juego";
-      const row=el("span"); row.style.cssText="flex-basis:100%;display:flex;flex-wrap:wrap;gap:6px";
+      const row=el("span"); row.style.cssText="grid-column:1/-1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px";
       [["juego","Situación jugada"],["parado","Acción balón parado"]].forEach(([g,t])=>{
         const gb=el("button",{type:"button",className:"optbtn g-"+g+(detGroup===g?" active":""),textContent:t});
         gb.onclick=()=>{ detGroup=g; renderDetBtns(DETS[cat]||[],s.value); };
@@ -4482,6 +4496,12 @@ window.renderHalfBands = function(b1,b2,mk,d){
     if(halfMarks.p2==null||t<halfMarks.p2) return fmtHM(t-halfMarks.p1);
     return fmtHM(2700+(t-halfMarks.p2));
   }
+  // Marcador de partido: ⏱ minuto de partido · 🎬 tiempo de vídeo (mismo formato que el cabezal)
+  function setMatchClock(el,t,mc){
+    el.textContent=mc?("⏱ "+mc+" · "):"";
+    if(!mc) return;
+    const v=document.createElement("span"); v.className="hcV"; v.textContent="🎬 "+fmt(t).replace(/\.\d$/,""); el.appendChild(v);
+  }
   { const tr=$("vSeekTrack"); let drag=false;
     const seekTo=ev=>{ const d=isFinite(v.duration)?v.duration:0; if(!d) return; const r=$("vZoomWrap").getBoundingClientRect(); v.currentTime=Math.min(1,Math.max(0,(ev.clientX-r.left)/r.width))*d; };
     tr.addEventListener("pointerdown",ev=>{ drag=true; tr.setPointerCapture(ev.pointerId); seekTo(ev); });
@@ -4523,11 +4543,12 @@ window.renderHalfBands = function(b1,b2,mk,d){
     s.addEventListener("keydown",e=>e.stopPropagation()); }
   function tick(){
     const t=v.currentTime||0, d=isFinite(v.duration)?v.duration:0;
-    $("clock").textContent=fmt(t).replace(/\.\d$/,"")+" / "+fmt(d).replace(/\.\d$/,"");    const mc=matchClockText(t); $("matchClock").textContent=mc?("⏱ "+mc):"";
-    $("fsClock").textContent=$("clock").textContent; $("fsMatch").textContent=mc?("⏱ "+mc):"";
+    $("clock").textContent=fmt(t).replace(/\.\d$/,"")+" / "+fmt(d).replace(/\.\d$/,"");    const mc=matchClockText(t); setMatchClock($("matchClock"),t,mc);
+    $("fsClock").textContent=$("clock").textContent; setMatchClock($("fsMatch"),t,mc);
     if(!fsSeeking) $("fsSeek").value=d?Math.round(t/d*1000):0;
     if(vZoom>1&&d&&Date.now()-vPanTs>2500){ const f=t/d; if(f<vZv||f>vZv+1/vZoom){ vZv=f-0.5/vZoom; vApplyZoom(); } } // el zoom sigue al cabezal
-    const p=d?Math.min(100,t/d*100):0; $("prog").style.width=p+"%"; $("head").style.left=p+"%"; $("vSeekHead").style.left=p+"%"; $("vHeadClock").style.left=p+"%"; $("vHeadClock").textContent=mc?("⏱ "+mc+" · vídeo "+fmt(t).replace(/\.\d$/,"")):"";
+    const p=d?Math.min(100,t/d*100):0; $("prog").style.width=p+"%"; $("head").style.left=p+"%"; $("vSeekHead").style.left=p+"%"; $("vHeadClock").style.left=p+"%"; { const hc=$("vHeadClock"); hc.textContent=mc?"⏱ "+mc+" · ":""; // segundo valor (vídeo) en gris
+      if(mc){ const v=document.createElement("span"); v.className="hcV"; v.textContent="🎬 "+fmt(t).replace(/\.\d$/,""); hc.appendChild(v); } }
     { const b=$("vPintGo"); // icono de pintar junto al cabezal cuando está sobre un evento
       const fl=$("flt").value, over=d&&events.some(e=>{ if(!CATS[e.cat]||(fl&&fl!==e.cat)||!passEq(e)) return false; const c=clipOf(e); return t>=c.a&&t<=c.b; });
       b.hidden=!over; if(over){ b.style.left=p+"%"; b.classList.toggle("left",p>90); } }
@@ -4593,7 +4614,13 @@ window.renderHalfBands = function(b1,b2,mk,d){
     const url=URL.createObjectURL(f); (window.__fileByUrl=window.__fileByUrl||{})[url]=f; v.dataset.user="1"; v.dataset.url=url;
     showMsg("Abriendo "+f.name.replace(/[<>&"]/g,"")+"…");
     v.src=url; v.load(); $("vidName").textContent=f.name;
+    vidPut("visor",f);
     persist(f); }
+  // Vídeo subido: se guarda en IndexedDB para que no se pierda al ir a la portada (Home) y volver
+  function vidDb(){ return new Promise((res,rej)=>{ const q=indexedDB.open("acfcVideos",1); q.onupgradeneeded=()=>q.result.createObjectStore("v"); q.onsuccess=()=>res(q.result); q.onerror=()=>rej(q.error); }); }
+  async function vidPut(key,f){ try{ const d=await vidDb(); await new Promise((res,rej)=>{ const t=d.transaction("v","readwrite"); t.objectStore("v").put(f,key); t.oncomplete=res; t.onerror=()=>rej(t.error); }); d.close(); }catch(e){} }
+  async function vidGet(key){ try{ const d=await vidDb(); const f=await new Promise((res,rej)=>{ const r=d.transaction("v").objectStore("v").get(key); r.onsuccess=()=>res(r.result); r.onerror=()=>rej(r.error); }); d.close(); return f instanceof Blob?f:null; }catch(e){ return null; } }
+  window.acfcVidGet=vidGet;
   $("regUseEditor").onclick=()=>{
     const ev=$("edV"), u=ev&&(ev.currentSrc||ev.getAttribute("src"));
     if(!u){ showMsg("El editor no tiene vídeo cargado. Súbelo primero en la pestaña «Editor de vídeo»."); return; }
@@ -4618,6 +4645,10 @@ window.renderHalfBands = function(b1,b2,mk,d){
   const regVids=window.__regVids=[];
   function isVid(f){ return f&&(f.type.startsWith("video/")||/\.(mp4|m4v|mov|webm)$/i.test(f.name)); }
   function regVidAdd(f){ if(!regVids.some(x=>x.name===f.name&&x.size===f.size)) regVids.push(f); regVidSync(f); }
+  // al volver de la portada: se recupera el último vídeo subido en el registro con vídeo
+  vidGet("visor").then(f=>{ if(!f) return; regVidAdd(f); if(v.dataset.url) URL.revokeObjectURL(v.dataset.url);
+    const url=URL.createObjectURL(f); (window.__fileByUrl=window.__fileByUrl||{})[url]=f; v.dataset.user="1"; v.dataset.url=url;
+    v.src=url; v.load(); $("vidName").textContent=f.name; });
   function regVidSync(cur){ const S=$("vidSel"); S.textContent="";
     regVids.forEach((f,i)=>{ const o=document.createElement("option"); o.value=i; o.textContent=f.name; o.title=f.name; S.append(o); });
     const i=regVids.findIndex(x=>cur&&x.name===cur.name&&x.size===cur.size); if(i>=0) S.value=i;
@@ -4703,7 +4734,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   }
   window.toggleFullscreen=toggleFullscreen;
   document.addEventListener("fullscreenchange",()=>{ if(!document.fullscreenElement && screen.orientation && screen.orientation.unlock){ try{screen.orientation.unlock();}catch(e){} } });
-  $("vFull").onclick=()=>toggleFullscreen(stage);
+  $("vFull").onclick=()=>toggleFullscreen($("tabVisor")); // como el botón del pintado: pone todo el registro a pantalla completa
   // Ventana emergente (Picture-in-Picture): saca el vídeo a una ventana flotante que sigue visible sobre otras aplicaciones
   // Preferente: Document PiP (Chrome/Edge 116+), ventana grande y redimensionable con controles propios.
   // Respaldo: PiP nativo del vídeo (tamaño decidido por el navegador).
@@ -4920,20 +4951,6 @@ window.renderHalfBands = function(b1,b2,mk,d){
     if(!v.paused) v.pause();
     manUI();
   };
-  // Ajustar tiempo: con un evento abierto lo desplaza; en uno nuevo mueve el vídeo (el evento se guarda en el instante actual)
-  $("dlgAdj").querySelectorAll("button").forEach(b=>b.onclick=()=>{
-    const d=+b.dataset.d, ev=editId&&events.find(x=>x.id===editId);
-    if(ev){
-      const t=Math.max(0,+(timeOf(ev)+d).toFixed(2)), dt=t-timeOf(ev);
-      ev.fixed=t; ev.min=matchClockText(t)||fmt(t);
-      if(ev.clip){ ev.clip.a=Math.max(0,ev.clip.a+dt); ev.clip.b=Math.max(ev.clip.a+0.2,ev.clip.b+dt); (ev.clip.segs||[]).forEach(g=>{ g.s=Math.max(0,g.s+dt); g.e=Math.max(g.s+0.2,g.e+dt); }); }
-      $("fMin").value=ev.min; save(); refresh();
-    } else if(v.src){
-      v.currentTime=Math.max(0,Math.min(v.duration||Infinity,(v.currentTime||0)+d));
-      $("fMin").value=matchClockText(v.currentTime)||fmt(v.currentTime);
-    }
-    updateClipInfo();
-  });
   $("dlgSave").addEventListener("click",ev=>{
     if(!manualMode||editId) return;
     if(manA===null||manB===null){
@@ -5750,7 +5767,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   const liveCur=()=>live.events.find(e=>e.id===liveSel);
   function liveRenderCompl(){
     const e=liveCur(), box=$("liveCur"), dets=$("liveDets"), jugs=$("liveJugs"), com=$("liveComent");
-    dets.replaceChildren(); jugs.replaceChildren(); $("liveAdj").hidden=!e; com.disabled=!e;
+    dets.replaceChildren(); jugs.replaceChildren(); com.disabled=!e;
     if(!e){ box.textContent="Pulsa una categoría para registrar; aquí completarás el detalle y el jugador."; com.value=""; return; }
     const c=CATS[e.cat]||CATS.OTRO||{c:"#3D4852"};
     box.replaceChildren(el("b",{textContent:e.min+" "}),el("span",{className:"liveCat",textContent:e.cat,style:"background:"+c.c}),
@@ -5768,10 +5785,6 @@ window.renderHalfBands = function(b1,b2,mk,d){
   $("liveJugAdd").onclick=liveAddJug;
   $("liveJugName").onkeydown=k=>{ if(k.key==="Enter"){ k.preventDefault(); liveAddJug(); } };
   $("liveComent").oninput=()=>{ const e=liveCur(); if(!e) return; e.coment=$("liveComent").value.slice(0,200); liveSave(); };
-  $("liveAdj").querySelectorAll("button").forEach(b=>b.onclick=()=>{
-    const e=liveCur(); if(!e) return; const t=Math.max(0,+(e.t+(+b.dataset.d)).toFixed(2));
-    e.t=t; e.min=liveMinText(t); liveCommit();
-  });
   // Sincronización con el vídeo: cada marca del directo se empareja con la del vídeo; los eventos se colocan por interpolación.
   // Dentro del descanso (fin 1ª → inicio 2ª) se mantiene el ritmo real, porque el vídeo suele recortarlo.
   function liveAnchors(){
@@ -5911,7 +5924,9 @@ window.renderHalfBands = function(b1,b2,mk,d){
     $("liveVidName").textContent=f.name; $("liveVidPanel").hidden=false;
     liveVid.addEventListener("loadedmetadata",()=>{ liveRender(); $("liveVidPanel").scrollIntoView({block:"start",behavior:"smooth"}); },{once:true});
   }
-  $("liveFile").onchange=ev=>{ liveLoadVideo(ev.target.files[0]); ev.target.value=""; };
+  $("liveFile").onchange=ev=>{ const f=ev.target.files[0]; liveLoadVideo(f); vidPut("live",f); ev.target.value=""; };
+  // al volver de la portada: se recupera el vídeo del registro sin vídeo
+  window.acfcVidGet("live").then(f=>{ if(f&&!liveVid.getAttribute("src")) liveLoadVideo(f); });
   $("liveToVideo").onclick=()=>$("liveFile").click();
   $("liveVidChange").onclick=()=>$("liveFile").click();
   // «Ver solo vídeo»: oculta el registro y deja el vídeo con la lista de eventos sincronizados
@@ -6495,7 +6510,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     s.addEventListener("input",()=>{ const d=dur(); if(d){ V.currentTime=s.value/1000*d; tick(); } });
     s.addEventListener("keydown",e=>e.stopPropagation()); }
   function tick(){ const d=dur(), t=V.currentTime||0; $("edClock").textContent=fmt(t).replace(/\.\d$/,"")+" / "+fmt(d||0).replace(/\.\d$/,"");
-    const mc=matchClockText(t); $("edMatchClock").textContent=mc?("⏱ "+mc+" · vídeo "+fmt(t).replace(/\.\d$/,"")):"";
+    const mc=matchClockText(t); $("edMatchClock").textContent=mc?("⏱ "+mc+" · 🎬 "+fmt(t).replace(/\.\d$/,"")):"";
     $("edFsClock").textContent=fmt(t).replace(/\.\d$/,"")+" / "+fmt(d).replace(/\.\d$/,""); $("edFsMatch").textContent=mc?("⏱ "+mc):"";
     if(!edFsSeeking) $("edFsSeek").value=d?Math.round(t/d*1000):0;
     $("edHead").style.left=(d?Math.min(100,t/d*100):0)+"%";
@@ -7369,10 +7384,9 @@ window.tutPaint=(()=>{
      async run(W){ await runClock(W,12); await press(W,"eq:Mi equipo","Mi equipo"); S.eq="Mi equipo"; draw(); await W(300);
        await press(W,"cat:Gol","Gol"); const e=e1(); e.fresh=true; S.ev.push(e); S.sel=0; draw(); await wait(W,1200,"Evento registrado en ese instante"); }},
     {s:"Completar",t:"Completa el evento",
-     d:"En «Completar el evento seleccionado» añade detalle, jugador y comentario. Si llegaste tarde, ajusta la hora con −10 s, −5 s, −1 s o +1 s.",
+     d:"En «Completar el evento seleccionado» añade detalle, jugador y comentario.",
      pre(){ S.ev=[{t:7,cat:"Gol",eq:"Mi equipo",det:"Situación jugada",jug:"9 · Williams",com:"Buena acción"}]; S.sel=0; S.clock=20; },
      async run(W){ S.sel=0; S.clock=20; draw();
-       await press(W,"a-5","Ajustar tiempo: menos 5 segundos"); S.ev[0].t=7; draw(); await W(500);
        await press(W,"det:Situación jugada","Detalle"); S.ev[0].det="Situación jugada"; draw(); await W(400);
        await press(W,"jug:9 · Williams","Jugador"); S.ev[0].jug="9 · Williams"; draw(); await W(400);
        await typeCom(W,"Buena acción"); await W(600); }},
@@ -10880,7 +10894,7 @@ html.acfc-imm .stageControls .acfcZm{display:none!important}
     Promise.resolve(p).then(()=>{ if(screen.orientation&&screen.orientation.lock) return screen.orientation.lock("landscape"); throw 0; })
       .catch(()=>phoneFallback(b,old,ev));
   }
-  const fsBtns={vFull:()=>D.querySelector("#tabVisor .stage"),edFull:()=>$("edStage"),visFullEditor:()=>$("tabVisor"),edFullEditor:()=>$("tabEditor")};
+  const fsBtns={vFull:()=>$("tabVisor"),edFull:()=>$("edStage"),visFullEditor:()=>$("tabVisor"),edFullEditor:()=>$("tabEditor")};
   Object.keys(fsBtns).forEach(id=>{ const b=$(id); if(!b) return; const old=b.onclick;
     b.onclick=ev=>{
       if(isTouch()&&Math.min(innerWidth,innerHeight)<=540) return phoneFull(b,old,ev);
@@ -10912,13 +10926,14 @@ html.acfc-imm .stageControls .acfcZm{display:none!important}
     }).observe(D.body,{subtree:true,childList:true,attributes:true,attributeFilter:["open"]});
 })();
 </script>
-<dialog id="dlgInstalar"><h2>Instalar la app</h2>
+<dialog id="dlgInstalar" aria-labelledby="instalarTit"><h2 id="instalarTit">Cómo instalarla</h2>
 <div id="instalarTxt"></div>
-<div style="text-align:right"><button type="button" class="btn primary" id="instalarCerrar">Entendido</button></div></dialog>
+<p id="instalarNota"></p>
+<div style="text-align:right"><button type="button" class="btn primary" id="instalarNativo">Instalar ahora</button> <button type="button" class="btn" id="instalarCerrar">Entendido</button></div></dialog>
 <script>
 /* Instalar app: acceso directo / PWA (el manifiesto se genera en caliente para seguir siendo un único HTML) */
 (function(){
-  var btn=document.getElementById("btnInstalar"), dlg=document.getElementById("dlgInstalar"), txt=document.getElementById("instalarTxt");
+  var btn=document.getElementById("btnInstalar"), dlg=document.getElementById("dlgInstalar"), txt=document.getElementById("instalarTxt"), nota=document.getElementById("instalarNota"), nativo=document.getElementById("instalarNativo");
   if(!btn||!dlg) return;
   var standalone=(window.matchMedia&&matchMedia("(display-mode: standalone)").matches)||navigator.standalone===true;
   if(standalone) return;
@@ -10934,32 +10949,38 @@ html.acfc-imm .stageControls .acfcZm{display:none!important}
   }catch(e){}
   var ev=null, ua=navigator.userAgent||"";
   var ios=/iPad|iPhone|iPod/.test(ua)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+  var android=/Android/.test(ua);
+  var PASOS_PC="<p>En el ordenador:</p><ul><li><b>Chrome o Edge:</b> pulsa el icono <b>Instalar</b> de la barra de direcciones (o ⋮ › Guardar y compartir › Instalar página como aplicación) y confirma. Suele crear el icono en el escritorio.</li><li><b>Safari (Mac):</b> menú Archivo › <b>Añadir al Dock</b>.</li></ul>";
+  var PASOS_IOS="<p>En iPhone o iPad (Safari):</p><ol><li>Abre esta página en <b>Safari</b>. Chrome en iOS no permite instalarla.</li><li>Pulsa <b>Compartir</b> (cuadrado con flecha, en la barra inferior).</li><li>Baja y elige <b>Añadir a la pantalla de inicio</b>.</li><li>Pulsa <b>Añadir</b>.</li></ol>";
+  var PASOS_AND="<p>En Android (Chrome):</p><ol><li>Pulsa el menú <b>⋮</b> del navegador.</li><li>Elige <b>Instalar aplicación</b> o <b>Añadir a la pantalla de inicio</b>.</li><li>Confirma con <b>Instalar</b>.</li></ol>";
   btn.hidden=false;
   window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();ev=e;});
   window.addEventListener("appinstalled",function(){btn.hidden=true;ev=null;});
-  /* En ordenador descarga un acceso directo (.url) que se arrastra al escritorio */
+  function lanzar(){ var e=ev; ev=null; e.prompt(); e.userChoice.catch(function(){}); }
+  function instrucciones(html){ txt.innerHTML=html; nota.textContent=""; dlg.showModal(); }
+  /* Acceso directo descargable: un .html que redirige a la herramienta. Al abrirlo, el navegador va directo a la URL */
+  var URL_HERRAMIENTA="https://ilandaleioa.github.io/Software-videoanalisis-AC-CENTER/";
   function descargarAcceso(){
-    var url=/^https?:$/.test(location.protocol)?base:location.href;
-    var a=document.createElement("a");
-    a.href=URL.createObjectURL(new Blob(["[InternetShortcut]\r\nURL="+url+"\r\n"],{type:"application/internet-shortcut"}));
-    a.download="Videoanálisis ACFC.url";
-    document.body.appendChild(a); a.click(); a.remove();
-    setTimeout(function(){URL.revokeObjectURL(a.href);},1000);
+    var url=/^https?:$/.test(location.protocol)?location.origin+location.pathname:URL_HERRAMIENTA;
+    var contenido='<!doctype html><html lang="es"><meta charset="utf-8"><title>AC Center · Videoanálisis</title>'+
+      '<meta http-equiv="refresh" content="0;url='+url+'"><script>location.replace("'+url+'");<\/script>'+
+      '<p><a href="'+url+'">Abrir AC Center · Videoanálisis</a></p>';
+    var blob=new Blob([contenido],{type:"text/html;charset=utf-8"});
+    var enlace=document.createElement("a");
+    enlace.href=URL.createObjectURL(blob); enlace.download="AC Center - Videoanalisis.html";
+    document.body.appendChild(enlace); enlace.click(); enlace.remove();
+    setTimeout(function(){ URL.revokeObjectURL(enlace.href); },1000);
   }
-  function ayuda(){
-    /* Se muestran las tres opciones; la del dispositivo actual va primero */
-    var pasos={
-      ios:"<p>En iPhone o iPad:</p><ol><li>Abre esta página en <b>Safari</b>.</li><li>Pulsa el botón <b>Compartir</b> (cuadrado con flecha).</li><li>Elige <b>Añadir a pantalla de inicio</b>.</li></ol>",
-      android:"<p>En Android (Chrome):</p><ol><li>Abre el menú <b>⋮</b> del navegador.</li><li>Elige <b>Instalar aplicación</b> o <b>Añadir a la pantalla de inicio</b>.</li></ol>",
-      pc:"<p>En el ordenador (Chrome o Edge):</p><ol><li>Pulsa el icono de instalar de la barra de direcciones, o el menú <b>⋮ / …</b></li><li>Elige <b>Instalar Videoanálisis</b> o <b>Guardar y compartir › Crear acceso directo</b>.</li></ol><p>Marca «Abrir como ventana» para usarla como una app.</p>"
-    };
-    var orden=ios?["ios","android","pc"]:/Android/.test(ua)?["android","pc","ios"]:["pc","android","ios"];
-    txt.innerHTML=orden.map(function(k){return pasos[k];}).join(""); dlg.showModal();
-  }
+  /* Mismo flujo que el botón «Instalar» de la home: instalación nativa si el navegador la permite; si no, pasos según el dispositivo */
   btn.addEventListener("click",function(){
-    if(ev){var e=ev; ev=null; e.prompt(); e.userChoice.then(function(c){if(c&&c.outcome==="accepted")btn.hidden=true;}).catch(function(){});}
-    else if(!ios&&!/Android/.test(ua)) descargarAcceso();
-    else ayuda();
+    if(ev) lanzar();
+    else if(ios) instrucciones(PASOS_IOS);
+    else if(android) instrucciones(PASOS_AND);
+    else instrucciones(PASOS_PC);
+  });
+  nativo.addEventListener("click",function(){
+    if(ev){ dlg.close(); lanzar(); }
+    else { descargarAcceso(); nota.textContent="Se ha descargado el acceso directo. Ábrelo desde tu carpeta de descargas o muévelo al escritorio."; }
   });
   document.getElementById("instalarCerrar").addEventListener("click",function(){dlg.close();});
 })();
