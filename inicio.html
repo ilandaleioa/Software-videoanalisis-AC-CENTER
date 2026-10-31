@@ -36,6 +36,9 @@
   .hero h1{font-family:var(--f-disp);font-weight:700;text-transform:uppercase;letter-spacing:.6px;font-size:clamp(28px,5vw,44px);line-height:1.05;margin:0 0 8px}
   .hero h1::before{content:"";display:block;width:44px;height:4px;background:var(--red);margin:0 auto 14px}
   .hero p{margin:0;color:var(--muted);font-size:16px}
+  .hero ul{display:inline-block;text-align:left;margin:14px 0 0;padding-left:20px;font-size:15px;line-height:1.45;color:var(--ink)}
+  .hero li{margin:4px 0}
+  .hero .heroAutor{margin-top:14px}
 
   /* ===== Accesos ===== */
   .sec-title{font-family:var(--f-disp);font-weight:700;text-transform:uppercase;letter-spacing:1.2px;font-size:13px;color:var(--muted);margin:0 0 14px;display:flex;align-items:center;gap:10px}
@@ -90,6 +93,7 @@
 
   @media (max-width:640px){
     main{padding:28px 16px 24px}
+    .hero p{font-size:14px;line-height:1.45}
     .hdr-in{padding:16px}
     .hdr img{height:44px}
     .grid{grid-template-columns:1fr 1fr;gap:10px}
@@ -118,8 +122,12 @@
 <main>
   <section class="hero">
     <h1>Software de videoanálisis</h1>
-    <p>Realizado por <b>Ibon Landa</b> (responsable de analistas de cantera del Athletic Club / Docente AC Football Center)</p>
-    <button type="button" class="btn-ins" id="btnDetalles" aria-haspopup="dialog">Más detalles</button>
+    <p>Este software de videoanálisis es creado por el Athletic Club Football Center.</p>
+    <ul>
+      <li><b>No requiere instalación:</b> funciona a través de la web.</li>
+      <li><b>Compatible con ordenador, Android e iOS.</b></li>
+    </ul>
+    <p class="heroAutor">Realizado por <b>Ibon Landa</b> (responsable de analistas de cantera del Athletic Club / Docente AC Football Center)</p>
   </section>
 
   <h2 class="sec-title">Herramientas</h2>
@@ -207,22 +215,11 @@
   <div class="insCerrar"><button type="button" class="btn-ins primary" id="detaCerrar">Entendido</button></div>
 </dialog>
 
-<dialog class="dlgIns" id="dlgDet" aria-labelledby="detTit">
-  <h2 class="sec-title" id="detTit">Software de videoanálisis</h2>
-  <div class="insTxt">
-    <p>Este software de videoanálisis es creado por el Athletic Club Football Center.</p>
-    <ul>
-      <li><b>No requiere instalación:</b> funciona a través de la web.</li>
-      <li><b>Compatible con ordenador, Android e iOS.</b></li>
-    </ul>
-  </div>
-  <div class="insCerrar"><button type="button" class="btn-ins primary" id="detCerrar">Entendido</button></div>
-</dialog>
-
 <dialog class="dlgIns" id="dlgIns" aria-labelledby="insTit">
   <h2 class="sec-title" id="insTit">Cómo instalarla</h2>
   <div class="insTxt" id="insTxt"></div>
-  <div class="insCerrar"><button type="button" class="btn-ins primary" id="insCerrar">Entendido</button></div>
+  <p class="insNota" id="insNota"></p>
+  <div class="insCerrar"><button type="button" class="btn-ins primary" id="insNativo">Instalar ahora</button> <button type="button" class="btn-ins" id="insCerrar">Entendido</button></div>
 </dialog>
 
 <footer>
@@ -271,9 +268,10 @@
       document.head.appendChild(l);
     }
   }catch(e){}
+  var insNativo=document.getElementById("insNativo"), insNota=document.getElementById("insNota");
   window.addEventListener("beforeinstallprompt",function(e){ e.preventDefault(); ev=e; });
   window.addEventListener("appinstalled",function(){ ev=null; bPc.hidden=true; bMov.hidden=true; });
-  function instrucciones(html){ insTxt.innerHTML=html; dlgIns.showModal(); }
+  function instrucciones(html){ insTxt.innerHTML=html; insNota.textContent=""; dlgIns.showModal(); }
   function lanzar(){ var e=ev; ev=null; e.prompt(); e.userChoice.catch(function(){}); }
   var PASOS_PC="<p>En el ordenador:</p><ul><li><b>Chrome o Edge:</b> pulsa el icono <b>Instalar</b> de la barra de direcciones (o ⋮ › Guardar y compartir › Instalar página como aplicación) y confirma. Suele crear el icono en el escritorio.</li><li><b>Safari (Mac):</b> menú Archivo › <b>Añadir al Dock</b>.</li></ul>";
   var PASOS_IOS="<p>En iPhone o iPad (Safari):</p><ol><li>Abre esta página en <b>Safari</b>. Chrome en iOS no permite instalarla.</li><li>Pulsa <b>Compartir</b> (cuadrado con flecha, en la barra inferior).</li><li>Baja y elige <b>Añadir a la pantalla de inicio</b>.</li><li>Pulsa <b>Añadir</b>. El icono de AC Center aparecerá en tu pantalla de inicio.</li></ol>";
@@ -286,9 +284,12 @@
     else instrucciones("<p>Para instalarla en el móvil, abre esta misma página desde el teléfono:</p>"+PASOS_IOS+PASOS_AND);
   });
   document.getElementById("insCerrar").addEventListener("click",function(){ dlgIns.close(); });
+  /* Botón dentro del diálogo: instala directamente cuando el navegador lo permite (Chrome, Edge, Android) */
+  insNativo.addEventListener("click",function(){
+    if(ev){ dlgIns.close(); lanzar(); }
+    else insNota.textContent="Tu navegador todavía no permite instalarla con un clic. Sigue los pasos de arriba.";
+  });
   if(!standalone){ bPc.hidden=movil; bMov.hidden=false; }
-  document.getElementById("btnDetalles").addEventListener("click",function(){ document.getElementById("dlgDet").showModal(); });
-  document.getElementById("detCerrar").addEventListener("click",function(){ document.getElementById("dlgDet").close(); });
   /* Detalle de cada herramienta: ventana con su descripción, sin entrar en la herramienta */
   var DETALLES={
     editor:"Recorta fragmentos de uno o varios vídeos con una botonera sencilla y personalizable. Las acciones registradas se pueden exportar en formato MP4. Lleva integrada una herramienta de pintado de acciones para dibujar sobre el vídeo.",
