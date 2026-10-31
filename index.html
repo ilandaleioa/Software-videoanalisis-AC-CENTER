@@ -940,7 +940,7 @@ html #regPintBtn svg{width:26px;height:26px}
   .pintField{grid-template-columns:84px 1fr}
   .pintBar{grid-template-columns:repeat(auto-fill,minmax(44px,1fr))}
 }
-/* ventana embebida del pintado: flota junto al reproductor al pulsar el botón de pintar */
+/* ventana embebida del pintado: se abre centrada en la pantalla al pulsar el botón de pintar */
 #pintWin{position:fixed;z-index:60;box-sizing:border-box;overflow-y:auto;background:var(--panel);border:1px solid var(--line);border-top:3px solid var(--ink);box-shadow:0 8px 24px rgba(0,0,0,.35)}
 #pintWin[hidden]{display:none}
 #pintWin .pintBlock{border-top:0;padding:10px 12px 12px}
@@ -2501,6 +2501,7 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
     <label class="dlgBotSelRow" id="dlgBotSelRow" style="display:flex;align-items:center;gap:8px;margin:6px 0 2px">Botonera
       <select id="dlgBotSel" aria-label="Botonera" title="Elige la botonera: cambia los detalles y jugadores disponibles" style="flex:1;min-width:0;padding:6px 8px;font:inherit;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:0"></select>
     </label>
+    <div class="row" style="justify-content:flex-end;margin:0 0 4px"><button type="button" class="btn edGreen" id="dlgSaveBot" title="Descarga la botonera (categorías, detalles y jugadores) para guardarla en el proyecto de botoneras">💾 Guardar botonera</button></div>
     <div id="manBar" hidden style="border:1px solid var(--line);border-top:3px solid var(--ink);padding:8px;margin:6px 0">
       <div class="row" style="flex-wrap:nowrap;gap:6px;margin:0">
         <button type="button" class="btn primary" id="manRec" style="flex:1" title="Marca el inicio del corte en el instante actual y reproduce">● REC</button>
@@ -2520,9 +2521,10 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
     <label>Categoría</label>
     <div id="fCatBtns" class="catbtns" role="group" aria-label="Categoría"></div>
     <select id="fCat" hidden aria-hidden="true"></select>
-    <div id="newCatRow" class="row" hidden style="flex-wrap:nowrap">
+    <div id="newCatRow" class="row" style="flex-wrap:nowrap">
       <input id="newCatName" maxlength="24" placeholder="Nombre de la categoría" aria-label="Nombre de la nueva categoría" style="flex:1">
       <input id="newCatColor" type="color" value="#3D4852" aria-label="Color" style="width:46px;padding:2px">
+      <button type="button" class="btn" id="newCatCancel" hidden>Cancelar</button>
       <button type="button" class="btn primary" id="newCatAdd">Añadir</button>
     </div>
     <div id="newCatErr" style="font-size:12px;color:var(--red)"></div>
@@ -2531,8 +2533,9 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
     <label>Detalle</label>
     <div id="fDetBtns" class="catbtns" role="group" aria-label="Detalle"></div>
     <select id="fDet" hidden aria-hidden="true"></select>
-    <div id="newDetRow" class="row" hidden style="flex-wrap:nowrap">
+    <div id="newDetRow" class="row" style="flex-wrap:nowrap">
       <input id="newDetName" maxlength="60" placeholder="Nuevo detalle" aria-label="Nuevo detalle" style="flex:1">
+      <button type="button" class="btn" id="newDetCancel" hidden>Cancelar</button>
       <button type="button" class="btn primary" id="newDetAdd">Añadir</button>
     </div>
     <div id="newDetErr" style="font-size:12px;color:var(--red)"></div>
@@ -2543,6 +2546,7 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
     <select id="fJug" hidden aria-hidden="true"></select>
     <div id="newJugRow" class="row" style="flex-wrap:nowrap">
       <input id="newJugName" maxlength="40" placeholder="Nombre del jugador" aria-label="Nuevo jugador" style="flex:1">
+      <button type="button" class="btn" id="newJugCancel" hidden>Cancelar</button>
       <button type="button" class="btn primary" id="newJugAdd">Añadir</button>
     </div>
     <div id="newJugErr" style="font-size:12px;color:var(--red)"></div>
@@ -3456,6 +3460,22 @@ window.renderHalfBands = function(b1,b2,mk,d){
     L.push(d); if(persist) saveDets(); return d; }
   function saveDets(){ try{ localStorage.setItem(DET_KEY,JSON.stringify(DETS)); }catch(e){} botSyncActiva(); }
   function removeDetFrom(cat,d){ const L=DETS[cat]; if(!L) return; const i=L.findIndex(x=>x===d); if(i<0) return; L.splice(i,1); saveDets(); }
+  // renombra un detalle (los eventos y el grupo de balón parado lo siguen); devuelve el error o ""
+  function renameDet(cat,d,nv){
+    const L=DETS[cat]||[], i=L.indexOf(d); if(i<0) return "No existe ese detalle.";
+    if(L.some(x=>x!==d&&x.toLowerCase()===nv.toLowerCase())) return "Ya existe ese detalle.";
+    const par=isParado(cat,d); L[i]=nv; saveDets();
+    events.forEach(e=>{ if(e.cat===cat&&e.det===d) e.det=nv; }); save();
+    if(par) addParado(nv);
+    return "";
+  }
+  // renombra un jugador (los eventos lo siguen); devuelve el error o ""
+  function renameJug(n,nv){
+    const i=JUGS.indexOf(n); if(i<0) return "No existe ese jugador.";
+    if(JUGS.some(x=>x!==n&&x.toLowerCase()===nv.toLowerCase())) return "Ya existe ese jugador.";
+    JUGS[i]=nv; JUGS.sort((a,b)=>a.localeCompare(b,'es')); saveJugs();
+    events.forEach(e=>{ if(e.jug===n) e.jug=nv; }); save(); return "";
+  }
   // detalles de GOL: los de balón parado van agrupados y con otro color
   const GOL_DETS=["Centro lateral","Tiro fuera del área","Uno contra uno","Tiro dentro del área","Rechace","Penalti","Córner","Falta lateral","Falta frontal","Falta directa"];
   const GOL_PARADO=["penalti","córner","falta lateral","falta frontal","falta directa"];
@@ -3685,8 +3705,9 @@ window.renderHalfBands = function(b1,b2,mk,d){
       if(k==="OTRO"||o.ret) return; // «Otro» y las categorías solo de eventos no se muestran como botón
       const b=el("button",{type:"button",className:"catbtn",textContent:k.charAt(0)+k.slice(1).toLowerCase(),style:"background:"+o.c});
       b.dataset.cat=k;
-      b.onclick=()=>{ fc.value=k; fc.dispatchEvent(new Event("change")); syncCatBtns(); if(k!=="__new__"){ eqPicked=false; setStage(1); } };
-      if(o.custom) addDelX(b,k,()=>{ removeCat(k); if(fc.value===k){ fc.value="OTRO"; fc.dispatchEvent(new Event("change")); } renderLegend(); });
+      b.onclick=()=>{ dlgEditCancel(); fc.value=k; fc.dispatchEvent(new Event("change")); syncCatBtns(); if(k!=="__new__"){ eqPicked=false; setStage(1); } };
+      addEditE(b,"Editar nombre y color de «"+k+"»",()=>dlgEditStart("cat",k));
+      if(o.custom) addDelX(b,k,()=>{ dlgEditCancel(); removeCat(k); if(fc.value===k){ fc.value="OTRO"; fc.dispatchEvent(new Event("change")); } renderLegend(); });
       wrap.append(b);
     });
     syncCatBtns(); // sin botón «+ Nueva»: las categorías se definen en la botonera
@@ -3694,7 +3715,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   let prevCat="OCASIÓN";
   $("fCat").addEventListener("focus",()=>{ if($("fCat").value!=="__new__") prevCat=$("fCat").value; });
   $("fCat").addEventListener("change",()=>{
-    const nw=$("fCat").value==="__new__"; $("newCatRow").hidden=!nw; $("newCatErr").textContent="";
+    const nw=$("fCat").value==="__new__"; $("newCatErr").textContent="";
     if(nw){ $("newCatName").value=""; $("newCatColor").value=PALETTE[Object.values(CATS).filter(o=>o.custom).length%PALETTE.length]; $("newCatName").focus(); }
     else prevCat=$("fCat").value; });
   // Equipo: «propio» (mi equipo) o «rival»; se recuerda la última elección para el siguiente evento
@@ -3779,8 +3800,9 @@ window.renderHalfBands = function(b1,b2,mk,d){
     L.forEach(d=>{
       const g=CAT_GOL(cat)?(isParado(cat,d)?"parado":"juego"):null;
       const b=el("button",{type:"button",className:"optbtn"+(g?" g-"+g:""),textContent:d});
-      b.dataset.det=d; b.onclick=()=>{ s.value=d; s.dispatchEvent(new Event("change")); syncDetBtns(); setStage(2); };
-      addDelX(b,d,()=>{ removeDetFrom(cat,d); if(s.value===d) s.value=""; fillDets(s.value); });
+      b.dataset.det=d; b.onclick=()=>{ dlgEditCancel(); s.value=d; s.dispatchEvent(new Event("change")); syncDetBtns(); setStage(2); };
+      addEditE(b,"Editar «"+d+"»",()=>dlgEditStart("det",d));
+      addDelX(b,d,()=>{ dlgEditCancel(); removeDetFrom(cat,d); if(s.value===d) s.value=""; fillDets(s.value); });
       wrap.append(b);
     });
     if(sel&&!L.includes(sel)&&sel!=="__new__"){
@@ -3796,13 +3818,13 @@ window.renderHalfBands = function(b1,b2,mk,d){
     L.forEach(d=>s.append(el("option",{value:d,textContent:d})));
     if(sel&&!L.includes(sel)) s.append(el("option",{value:sel,textContent:sel}));
     s.append(el("option",{value:"__new__",textContent:"+ AÑADIR DETALLE"}));
-    s.value=sel||""; $("newDetRow").hidden=true; $("newDetErr").textContent="";
+    s.value=sel||""; $("newDetErr").textContent="";
     if(!sel) detGroup=null;
     renderDetBtns(L,sel); }
   $("fCat").addEventListener("change",()=>{ if($("fCat").value!=="__new__"){ detGroup=null; fillDets(""); } });
-  $("fDet").addEventListener("change",()=>{ const nw=$("fDet").value==="__new__"; $("newDetRow").hidden=!nw; $("newDetErr").textContent="";
-    if(nw){ $("newDetName").value=""; $("newDetName").focus(); } });
+  $("fDet").addEventListener("change",()=>{ $("newDetErr").textContent=""; });
   function addDet(){
+    if(dlgEdit&&dlgEdit.kind==="det") return dlgEditApply();
     const cat=$("fCat").value; if(cat==="__new__"){ $("newDetErr").textContent="Añade primero la categoría."; return; }
     const d=addDetTo(cat,$("newDetName").value); if(!d){ $("newDetErr").textContent="Escribe el detalle."; return; }
     if(CAT_GOL(cat)&&newDetGroup==="parado") addParado(d);
@@ -3821,8 +3843,9 @@ window.renderHalfBands = function(b1,b2,mk,d){
     wrap.append(noneBtn);
     JUGS.forEach(n=>{
       const b=el("button",{type:"button",className:"optbtn",textContent:n});
-      b.dataset.jug=n; b.onclick=()=>{ s.value=(s.value===n?"":n); s.dispatchEvent(new Event("change")); syncJugBtns(); };
-      addDelX(b,n,()=>{ removeJug(n); if(s.value===n) s.value=""; fillJugs(s.value); });
+      b.dataset.jug=n; b.onclick=()=>{ dlgEditCancel(); s.value=(s.value===n?"":n); s.dispatchEvent(new Event("change")); syncJugBtns(); };
+      addEditE(b,"Editar «"+n+"»",()=>dlgEditStart("jug",n));
+      addDelX(b,n,()=>{ dlgEditCancel(); removeJug(n); if(s.value===n) s.value=""; fillJugs(s.value); });
       wrap.append(b);
     });
     if(sel&&!JUGS.includes(sel)&&sel!=="__new__"){
@@ -3842,19 +3865,62 @@ window.renderHalfBands = function(b1,b2,mk,d){
     renderJugBtns(sel); }
   $("fJug").addEventListener("change",()=>{ $("newJugErr").textContent=""; });
   function addJug(){
+    if(dlgEdit&&dlgEdit.kind==="jug") return dlgEditApply();
     const n=addJugTo($("newJugName").value); if(!n){ $("newJugErr").textContent="Escribe el nombre."; return; }
     fillJugs(n); }
   $("newJugAdd").onclick=addJug;
   $("newJugName").addEventListener("keydown",k=>{ if(k.key==="Enter"){ k.preventDefault(); addJug(); } });
   function addCat(){
+    if(dlgEdit&&dlgEdit.kind==="cat") return dlgEditApply();
     const n=$("newCatName").value.trim().replace(/\s+/g," ").toUpperCase().slice(0,24);
     if(!n){ $("newCatErr").textContent="Escribe un nombre para la categoría."; return; }
     if(n==="__NEW__"){ $("newCatErr").textContent="Ese nombre no es válido."; return; }
     if(!CATS[n]){ CATS[n]={c:$("newCatColor").value,custom:true}; saveCats(); }
-    renderLegend(); $("fCat").value=n; syncCatBtns(); prevCat=n; $("newCatRow").hidden=true; $("newCatErr").textContent=""; fillDets(""); setStage(1);
+    renderLegend(); $("fCat").value=n; syncCatBtns(); prevCat=n; $("newCatName").value=""; $("newCatErr").textContent=""; fillDets(""); setStage(1);
   }
   $("newCatAdd").onclick=addCat;
   $("newCatName").addEventListener("keydown",k=>{ if(k.key==="Enter"){ k.preventDefault(); addCat(); } });
+  // ---------- editar botones desde la ventana de registro (categorías, detalles y jugadores) ----------
+  // Una sola fila de «Añadir» sirve también para editar: el botón cambia a «Guardar» y aparece «Cancelar»
+  let dlgEdit=null; // {kind:"cat"|"det"|"jug", old, cat?} mientras se edita un botón
+  const DLG_ROW={cat:["newCatName","newCatAdd","newCatCancel","newCatErr"], det:["newDetName","newDetAdd","newDetCancel","newDetErr"], jug:["newJugName","newJugAdd","newJugCancel","newJugErr"]};
+  function dlgEditStart(kind,old){
+    dlgEditCancel();
+    dlgEdit={kind,old,cat:$("fCat").value};
+    const [inId,btId,caId,erId]=DLG_ROW[kind], inp=$(inId);
+    if(kind==="cat"){ inp.value=old.charAt(0)+old.slice(1).toLowerCase(); inp.readOnly=CAT_NOMBRE_FIJO.includes(old); $("newCatColor").value=cssToHex(CATS[old].c); }
+    else inp.value=old;
+    $(btId).textContent="Guardar"; $(caId).hidden=false; $(erId).textContent=""; inp.focus(); inp.select();
+  }
+  function dlgEditCancel(){
+    if(!dlgEdit) return;
+    const [inId,btId,caId,erId]=DLG_ROW[dlgEdit.kind];
+    $(inId).value=""; $(inId).readOnly=false; $(btId).textContent="Añadir"; $(caId).hidden=true; $(erId).textContent="";
+    dlgEdit=null;
+  }
+  function dlgEditApply(){
+    const {kind,old,cat}=dlgEdit, [inId,,,erId]=DLG_ROW[kind], err=$(erId);
+    let e="";
+    if(kind==="cat"){
+      const n=$(inId).value.trim().replace(/\s+/g," ").toUpperCase().slice(0,24);
+      if(!n){ err.textContent="Escribe un nombre para la categoría."; return; }
+      e=editCat(old,n,$("newCatColor").value);
+      if(!e){ if($("fCat").value===old) $("fCat").value=n; prevCat=$("fCat").value; }
+    } else if(kind==="det"){
+      const nv=addDetName($(inId).value); if(!nv){ err.textContent="Escribe el detalle."; return; }
+      if(nv!==old) e=renameDet(cat,old,nv);
+      if(!e&&$("fDet").value===old) $("fDet").value=nv;
+    } else {
+      const nv=String($(inId).value||"").trim().replace(/\s+/g," ").slice(0,40);
+      if(!nv){ err.textContent="Escribe el nombre."; return; }
+      if(nv!==old) e=renameJug(old,nv);
+      if(!e&&$("fJug").value===old) $("fJug").value=nv;
+    }
+    if(e){ err.textContent=e; return; }
+    dlgEditCancel();
+    botSync(); if(dlgBot.open) renderBot(); refresh();
+  }
+  $("newCatCancel").onclick=$("newDetCancel").onclick=$("newJugCancel").onclick=dlgEditCancel;
   // ---------- apartado Botonera: define las categorías, detalles y jugadores de los registros ----------
   const dlgBot=document.getElementById("dlgBot");
   let botCat="OCASIÓN"; // categoría cuyos detalles se están editando
@@ -3903,10 +3969,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
       const b=el("button",{type:"button",className:"optbtn"+(g?" g-"+g:""),textContent:d});
       addEditE(b,"Editar «"+d+"»",()=>{
         const nv=addDetName(prompt("Nuevo nombre del detalle:",d)); if(!nv||nv===d) return;
-        const L2=DETS[botCat]; if(L2.some(x=>x!==d&&x.toLowerCase()===nv.toLowerCase())){ $("botDetErr").textContent="Ya existe ese detalle."; return; }
-        const par=isParado(botCat,d); L2[L2.indexOf(d)]=nv; saveDets();
-        events.forEach(e=>{ if(e.cat===botCat&&e.det===d) e.det=nv; }); save();
-        if(par) addParado(nv);
+        const err=renameDet(botCat,d,nv); if(err){ $("botDetErr").textContent=err; return; }
         $("botDetErr").textContent=""; botSync(); renderBot(); refresh(); });
       addDelX(b,d,()=>{ removeDetFrom(botCat,d); botSync(); renderBot(); });
       wd.append(b);
@@ -3918,9 +3981,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
       const b=el("button",{type:"button",className:"optbtn",textContent:n});
       addEditE(b,"Editar «"+n+"»",()=>{
         const nv=String(prompt("Nuevo nombre del jugador:",n)||"").trim().replace(/\s+/g," ").slice(0,40); if(!nv||nv===n) return;
-        if(JUGS.some(x=>x!==n&&x.toLowerCase()===nv.toLowerCase())){ $("botJugErr").textContent="Ya existe ese jugador."; return; }
-        JUGS[JUGS.indexOf(n)]=nv; JUGS.sort((a,b)=>a.localeCompare(b,'es')); saveJugs();
-        events.forEach(e=>{ if(e.jug===n) e.jug=nv; }); save();
+        const err=renameJug(n,nv); if(err){ $("botJugErr").textContent=err; return; }
         $("botJugErr").textContent=""; botSync(); renderBot(); refresh(); });
       addDelX(b,n,()=>{ removeJug(n); botSync(); renderBot(); });
       wj.append(b);
@@ -4514,7 +4575,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     tr.addEventListener("pointermove",ev=>{ if(drag) seekTo(ev); });
     tr.addEventListener("pointerup",()=>{ drag=false; }); tr.addEventListener("pointercancel",()=>{ drag=false; }); }
   ["regPintBtn","regPintBtn2"].forEach(id=>{ const b=$(id); if(b) b.addEventListener("click",()=>$("vPintGo").click()); });
-  // Ventana embebida del pintado: el panel sale de la columna y flota junto al reproductor; al cerrarla vuelve a su sitio
+  // Ventana embebida del pintado: el panel sale de la columna y se abre centrada en la pantalla; al cerrarla vuelve a su sitio
   // El panel del pintado vive solo dentro de esta ventana: ya no aparece en la columna derecha del registro
   const pwBlk=$("pintBlock");
   const pwWin=document.createElement("div"), pwX=document.createElement("button");
@@ -4530,17 +4591,15 @@ window.renderHalfBands = function(b1,b2,mk,d){
     pwWin.style.left=l+"px"; pwWin.style.top=t+"px";
     pwWin.style.maxHeight=Math.max(120,innerHeight-t-8)+"px";
   }
-  let pwPos=null; // posición elegida por el usuario; se conserva al reabrir
-  function pintWinOpen(anchor){
-    const r=anchor&&anchor.getBoundingClientRect(), a=r&&r.width?r:v.getBoundingClientRect();
+  // Se abre siempre centrada en la pantalla
+  function pintWinOpen(){
     const small=innerWidth<=640, W=small?innerWidth-16:Math.min(440,innerWidth-16);
-    const top=Math.max(8,Math.min(a.bottom+6,innerHeight-160));
     pwWin.style.width=W+"px";
-    pwWin.style.left=(small?8:Math.max(8,Math.min(a.left,innerWidth-W-8)))+"px";
-    pwWin.style.top=top+"px";
-    pwWin.style.maxHeight=Math.max(120,innerHeight-top-8)+"px";
+    pwWin.style.maxHeight=(innerHeight-16)+"px";
     pwWin.hidden=false;
-    if(pwPos){ pwWin.style.left=pwPos.left+"px"; pwWin.style.top=pwPos.top+"px"; pwFit(); }
+    const H=Math.min(pwWin.offsetHeight,innerHeight-16);
+    pwWin.style.left=Math.max(8,(innerWidth-W)/2)+"px";
+    pwWin.style.top=Math.max(8,(innerHeight-H)/2)+"px";
   }
   pwX.addEventListener("click",pintWinClose);
   // Arrastre desde la cabecera «Pintado de acciones» (ratón, lápiz y dedo); los botones y controles no arrastran
@@ -4552,13 +4611,13 @@ window.renderHalfBands = function(b1,b2,mk,d){
     pwWin.addEventListener("pointermove",ev=>{
       if(!d||ev.pointerId!==d.id) return;
       pwWin.style.left=(ev.clientX-d.dx)+"px"; pwWin.style.top=(ev.clientY-d.dy)+"px"; pwFit(); });
-    const pwEnd=ev=>{ if(!d||ev.pointerId!==d.id) return; const r=pwWin.getBoundingClientRect(); pwPos={left:r.left,top:r.top}; d=null; };
+    const pwEnd=ev=>{ if(!d||ev.pointerId!==d.id) return; d=null; };
     pwWin.addEventListener("pointerup",pwEnd); pwWin.addEventListener("pointercancel",pwEnd);
     addEventListener("resize",()=>{ if(!pwWin.hidden) pwFit(); }); }
   { const b=$("vPintGo"); b.addEventListener("pointerdown",ev=>ev.stopPropagation());
     b.addEventListener("click",()=>{ v.pause();
       const body=$("pintBody"); if(body&&body.hidden&&$("pintToggle")) $("pintToggle").click();
-      pintWinOpen(b.hidden?$("regPintBtn"):b);
+      pintWinOpen();
       const t=pwBlk.querySelector('.pintTool[data-tool="pen"]'); if(t){ t.focus({preventScroll:true}); const m=$("pintMode"); if(m&&m.getAttribute("aria-pressed")!=="true") t.click(); } }); }
   // Zoom de las líneas de tiempo del registro (la de arriba y la de categorías van juntas)
   let vZoom=1, vZv=0, vPanTs=0; const VZMAX=64;
@@ -4957,7 +5016,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     if(e) manualMode=false; else manReset();
     placeDlgForFullscreen(); editId=e?e.id:null; const cur=v.currentTime||0;
     $("fMin").value=e?e.min:(matchClockText(cur)||(Math.floor(cur/60)+":"+String(Math.floor(cur%60)).padStart(2,"0")));
-    $("newCatRow").hidden=true; $("newCatErr").textContent=""; $("fCat").value=e&&CATS[e.cat]?e.cat:(CATS[prevCat]?prevCat:"OCASIÓN"); syncCatBtns(); setEq(e?e.eq:"propio"); fillDets(e?e.det:""); fillJugs(e?e.jug:""); setStage(e?2:0); $("fComent").value=e?(e.coment||""):""; positionDlgOverList(); if(!dlgEl.open){ try{ dlgEl.show(); }catch(err){ console.error("No se pudo abrir la botonera:",err); dlgEl.setAttribute("open",""); } } updatePopOutBtn(); manUI(); updateClipInfo();
+    dlgEditCancel(); $("newCatErr").textContent=""; $("fCat").value=e&&CATS[e.cat]?e.cat:(CATS[prevCat]?prevCat:"OCASIÓN"); syncCatBtns(); setEq(e?e.eq:"propio"); fillDets(e?e.det:""); fillJugs(e?e.jug:""); setStage(e?2:0); $("fComent").value=e?(e.coment||""):""; positionDlgOverList(); if(!dlgEl.open){ try{ dlgEl.show(); }catch(err){ console.error("No se pudo abrir la botonera:",err); dlgEl.setAttribute("open",""); } } updatePopOutBtn(); manUI(); updateClipInfo();
     // por defecto, en ventana emergente (salvo que se haya elegido «Fijo» o no esté disponible, p. ej. en móvil)
     // (en pantallas estrechas ≤640 px no se abre sola: el botón EMERGENTE queda para hacerlo a mano)
     if(!dlgFijo && !popoutWin && dlgEl.ownerDocument===document && !matchMedia("(max-width:640px)").matches && getComputedStyle($("popOutDlg")).display!=="none") openDlgInPopout(true); }
@@ -5224,6 +5283,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   $("saveBot").onclick=()=>{
     download("botonera_cortes3.json", JSON.stringify(botoneraSnapshot(),null,0), "application/json");
   };
+  $("dlgSaveBot").onclick=()=>$("saveBot").click(); // mismo archivo que «Guardar botonera» de Proyectos y botoneras
   function loadBotonera(data){
     let nCats=0,nDets=0,nJugs=0;
     if(Array.isArray(data.cats)) data.cats.slice(0,40).forEach(o=>{
