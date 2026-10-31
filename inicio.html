@@ -283,18 +283,16 @@
     else instrucciones("<p>Para instalarla en el móvil, abre esta misma página desde el teléfono:</p>"+PASOS_IOS+PASOS_AND);
   });
   document.getElementById("insCerrar").addEventListener("click",function(){ dlgIns.close(); });
-  /* Acceso directo descargable (.url en Windows/Linux, .webloc en Mac) con la URL de la herramienta */
+  /* Acceso directo descargable: un .html que redirige a la herramienta. Al abrirlo, el navegador va directo a la URL */
   var URL_HERRAMIENTA="https://ilandaleioa.github.io/Software-videoanalisis-AC-CENTER/";
   function descargarAcceso(){
     var url=/^https?:$/.test(location.protocol)?location.origin+location.pathname:URL_HERRAMIENTA;
-    var mac=/Mac/.test(navigator.platform||"")||/Macintosh/.test(ua);
-    var nombre=mac?"AC Center - Videoanalisis.webloc":"AC Center - Videoanalisis.url";
-    var contenido=mac
-      ? '<?xml version="1.0" encoding="UTF-8"?>\n<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">\n<plist version="1.0"><dict><key>URL</key><string>'+url+'</string></dict></plist>\n'
-      : "[InternetShortcut]\r\nURL="+url+"\r\n";
-    var blob=new Blob([contenido],{type:"application/octet-stream"});
+    var contenido='<!doctype html><html lang="es"><meta charset="utf-8"><title>AC Center · Videoanálisis</title>'+
+      '<meta http-equiv="refresh" content="0;url='+url+'"><script>location.replace("'+url+'");<\/script>'+
+      '<p><a href="'+url+'">Abrir AC Center · Videoanálisis</a></p>';
+    var blob=new Blob([contenido],{type:"text/html;charset=utf-8"});
     var enlace=document.createElement("a");
-    enlace.href=URL.createObjectURL(blob); enlace.download=nombre;
+    enlace.href=URL.createObjectURL(blob); enlace.download="AC Center - Videoanalisis.html";
     document.body.appendChild(enlace); enlace.click(); enlace.remove();
     setTimeout(function(){ URL.revokeObjectURL(enlace.href); },1000);
   }
