@@ -893,6 +893,10 @@ html #tabEditor aside .pintBlock:has(#pintBodyEd[hidden]) .pbHead{margin-bottom:
 #pintMode svg,#pintModeEd svg{width:26px;height:26px}
 #pintMode:hover,#pintModeEd:hover{background:var(--red);color:#fff;border-color:var(--red)}
 #pintMode.is-active,#pintModeEd.is-active{background:var(--red);color:#fff;box-shadow:none}
+/* botón de pintado del registro (junto al reproductor): mismo énfasis que el de dibujo */
+html #regPintBtn{border:2px solid var(--red);color:var(--red);background:var(--panel);box-shadow:0 0 0 3px color-mix(in srgb,var(--red) 18%,transparent)}
+html #regPintBtn:hover{background:var(--red);color:#fff;border-color:var(--red)}
+html #regPintBtn svg{width:26px;height:26px}
 .pintDiv{display:flex;align-items:center;gap:7px;margin:12px 0 7px;padding-top:9px;border-top:1px solid var(--line);font-family:var(--f-disp);font-weight:700;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink)}
 .pintDiv i{width:6px;height:6px;background:var(--red);flex:none}
 .pintDivFollow span{flex:1}
@@ -2553,9 +2557,11 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
 <dialog id="dlgBot" aria-labelledby="botTitle">
   <div class="botWrap">
     <div class="row" style="justify-content:space-between;align-items:center;flex-wrap:nowrap">
-      <div class="row" style="align-items:center;flex-wrap:nowrap;gap:12px">
+      <div class="row" style="align-items:center;flex-wrap:wrap;gap:12px">
         <h2 id="botTitle" style="margin:0;font-family:var(--f-disp)">Botonera</h2>
         <button type="button" class="btn" id="botNew" title="Crea una botonera nueva: mantiene las categorías y empieza sin detalles ni jugadores">+ Nueva botonera</button>
+        <button type="button" class="btn edGreen" id="botSave" title="Descarga la botonera como archivo">💾 Guardar botonera</button>
+        <label class="btn" for="impBot" title="Carga una botonera guardada previamente; se añade a la actual">📂 Cargar botonera</label>
       </div>
       <button type="button" class="btn" id="botClose" title="Cerrar">❌ Cerrar</button>
     </div>
@@ -2612,11 +2618,7 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
       <div id="botJugErr" class="botErr"></div>
     </section>
 
-    <div class="row" style="justify-content:space-between">
-      <div class="row">
-        <button type="button" class="btn edGreen" id="botSave" title="Descarga la botonera como archivo">💾 Guardar botonera</button>
-        <label class="btn" for="impBot" title="Carga una botonera guardada previamente; se añade a la actual">📂 Cargar botonera</label>
-      </div>
+    <div class="row" style="justify-content:flex-end">
       <button type="button" class="btn primary" id="botDone">Hecho</button>
     </div>
   </div>
