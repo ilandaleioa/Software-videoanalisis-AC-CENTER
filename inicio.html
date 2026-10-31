@@ -41,13 +41,16 @@
   .sec-title{font-family:var(--f-disp);font-weight:700;text-transform:uppercase;letter-spacing:1.2px;font-size:13px;color:var(--muted);margin:0 0 14px;display:flex;align-items:center;gap:10px}
   .sec-title::before{content:"";width:8px;height:8px;background:var(--red)}
   .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px}
-  .card{display:flex;flex-direction:column;align-items:flex-start;gap:14px;padding:20px;background:var(--panel);border:1px solid var(--line);border-top:3px solid var(--ink);color:var(--ink);text-decoration:none;min-height:150px;transition:border-top-color .15s,transform .15s}
+  .card{display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--line);border-top:3px solid var(--ink);min-height:150px;transition:border-top-color .15s,transform .15s}
   .card:hover{border-top-color:var(--red);transform:translateY(-2px)}
-  .card:focus-visible{outline:2px solid var(--red);outline-offset:3px}
+  .card-link{flex:1;display:flex;flex-direction:column;align-items:flex-start;gap:14px;padding:20px 20px 14px;color:var(--ink);text-decoration:none}
+  .card-link:focus-visible,.tut:focus-visible{outline:2px solid var(--red);outline-offset:3px}
   .ico{width:48px;height:48px;display:flex;align-items:center;justify-content:center;background:var(--ink);color:var(--panel)}
   .ico svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:square;stroke-linejoin:miter}
   .card h2{font-family:var(--f-disp);font-weight:700;text-transform:uppercase;letter-spacing:.4px;font-size:18px;line-height:1.15;margin:auto 0 0}
   .card span.desc{font-size:13px;color:var(--muted);line-height:1.35}
+  .tut{display:block;margin:0 20px 18px;padding:7px 10px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font-family:var(--f-disp);font-weight:700;text-transform:uppercase;letter-spacing:.6px;font-size:13px;text-align:center;text-decoration:none}
+  .tut:hover{border-color:var(--red);color:var(--red)}
 
   /* ===== Curso ===== */
   .curso{margin-top:32px;display:flex;align-items:center;gap:18px;padding:20px;background:var(--panel);border:1px solid var(--line);border-left:6px solid var(--red);text-decoration:none;color:var(--ink)}
@@ -69,7 +72,9 @@
     .hdr img{height:44px}
     .grid{grid-template-columns:1fr 1fr;gap:10px}
     .grid .card:last-child:nth-child(odd){grid-column:1/-1}
-    .card{min-height:0;padding:16px}
+    .card{min-height:0}
+    .card-link{padding:16px 16px 12px}
+    .tut{margin:0 16px 14px}
     .card h2{font-size:16px}
     .card span.desc{display:none}
     .curso{flex-wrap:wrap;gap:14px}
@@ -94,35 +99,50 @@
   <h2 class="sec-title">Herramientas</h2>
   <nav class="grid" aria-label="Herramientas de videoanálisis">
 
-    <a class="card" href="index.html#editor">
-      <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="1.5"/><path d="M3 9h18M3 15h18M8 4v16M16 4v16"/><path d="M11 11.5v3l2.5-1.5z" fill="currentColor"/></svg></span>
-      <h2>Editor básico</h2>
-      <span class="desc">Sube vídeos, corta, nombra eventos y descarga.</span>
-    </a>
+    <div class="card">
+      <a class="card-link" href="index.html#editor">
+        <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="1.5"/><path d="M3 9h18M3 15h18M8 4v16M16 4v16"/><path d="M11 11.5v3l2.5-1.5z" fill="currentColor"/></svg></span>
+        <h2>Editor básico</h2>
+        <span class="desc">Sube vídeos, corta, nombra eventos y descarga.</span>
+      </a>
+      <a class="tut" href="index.html#tut-editor">▶ Tutorial</a>
+    </div>
 
-    <a class="card" href="index.html#visor">
-      <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="2.5" y="6" width="13" height="12" rx="1.5"/><path d="M15.5 10.5l6-3.5v10l-6-3.5"/><circle cx="9" cy="12" r="1.6" fill="currentColor"/></svg></span>
-      <h2>Registro con vídeo</h2>
-      <span class="desc">Marca acciones mientras reproduces el partido.</span>
-    </a>
+    <div class="card">
+      <a class="card-link" href="index.html#visor">
+        <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="2.5" y="6" width="13" height="12" rx="1.5"/><path d="M15.5 10.5l6-3.5v10l-6-3.5"/><circle cx="9" cy="12" r="1.6" fill="currentColor"/></svg></span>
+        <h2>Registro con vídeo</h2>
+        <span class="desc">Marca acciones mientras reproduces el partido.</span>
+      </a>
+      <a class="tut" href="index.html#tut-visor">▶ Tutorial</a>
+    </div>
 
-    <a class="card" href="index.html#live">
-      <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="3.5" width="14" height="17" rx="1.5"/><path d="M9 3.5v2h6v-2"/><path d="M8.5 11l1.2 1.2 2-2.2M8.5 16l1.2 1.2 2-2.2M13.5 11.5h2.5M13.5 16.5h2.5"/></svg></span>
-      <h2>Registro sin vídeo</h2>
-      <span class="desc">Registra acciones en directo sin tener el vídeo.</span>
-    </a>
+    <div class="card">
+      <a class="card-link" href="index.html#live">
+        <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="3.5" width="14" height="17" rx="1.5"/><path d="M9 3.5v2h6v-2"/><path d="M8.5 11l1.2 1.2 2-2.2M8.5 16l1.2 1.2 2-2.2M13.5 11.5h2.5M13.5 16.5h2.5"/></svg></span>
+        <h2>Registro sin vídeo</h2>
+        <span class="desc">Registra acciones en directo sin tener el vídeo.</span>
+      </a>
+      <a class="tut" href="index.html#tut-live">▶ Tutorial</a>
+    </div>
 
-    <a class="card" href="index.html#conv">
-      <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M19 12a7 7 0 1 1-2.1-5"/><path d="M19.5 3.5v4h-4"/><path d="M9 10.5l2 2-2 2"/></svg></span>
-      <h2>Conversión de vídeos</h2>
-      <span class="desc">Convierte cualquier vídeo a MP4 compatible.</span>
-    </a>
+    <div class="card">
+      <a class="card-link" href="index.html#conv">
+        <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M19 12a7 7 0 1 1-2.1-5"/><path d="M19.5 3.5v4h-4"/><path d="M9 10.5l2 2-2 2"/></svg></span>
+        <h2>Conversión de vídeos</h2>
+        <span class="desc">Convierte cualquier vídeo a MP4 compatible.</span>
+      </a>
+      <a class="tut" href="index.html#tut-conv">▶ Tutorial</a>
+    </div>
 
-    <a class="card" href="index.html#fus">
-      <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="2.5" y="5" width="8" height="6" rx="1"/><rect x="2.5" y="13" width="8" height="6" rx="1"/><path d="M11 8h3M11 16h3M14 8v8"/><rect x="14" y="9" width="7.5" height="6" rx="1"/></svg></span>
-      <h2>Fusionar vídeos</h2>
-      <span class="desc">Une, recorta y ordena varios vídeos.</span>
-    </a>
+    <div class="card">
+      <a class="card-link" href="index.html#fus">
+        <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="2.5" y="5" width="8" height="6" rx="1"/><rect x="2.5" y="13" width="8" height="6" rx="1"/><path d="M11 8h3M11 16h3M14 8v8"/><rect x="14" y="9" width="7.5" height="6" rx="1"/></svg></span>
+        <h2>Fusionar vídeos</h2>
+        <span class="desc">Une, recorta y ordena varios vídeos.</span>
+      </a>
+      <a class="tut" href="index.html#tut-fus">▶ Tutorial</a>
+    </div>
 
   </nav>
 
@@ -146,7 +166,7 @@
   (function(){
     var local = !location.hostname || location.hostname === "localhost" || location.hostname === "127.0.0.1";
     var tool = local ? "Herramienta%20videoanalis%20AC%20Center.html" : "index.html";
-    document.querySelectorAll('a.card[href^="index.html#"]').forEach(function(a){
+    document.querySelectorAll('a[href^="index.html#"]').forEach(function(a){
       a.href = tool + a.getAttribute("href").slice("index.html".length);
     });
   })();
