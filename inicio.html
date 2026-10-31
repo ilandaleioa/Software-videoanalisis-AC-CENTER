@@ -141,5 +141,15 @@
   Athletic Club Football Center · Software de videoanálisis
 </footer>
 
+<script>
+  // En local la herramienta tiene su nombre de archivo; en GitHub Pages se publica como index.html.
+  (function(){
+    var local = !location.hostname || location.hostname === "localhost" || location.hostname === "127.0.0.1";
+    var tool = local ? "Herramienta%20videoanalis%20AC%20Center.html" : "index.html";
+    document.querySelectorAll('a.card[href^="index.html#"]').forEach(function(a){
+      a.href = tool + a.getAttribute("href").slice("index.html".length);
+    });
+  })();
+</script>
 </body>
 </html>
