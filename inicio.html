@@ -90,6 +90,12 @@
   .insTxt li{margin:6px 0}
   .insTxt p{margin:0 0 8px}
   .insCerrar{margin-top:14px;text-align:right}
+  /* ===== Proyectos y botoneras (abren la herramienta en su sitio) ===== */
+  .proyectos{margin:0 0 32px}
+  .proyHelp{margin:-6px 0 12px;font-size:14px;color:var(--muted);line-height:1.45}
+  a.btn-ins,label.btn-ins{display:inline-block;text-decoration:none;text-align:center}
+  .btn-ins.ink{background:var(--ink);border-color:var(--ink);color:var(--panel)}
+  .btn-ins.ink:hover{background:var(--red);border-color:var(--red);color:#fff}
   .dlgIns{width:min(520px,94vw);padding:18px;border:1px solid var(--line);border-top:3px solid var(--red);background:var(--panel);color:var(--ink)}
   .dlgIns::backdrop{background:rgba(21,24,29,.6)}
   @media (max-width:640px){.tutWin{width:100vw;max-width:100vw;height:100vh;max-height:100vh;border:0}}
@@ -198,6 +204,16 @@
     </div>
   </section>
 
+  <section class="proyectos" aria-labelledby="proyTit">
+    <h2 class="sec-title" id="proyTit">Proyectos y botoneras</h2>
+    <p class="proyHelp">Carga un proyecto guardado o define la botonera de registro. La botonera se abre aquí, con sus opciones de guardar y cargar.</p>
+    <div class="instBtns">
+      <label class="btn-ins" for="homeImp" title="Carga un proyecto guardado previamente y abre la herramienta con sus datos">Cargar proyecto</label>
+      <input type="file" id="homeImp" accept=".json,application/json" hidden>
+      <button type="button" class="btn-ins primary" id="btnBotHome" title="Define las categorías, detalles y jugadores que aparecen como botones al registrar una acción">Botonera</button>
+    </div>
+  </section>
+
   <a class="curso" href="https://acfootballcenter.eus/ia-aplicada-gestion-deportiva/?utm_source=lezama-talks&amp;utm_medium=herramienta-videoanalisis&amp;utm_campaign=promo-cursos&amp;utm_content=home" target="_blank" rel="noopener">
     <span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11.2V16c0 1.2 2.7 3 6 3s6-1.8 6-3v-4.8"/><path d="M22 9v5"/></svg></span>
     <span class="txt">
@@ -239,10 +255,30 @@
     document.querySelectorAll('a[href^="index.html#"]').forEach(function(a){
       a.href = tool + a.getAttribute("href").slice("index.html".length);
     });
+    window.acfcHerramienta = tool;
   })();
+
+  /* Cargar proyecto desde la portada: el archivo se guarda en esta pestaña y la herramienta lo carga al abrirse, igual que su botón «Cargar proyecto» */
+  var impHome=document.getElementById("homeImp");
+  impHome.addEventListener("change",function(){
+    var f=impHome.files[0]; if(!f) return;
+    if(f.size>5e6){ alert("Archivo demasiado grande."); impHome.value=""; return; }
+    var lector=new FileReader();
+    lector.onload=function(){
+      try{ sessionStorage.setItem("acfcImpPendiente",JSON.stringify({name:f.name,text:lector.result})); }
+      catch(e){ alert("No se pudo preparar el proyecto para cargarlo."); impHome.value=""; return; }
+      location.href=window.acfcHerramienta+"#visor";
+    };
+    lector.readAsText(f);
+  });
 
   /* Ventana del tutorial: el botón abre la herramienta con solo ese tutorial, sin entrar en sus opciones */
   var win=document.getElementById("tutWin"), frame=document.getElementById("tutWinF");
+  /* Botonera: se abre embebida aquí (con Guardar y Cargar botonera dentro), sin ir a los tipos de registro */
+  document.getElementById("btnBotHome").addEventListener("click",function(){
+    document.getElementById("tutWinT").textContent="Botonera";
+    frame.src=window.acfcHerramienta+"#visor&accion=botonera"; win.showModal();
+  });
   document.querySelectorAll("a.tut").forEach(function(a){
     a.addEventListener("click",function(e){
       e.preventDefault();
