@@ -323,7 +323,7 @@ body.markBtnsHidden .hdlTime.markLbl{display:none!important}
 #vxPrev{width:100%;max-width:100%;display:block}
 #vxInfo{overflow-wrap:anywhere;line-height:1.45}
 #vxX{position:absolute;top:8px;right:8px;width:32px;height:32px;padding:0;line-height:1;font-size:18px;display:flex;align-items:center;justify-content:center}
-dialog#dlgBot{width:min(620px,94vw);height:calc(100vh - 24px);max-height:calc(100vh - 24px);overflow:auto}
+dialog#dlgBot{width:min(620px,94vw);height:calc(100vh - 24px);max-height:calc(100vh - 24px);overflow:auto;resize:both;min-width:300px;min-height:260px;max-width:calc(100vw - 8px)}
 .botWrap{display:grid;gap:12px}
 .botSec{border-top:1px solid var(--line);padding-top:10px;display:grid;gap:8px}
 .botSec h3{margin:0;font-family:var(--f-disp);font-size:15px;text-transform:uppercase;letter-spacing:.3px}
@@ -4148,6 +4148,10 @@ window.renderHalfBands = function(b1,b2,mk,d){
     $("botDetErr").textContent=$("botJugErr").textContent=""; botSync(); renderBot(); refresh();
   };
   $("botClose").onclick=$("botDone").onclick=()=>dlgBot.close();
+  // Tamaño de la ventana de la botonera: se cambia arrastrando la esquina inferior derecha y se recuerda en este navegador
+  const BOT_TAM_KEY="acfcBotTamano";
+  try{ const t=JSON.parse(localStorage.getItem(BOT_TAM_KEY)||"null"); if(t&&t.w&&t.h){ dlgBot.style.width=t.w+"px"; dlgBot.style.height=t.h+"px"; } }catch(_){}
+  if(window.ResizeObserver) new ResizeObserver(()=>{ if(!dlgBot.open) return; try{ localStorage.setItem(BOT_TAM_KEY,JSON.stringify({w:Math.round(dlgBot.offsetWidth),h:Math.round(dlgBot.offsetHeight)})); }catch(_){} }).observe(dlgBot);
   $("botCatCancel").onclick=botCancelEdit;
   $("botCatAdd").onclick=botAddCat; $("botDetAdd").onclick=botAddDet; $("botJugAdd").onclick=botAddJug;
   [["botCatName",botAddCat],["botDetName",botAddDet],["botJugName",botAddJug]].forEach(([id,fn])=>
