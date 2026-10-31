@@ -1042,6 +1042,27 @@ html #tabEditor aside .pintBlock:has(#pintBodyEd[hidden]) .pbHead{margin-bottom:
   #tabLive[data-lv="vid"] .liveMain{display:none}
 }
 /* ===== fin vistas móvil registro sin vídeo ===== */
+/* Conversión vídeos · cambio de formato a MP4 en el navegador */
+#tabConv{padding:16px 20px 28px;max-width:960px;margin:0 auto;display:grid;gap:14px}
+#tabConv[hidden],#tabConv .convPanel[hidden]{display:none}
+#tabConv .convPanel{background:var(--panel);border:1px solid var(--line);border-top:3px solid var(--ink);padding:14px;display:grid;gap:12px;min-width:0}
+#tabConv .convPanel h2{margin:0;font-family:var(--f-disp);font-size:16px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+#tabConv .convPanel h2::before{content:"";width:6px;height:6px;background:var(--red);flex:none}
+#tabConv .convHelp{margin:0;font-size:13px;color:var(--muted)}
+#tabConv .convDrop{border:1px dashed var(--line);padding:22px 14px;display:grid;gap:10px;justify-items:center;text-align:center;font-size:14px;color:var(--muted)}
+#tabConv .convDrop.over{border-color:var(--red);color:var(--ink)}
+#tabConv .convName{font-weight:700;color:var(--ink);word-break:break-all}
+#tabConv .convRow{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+#tabConv .convRow label{font-size:13px;color:var(--muted);display:flex;gap:6px;align-items:center}
+#tabConv .convBar{height:8px;background:var(--line);overflow:hidden}
+#tabConv .convBar i{display:block;height:100%;width:0;background:var(--red);transition:width .2s}
+#tabConv .convBar.indet i{width:30%!important;transition:none;animation:convSlide 1.2s linear infinite}
+@keyframes convSlide{from{transform:translateX(-100%)}to{transform:translateX(340%)}}
+#tabConv .convMsg{font-size:13px;color:var(--muted);min-height:1em;margin:0}
+#tabConv .convMsg.err{color:var(--red)}
+#tabConv video{width:100%;max-height:420px;background:#000}
+@media (max-width:640px){#tabConv{padding:10px 12px 16px}}
+/* ===== fin conversión vídeos ===== */
 
 /* =====================================================================
    ACFC · INTERFAZ v2 (2026-10-02) · colores de marca, jerarquía y móvil
@@ -1154,6 +1175,7 @@ aside h2{font-size:13px;letter-spacing:.05em}
   #tabBtnEditor::after{content:"";display:block;width:20px;height:20px;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='6' cy='6' r='3'/%3E%3Ccircle cx='6' cy='18' r='3'/%3E%3Cpath d='M20 4 8.1 15.9M14.5 14.5 20 20M8.1 8.1 12 12'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='6' cy='6' r='3'/%3E%3Ccircle cx='6' cy='18' r='3'/%3E%3Cpath d='M20 4 8.1 15.9M14.5 14.5 20 20M8.1 8.1 12 12'/%3E%3C/svg%3E") center/contain no-repeat}
   #tabBtnVisor::after{content:"";display:block;width:20px;height:20px;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='2' y='6' width='14' height='12' rx='2'/%3E%3Cpath d='m22 8-6 4 6 4z'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='2' y='6' width='14' height='12' rx='2'/%3E%3Cpath d='m22 8-6 4 6 4z'/%3E%3C/svg%3E") center/contain no-repeat}
   #tabBtnLive::after{content:"";display:block;width:20px;height:20px;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='14' r='8'/%3E%3Cpath d='M12 14V9M9 2h6'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='14' r='8'/%3E%3Cpath d='M12 14V9M9 2h6'/%3E%3C/svg%3E") center/contain no-repeat}
+  #tabBtnConv::after{content:"";display:block;width:20px;height:20px;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 4v14m0 0-3-3m3 3 3-3M17 20V6m0 0-3 3m3-3 3 3'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 4v14m0 0-3-3m3 3 3-3M17 20V6m0 0-3 3m3-3 3 3'/%3E%3C/svg%3E") center/contain no-repeat}
   header .sub,header .sp{display:none!important}
   header label.btn.primary{flex:none;padding:7px 10px;font-size:10.5px;letter-spacing:.1em;white-space:nowrap}
   /* vídeo + mandos fijos arriba: la lista se desliza por debajo */
@@ -1233,6 +1255,7 @@ html.acfc-imm header .tab::after{font-size:10.5px;letter-spacing:.14em}
 html.acfc-imm #tabBtnEditor::after{content:"";display:block;width:20px;height:20px;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='6' cy='6' r='3'/%3E%3Ccircle cx='6' cy='18' r='3'/%3E%3Cpath d='M20 4 8.1 15.9M14.5 14.5 20 20M8.1 8.1 12 12'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='6' cy='6' r='3'/%3E%3Ccircle cx='6' cy='18' r='3'/%3E%3Cpath d='M20 4 8.1 15.9M14.5 14.5 20 20M8.1 8.1 12 12'/%3E%3C/svg%3E") center/contain no-repeat}
 html.acfc-imm #tabBtnVisor::after{content:"";display:block;width:20px;height:20px;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='2' y='6' width='14' height='12' rx='2'/%3E%3Cpath d='m22 8-6 4 6 4z'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='2' y='6' width='14' height='12' rx='2'/%3E%3Cpath d='m22 8-6 4 6 4z'/%3E%3C/svg%3E") center/contain no-repeat}
 html.acfc-imm #tabBtnLive::after{content:"";display:block;width:20px;height:20px;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='14' r='8'/%3E%3Cpath d='M12 14V9M9 2h6'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='14' r='8'/%3E%3Cpath d='M12 14V9M9 2h6'/%3E%3C/svg%3E") center/contain no-repeat}
+html.acfc-imm #tabBtnConv::after{content:"";display:block;width:20px;height:20px;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 4v14m0 0-3-3m3 3 3-3M17 20V6m0 0-3 3m3-3 3 3'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 4v14m0 0-3-3m3 3 3-3M17 20V6m0 0-3 3m3-3 3 3'/%3E%3C/svg%3E") center/contain no-repeat}
 /* el vídeo ocupa toda la pantalla */
 html.acfc-imm #tabVisor main,html.acfc-imm #tabEditor .edgrid{display:block;padding:0;max-width:none}
 html.acfc-imm #tabVisor main>section,html.acfc-imm #tabEditor .edgrid>section{position:fixed;inset:0;z-index:40;background:#000;display:block}
@@ -1444,7 +1467,7 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
   <a class="acfcUtil__site" href="https://acfootballcenter.eus/?utm_source=lezama-talks&amp;utm_medium=herramienta-videoanalisis&amp;utm_campaign=promo-cursos&amp;utm_content=barra" target="_blank" rel="noopener">acfootballcenter.eus ↗</a>
 </div></div>
 <header>
-  <h1 class="acfcBrand"><a href="https://acfootballcenter.eus/" target="_blank" rel="noopener" title="Athletic Club Football Center"><img src="https://acfootballcenter.eus/wp-content/uploads/2022/11/acfc-logo-white.svg" alt="Athletic Club Football Center" width="118" height="32"></a><span class="acfcBrandTxt">Videoanálisis<small>Lezama Talks</small></span></h1><nav class="tabs" role="tablist"><button class="tab" role="tab" id="tabBtnEditor" aria-label="Editor básico" title="Editor básico" aria-selected="false">Editor básico</button><button class="tab" role="tab" id="tabBtnVisor" aria-label="Registro con vídeo" title="Registro con vídeo" aria-selected="true">Registro con vídeo</button><button class="tab" role="tab" id="tabBtnLive" aria-label="Registro sin vídeo" title="Registro sin vídeo" aria-selected="false">Registro sin vídeo</button></nav><span class="sub" id="vidName">cortes3.mp4</span><span class="sub" id="vidNote" style="font-size:12px"></span>
+  <h1 class="acfcBrand"><a href="https://acfootballcenter.eus/" target="_blank" rel="noopener" title="Athletic Club Football Center"><img src="https://acfootballcenter.eus/wp-content/uploads/2022/11/acfc-logo-white.svg" alt="Athletic Club Football Center" width="118" height="32"></a><span class="acfcBrandTxt">Videoanálisis<small>Lezama Talks</small></span></h1><nav class="tabs" role="tablist"><button class="tab" role="tab" id="tabBtnEditor" aria-label="Editor básico" title="Editor básico" aria-selected="false">Editor básico</button><button class="tab" role="tab" id="tabBtnVisor" aria-label="Registro con vídeo" title="Registro con vídeo" aria-selected="true">Registro con vídeo</button><button class="tab" role="tab" id="tabBtnLive" aria-label="Registro sin vídeo" title="Registro sin vídeo" aria-selected="false">Registro sin vídeo</button><button class="tab" role="tab" id="tabBtnConv" aria-label="Conversión vídeos" title="Convertir vídeos a MP4" aria-selected="false">Conversión vídeos</button></nav><span class="sub" id="vidName">cortes3.mp4</span><span class="sub" id="vidNote" style="font-size:12px"></span>
   <select id="vidSel" hidden aria-label="Vídeo abierto en el registro" title="Cambiar de vídeo"></select>
   <!-- ACFC · formaciones en la cabecera (actualizar fechas cada edición) -->
   <nav class="acfcHdrLinks" aria-label="Próximas formaciones">
@@ -1646,6 +1669,7 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
           <div class="row" style="margin:0">
             <label for="flt">Filtros</label>
             <select id="flt"><option value="">Todas</option></select>
+            <select id="fltVid" aria-label="Filtrar por vídeo" title="Ver solo los eventos de un vídeo" hidden><option value="">Todos los vídeos</option></select>
             <button type="button" class="btn" id="fltClear" title="Quitar todos los filtros">Limpiar</button>
           </div>
         </div>
@@ -2153,6 +2177,39 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
         <button type="button" class="btn primary" id="liveToVideo" title="Elige el vídeo en tu ordenador y sincroniza los eventos con él aquí mismo">Añadir el vídeo y sincronizar</button>
         <input type="file" id="liveFile" accept="video/*" hidden>
       </div>
+    </div>
+  </div>
+</section>
+
+<section id="tabConv" hidden>
+  <div class="convPanel">
+    <h2>Conversión de vídeos</h2>
+    <p class="convHelp">Convierte vídeos .mov, .avi, .mkv, .wmv y otros formatos a MP4 (H.264 + AAC). La conversión se hace en tu ordenador: el vídeo no se sube a ningún servidor.</p>
+    <div class="convDrop" id="convDrop">
+      <div>Arrastra aquí un vídeo o elígelo desde tu equipo.</div>
+      <label class="btn primary" for="convFile">Elegir vídeo</label>
+      <input type="file" id="convFile" accept="video/*,.mov,.avi,.mkv,.wmv,.flv,.mpg,.mpeg,.m4v,.3gp,.mts,.ts,.webm" hidden>
+    </div>
+    <div class="convName" id="convName"></div>
+    <div class="convRow">
+      <label>Resolución
+        <select id="convQ">
+          <option value="1080">1080p</option>
+          <option value="720" selected>720p</option>
+        </select>
+      </label>
+      <button type="button" class="btn primary" id="convGo" disabled>Convertir a MP4</button>
+      <button type="button" class="btn" id="convCancel" hidden>Cancelar</button>
+    </div>
+    <div class="convBar" id="convBar" hidden><i id="convBarFill"></i></div>
+    <p class="convMsg" id="convMsg" aria-live="polite"></p>
+  </div>
+  <div class="convPanel" id="convResult" hidden>
+    <h2>Vídeo convertido</h2>
+    <video id="convOut" controls playsinline></video>
+    <div class="convRow">
+      <a class="btn primary" id="convDl" href="#" download>Descargar MP4</a>
+      <span class="convMsg" id="convOutInfo"></span>
     </div>
   </div>
 </section>
@@ -3336,7 +3393,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   function sanitize(arr){ return arr.filter(e=>e&&typeof e==="object").slice(0,500).map((e,i)=>({
     id:String(e.id||"e"+i).slice(0,20), min:String(e.min||"0:00").slice(0,8),
     cat:CATS[e.cat]?e.cat:"OTRO", eq:e.eq==="rival"?"rival":"propio", det:String(e.det||"").slice(0,60), jug:String(e.jug||"").slice(0,40), coment:String(e.coment||"").slice(0,200),
-    fixed:Number.isFinite(+e.fixed)&&e.fixed!==null?+e.fixed:null, clip:validClip(e.clip), ...(e.man===true?{man:true}:{}) })); }
+    fixed:Number.isFinite(+e.fixed)&&e.fixed!==null?+e.fixed:null, clip:validClip(e.clip), ...(e.man===true?{man:true}:{}), ...(e.vid?{vid:String(e.vid).slice(0,80)}:{}) })); }
   function validClip(c){ if(!c||typeof c!=="object") return null; const a=+c.a, b=+c.b; if(!(isFinite(a)&&isFinite(b)&&b>a&&a>=0)) return null;
     let segs=Array.isArray(c.segs)?c.segs.slice(0,200).map(g=>({s:+g.s,e:+g.e,off:!!g.off})).filter(g=>isFinite(g.s)&&isFinite(g.e)&&g.e>g.s).sort((x,y)=>x.s-y.s):[];
     if(!segs.length) segs=[{s:a,e:b,off:false}]; return {a,b,segs}; }
@@ -3418,7 +3475,22 @@ window.renderHalfBands = function(b1,b2,mk,d){
   let prevEq="propio";
   // Filtro del registro por equipo: "" = todos; pulsar de nuevo el botón activo lo quita
   let fltEq="";
-  const passEq=e=>!fltEq||eqOk(e.eq)===fltEq;
+  // Filtro por vídeo: "" = todos; "__none__" = eventos sin vídeo asignado (p. ej. importados de Excel)
+  const passVid=e=>{ const f=$("fltVid").value; return !f||(f==="__none__"?!e.vid:e.vid===f); };
+  const passEq=e=>(!fltEq||eqOk(e.eq)===fltEq)&&passVid(e);
+  // Opciones del selector de vídeo: los del registro y los que tienen eventos; se oculta si solo hay uno
+  function renderVidFilter(){
+    const S=$("fltVid"), cur=S.value;
+    const names=[...new Set([...(window.__regVids||[]).map(f=>f.name),...events.map(e=>e.vid).filter(Boolean)])];
+    S.replaceChildren(el("option",{value:"",textContent:"Todos los vídeos"}));
+    names.forEach((n,i)=>S.append(el("option",{value:n,textContent:(i+1)+". "+n})));
+    if(events.some(e=>!e.vid)) S.append(el("option",{value:"__none__",textContent:"Sin vídeo asignado"}));
+    S.value=[...S.options].some(o=>o.value===cur)?cur:"";
+    S.hidden=S.options.length<3;
+  }
+  // Etiqueta «V1», «V2»… de cada evento, con el mismo color que su vídeo en la lista de vídeos
+  const vidBadge=e=>{ if(!e.vid||!window.acfcVidInfo) return []; const d=window.acfcVidInfo(e.vid);
+    return [el("span",{textContent:"V"+d.n,title:"Vídeo: "+e.vid,style:"font-size:10px;font-weight:700;line-height:1.5;padding:0 4px;color:#fff;background:"+d.c})]; };
   document.querySelectorAll("#fltEqBtns .fltEq").forEach(b=>{
     b.onclick=()=>{
       fltEq=b.dataset.eq==="ambos"||fltEq===b.dataset.eq?"":b.dataset.eq;
@@ -3428,6 +3500,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   });
   $("fltClear").onclick=()=>{
     $("flt").value="";
+    $("fltVid").value="";
     fltEq="";
     document.querySelectorAll("#fltEqBtns .fltEq").forEach(x=>{ const on=x.dataset.eq==="ambos"; x.classList.toggle("active",on); x.setAttribute("aria-pressed",on); });
     refresh();
@@ -3808,7 +3881,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
       row.append(chk);
       row.append(
         el("div",{className:"m"},[el("div",{textContent:cutRangeText(e)||e.min,title:e.clip?"Corte ajustado a mano · minuto del evento: "+e.min:""}),el("div",{className:"cl",textContent:(s=>s>=60?Math.floor(s/60)+" min "+String(s%60).padStart(2,"0")+" s":s+" s")(Math.round(clipLen(e)))})]),
-        el("div",{className:"t"},[el("div",{style:"display:flex;align-items:center;gap:6px"},[el("span",{className:"eqDot "+(e.eq==="rival"?"rival":"propio"),title:e.eq==="rival"?"Rival":"Mi equipo"}),...(e.man?[el("b",{textContent:"M",title:"Registro manual",style:"color:var(--red)"})]:[]),el("b",{textContent:e.cat}),...pintBadge(e)]),el("div",{textContent:e.det+(e.jug?" · "+e.jug:"")}),...(e.coment?[el("div",{textContent:e.coment,style:"font-style:italic"})]:[])])
+        el("div",{className:"t"},[el("div",{style:"display:flex;align-items:center;gap:6px"},[el("span",{className:"eqDot "+(e.eq==="rival"?"rival":"propio"),title:e.eq==="rival"?"Rival":"Mi equipo"}),...(e.man?[el("b",{textContent:"M",title:"Registro manual",style:"color:var(--red)"})]:[]),el("b",{textContent:e.cat}),...vidBadge(e),...pintBadge(e)]),el("div",{textContent:e.det+(e.jug?" · "+e.jug:"")}),...(e.coment?[el("div",{textContent:e.coment,style:"font-style:italic"})]:[])])
       );
       const acts=el("div",{className:"acts"});
       const inPl=inAnyPlaylist(e.id);
@@ -4183,7 +4256,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     document.querySelectorAll("#fltEqBtns .fltEq").forEach(x=>{ const on=(x.dataset.eq==="ambos"?"":x.dataset.eq)===fltEq; x.classList.toggle("active",on); x.setAttribute("aria-pressed",on); });
     refresh();
   };
-  const refresh=()=>{syncRegTlFlt(); renderList(); renderMarks(); renderHalfMarks(); renderClip(); renderPlaylist(); tick();};
+  const refresh=()=>{syncRegTlFlt(); renderVidFilter(); renderList(); renderMarks(); renderHalfMarks(); renderClip(); renderPlaylist(); tick();};
 
   // ---------- playback ----------
   function go(e,play=true){ if(!v.src) return; active=e.id; if(selEv!==e.id) openClip(e,false); const k=keptOf(e);
@@ -4252,7 +4325,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     $("fsClock").textContent=$("clock").textContent; $("fsMatch").textContent=mc?("⏱ "+mc):"";
     if(!fsSeeking) $("fsSeek").value=d?Math.round(t/d*1000):0;
     if(vZoom>1&&d&&Date.now()-vPanTs>2500){ const f=t/d; if(f<vZv||f>vZv+1/vZoom){ vZv=f-0.5/vZoom; vApplyZoom(); } } // el zoom sigue al cabezal
-    const p=d?Math.min(100,t/d*100):0; $("prog").style.width=p+"%"; $("head").style.left=p+"%"; $("vSeekHead").style.left=p+"%"; $("vHeadClock").style.left=p+"%"; $("vHeadClock").textContent=mc?("⏱ "+mc):"";
+    const p=d?Math.min(100,t/d*100):0; $("prog").style.width=p+"%"; $("head").style.left=p+"%"; $("vSeekHead").style.left=p+"%"; $("vHeadClock").style.left=p+"%"; $("vHeadClock").textContent=mc?("⏱ "+mc+" · vídeo "+fmt(t).replace(/\.\d$/,"")):"";
     { const b=$("vPintGo"); // icono de pintar junto al cabezal cuando está sobre un evento
       const fl=$("flt").value, over=d&&events.some(e=>{ if(!CATS[e.cat]||(fl&&fl!==e.cat)||!passEq(e)) return false; const c=clipOf(e); return t>=c.a&&t<=c.b; });
       b.hidden=!over; if(over){ b.style.left=p+"%"; b.classList.toggle("left",p>90); } }
@@ -4351,6 +4424,9 @@ window.renderHalfBands = function(b1,b2,mk,d){
   // lista de vídeos del registro: mismo diseño que la del editor de vídeo
   let regCur=null; const regDurs=new Map();
   const REG_SRC_COLORS=["#2f6b3c","#3F5568","#D3291E","#C98A1B","#7A1712","#6B5B4B","#5E6B3A","#8A8F96"];
+  // número y color de un vídeo (los de la lista de vídeos del registro) y vídeo que se está registrando
+  window.acfcVidInfo=name=>{ const i=regVids.findIndex(f=>f.name===name); return {n:i>=0?i+1:"?",c:i>=0?REG_SRC_COLORS[i%REG_SRC_COLORS.length]:"var(--muted)"}; };
+  window.acfcVidTag=()=>{ const n=$("vidName").textContent.trim(); return n?{vid:n.slice(0,80)}:{}; };
   const regFmt=s=>{ s=Math.max(0,Math.round(s)); const h=Math.floor(s/3600), m=Math.floor(s%3600/60), x=s%60; return (h?h+":"+String(m).padStart(2,"0"):m)+":"+String(x).padStart(2,"0"); };
   function regDurOf(f){
     if(f===regCur&&isFinite(v.duration)&&v.duration>0) regDurs.set(f,v.duration);
@@ -4548,7 +4624,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   v.addEventListener("volumechange",syncVMute);
   $("rate").onchange=e=>v.playbackRate=+e.target.value;
   $("track").onclick=ev=>{ if(!v.duration) return; const r=$("catZoomWrap").getBoundingClientRect(); playing=null; v.currentTime=(ev.clientX-r.left)/r.width*v.duration; tick(); };
-  ["flt"].forEach(id=>$(id).addEventListener("input",()=>{ refresh(); }));
+  ["flt","fltVid"].forEach(id=>$(id).addEventListener("input",()=>{ refresh(); }));
   $("offRow").style.display="none";
 
   // ---------- edición ----------
@@ -4767,8 +4843,8 @@ window.renderHalfBands = function(b1,b2,mk,d){
     if($("fJug").value) addJugTo($("fJug").value);
     const data={min:$("fMin").value.trim().slice(0,8),cat:$("fCat").value,eq:eqOk($("fEq").value),det:$("fDet").value.trim().slice(0,60),jug:$("fJug").value.trim().slice(0,40),coment:$("fComent").value.trim().slice(0,200)};
     if(editId){ Object.assign(events.find(x=>x.id===editId),data); }
-    else if(manualMode&&manA!==null&&manB!==null) events.push({id:"u"+Date.now(),...data,man:true,fixed:+manA.toFixed(2),clip:{a:manA,b:manB,segs:[{s:manA,e:manB,off:false}]}});
-    else events.push({id:"u"+Date.now(),...data,fixed:+(v.currentTime||0).toFixed(2)});
+    else if(manualMode&&manA!==null&&manB!==null) events.push({id:"u"+Date.now(),...data,...window.acfcVidTag(),man:true,fixed:+manA.toFixed(2),clip:{a:manA,b:manB,segs:[{s:manA,e:manB,off:false}]}});
+    else events.push({id:"u"+Date.now(),...data,...window.acfcVidTag(),fixed:+(v.currentTime||0).toFixed(2)});
     save(); refresh();
     openDlg(null); // la botonera no se cierra al guardar (ni emergente ni encajada): queda lista para el siguiente evento hasta pulsar Cerrar/Cancelar/Esc
   });
@@ -5702,7 +5778,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   }
 
   // ---------- pestañas ----------
-  const tabs=[["tabBtnVisor","tabVisor"],["tabBtnEditor","tabEditor"],["tabBtnLive","tabLive"]];
+  const tabs=[["tabBtnVisor","tabVisor"],["tabBtnEditor","tabEditor"],["tabBtnLive","tabLive"],["tabBtnConv","tabConv"]];
   tabs.forEach(([b,p])=>$(b).onclick=()=>{ tabs.forEach(([b2,p2])=>{ $(b2).setAttribute("aria-selected",b2===b); $(p2).hidden=b2!==b; });
     document.querySelectorAll("video").forEach(x=>{ if(!x.closest("#"+p)) x.pause(); });
     if(p==="tabLive"&&window.acfcLive) window.acfcLive.render();
@@ -6214,7 +6290,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     s.addEventListener("input",()=>{ const d=dur(); if(d){ V.currentTime=s.value/1000*d; tick(); } });
     s.addEventListener("keydown",e=>e.stopPropagation()); }
   function tick(){ const d=dur(), t=V.currentTime||0; $("edClock").textContent=fmt(t).replace(/\.\d$/,"")+" / "+fmt(d||0).replace(/\.\d$/,"");
-    const mc=matchClockText(t); $("edMatchClock").textContent=mc?("⏱ "+mc):"";
+    const mc=matchClockText(t); $("edMatchClock").textContent=mc?("⏱ "+mc+" · vídeo "+fmt(t).replace(/\.\d$/,"")):"";
     $("edFsClock").textContent=fmt(t).replace(/\.\d$/,"")+" / "+fmt(d).replace(/\.\d$/,""); $("edFsMatch").textContent=mc?("⏱ "+mc):"";
     if(!edFsSeeking) $("edFsSeek").value=d?Math.round(t/d*1000):0;
     $("edHead").style.left=(d?Math.min(100,t/d*100):0)+"%";
@@ -10801,6 +10877,105 @@ try{var v=localStorage.getItem(KEY);if(v==="botev"||v==="vid")set(v)}catch(e){}}
   document.addEventListener("click",function(){setTimeout(sync,0);},true);
   document.addEventListener("keyup",sync,true);
   setInterval(sync,500); sync();
+})();
+</script>
+<!-- Conversión vídeos · ffmpeg.wasm se carga solo la primera vez que se convierte -->
+<script id="convScript">
+(function(){
+  var FF_URL="https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.10/dist/esm";
+  var CORE_URL="https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/esm";
+  var BIG=1.5*1073741824;
+  var ff=null, ffLoading=null, working=false, cancelled=false, file=null, outUrl="";
+  var $c=function(id){return document.getElementById(id);};
+
+  function msg(t,err){ var m=$c("convMsg"); m.textContent=t; m.classList.toggle("err",!!err); }
+  // p = null oculta la barra; p = undefined la muestra animada (no se conoce el avance todavía)
+  function bar(p){
+    $c("convBar").hidden=p===null;
+    $c("convBar").classList.toggle("indet",p===undefined);
+    $c("convBarFill").style.width=(typeof p==="number"?Math.round(p*100):0)+"%";
+  }
+  function fmtSize(b){ return b>=1073741824?(b/1073741824).toFixed(2)+" GB":(b/1048576).toFixed(1)+" MB"; }
+  function blobURL(url,type){
+    return fetch(url).then(function(r){ if(!r.ok) throw new Error("No se pudo descargar el motor de conversión ("+r.status+")."); return r.blob(); })
+      .then(function(b){ return URL.createObjectURL(new Blob([b],{type:type})); });
+  }
+  function getEngine(){
+    if(ff) return Promise.resolve(ff);
+    if(ffLoading) return ffLoading;
+    ffLoading=Promise.all([
+      import(FF_URL+"/index.js"),
+      blobURL(CORE_URL+"/ffmpeg-core.js","text/javascript"),
+      blobURL(CORE_URL+"/ffmpeg-core.wasm","application/wasm")
+    ]).then(function(r){
+      var inst=new r[0].FFmpeg();
+      inst.on("progress",function(e){ if(working&&isFinite(e.progress)) bar(Math.min(Math.max(e.progress,0),1)); });
+      // (si no llega progreso, la barra se queda animada)
+      // El worker de la librería vive en otro dominio: se carga a través de un blob que lo importa
+      var worker=URL.createObjectURL(new Blob(['import "'+FF_URL+'/worker.js";'],{type:"text/javascript"}));
+      return inst.load({classWorkerURL:worker,coreURL:r[1],wasmURL:r[2]}).then(function(){ ff=inst; return inst; });
+    }).catch(function(e){ ffLoading=null; throw e; });
+    return ffLoading;
+  }
+
+  function pick(f){
+    if(!f||working) return;
+    file=f;
+    $c("convName").textContent=f.name+" · "+fmtSize(f.size);
+    $c("convGo").disabled=false;
+    $c("convResult").hidden=true;
+    msg(f.size>BIG?"Este vídeo es muy grande y puede agotar la memoria del navegador. Si falla, prueba con una versión más ligera.":"Pulsa «Convertir a MP4».",false);
+  }
+
+  function convert(){
+    if(!file||working) return;
+    working=true; cancelled=false;
+    $c("convGo").disabled=true; $c("convCancel").hidden=false; $c("convResult").hidden=true;
+    bar(undefined); msg("Preparando el motor de conversión (la primera vez tarda unos segundos)…",false);
+    var src=file, base=src.name.replace(/\.[^.]+$/,"")||"video";
+    var ext=(src.name.match(/\.[a-z0-9]+$/i)||[".bin"])[0].toLowerCase();
+    var IN="entrada"+ext, OUT="salida.mp4", q=$c("convQ").value, inst;
+    getEngine().then(function(e){
+      inst=e; msg("Convirtiendo "+src.name+" a MP4… Mantén esta pestaña abierta.",false);
+      return src.arrayBuffer();
+    }).then(function(buf){
+      return inst.writeFile(IN,new Uint8Array(buf));
+    }).then(function(){
+      // Altura de salida según la resolución elegida; la anchura se calcula y min(…,ih) evita ampliar vídeos más pequeños
+      return inst.exec(["-i",IN,"-vf","scale=-2:min("+q+"\\,ih)","-c:v","libx264","-preset","veryfast","-crf","23","-pix_fmt","yuv420p","-c:a","aac","-b:a","128k","-movflags","+faststart","-y",OUT]);
+    }).then(function(code){
+      if(code!==0) throw new Error("La conversión ha fallado (código "+code+"). Comprueba que el archivo no esté dañado.");
+      return inst.readFile(OUT);
+    }).then(function(data){
+      inst.deleteFile(IN).catch(function(){}); inst.deleteFile(OUT).catch(function(){});
+      if(outUrl) URL.revokeObjectURL(outUrl);
+      outUrl=URL.createObjectURL(new Blob([data],{type:"video/mp4"}));
+      $c("convOut").src=outUrl;
+      var a=$c("convDl"); a.href=outUrl; a.download=base+".mp4";
+      $c("convOutInfo").textContent=base+".mp4 · "+fmtSize(data.byteLength);
+      $c("convResult").hidden=false;
+      msg("Listo. Puedes reproducir el MP4 o descargarlo.",false);
+    }).catch(function(e){
+      msg(cancelled?"Conversión cancelada.":(e&&e.message)||"No se pudo convertir el vídeo.",!cancelled);
+    }).then(function(){
+      working=false; $c("convGo").disabled=!file; $c("convCancel").hidden=true; bar(null);
+    });
+  }
+
+  function cancel(){
+    if(!working) return;
+    cancelled=true;
+    if(ff) ff.terminate();
+    ff=null; ffLoading=null; // la próxima conversión vuelve a cargar el motor
+  }
+
+  var dz=$c("convDrop");
+  ["dragenter","dragover"].forEach(function(t){ dz.addEventListener(t,function(e){ e.preventDefault(); e.stopPropagation(); dz.classList.add("over"); }); });
+  ["dragleave","drop"].forEach(function(t){ dz.addEventListener(t,function(e){ e.preventDefault(); e.stopPropagation(); dz.classList.remove("over"); }); });
+  dz.addEventListener("drop",function(e){ pick(e.dataTransfer.files[0]); });
+  $c("convFile").addEventListener("change",function(e){ pick(e.target.files[0]); e.target.value=""; });
+  $c("convGo").addEventListener("click",convert);
+  $c("convCancel").addEventListener("click",cancel);
 })();
 </script>
 </body>
