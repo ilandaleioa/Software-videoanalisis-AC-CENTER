@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Software de videoanálisis · Athletic Club Football Center</title>
+<title>Software de videoanálisis · AC Football Center · Athletic Club Football Center</title>
 <meta name="description" content="Software de videoanálisis de Athletic Club Football Center: editor, registro con y sin vídeo, conversión y fusión de vídeos.">
 <style>
   /* ===== Tokens ACFC (mismos que la herramienta) ===== */
@@ -29,12 +29,17 @@
   .hdr{background:var(--acfc-ink);border-bottom:3px solid var(--red)}
   .hdr-in{max-width:1100px;margin:0 auto;padding:22px 16px;display:flex;justify-content:center}
   .hdr img{height:56px;width:auto;display:block}
+  /* icono ↗ junto al logo: indica que lleva a la web de ACFC */
+  .hdrLogo{position:relative;display:block;line-height:0}
+  .hdrLogo::after{content:"\2197";position:absolute;top:50%;right:-26px;transform:translateY(-50%);width:18px;height:18px;display:flex;align-items:center;justify-content:center;border:1px solid #fff;color:#fff;font-size:12px;line-height:1;transition:background .2s,color .2s}
+  .hdrLogo:hover::after,.hdrLogo:focus-visible::after{background:#fff;color:var(--acfc-ink)}
 
   /* ===== Hero ===== */
   main{flex:1;width:100%;max-width:1100px;margin:0 auto;padding:40px 16px 32px}
   .hero{text-align:center;margin-bottom:32px}
   .hero h1{font-family:var(--f-disp);font-weight:700;text-transform:uppercase;letter-spacing:.6px;font-size:clamp(28px,5vw,44px);line-height:1.05;margin:0 0 8px}
   .hero h1::before{content:"";display:block;width:44px;height:4px;background:var(--red);margin:0 auto 14px}
+  .hero h1 .heroDos{display:block;margin-top:6px;font-size:.62em;letter-spacing:.4px;color:var(--red)}
   .hero p{margin:0;color:var(--muted);font-size:16px}
   .hero ul{display:inline-block;text-align:left;margin:14px 0 0;padding-left:20px;font-size:15px;line-height:1.45;color:var(--ink)}
   .hero li{margin:4px 0}
@@ -115,15 +120,16 @@
 
 <header class="hdr">
   <div class="hdr-in">
-    <img src="https://acfootballcenter.eus/wp-content/uploads/2022/11/acfc-logo-white.svg" alt="Athletic Club Football Center" width="200" height="56">
+    <a class="hdrLogo" href="https://acfootballcenter.eus/?utm_source=lezama-talks&amp;utm_medium=herramienta-videoanalisis&amp;utm_campaign=promo-cursos&amp;utm_content=portada-logo" target="_blank" rel="noopener" title="Ir a acfootballcenter.eus"><img src="https://acfootballcenter.eus/wp-content/uploads/2022/11/acfc-logo-white.svg" alt="Athletic Club Football Center" width="200" height="56"></a>
   </div>
 </header>
 
 <main>
   <section class="hero">
-    <h1>Software de videoanálisis</h1>
+    <h1>Software de videoanálisis <span class="heroDos">AC Football Center</span></h1>
     <p class="heroAutor">Realizado por <b>Ibon Landa</b> (responsable de analistas de cantera del Athletic Club / Docente AC Football Center)</p>
     <ul>
+      <li><b>Software de análisis:</b> herramienta para registrar, clasificar y revisar acciones de partido y entrenamiento.</li>
       <li><b>No requiere instalación:</b> funciona a través de la web.</li>
       <li><b>Compatible con ordenador, Android e iOS.</b></li>
     </ul>
@@ -222,7 +228,7 @@
 </dialog>
 
 <footer>
-  Athletic Club Football Center · Software de videoanálisis
+  Athletic Club Football Center · Software de videoanálisis · AC Football Center
 </footer>
 
 <script>
@@ -283,18 +289,16 @@
     else instrucciones("<p>Para instalarla en el móvil, abre esta misma página desde el teléfono:</p>"+PASOS_IOS+PASOS_AND);
   });
   document.getElementById("insCerrar").addEventListener("click",function(){ dlgIns.close(); });
-  /* Acceso directo descargable (.url en Windows/Linux, .webloc en Mac) con la URL de la herramienta */
+  /* Acceso directo descargable: un .html que redirige a la herramienta. Al abrirlo, el navegador va directo a la URL */
   var URL_HERRAMIENTA="https://ilandaleioa.github.io/Software-videoanalisis-AC-CENTER/";
   function descargarAcceso(){
     var url=/^https?:$/.test(location.protocol)?location.origin+location.pathname:URL_HERRAMIENTA;
-    var mac=/Mac/.test(navigator.platform||"")||/Macintosh/.test(ua);
-    var nombre=mac?"AC Center - Videoanalisis.webloc":"AC Center - Videoanalisis.url";
-    var contenido=mac
-      ? '<?xml version="1.0" encoding="UTF-8"?>\n<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">\n<plist version="1.0"><dict><key>URL</key><string>'+url+'</string></dict></plist>\n'
-      : "[InternetShortcut]\r\nURL="+url+"\r\n";
-    var blob=new Blob([contenido],{type:"application/octet-stream"});
+    var contenido='<!doctype html><html lang="es"><meta charset="utf-8"><title>AC Center · Videoanálisis</title>'+
+      '<meta http-equiv="refresh" content="0;url='+url+'"><script>location.replace("'+url+'");<\/script>'+
+      '<p><a href="'+url+'">Abrir AC Center · Videoanálisis</a></p>';
+    var blob=new Blob([contenido],{type:"text/html;charset=utf-8"});
     var enlace=document.createElement("a");
-    enlace.href=URL.createObjectURL(blob); enlace.download=nombre;
+    enlace.href=URL.createObjectURL(blob); enlace.download="AC Center - Videoanalisis.html";
     document.body.appendChild(enlace); enlace.click(); enlace.remove();
     setTimeout(function(){ URL.revokeObjectURL(enlace.href); },1000);
   }
