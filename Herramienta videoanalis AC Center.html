@@ -1600,6 +1600,15 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
   /* Móvil: se ocultan «Limpiar proyecto», la estrella (versión gratuita) y la corona (versión premium); siguen en escritorio */
   html header #acfcClearProj,html header #acfcFreeBtn.btn,html header #acfcLicBtn.btn{display:none!important}
 }
+/* ACFC · BOTONERA NEGRA: la ventana Botonera (nueva o editar) usa la paleta oscura de la marca (tokens propios) */
+dialog#dlgBot{--bg:#0B0D10;--panel:#15181D;--ink:#EDEDEB;--muted:#9AA0A6;--line:#2C3338;
+  color-scheme:dark;background:var(--panel);color:var(--ink);border-top:3px solid var(--red);box-shadow:0 8px 28px rgba(0,0,0,.6)}
+dialog#dlgBot::backdrop{background:rgba(0,0,0,.7)}
+dialog#dlgBot input,dialog#dlgBot select{color:var(--ink);background:var(--bg);border-color:var(--line)}
+dialog#dlgBot input::placeholder{color:var(--muted);opacity:1}
+dialog#dlgBot .botSec{border-top-color:var(--line)}
+dialog#dlgBot .btn:not(.primary):not(.edGreen){background:var(--panel);color:var(--ink);border-color:var(--line)}
+dialog#dlgBot .btn:not(.primary):not(.edGreen):hover{background:var(--ink);border-color:var(--ink);color:var(--panel)}
 </style>
 </head>
 <body>
