@@ -3504,7 +3504,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   }
   function movePl(id,dir){ const pl=curPl(); if(!pl) return; const i=pl.items.indexOf(id); const j=i+dir; if(i<0||j<0||j>=pl.items.length) return; [pl.items[i],pl.items[j]]=[pl.items[j],pl.items[i]]; savePlaylists(); renderPlaylist(); }
   function removeFromPl(id){ const pl=curPl(); if(!pl) return; pl.items=pl.items.filter(x=>x!==id); savePlaylists(); renderList(); renderPlaylist(); }
-  function clearPlaylist(){ const pl=curPl(); if(!pl||!pl.items.length) return; pl.items=[]; savePlaylists(); renderList(); renderPlaylist(); }
+  function clearPlaylist(){ const pl=curPl(); if(!pl||!pl.items.length) return; if(confirm("¿Vaciar la lista «"+pl.name+"»?")){ pl.items=[]; savePlaylists(); renderList(); renderPlaylist(); } }
   function removeEventFromAllPlaylists(id){ playlists.forEach(p=>{ p.items=p.items.filter(x=>x!==id); }); savePlaylists(); }
   function renderPlSelect(){
     const S=$("plSel"); S.replaceChildren();
@@ -3874,6 +3874,8 @@ window.renderHalfBands = function(b1,b2,mk,d){
       b.onclick=()=>{ botCat=k; renderBot(); };
       addEditE(b,"Editar nombre y color de «"+k+"»",()=>{ botCat=k; botEditCat=k; $("botCatName").value=k.charAt(0)+k.slice(1).toLowerCase(); $("botCatColor").value=cssToHex(o.c); $("botCatErr").textContent=""; renderBot(); $("botCatName").focus(); });
       if(!CAT_FIJAS.includes(k)) addDelX(b,k,()=>{
+        const n=events.filter(e=>e.cat===k).length;
+        if(!confirm("¿Borrar la categoría «"+k+"»?"+(n?"\n"+n+" evento(s) del registro pasarán a «Otro».":""))) return;
         if($("fCat").value===k) $("fCat").value="OTRO";
         if(botEditCat===k) botEditCat=null;
         removeCat(k); botSync(); renderBot(); refresh(); });
@@ -4044,6 +4046,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   };
   $("botDel").onclick=()=>{
     if(BOTS.lista.length<2) return; const a=botActual();
+    if(!confirm("¿Borrar la botonera «"+a.n+"»? Sus detalles y jugadores se perderán (los eventos registrados no se tocan).")) return;
     const i=BOTS.lista.indexOf(a), sig=BOTS.lista[i+1]||BOTS.lista[i-1];
     BOTS.lista.splice(i,1); BOTS.act=sig.id; botAplica(sig); saveBots();
     $("botDetErr").textContent=$("botJugErr").textContent=""; botSync(); renderBot(); refresh();
@@ -5649,6 +5652,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   $("plClear").onclick=clearPlaylist;
   $("delAllEv").onclick=()=>{
     if(!events.length) return;
+    if(!confirm("¿Borrar TODOS los eventos del registro ("+events.length+")? Esta acción no se puede deshacer.")) return;
     events=[]; playlists.forEach(p=>{ p.items=[]; }); savePlaylists(); closeClip(); save(); refresh();
   };
   window.acfcClearVisor=()=>{ events=[]; playlists.forEach(p=>{ p.items=[]; }); savePlaylists(); selectedIds.clear(); closeClip(); save(); refresh(); };
@@ -5880,10 +5884,11 @@ window.renderHalfBands = function(b1,b2,mk,d){
   }
   $("liveBulkDl").onclick=()=>liveDownload(live.events.filter(e=>liveChk.has(e.id)),false);
   $("liveBulkSep").onclick=()=>liveDownload(live.events.filter(e=>liveChk.has(e.id)),true);
-  $("liveBulkDel").onclick=()=>{ if(!liveChk.size) return;
+  $("liveBulkDel").onclick=()=>{ if(!liveChk.size) return; if(!confirm("¿Borrar los "+liveChk.size+" eventos seleccionados?")) return;
     live.events=live.events.filter(e=>!liveChk.has(e.id)); if(liveSel&&liveChk.has(liveSel)) liveSel=null; liveChk.clear(); liveCommit(); };
   $("liveBulkClear").onclick=()=>{ liveChk.clear(); liveRenderList(); };
   $("liveDelAll").onclick=()=>{ if(!live.events.length) return;
+    if(!confirm("¿Borrar TODOS los eventos del registro sin vídeo ("+live.events.length+")? Esta acción no se puede deshacer.")) return;
     live.events=[]; liveChk.clear(); liveSel=null; liveCommit(); };
   // ventana de edición de un evento
   function liveEditDlg(e){
@@ -5953,6 +5958,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
       if(Array.isArray(d.pintado)&&window.acfcPintLv) window.acfcPintLv.set(d.pintado);
     }); };
   $("liveNew").onclick=()=>{
+    if(!confirm("Se pondrá el cronómetro a cero y se borrarán los eventos y las marcas de este registro sin vídeo. ¿Continuar?")) return;
     livePause(); live=liveBlank(); liveSel=null; liveCommit();
   };
   window.acfcClearLive=()=>{ livePause(); live=liveBlank(); liveSel=null; liveChk.clear(); liveCommit(); };
@@ -5997,34 +6003,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   $("tabBtnEditor").click(); // el editor de vídeo es la pestaña inicial
   // Enlaces desde la portada: index.html#editor | #visor | #live | #conv | #fus
   const tabHash={editor:"tabBtnEditor",visor:"tabBtnVisor",live:"tabBtnLive",conv:"tabBtnConv",fus:"tabBtnFus"};
-  const [hashTab,...hashRest]=location.hash.slice(1).split("&");
-  if(tabHash[hashTab]) $(tabHash[hashTab]).click();
-  // Botones de «Proyectos y botoneras» de la portada: index.html#visor&accion=guardar-proyecto | cargar-proyecto | guardar-botonera | cargar-botonera | botonera
-  {
-    const accionPortada=(hashRest.find(p=>p.startsWith("accion="))||"").slice(7);
-    const resaltaCarga=id=>{
-      if(getComputedStyle($("pbRow")).display==="none") $("pbToggle").click(); // el bloque puede estar oculto por defecto
-      const el=document.querySelector('label[for="'+id+'"]'); if(!el) return;
-      el.scrollIntoView({block:"center"}); el.style.outline="2px solid var(--red)"; el.style.outlineOffset="3px";
-      setTimeout(()=>{ el.style.outline=""; el.style.outlineOffset=""; },2500);
-    };
-    const ACCIONES_PORTADA={
-      "guardar-proyecto":()=>$("saveProj").click(),
-      "guardar-botonera":()=>$("saveBot").click(),
-      "botonera":()=>$("btnBotonera").click(),
-      "cargar-botonera":()=>resaltaCarga("impBot")
-    };
-    if(ACCIONES_PORTADA[accionPortada]) ACCIONES_PORTADA[accionPortada]();
-    // «Cargar proyecto» de la portada: el archivo llega desde inicio.html y se carga con el mismo flujo que el botón de aquí
-    try{
-      const pend=JSON.parse(sessionStorage.getItem("acfcImpPendiente")||"null");
-      sessionStorage.removeItem("acfcImpPendiente");
-      if(pend&&typeof pend.text==="string"){
-        const dt=new DataTransfer(); dt.items.add(new File([pend.text],pend.name||"proyecto.json",{type:"application/json"}));
-        $("imp").files=dt.files; $("imp").dispatchEvent(new Event("change"));
-      }
-    }catch(e){}
-  }
+  if(tabHash[location.hash.slice(1)]) $(tabHash[location.hash.slice(1)]).click();
 
   // ---------- carga ----------
   function msg(t){ $("edMsg").textContent=t; $("edEmpty").hidden=false; }
@@ -6150,7 +6129,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   function syncCur(){ const s=sources[curSrc]; if(!s) return; s.segs=segs; s.inP=inP; s.outP=outP; s.hist=hist; s.marks=marks; }
   function moveSource(i,dir){ const j=i+dir; if(j<0||j>=sources.length) return; syncCur();
     [sources[i],sources[j]]=[sources[j],sources[i]]; if(curSrc===i) curSrc=j; else if(curSrc===j) curSrc=i; renderSources(); render(); }
-  function removeSource(i){ const s=sources[i]; if(!s) return;
+  function removeSource(i){ const s=sources[i]; if(!s||!confirm("¿Quitar «"+s.name+"» del editor?")) return;
     const wasActive=i===curSrc; if(s.file&&s.url&&s.url.startsWith("blob:")) URL.revokeObjectURL(s.url);
     sources.splice(i,1); if(curSrc>i) curSrc--; added=added.filter(it=>it.srcId!==s.id); stills=stills.filter(k=>k.srcId!==s.id);
     if(!sources.length){ curSrc=-1; segs=[]; inP=0; outP=0; hist=[]; sel=-1; marks=emptyMarks(); V.pause(); V.removeAttribute("src"); V.load();
@@ -6286,8 +6265,8 @@ window.renderHalfBands = function(b1,b2,mk,d){
   const selAdded=new Set();
   const selOk=it=>!selAdded.size||selAdded.has(it);
   function removeAdded(idx){ if(added[idx]===activeAdded) activeAdded=null; selAdded.delete(added[idx]); added.splice(idx,1); render(); }
-  function clearStills(){ stills.length=0; render(); }
-  function clearAdded(){ if(document.body.classList.contains("edStillsShow")) return clearStills(); added=[]; activeAdded=null; render(); }
+  function clearStills(){ if(stills.length&&!confirm("¿Quitar todas las capturas de pintado?")) return; stills.length=0; render(); }
+  function clearAdded(){ if(document.body.classList.contains("edStillsShow")) return clearStills(); if(added.length&&!confirm("¿Quitar todos los eventos de la lista?")) return; added=[]; activeAdded=null; render(); }
   $("edClearAdded").onclick=clearAdded;
   window.acfcClearEditor=()=>{ added=[]; activeAdded=null; stills.length=0; selAdded.clear(); render(); };
   function halfLabel(s,t){
@@ -6830,7 +6809,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     const f=box.querySelector("button"); if(f) f.focus({preventScroll:true});
   }
   $("edUndo").onclick=undo; $("edUndo2").onclick=undo; $("edRedo").onclick=redo;
-  $("edReset").onclick=()=>{ if(dur()){ segs=[{s:0,e:dur(),off:false}]; inP=0; outP=dur(); sel=-1; hist=[]; activeAdded=null; render(); } };
+  $("edReset").onclick=()=>{ if(dur()&&confirm("¿Quitar todos los cortes y recortes de este vídeo?")){ segs=[{s:0,e:dur(),off:false}]; inP=0; outP=dur(); sel=-1; hist=[]; activeAdded=null; render(); } };
 
   document.addEventListener("keydown",k=>{
     if($("tabEditor").hidden||exporting||/INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName)||!dur()) return;
@@ -10645,7 +10624,9 @@ html #acfcClearProj:hover{filter:brightness(.88);color:#fff}
   const $=id=>document.getElementById(id), btn=$("acfcClearProj"); if(!btn) return;
   const tab=()=>$("tabBtnEditor").getAttribute("aria-selected")==="true"?"editor":$("tabBtnLive").getAttribute("aria-selected")==="true"?"live":"visor";
   btn.addEventListener("click",()=>{
-    const t=tab();
+    const t=tab(), nombre={visor:"Registro con vídeo",editor:"Editor básico",live:"Registro sin vídeo"}[t];
+    const incl=t==="live"?"todos los eventos y las marcas, y el cronómetro a cero":"todos los eventos y todo el pintado";
+    if(!confirm("Se borrarán "+incl+" de «"+nombre+"». Esta acción no se puede deshacer. ¿Continuar?")) return;
     try{
       if(t==="visor"){ window.acfcClearVisor&&window.acfcClearVisor(); const p=window.acfcPint; if(p) p.set([]); }
       else if(t==="editor"){ window.acfcClearEditor&&window.acfcClearEditor(); const p=window.acfcPintEd; if(p) p.set([]); }
