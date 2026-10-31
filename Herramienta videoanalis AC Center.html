@@ -48,8 +48,8 @@ button,select,input{font:inherit;color:inherit}
 main{display:grid;grid-template-columns:minmax(0,1fr) 400px;gap:18px;padding:18px 22px;max-width:none;margin:0}
 @media (max-width:1250px){main{grid-template-columns:1fr} aside{max-height:none}}
 .stage{position:relative;background:#000;border-radius:8px;overflow:hidden;aspect-ratio:16/9}
-/* franja negra sobre el visor: muestra la opción de menú elegida */
-.stageBand{background:#000;color:#fff;font-family:var(--f-disp);font-size:15px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;padding:7px 12px;line-height:1.2;border-radius:8px 8px 0 0}
+/* nombre de la pestaña activa, en la fila de la cabecera (junto a HOME) */
+header .hdrOpt{font-family:var(--f-disp);font-size:17px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:#fff;white-space:nowrap;align-self:center;padding-left:6px}
 video{width:100%;height:100%;display:block;background:#000}
 .empty{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:#cfd6d1;text-align:center;padding:20px}
 .empty[hidden]{display:none}
@@ -245,6 +245,9 @@ html:not(.acfc-imm) #edCtl1.ctlAllHid,html:not(.acfc-imm) #edCtl2.ctlAllHid{disp
 #edCtlAllToggle{margin-left:auto}
 .headClock{position:absolute;top:-19px;transform:translate(-50%,-100%);font-family:var(--f-disp);font-size:16px;font-weight:700;line-height:1;color:var(--red);background:var(--panel);border:1px solid var(--red);padding:2px 6px;white-space:nowrap;pointer-events:none;z-index:7}
 .headClock:empty{display:none}
+.headClock .hcV{color:var(--muted)}
+#matchClock .hcV{color:var(--muted);font-size:15px;font-weight:600}
+.fsBar .fsMatch .hcV{color:#ccc;font-size:.8em;font-weight:600}
 .vPintGo{position:absolute;top:50%;transform:translate(10px,-50%);z-index:8;width:30px;height:30px;padding:0;display:flex;align-items:center;justify-content:center;font-size:16px;line-height:1;cursor:pointer;color:#fff;background:var(--red);border:1px solid var(--panel);border-radius:0;box-shadow:0 1px 4px rgba(0,0,0,.45)}
 .vPintGo:hover{background:var(--red-2,var(--red))}
 .vPintGo[hidden]{display:none}
@@ -1577,7 +1580,7 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
   <a class="acfcUtil__site" href="https://acfootballcenter.eus/?utm_source=lezama-talks&amp;utm_medium=herramienta-videoanalisis&amp;utm_campaign=promo-cursos&amp;utm_content=barra" target="_blank" rel="noopener">acfootballcenter.eus ↗</a>
 </div></div>
 <header>
-  <h1 class="acfcBrand"><a href="inicio.html" title="Ir a la portada"><img src="https://acfootballcenter.eus/wp-content/uploads/2022/11/acfc-logo-white.svg" alt="Athletic Club Football Center" width="118" height="32"></a><a class="acfcBrandSite" href="https://acfootballcenter.eus/?utm_source=lezama-talks&amp;utm_medium=herramienta-videoanalisis&amp;utm_campaign=promo-cursos&amp;utm_content=cabecera-logo" target="_blank" rel="noopener" title="Athletic Club Football Center" aria-label="Athletic Club Football Center (acfootballcenter.eus)"></a></h1><nav class="tabs" role="tablist"><a class="tab tabHome" href="inicio.html" title="Ir a la portada">Home</a><button class="tab" role="tab" id="tabBtnEditor" aria-label="Editor básico" title="Editor básico" aria-selected="false">Editor básico</button><button class="tab" role="tab" id="tabBtnVisor" aria-label="Registro con vídeo" title="Registro con vídeo" aria-selected="true">Registro con vídeo</button><button class="tab" role="tab" id="tabBtnLive" aria-label="Registro sin vídeo" title="Registro sin vídeo" aria-selected="false">Registro sin vídeo</button><button class="tab" role="tab" id="tabBtnConv" aria-label="Conversión vídeos" title="Convertir vídeos a MP4" aria-selected="false">Conversión vídeos</button><button class="tab" role="tab" id="tabBtnFus" aria-label="Fusiona vídeos" title="Fusiona, recorta y une varios vídeos" aria-selected="false">Fusiona vídeos</button></nav><span class="sub" id="vidName">cortes3.mp4</span><span class="sub" id="vidNote" style="font-size:12px"></span>
+  <h1 class="acfcBrand"><a href="inicio.html" title="Ir a la portada"><img src="https://acfootballcenter.eus/wp-content/uploads/2022/11/acfc-logo-white.svg" alt="Athletic Club Football Center" width="118" height="32"></a><a class="acfcBrandSite" href="https://acfootballcenter.eus/?utm_source=lezama-talks&amp;utm_medium=herramienta-videoanalisis&amp;utm_campaign=promo-cursos&amp;utm_content=cabecera-logo" target="_blank" rel="noopener" title="Athletic Club Football Center" aria-label="Athletic Club Football Center (acfootballcenter.eus)"></a></h1><nav class="tabs" role="tablist"><a class="tab tabHome" href="inicio.html" title="Ir a la portada">Home</a><button class="tab" role="tab" id="tabBtnEditor" aria-label="Editor básico" title="Editor básico" aria-selected="false">Editor básico</button><button class="tab" role="tab" id="tabBtnVisor" aria-label="Registro con vídeo" title="Registro con vídeo" aria-selected="true">Registro con vídeo</button><button class="tab" role="tab" id="tabBtnLive" aria-label="Registro sin vídeo" title="Registro sin vídeo" aria-selected="false">Registro sin vídeo</button><button class="tab" role="tab" id="tabBtnConv" aria-label="Conversión vídeos" title="Convertir vídeos a MP4" aria-selected="false">Conversión vídeos</button><button class="tab" role="tab" id="tabBtnFus" aria-label="Fusiona vídeos" title="Fusiona, recorta y une varios vídeos" aria-selected="false">Fusiona vídeos</button></nav><span class="hdrOpt" id="hdrOpt">Registro con vídeo</span><span class="sub" id="vidName">cortes3.mp4</span><span class="sub" id="vidNote" style="font-size:12px"></span>
   <select id="vidSel" hidden aria-label="Vídeo abierto en el registro" title="Cambiar de vídeo"></select>
   <span class="sp"></span>
   <span class="hdrRight"><button type="button" class="btn" id="acfcClearProj" title="Borra de golpe todos los eventos y pintados de esta pestaña">Limpiar proyecto</button>
@@ -1585,11 +1588,20 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
   <input type="file" id="file" accept="video/*" hidden>
   <input type="file" id="fileAdd" accept="video/*" multiple hidden>
 </header>
+<script>
+// nombre de la pestaña activa en la cabecera (sigue a aria-selected de las pestañas)
+(function(){
+  const opt=document.getElementById("hdrOpt");
+  const tabs=document.querySelectorAll('header .tab[role="tab"]');
+  const pick=()=>{ const s=[...tabs].find(t=>t.getAttribute("aria-selected")==="true"); if(opt&&s) opt.textContent=s.getAttribute("aria-label")||s.textContent.trim(); };
+  tabs.forEach(t=>new MutationObserver(pick).observe(t,{attributes:true,attributeFilter:["aria-selected"]}));
+  pick();
+})();
+</script>
 
 <div id="tabVisor">
 <main>
   <section>
-    <div class="stageBand" id="visBand">Registro con vídeo</div>
     <div class="stage">
       <video id="v" preload="metadata" playsinline></video>
       <div class="empty" id="empty">
@@ -4493,6 +4505,12 @@ window.renderHalfBands = function(b1,b2,mk,d){
     if(halfMarks.p2==null||t<halfMarks.p2) return fmtHM(t-halfMarks.p1);
     return fmtHM(2700+(t-halfMarks.p2));
   }
+  // Marcador de partido: ⏱ minuto de partido · 🎬 tiempo de vídeo (mismo formato que el cabezal)
+  function setMatchClock(el,t,mc){
+    el.textContent=mc?("⏱ "+mc+" · "):"";
+    if(!mc) return;
+    const v=document.createElement("span"); v.className="hcV"; v.textContent="🎬 "+fmt(t).replace(/\.\d$/,""); el.appendChild(v);
+  }
   { const tr=$("vSeekTrack"); let drag=false;
     const seekTo=ev=>{ const d=isFinite(v.duration)?v.duration:0; if(!d) return; const r=$("vZoomWrap").getBoundingClientRect(); v.currentTime=Math.min(1,Math.max(0,(ev.clientX-r.left)/r.width))*d; };
     tr.addEventListener("pointerdown",ev=>{ drag=true; tr.setPointerCapture(ev.pointerId); seekTo(ev); });
@@ -4534,11 +4552,12 @@ window.renderHalfBands = function(b1,b2,mk,d){
     s.addEventListener("keydown",e=>e.stopPropagation()); }
   function tick(){
     const t=v.currentTime||0, d=isFinite(v.duration)?v.duration:0;
-    $("clock").textContent=fmt(t).replace(/\.\d$/,"")+" / "+fmt(d).replace(/\.\d$/,"");    const mc=matchClockText(t); $("matchClock").textContent=mc?("⏱ "+mc):"";
-    $("fsClock").textContent=$("clock").textContent; $("fsMatch").textContent=mc?("⏱ "+mc):"";
+    $("clock").textContent=fmt(t).replace(/\.\d$/,"")+" / "+fmt(d).replace(/\.\d$/,"");    const mc=matchClockText(t); setMatchClock($("matchClock"),t,mc);
+    $("fsClock").textContent=$("clock").textContent; setMatchClock($("fsMatch"),t,mc);
     if(!fsSeeking) $("fsSeek").value=d?Math.round(t/d*1000):0;
     if(vZoom>1&&d&&Date.now()-vPanTs>2500){ const f=t/d; if(f<vZv||f>vZv+1/vZoom){ vZv=f-0.5/vZoom; vApplyZoom(); } } // el zoom sigue al cabezal
-    const p=d?Math.min(100,t/d*100):0; $("prog").style.width=p+"%"; $("head").style.left=p+"%"; $("vSeekHead").style.left=p+"%"; $("vHeadClock").style.left=p+"%"; $("vHeadClock").textContent=mc?("⏱ "+mc+" · 🎬 "+fmt(t).replace(/\.\d$/,"")):"";
+    const p=d?Math.min(100,t/d*100):0; $("prog").style.width=p+"%"; $("head").style.left=p+"%"; $("vSeekHead").style.left=p+"%"; $("vHeadClock").style.left=p+"%"; { const hc=$("vHeadClock"); hc.textContent=mc?"⏱ "+mc+" · ":""; // segundo valor (vídeo) en gris
+      if(mc){ const v=document.createElement("span"); v.className="hcV"; v.textContent="🎬 "+fmt(t).replace(/\.\d$/,""); hc.appendChild(v); } }
     { const b=$("vPintGo"); // icono de pintar junto al cabezal cuando está sobre un evento
       const fl=$("flt").value, over=d&&events.some(e=>{ if(!CATS[e.cat]||(fl&&fl!==e.cat)||!passEq(e)) return false; const c=clipOf(e); return t>=c.a&&t<=c.b; });
       b.hidden=!over; if(over){ b.style.left=p+"%"; b.classList.toggle("left",p>90); } }
@@ -4604,7 +4623,13 @@ window.renderHalfBands = function(b1,b2,mk,d){
     const url=URL.createObjectURL(f); (window.__fileByUrl=window.__fileByUrl||{})[url]=f; v.dataset.user="1"; v.dataset.url=url;
     showMsg("Abriendo "+f.name.replace(/[<>&"]/g,"")+"…");
     v.src=url; v.load(); $("vidName").textContent=f.name;
+    vidPut("visor",f);
     persist(f); }
+  // Vídeo subido: se guarda en IndexedDB para que no se pierda al ir a la portada (Home) y volver
+  function vidDb(){ return new Promise((res,rej)=>{ const q=indexedDB.open("acfcVideos",1); q.onupgradeneeded=()=>q.result.createObjectStore("v"); q.onsuccess=()=>res(q.result); q.onerror=()=>rej(q.error); }); }
+  async function vidPut(key,f){ try{ const d=await vidDb(); await new Promise((res,rej)=>{ const t=d.transaction("v","readwrite"); t.objectStore("v").put(f,key); t.oncomplete=res; t.onerror=()=>rej(t.error); }); d.close(); }catch(e){} }
+  async function vidGet(key){ try{ const d=await vidDb(); const f=await new Promise((res,rej)=>{ const r=d.transaction("v").objectStore("v").get(key); r.onsuccess=()=>res(r.result); r.onerror=()=>rej(r.error); }); d.close(); return f instanceof Blob?f:null; }catch(e){ return null; } }
+  window.acfcVidGet=vidGet;
   $("regUseEditor").onclick=()=>{
     const ev=$("edV"), u=ev&&(ev.currentSrc||ev.getAttribute("src"));
     if(!u){ showMsg("El editor no tiene vídeo cargado. Súbelo primero en la pestaña «Editor de vídeo»."); return; }
@@ -4629,6 +4654,10 @@ window.renderHalfBands = function(b1,b2,mk,d){
   const regVids=window.__regVids=[];
   function isVid(f){ return f&&(f.type.startsWith("video/")||/\.(mp4|m4v|mov|webm)$/i.test(f.name)); }
   function regVidAdd(f){ if(!regVids.some(x=>x.name===f.name&&x.size===f.size)) regVids.push(f); regVidSync(f); }
+  // al volver de la portada: se recupera el último vídeo subido en el registro con vídeo
+  vidGet("visor").then(f=>{ if(!f) return; regVidAdd(f); if(v.dataset.url) URL.revokeObjectURL(v.dataset.url);
+    const url=URL.createObjectURL(f); (window.__fileByUrl=window.__fileByUrl||{})[url]=f; v.dataset.user="1"; v.dataset.url=url;
+    v.src=url; v.load(); $("vidName").textContent=f.name; });
   function regVidSync(cur){ const S=$("vidSel"); S.textContent="";
     regVids.forEach((f,i)=>{ const o=document.createElement("option"); o.value=i; o.textContent=f.name; o.title=f.name; S.append(o); });
     const i=regVids.findIndex(x=>cur&&x.name===cur.name&&x.size===cur.size); if(i>=0) S.value=i;
@@ -5922,7 +5951,9 @@ window.renderHalfBands = function(b1,b2,mk,d){
     $("liveVidName").textContent=f.name; $("liveVidPanel").hidden=false;
     liveVid.addEventListener("loadedmetadata",()=>{ liveRender(); $("liveVidPanel").scrollIntoView({block:"start",behavior:"smooth"}); },{once:true});
   }
-  $("liveFile").onchange=ev=>{ liveLoadVideo(ev.target.files[0]); ev.target.value=""; };
+  $("liveFile").onchange=ev=>{ const f=ev.target.files[0]; liveLoadVideo(f); vidPut("live",f); ev.target.value=""; };
+  // al volver de la portada: se recupera el vídeo del registro sin vídeo
+  window.acfcVidGet("live").then(f=>{ if(f&&!liveVid.getAttribute("src")) liveLoadVideo(f); });
   $("liveToVideo").onclick=()=>$("liveFile").click();
   $("liveVidChange").onclick=()=>$("liveFile").click();
   // «Ver solo vídeo»: oculta el registro y deja el vídeo con la lista de eventos sincronizados
