@@ -800,6 +800,7 @@ kbd{border-radius:0;font-family:var(--f-body)}
 #tutDlgL .tutItem.go{background:color-mix(in srgb,var(--red) 18%,var(--panel))}
 #tutDlgL .tutToast{left:12px;right:12px;top:auto;bottom:10px}
 #tutDlgL .tutNote{font-size:10px;color:var(--muted)}
+#tutDlgL .tutPaintMk{position:absolute;left:24%;top:26%;width:34%;height:30%;border:3px solid var(--red);background:rgba(200,16,46,.15);box-shadow:0 0 8px rgba(200,16,46,.6);pointer-events:none;z-index:4}
 /* ===== fin tutorial ===== */
 /* Botón ojo (mostrar/ocultar botones de marcas): color propio, azul de la herramienta */
 #vMarkToggle,#edMarkToggle{background:var(--c-sal);border-color:var(--c-sal);color:#fff}
@@ -1042,6 +1043,64 @@ html #tabEditor aside .pintBlock:has(#pintBodyEd[hidden]) .pbHead{margin-bottom:
   #tabLive[data-lv="vid"] .liveMain{display:none}
 }
 /* ===== fin vistas móvil registro sin vídeo ===== */
+/* Conversión vídeos · cambio de formato a MP4 en el navegador */
+#tabConv{padding:16px 20px 28px;max-width:960px;margin:0 auto;display:grid;gap:14px}
+#tabConv[hidden],#tabConv .convPanel[hidden]{display:none}
+#tabConv .convPanel{background:var(--panel);border:1px solid var(--line);border-top:3px solid var(--ink);padding:14px;display:grid;gap:12px;min-width:0}
+#tabConv .convPanel h2{margin:0;font-family:var(--f-disp);font-size:16px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+#tabConv .convPanel h2::before{content:"";width:6px;height:6px;background:var(--red);flex:none}
+#tabConv .convHelp{margin:0;font-size:13px;color:var(--muted)}
+#tabConv .convDrop{border:1px dashed var(--line);padding:22px 14px;display:grid;gap:10px;justify-items:center;text-align:center;font-size:14px;color:var(--muted)}
+#tabConv .convDrop.over{border-color:var(--red);color:var(--ink)}
+#tabConv .convName{font-weight:700;color:var(--ink);word-break:break-all}
+#tabConv .convRow{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+#tabConv .convRow label{font-size:13px;color:var(--muted);display:flex;gap:6px;align-items:center}
+#tabConv .convBar{height:8px;background:var(--line);overflow:hidden}
+#tabConv .convBar i{display:block;height:100%;width:0;background:var(--red);transition:width .2s}
+#tabConv .convBar.indet i{width:30%!important;transition:none;animation:convSlide 1.2s linear infinite}
+@keyframes convSlide{from{transform:translateX(-100%)}to{transform:translateX(340%)}}
+#tabConv .convMsg{font-size:13px;color:var(--muted);min-height:1em;margin:0}
+#tabConv .convMsg.err{color:var(--red)}
+#tabConv video{width:100%;max-height:420px;background:#000}
+@media (max-width:640px){#tabConv{padding:10px 12px 16px}}
+/* ===== fin conversión vídeos ===== */
+
+/* Fusiona vídeos · sube varios vídeos, recórtalos, únelos y exporta a MP4 */
+#tabBtnFus::after{content:"";display:block;width:20px;height:20px;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 5h6v5H3zM3 14h6v5H3zM12 12h9M17 9l4 3-4 3'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 5h6v5H3zM3 14h6v5H3zM12 12h9M17 9l4 3-4 3'/%3E%3C/svg%3E") center/contain no-repeat}
+html.acfc-imm #tabBtnFus::after{content:"";display:block;width:20px;height:20px;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 5h6v5H3zM3 14h6v5H3zM12 12h9M17 9l4 3-4 3'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 5h6v5H3zM3 14h6v5H3zM12 12h9M17 9l4 3-4 3'/%3E%3C/svg%3E") center/contain no-repeat}
+#tabFus{padding:16px 20px 28px;max-width:960px;margin:0 auto;display:grid;gap:14px}
+#tabFus[hidden],#tabFus .fusPanel[hidden]{display:none}
+#tabFus .fusPanel{background:var(--panel);border:1px solid var(--line);border-top:3px solid var(--ink);padding:14px;display:grid;gap:12px;min-width:0}
+#tabFus .fusPanel h2{margin:0;font-family:var(--f-disp);font-size:16px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+#tabFus .fusPanel h2::before{content:"";width:6px;height:6px;background:var(--red);flex:none}
+#tabFus .fusHelp{margin:0;font-size:13px;color:var(--muted)}
+#tabFus .fusDrop{border:1px dashed var(--line);padding:18px 14px;display:grid;gap:10px;justify-items:center;text-align:center;font-size:14px;color:var(--muted)}
+#tabFus .fusDrop.over{border-color:var(--red);color:var(--ink)}
+#tabFus .fusRow{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+#tabFus .fusRow label{font-size:13px;color:var(--muted);display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+#tabFus .fusRow input[type=text]{width:200px;max-width:100%;font:inherit;font-size:13px;padding:6px 8px;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:0}
+#tabFus .fusMsg{font-size:13px;color:var(--muted);min-height:1em;margin:0}
+#tabFus .fusMsg.err{color:var(--red)}
+#tabFus .fusTotal{font-size:13px;color:var(--ink);font-weight:700}
+#tabFus .fusList{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+#tabFus .fusClip{border:1px solid var(--line);background:var(--bg);padding:10px;display:grid;gap:8px;min-width:0}
+#tabFus .fusClip.fusDel{display:none}
+#tabFus .fusHead{display:flex;gap:10px;align-items:center;flex-wrap:wrap;min-width:0}
+#tabFus .fusIdx{font-family:var(--f-disp);font-weight:700;color:var(--red);min-width:1.6em}
+#tabFus .fusName{font-weight:700;color:var(--ink);word-break:break-all;flex:1 1 180px;min-width:0}
+#tabFus .fusInfo{font-size:12px;color:var(--muted)}
+#tabFus .fusHead .fusMove{display:flex;gap:6px;margin-left:auto}
+#tabFus .fusClip video{width:100%;max-height:260px;background:#000}
+#tabFus .fusTrim{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+#tabFus .fusTrim label{display:flex;gap:6px;align-items:center}
+#tabFus .fusTrim input[type=number]{width:96px;font:inherit;font-size:13px;padding:5px 6px;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:0}
+#tabFus .fusBar{height:8px;background:var(--line);overflow:hidden}
+#tabFus .fusBar i{display:block;height:100%;width:0;background:var(--red);transition:width .2s}
+#tabFus .fusBar.indet i{width:30%!important;transition:none;animation:fusSlide 1.2s linear infinite}
+@keyframes fusSlide{from{transform:translateX(-100%)}to{transform:translateX(340%)}}
+#tabFus .fusResult video{width:100%;max-height:420px;background:#000}
+@media (max-width:640px){#tabFus{padding:10px 12px 16px}#tabFus .fusHead .fusMove{margin-left:0}}
+/* ===== fin fusiona vídeos ===== */
 
 /* =====================================================================
    ACFC · INTERFAZ v2 (2026-10-02) · colores de marca, jerarquía y móvil
@@ -1154,6 +1213,7 @@ aside h2{font-size:13px;letter-spacing:.05em}
   #tabBtnEditor::after{content:"";display:block;width:20px;height:20px;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='6' cy='6' r='3'/%3E%3Ccircle cx='6' cy='18' r='3'/%3E%3Cpath d='M20 4 8.1 15.9M14.5 14.5 20 20M8.1 8.1 12 12'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='6' cy='6' r='3'/%3E%3Ccircle cx='6' cy='18' r='3'/%3E%3Cpath d='M20 4 8.1 15.9M14.5 14.5 20 20M8.1 8.1 12 12'/%3E%3C/svg%3E") center/contain no-repeat}
   #tabBtnVisor::after{content:"";display:block;width:20px;height:20px;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='2' y='6' width='14' height='12' rx='2'/%3E%3Cpath d='m22 8-6 4 6 4z'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='2' y='6' width='14' height='12' rx='2'/%3E%3Cpath d='m22 8-6 4 6 4z'/%3E%3C/svg%3E") center/contain no-repeat}
   #tabBtnLive::after{content:"";display:block;width:20px;height:20px;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='14' r='8'/%3E%3Cpath d='M12 14V9M9 2h6'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='14' r='8'/%3E%3Cpath d='M12 14V9M9 2h6'/%3E%3C/svg%3E") center/contain no-repeat}
+  #tabBtnConv::after{content:"";display:block;width:20px;height:20px;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 4v14m0 0-3-3m3 3 3-3M17 20V6m0 0-3 3m3-3 3 3'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 4v14m0 0-3-3m3 3 3-3M17 20V6m0 0-3 3m3-3 3 3'/%3E%3C/svg%3E") center/contain no-repeat}
   header .sub,header .sp{display:none!important}
   header label.btn.primary{flex:none;padding:7px 10px;font-size:10.5px;letter-spacing:.1em;white-space:nowrap}
   /* vídeo + mandos fijos arriba: la lista se desliza por debajo */
@@ -1233,6 +1293,7 @@ html.acfc-imm header .tab::after{font-size:10.5px;letter-spacing:.14em}
 html.acfc-imm #tabBtnEditor::after{content:"";display:block;width:20px;height:20px;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='6' cy='6' r='3'/%3E%3Ccircle cx='6' cy='18' r='3'/%3E%3Cpath d='M20 4 8.1 15.9M14.5 14.5 20 20M8.1 8.1 12 12'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='6' cy='6' r='3'/%3E%3Ccircle cx='6' cy='18' r='3'/%3E%3Cpath d='M20 4 8.1 15.9M14.5 14.5 20 20M8.1 8.1 12 12'/%3E%3C/svg%3E") center/contain no-repeat}
 html.acfc-imm #tabBtnVisor::after{content:"";display:block;width:20px;height:20px;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='2' y='6' width='14' height='12' rx='2'/%3E%3Cpath d='m22 8-6 4 6 4z'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='2' y='6' width='14' height='12' rx='2'/%3E%3Cpath d='m22 8-6 4 6 4z'/%3E%3C/svg%3E") center/contain no-repeat}
 html.acfc-imm #tabBtnLive::after{content:"";display:block;width:20px;height:20px;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='14' r='8'/%3E%3Cpath d='M12 14V9M9 2h6'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='14' r='8'/%3E%3Cpath d='M12 14V9M9 2h6'/%3E%3C/svg%3E") center/contain no-repeat}
+html.acfc-imm #tabBtnConv::after{content:"";display:block;width:20px;height:20px;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 4v14m0 0-3-3m3 3 3-3M17 20V6m0 0-3 3m3-3 3 3'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M7 4v14m0 0-3-3m3 3 3-3M17 20V6m0 0-3 3m3-3 3 3'/%3E%3C/svg%3E") center/contain no-repeat}
 /* el vídeo ocupa toda la pantalla */
 html.acfc-imm #tabVisor main,html.acfc-imm #tabEditor .edgrid{display:block;padding:0;max-width:none}
 html.acfc-imm #tabVisor main>section,html.acfc-imm #tabEditor .edgrid>section{position:fixed;inset:0;z-index:40;background:#000;display:block}
@@ -1444,7 +1505,7 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
   <a class="acfcUtil__site" href="https://acfootballcenter.eus/?utm_source=lezama-talks&amp;utm_medium=herramienta-videoanalisis&amp;utm_campaign=promo-cursos&amp;utm_content=barra" target="_blank" rel="noopener">acfootballcenter.eus ↗</a>
 </div></div>
 <header>
-  <h1 class="acfcBrand"><a href="https://acfootballcenter.eus/" target="_blank" rel="noopener" title="Athletic Club Football Center"><img src="https://acfootballcenter.eus/wp-content/uploads/2022/11/acfc-logo-white.svg" alt="Athletic Club Football Center" width="118" height="32"></a><span class="acfcBrandTxt">Videoanálisis<small>Lezama Talks</small></span></h1><nav class="tabs" role="tablist"><button class="tab" role="tab" id="tabBtnEditor" aria-label="Editor básico" title="Editor básico" aria-selected="false">Editor básico</button><button class="tab" role="tab" id="tabBtnVisor" aria-label="Registro con vídeo" title="Registro con vídeo" aria-selected="true">Registro con vídeo</button><button class="tab" role="tab" id="tabBtnLive" aria-label="Registro sin vídeo" title="Registro sin vídeo" aria-selected="false">Registro sin vídeo</button></nav><span class="sub" id="vidName">cortes3.mp4</span><span class="sub" id="vidNote" style="font-size:12px"></span>
+  <h1 class="acfcBrand"><a href="https://acfootballcenter.eus/" target="_blank" rel="noopener" title="Athletic Club Football Center"><img src="https://acfootballcenter.eus/wp-content/uploads/2022/11/acfc-logo-white.svg" alt="Athletic Club Football Center" width="118" height="32"></a><span class="acfcBrandTxt">Videoanálisis<small>Lezama Talks</small></span></h1><nav class="tabs" role="tablist"><button class="tab" role="tab" id="tabBtnEditor" aria-label="Editor básico" title="Editor básico" aria-selected="false">Editor básico</button><button class="tab" role="tab" id="tabBtnVisor" aria-label="Registro con vídeo" title="Registro con vídeo" aria-selected="true">Registro con vídeo</button><button class="tab" role="tab" id="tabBtnLive" aria-label="Registro sin vídeo" title="Registro sin vídeo" aria-selected="false">Registro sin vídeo</button><button class="tab" role="tab" id="tabBtnConv" aria-label="Conversión vídeos" title="Convertir vídeos a MP4" aria-selected="false">Conversión vídeos</button><button class="tab" role="tab" id="tabBtnFus" aria-label="Fusiona vídeos" title="Fusiona, recorta y une varios vídeos" aria-selected="false">Fusiona vídeos</button></nav><span class="sub" id="vidName">cortes3.mp4</span><span class="sub" id="vidNote" style="font-size:12px"></span>
   <select id="vidSel" hidden aria-label="Vídeo abierto en el registro" title="Cambiar de vídeo"></select>
   <!-- ACFC · formaciones en la cabecera (actualizar fechas cada edición) -->
   <nav class="acfcHdrLinks" aria-label="Próximas formaciones">
@@ -1646,6 +1707,7 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
           <div class="row" style="margin:0">
             <label for="flt">Filtros</label>
             <select id="flt"><option value="">Todas</option></select>
+            <select id="fltVid" aria-label="Filtrar por vídeo" title="Ver solo los eventos de un vídeo" hidden><option value="">Todos los vídeos</option></select>
             <button type="button" class="btn" id="fltClear" title="Quitar todos los filtros">Limpiar</button>
           </div>
         </div>
@@ -1680,6 +1742,7 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
         <h2 style="margin:0">Pintado de acciones</h2>
         <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end">
           <button type="button" class="btn" id="pintClear" title="Borra todo lo pintado">Limpiar</button>
+          <button type="button" class="btn acfcLink" id="pintTutL" title="Guía paso a paso del pintado de acciones">❓ Tutorial</button>
           <button type="button" class="btn acfcLink" id="pintToggle" aria-expanded="true" aria-controls="pintBody" title="Ocultar/mostrar las herramientas de pintado">Ocultar</button>
         </div>
       </div>
@@ -2153,6 +2216,80 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
         <button type="button" class="btn primary" id="liveToVideo" title="Elige el vídeo en tu ordenador y sincroniza los eventos con él aquí mismo">Añadir el vídeo y sincronizar</button>
         <input type="file" id="liveFile" accept="video/*" hidden>
       </div>
+    </div>
+  </div>
+</section>
+
+<section id="tabConv" hidden>
+  <div class="convPanel">
+    <h2>Conversión de vídeos</h2>
+    <p class="convHelp">Convierte vídeos .mov, .avi, .mkv, .wmv y otros formatos a MP4 (H.264 + AAC). La conversión se hace en tu ordenador: el vídeo no se sube a ningún servidor.</p>
+    <div class="convDrop" id="convDrop">
+      <div>Arrastra aquí un vídeo o elígelo desde tu equipo.</div>
+      <label class="btn primary" for="convFile">Elegir vídeo</label>
+      <input type="file" id="convFile" accept="video/*,.mov,.avi,.mkv,.wmv,.flv,.mpg,.mpeg,.m4v,.3gp,.mts,.ts,.webm" hidden>
+    </div>
+    <div class="convName" id="convName"></div>
+    <div class="convRow">
+      <label>Resolución
+        <select id="convQ">
+          <option value="1080">1080p</option>
+          <option value="720" selected>720p</option>
+        </select>
+      </label>
+      <button type="button" class="btn primary" id="convGo" disabled>Convertir a MP4</button>
+      <button type="button" class="btn" id="convCancel" hidden>Cancelar</button>
+    </div>
+    <div class="convBar" id="convBar" hidden><i id="convBarFill"></i></div>
+    <p class="convMsg" id="convMsg" aria-live="polite"></p>
+  </div>
+  <div class="convPanel" id="convResult" hidden>
+    <h2>Vídeo convertido</h2>
+    <video id="convOut" controls playsinline></video>
+    <div class="convRow">
+      <a class="btn primary" id="convDl" href="#" download>Descargar MP4</a>
+      <span class="convMsg" id="convOutInfo"></span>
+    </div>
+  </div>
+</section>
+
+<section id="tabFus" hidden>
+  <div class="fusPanel">
+    <h2>Fusiona vídeos</h2>
+    <p class="fusHelp">Sube varios vídeos, recorta cada uno y únelos en un único MP4. Todo se procesa en tu ordenador: el vídeo no se sube a ningún servidor.</p>
+    <div class="fusDrop" id="fusDrop">
+      <div>Arrastra aquí varios vídeos o elígelos desde tu equipo. Se unirán en el orden de la lista.</div>
+      <label class="btn primary" for="fusFile">Añadir vídeos</label>
+      <input type="file" id="fusFile" accept="video/*,.mov,.avi,.mkv,.wmv,.flv,.mpg,.mpeg,.m4v,.3gp,.mts,.ts,.webm" multiple hidden>
+    </div>
+    <p class="fusMsg" id="fusMsg" aria-live="polite"></p>
+    <ol class="fusList" id="fusList"></ol>
+    <div class="fusRow">
+      <span class="fusTotal" id="fusTotal"></span>
+    </div>
+  </div>
+  <div class="fusPanel">
+    <h2>Unir y exportar</h2>
+    <div class="fusRow">
+      <label>Resolución
+        <select id="fusQ">
+          <option value="1080">1080p</option>
+          <option value="720" selected>720p</option>
+        </select>
+      </label>
+      <button type="button" class="btn primary" id="fusGo" disabled>Unir vídeos</button>
+      <button type="button" class="btn" id="fusCancel" hidden>Cancelar</button>
+    </div>
+    <div class="fusBar" id="fusBar" hidden><i id="fusBarFill"></i></div>
+    <p class="fusMsg" id="fusJoinMsg" aria-live="polite"></p>
+  </div>
+  <div class="fusPanel" id="fusResult" hidden>
+    <h2>Vídeo unido</h2>
+    <video id="fusOut" controls playsinline></video>
+    <div class="fusRow">
+      <label>Nombre del archivo <input type="text" id="fusName" value="video_unido" maxlength="80"></label>
+      <button type="button" class="btn primary" id="fusExport">Exportar MP4</button>
+      <span class="fusMsg" id="fusOutInfo"></span>
     </div>
   </div>
 </section>
@@ -2641,12 +2778,16 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
     <div class="tutR">
       <div class="tutPn tutVp" hidden>
         <h3>Vídeo y sincronización</h3>
-        <div class="tutVidL"><b>partido.mp4</b><em data-k="vt">0:00</em></div>
+        <div class="tutVidL"><b>partido.mp4</b><em data-k="vt">0:00</em><i class="tutPaintMk" hidden></i></div>
         <div class="tutSyn"><span>Inicio partido</span><small data-s="ini">—</small><span class="tutB" data-k="m:ini">Marcar</span></div>
         <div class="tutSyn"><span>Fin 1ª parte</span><small data-s="f1">—</small><span class="tutB" data-k="m:f1">Marcar</span></div>
         <div class="tutSyn"><span>Inicio 2ª parte</span><small data-s="i2">—</small><span class="tutB" data-k="m:i2">Marcar</span></div>
         <div class="tutSyn"><span>Fin partido</span><small data-s="fin">—</small><span class="tutB" data-k="m:fin">Marcar</span></div>
         <div class="tutChips"><span class="tutB trd" data-k="view">Ver solo vídeo + eventos</span><span class="tutB">Cambiar vídeo</span></div>
+      </div>
+      <div class="tutPn tutPint" hidden>
+        <h3>Pintado de acciones</h3>
+        <div class="tutChips"><span class="tutB" data-k="pt:move">Mover</span><span class="tutB" data-k="pt:arrow">Flecha</span><span class="tutB" data-k="pt:zone">Zona</span><span class="tutB" data-k="pt:focus">Foco</span><span class="tutB" data-k="pt:text">Texto</span></div>
       </div>
       <div class="tutPn"><h3>Eventos <span class="tutNote" data-k="cnt"></span></h3><div class="tutList"></div></div>
       <div class="tutExp">
@@ -3336,7 +3477,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   function sanitize(arr){ return arr.filter(e=>e&&typeof e==="object").slice(0,500).map((e,i)=>({
     id:String(e.id||"e"+i).slice(0,20), min:String(e.min||"0:00").slice(0,8),
     cat:CATS[e.cat]?e.cat:"OTRO", eq:e.eq==="rival"?"rival":"propio", det:String(e.det||"").slice(0,60), jug:String(e.jug||"").slice(0,40), coment:String(e.coment||"").slice(0,200),
-    fixed:Number.isFinite(+e.fixed)&&e.fixed!==null?+e.fixed:null, clip:validClip(e.clip), ...(e.man===true?{man:true}:{}) })); }
+    fixed:Number.isFinite(+e.fixed)&&e.fixed!==null?+e.fixed:null, clip:validClip(e.clip), ...(e.man===true?{man:true}:{}), ...(e.vid?{vid:String(e.vid).slice(0,80)}:{}) })); }
   function validClip(c){ if(!c||typeof c!=="object") return null; const a=+c.a, b=+c.b; if(!(isFinite(a)&&isFinite(b)&&b>a&&a>=0)) return null;
     let segs=Array.isArray(c.segs)?c.segs.slice(0,200).map(g=>({s:+g.s,e:+g.e,off:!!g.off})).filter(g=>isFinite(g.s)&&isFinite(g.e)&&g.e>g.s).sort((x,y)=>x.s-y.s):[];
     if(!segs.length) segs=[{s:a,e:b,off:false}]; return {a,b,segs}; }
@@ -3418,7 +3559,22 @@ window.renderHalfBands = function(b1,b2,mk,d){
   let prevEq="propio";
   // Filtro del registro por equipo: "" = todos; pulsar de nuevo el botón activo lo quita
   let fltEq="";
-  const passEq=e=>!fltEq||eqOk(e.eq)===fltEq;
+  // Filtro por vídeo: "" = todos; "__none__" = eventos sin vídeo asignado (p. ej. importados de Excel)
+  const passVid=e=>{ const f=$("fltVid").value; return !f||(f==="__none__"?!e.vid:e.vid===f); };
+  const passEq=e=>(!fltEq||eqOk(e.eq)===fltEq)&&passVid(e);
+  // Opciones del selector de vídeo: los del registro y los que tienen eventos; se oculta si solo hay uno
+  function renderVidFilter(){
+    const S=$("fltVid"), cur=S.value;
+    const names=[...new Set([...(window.__regVids||[]).map(f=>f.name),...events.map(e=>e.vid).filter(Boolean)])];
+    S.replaceChildren(el("option",{value:"",textContent:"Todos los vídeos"}));
+    names.forEach((n,i)=>S.append(el("option",{value:n,textContent:(i+1)+". "+n})));
+    if(events.some(e=>!e.vid)) S.append(el("option",{value:"__none__",textContent:"Sin vídeo asignado"}));
+    S.value=[...S.options].some(o=>o.value===cur)?cur:"";
+    S.hidden=S.options.length<3;
+  }
+  // Etiqueta «V1», «V2»… de cada evento, con el mismo color que su vídeo en la lista de vídeos
+  const vidBadge=e=>{ if(!e.vid||!window.acfcVidInfo) return []; const d=window.acfcVidInfo(e.vid);
+    return [el("span",{textContent:"V"+d.n,title:"Vídeo: "+e.vid,style:"font-size:10px;font-weight:700;line-height:1.5;padding:0 4px;color:#fff;background:"+d.c})]; };
   document.querySelectorAll("#fltEqBtns .fltEq").forEach(b=>{
     b.onclick=()=>{
       fltEq=b.dataset.eq==="ambos"||fltEq===b.dataset.eq?"":b.dataset.eq;
@@ -3428,6 +3584,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   });
   $("fltClear").onclick=()=>{
     $("flt").value="";
+    $("fltVid").value="";
     fltEq="";
     document.querySelectorAll("#fltEqBtns .fltEq").forEach(x=>{ const on=x.dataset.eq==="ambos"; x.classList.toggle("active",on); x.setAttribute("aria-pressed",on); });
     refresh();
@@ -3808,7 +3965,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
       row.append(chk);
       row.append(
         el("div",{className:"m"},[el("div",{textContent:cutRangeText(e)||e.min,title:e.clip?"Corte ajustado a mano · minuto del evento: "+e.min:""}),el("div",{className:"cl",textContent:(s=>s>=60?Math.floor(s/60)+" min "+String(s%60).padStart(2,"0")+" s":s+" s")(Math.round(clipLen(e)))})]),
-        el("div",{className:"t"},[el("div",{style:"display:flex;align-items:center;gap:6px"},[el("span",{className:"eqDot "+(e.eq==="rival"?"rival":"propio"),title:e.eq==="rival"?"Rival":"Mi equipo"}),...(e.man?[el("b",{textContent:"M",title:"Registro manual",style:"color:var(--red)"})]:[]),el("b",{textContent:e.cat}),...pintBadge(e)]),el("div",{textContent:e.det+(e.jug?" · "+e.jug:"")}),...(e.coment?[el("div",{textContent:e.coment,style:"font-style:italic"})]:[])])
+        el("div",{className:"t"},[el("div",{style:"display:flex;align-items:center;gap:6px"},[el("span",{className:"eqDot "+(e.eq==="rival"?"rival":"propio"),title:e.eq==="rival"?"Rival":"Mi equipo"}),...(e.man?[el("b",{textContent:"M",title:"Registro manual",style:"color:var(--red)"})]:[]),el("b",{textContent:e.cat}),...vidBadge(e),...pintBadge(e)]),el("div",{textContent:e.det+(e.jug?" · "+e.jug:"")}),...(e.coment?[el("div",{textContent:e.coment,style:"font-style:italic"})]:[])])
       );
       const acts=el("div",{className:"acts"});
       const inPl=inAnyPlaylist(e.id);
@@ -4183,7 +4340,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     document.querySelectorAll("#fltEqBtns .fltEq").forEach(x=>{ const on=(x.dataset.eq==="ambos"?"":x.dataset.eq)===fltEq; x.classList.toggle("active",on); x.setAttribute("aria-pressed",on); });
     refresh();
   };
-  const refresh=()=>{syncRegTlFlt(); renderList(); renderMarks(); renderHalfMarks(); renderClip(); renderPlaylist(); tick();};
+  const refresh=()=>{syncRegTlFlt(); renderVidFilter(); renderList(); renderMarks(); renderHalfMarks(); renderClip(); renderPlaylist(); tick();};
 
   // ---------- playback ----------
   function go(e,play=true){ if(!v.src) return; active=e.id; if(selEv!==e.id) openClip(e,false); const k=keptOf(e);
@@ -4252,7 +4409,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     $("fsClock").textContent=$("clock").textContent; $("fsMatch").textContent=mc?("⏱ "+mc):"";
     if(!fsSeeking) $("fsSeek").value=d?Math.round(t/d*1000):0;
     if(vZoom>1&&d&&Date.now()-vPanTs>2500){ const f=t/d; if(f<vZv||f>vZv+1/vZoom){ vZv=f-0.5/vZoom; vApplyZoom(); } } // el zoom sigue al cabezal
-    const p=d?Math.min(100,t/d*100):0; $("prog").style.width=p+"%"; $("head").style.left=p+"%"; $("vSeekHead").style.left=p+"%"; $("vHeadClock").style.left=p+"%"; $("vHeadClock").textContent=mc?("⏱ "+mc):"";
+    const p=d?Math.min(100,t/d*100):0; $("prog").style.width=p+"%"; $("head").style.left=p+"%"; $("vSeekHead").style.left=p+"%"; $("vHeadClock").style.left=p+"%"; $("vHeadClock").textContent=mc?("⏱ "+mc+" · vídeo "+fmt(t).replace(/\.\d$/,"")):"";
     { const b=$("vPintGo"); // icono de pintar junto al cabezal cuando está sobre un evento
       const fl=$("flt").value, over=d&&events.some(e=>{ if(!CATS[e.cat]||(fl&&fl!==e.cat)||!passEq(e)) return false; const c=clipOf(e); return t>=c.a&&t<=c.b; });
       b.hidden=!over; if(over){ b.style.left=p+"%"; b.classList.toggle("left",p>90); } }
@@ -4351,6 +4508,9 @@ window.renderHalfBands = function(b1,b2,mk,d){
   // lista de vídeos del registro: mismo diseño que la del editor de vídeo
   let regCur=null; const regDurs=new Map();
   const REG_SRC_COLORS=["#2f6b3c","#3F5568","#D3291E","#C98A1B","#7A1712","#6B5B4B","#5E6B3A","#8A8F96"];
+  // número y color de un vídeo (los de la lista de vídeos del registro) y vídeo que se está registrando
+  window.acfcVidInfo=name=>{ const i=regVids.findIndex(f=>f.name===name); return {n:i>=0?i+1:"?",c:i>=0?REG_SRC_COLORS[i%REG_SRC_COLORS.length]:"var(--muted)"}; };
+  window.acfcVidTag=()=>{ const n=$("vidName").textContent.trim(); return n?{vid:n.slice(0,80)}:{}; };
   const regFmt=s=>{ s=Math.max(0,Math.round(s)); const h=Math.floor(s/3600), m=Math.floor(s%3600/60), x=s%60; return (h?h+":"+String(m).padStart(2,"0"):m)+":"+String(x).padStart(2,"0"); };
   function regDurOf(f){
     if(f===regCur&&isFinite(v.duration)&&v.duration>0) regDurs.set(f,v.duration);
@@ -4548,7 +4708,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   v.addEventListener("volumechange",syncVMute);
   $("rate").onchange=e=>v.playbackRate=+e.target.value;
   $("track").onclick=ev=>{ if(!v.duration) return; const r=$("catZoomWrap").getBoundingClientRect(); playing=null; v.currentTime=(ev.clientX-r.left)/r.width*v.duration; tick(); };
-  ["flt"].forEach(id=>$(id).addEventListener("input",()=>{ refresh(); }));
+  ["flt","fltVid"].forEach(id=>$(id).addEventListener("input",()=>{ refresh(); }));
   $("offRow").style.display="none";
 
   // ---------- edición ----------
@@ -4767,8 +4927,8 @@ window.renderHalfBands = function(b1,b2,mk,d){
     if($("fJug").value) addJugTo($("fJug").value);
     const data={min:$("fMin").value.trim().slice(0,8),cat:$("fCat").value,eq:eqOk($("fEq").value),det:$("fDet").value.trim().slice(0,60),jug:$("fJug").value.trim().slice(0,40),coment:$("fComent").value.trim().slice(0,200)};
     if(editId){ Object.assign(events.find(x=>x.id===editId),data); }
-    else if(manualMode&&manA!==null&&manB!==null) events.push({id:"u"+Date.now(),...data,man:true,fixed:+manA.toFixed(2),clip:{a:manA,b:manB,segs:[{s:manA,e:manB,off:false}]}});
-    else events.push({id:"u"+Date.now(),...data,fixed:+(v.currentTime||0).toFixed(2)});
+    else if(manualMode&&manA!==null&&manB!==null) events.push({id:"u"+Date.now(),...data,...window.acfcVidTag(),man:true,fixed:+manA.toFixed(2),clip:{a:manA,b:manB,segs:[{s:manA,e:manB,off:false}]}});
+    else events.push({id:"u"+Date.now(),...data,...window.acfcVidTag(),fixed:+(v.currentTime||0).toFixed(2)});
     save(); refresh();
     openDlg(null); // la botonera no se cierra al guardar (ni emergente ni encajada): queda lista para el siguiente evento hasta pulsar Cerrar/Cancelar/Esc
   });
@@ -5702,7 +5862,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
   }
 
   // ---------- pestañas ----------
-  const tabs=[["tabBtnVisor","tabVisor"],["tabBtnEditor","tabEditor"],["tabBtnLive","tabLive"]];
+  const tabs=[["tabBtnVisor","tabVisor"],["tabBtnEditor","tabEditor"],["tabBtnLive","tabLive"],["tabBtnConv","tabConv"],["tabBtnFus","tabFus"]];
   tabs.forEach(([b,p])=>$(b).onclick=()=>{ tabs.forEach(([b2,p2])=>{ $(b2).setAttribute("aria-selected",b2===b); $(p2).hidden=b2!==b; });
     document.querySelectorAll("video").forEach(x=>{ if(!x.closest("#"+p)) x.pause(); });
     if(p==="tabLive"&&window.acfcLive) window.acfcLive.render();
@@ -6214,7 +6374,7 @@ window.renderHalfBands = function(b1,b2,mk,d){
     s.addEventListener("input",()=>{ const d=dur(); if(d){ V.currentTime=s.value/1000*d; tick(); } });
     s.addEventListener("keydown",e=>e.stopPropagation()); }
   function tick(){ const d=dur(), t=V.currentTime||0; $("edClock").textContent=fmt(t).replace(/\.\d$/,"")+" / "+fmt(d||0).replace(/\.\d$/,"");
-    const mc=matchClockText(t); $("edMatchClock").textContent=mc?("⏱ "+mc):"";
+    const mc=matchClockText(t); $("edMatchClock").textContent=mc?("⏱ "+mc+" · vídeo "+fmt(t).replace(/\.\d$/,"")):"";
     $("edFsClock").textContent=fmt(t).replace(/\.\d$/,"")+" / "+fmt(d).replace(/\.\d$/,""); $("edFsMatch").textContent=mc?("⏱ "+mc):"";
     if(!edFsSeeking) $("edFsSeek").value=d?Math.round(t/d*1000):0;
     $("edHead").style.left=(d?Math.min(100,t/d*100):0)+"%";
@@ -7039,7 +7199,7 @@ window.tutPaint=(()=>{
   const CATS=[["Gol","var(--c-gol)"],["Ocasión","var(--c-oca)"],["Transición of","var(--c-tra)"],["Salida balón","var(--c-sal)"],["Presión","var(--c-pre)"]];
   const colOf=c=>(CATS.find(x=>x[0]===c)||[0,"var(--c-otr)"])[1];
   const LBL={ini:"Inicio partido",f1:"Fin 1ª parte",i2:"Inicio 2ª parte",fin:"Fin partido"};
-  const blank=()=>({clock:0,running:false,marks:{},ev:[],sel:-1,eq:"Mi equipo",vid:false,sync:{},toast:"",hot:null,go:-1});
+  const blank=()=>({clock:0,running:false,marks:{},ev:[],sel:-1,eq:"Mi equipo",vid:false,pint:false,mk:false,sync:{},toast:"",hot:null,go:-1});
   let S=blank(), token=0, cur=0, playing=true, finished=false;
   const mk=(tag,cls,txt)=>{ const e=document.createElement(tag); if(cls) e.className=cls; if(txt!=null) e.textContent=txt; return e; };
   const K=k=>q('[data-k="'+k+'"]');
@@ -7056,7 +7216,7 @@ window.tutPaint=(()=>{
     qa('[data-k^="jug:"]').forEach(b=>b.classList.toggle("set",!!ev&&b.dataset.k==="jug:"+ev.jug));
     K("cur").textContent=ev?fs(ev.t)+" · "+ev.cat+" · "+ev.eq:"Aún no hay ningún evento.";
     const c=K("com"); c.textContent=ev&&ev.com?ev.com:"Comentario libre (opcional)"; c.style.color=ev&&ev.com?"var(--ink)":"";
-    q(".tutVp").hidden=!S.vid;
+    q(".tutVp").hidden=!S.vid; q(".tutPint").hidden=!S.pint; q(".tutPaintMk").hidden=!S.mk;
     Object.keys(LBL).forEach(k=>{ q('[data-s="'+k+'"]').textContent=S.sync[k]!=null?"✔ "+fs(S.sync[k]):"—"; });
     K("cnt").textContent=S.ev.length?"· "+S.ev.length:"";
     TOAST.hidden=!S.toast; TOAST.textContent=S.toast;
@@ -7117,6 +7277,10 @@ window.tutPaint=(()=>{
      pre(){ S.sync={ini:190,f1:190+45*60,i2:190+45*60+300,fin:190+90*60+300}; },
      async run(W){ const V={ini:190,f1:190+45*60,i2:190+45*60+300,fin:190+90*60+300}; const vt=K("vt");
        for(const k of Object.keys(LBL)){ vt.textContent=fs(V[k]); await W(500); await press(W,"m:"+k,k==="ini"?"Marcar en Inicio partido, con el vídeo en el saque inicial":"Marcar "+LBL[k]); S.sync[k]=V[k]; draw(); await W(400); } await W(700); }},
+    {s:"Pintar",t:"Pinta sobre el vídeo",
+     d:"Pausa el vídeo en la jugada y usa «Pintado de acciones»: flechas, zonas o el foco de un jugador. Lo que pintes se guarda en ese instante y vuelve a aparecer cuando el vídeo llega a él.",
+     pre(){ S.vid=true; S.pint=false; S.mk=false; },
+     async run(W){ S.pint=true; draw(); await wait(W,600,"Debajo del registro aparece el pintado de acciones"); await press(W,"pt:arrow","Flecha para señalar el movimiento"); S.mk=true; draw(); await wait(W,1400,"Lo pintado se guarda en este instante del vídeo"); await press(W,"pt:zone","Zona para marcar un espacio"); await wait(W,900,"Pausa, pinta y sigue: todo queda guardado"); }},
     {s:"Revisar",t:"Revisa los eventos",
      d:"Toca un evento de la lista y el vídeo salta 5 s antes de su momento. Arriba, «Botonera + eventos» y «Vídeo + eventos» cambian de vista. «Ver solo vídeo + eventos» oculta el registro y deja el vídeo con la lista de eventos.",
      pre(){ S.go=0; },
@@ -7153,6 +7317,8 @@ window.tutPaint=(()=>{
   q("#tutlNext").onclick=()=>{ if(cur<STEPS.length-1) show(cur+1); };
   q("#tutlPlay").onclick=()=>{ if(playing){ playing=false; stop(); ui(); } else { playing=true; show(finished?0:cur); } };
   q("#tutlClose").onclick=()=>D.close();
+  const pintTut=document.getElementById("pintTutL");
+  if(pintTut) pintTut.onclick=()=>{ document.querySelectorAll("video").forEach(v=>v.pause()); playing=true; D.showModal(); show(STEPS.findIndex(s=>s.s==="Pintar")); };
   D.addEventListener("close",stop);
   D.addEventListener("keydown",e=>{ e.stopPropagation(); });
   D.addEventListener("click",e=>{ if(e.target===D) D.close(); });
@@ -10801,6 +10967,362 @@ try{var v=localStorage.getItem(KEY);if(v==="botev"||v==="vid")set(v)}catch(e){}}
   document.addEventListener("click",function(){setTimeout(sync,0);},true);
   document.addEventListener("keyup",sync,true);
   setInterval(sync,500); sync();
+})();
+</script>
+<!-- Conversión vídeos · ffmpeg.wasm se carga solo la primera vez que se convierte -->
+<script id="convScript">
+(function(){
+  var FF_URL="https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.10/dist/esm";
+  var CORE_URL="https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/esm";
+  var BIG=1.5*1073741824;
+  var ff=null, ffLoading=null, working=false, cancelled=false, file=null, outUrl="";
+  var $c=function(id){return document.getElementById(id);};
+
+  function msg(t,err){ var m=$c("convMsg"); m.textContent=t; m.classList.toggle("err",!!err); }
+  // p = null oculta la barra; p = undefined la muestra animada (no se conoce el avance todavía)
+  function bar(p){
+    $c("convBar").hidden=p===null;
+    $c("convBar").classList.toggle("indet",p===undefined);
+    $c("convBarFill").style.width=(typeof p==="number"?Math.round(p*100):0)+"%";
+  }
+  function fmtSize(b){ return b>=1073741824?(b/1073741824).toFixed(2)+" GB":(b/1048576).toFixed(1)+" MB"; }
+  function blobURL(url,type){
+    return fetch(url).then(function(r){ if(!r.ok) throw new Error("No se pudo descargar el motor de conversión ("+r.status+")."); return r.blob(); })
+      .then(function(b){ return URL.createObjectURL(new Blob([b],{type:type})); });
+  }
+  function getEngine(){
+    if(ff) return Promise.resolve(ff);
+    if(ffLoading) return ffLoading;
+    ffLoading=Promise.all([
+      import(FF_URL+"/index.js"),
+      blobURL(CORE_URL+"/ffmpeg-core.js","text/javascript"),
+      blobURL(CORE_URL+"/ffmpeg-core.wasm","application/wasm")
+    ]).then(function(r){
+      var inst=new r[0].FFmpeg();
+      inst.on("progress",function(e){ if(working&&isFinite(e.progress)) bar(Math.min(Math.max(e.progress,0),1)); });
+      // (si no llega progreso, la barra se queda animada)
+      // El worker de la librería vive en otro dominio: se carga a través de un blob que lo importa
+      var worker=URL.createObjectURL(new Blob(['import "'+FF_URL+'/worker.js";'],{type:"text/javascript"}));
+      return inst.load({classWorkerURL:worker,coreURL:r[1],wasmURL:r[2]}).then(function(){ ff=inst; return inst; });
+    }).catch(function(e){ ffLoading=null; throw e; });
+    return ffLoading;
+  }
+
+  function pick(f){
+    if(!f||working) return;
+    file=f;
+    $c("convName").textContent=f.name+" · "+fmtSize(f.size);
+    $c("convGo").disabled=false;
+    $c("convResult").hidden=true;
+    msg(f.size>BIG?"Este vídeo es muy grande y puede agotar la memoria del navegador. Si falla, prueba con una versión más ligera.":"Pulsa «Convertir a MP4».",false);
+  }
+
+  function convert(){
+    if(!file||working) return;
+    working=true; cancelled=false;
+    $c("convGo").disabled=true; $c("convCancel").hidden=false; $c("convResult").hidden=true;
+    bar(undefined); msg("Preparando el motor de conversión (la primera vez tarda unos segundos)…",false);
+    var src=file, base=src.name.replace(/\.[^.]+$/,"")||"video";
+    var ext=(src.name.match(/\.[a-z0-9]+$/i)||[".bin"])[0].toLowerCase();
+    var IN="entrada"+ext, OUT="salida.mp4", q=$c("convQ").value, inst;
+    getEngine().then(function(e){
+      inst=e; msg("Convirtiendo "+src.name+" a MP4… Mantén esta pestaña abierta.",false);
+      return src.arrayBuffer();
+    }).then(function(buf){
+      return inst.writeFile(IN,new Uint8Array(buf));
+    }).then(function(){
+      // Altura de salida según la resolución elegida; la anchura se calcula y min(…,ih) evita ampliar vídeos más pequeños
+      return inst.exec(["-i",IN,"-vf","scale=-2:min("+q+"\\,ih)","-c:v","libx264","-preset","veryfast","-crf","23","-pix_fmt","yuv420p","-c:a","aac","-b:a","128k","-movflags","+faststart","-y",OUT]);
+    }).then(function(code){
+      if(code!==0) throw new Error("La conversión ha fallado (código "+code+"). Comprueba que el archivo no esté dañado.");
+      return inst.readFile(OUT);
+    }).then(function(data){
+      inst.deleteFile(IN).catch(function(){}); inst.deleteFile(OUT).catch(function(){});
+      if(outUrl) URL.revokeObjectURL(outUrl);
+      outUrl=URL.createObjectURL(new Blob([data],{type:"video/mp4"}));
+      $c("convOut").src=outUrl;
+      var a=$c("convDl"); a.href=outUrl; a.download=base+".mp4";
+      $c("convOutInfo").textContent=base+".mp4 · "+fmtSize(data.byteLength);
+      $c("convResult").hidden=false;
+      msg("Listo. Puedes reproducir el MP4 o descargarlo.",false);
+    }).catch(function(e){
+      msg(cancelled?"Conversión cancelada.":(e&&e.message)||"No se pudo convertir el vídeo.",!cancelled);
+    }).then(function(){
+      working=false; $c("convGo").disabled=!file; $c("convCancel").hidden=true; bar(null);
+    });
+  }
+
+  function cancel(){
+    if(!working) return;
+    cancelled=true;
+    if(ff) ff.terminate();
+    ff=null; ffLoading=null; // la próxima conversión vuelve a cargar el motor
+  }
+
+  // Motor compartido con «Fusiona vídeos» (una sola instancia de ffmpeg.wasm por página)
+  window.acfcFF={ get:getEngine, reset:function(){ if(ff) ff.terminate(); ff=null; ffLoading=null; } };
+
+  var dz=$c("convDrop");
+  ["dragenter","dragover"].forEach(function(t){ dz.addEventListener(t,function(e){ e.preventDefault(); e.stopPropagation(); dz.classList.add("over"); }); });
+  ["dragleave","drop"].forEach(function(t){ dz.addEventListener(t,function(e){ e.preventDefault(); e.stopPropagation(); dz.classList.remove("over"); }); });
+  dz.addEventListener("drop",function(e){ pick(e.dataTransfer.files[0]); });
+  $c("convFile").addEventListener("change",function(e){ pick(e.target.files[0]); e.target.value=""; });
+  $c("convGo").addEventListener("click",convert);
+  $c("convCancel").addEventListener("click",cancel);
+})();
+</script>
+<!-- Fusiona vídeos · recorte por clip y unión con ffmpeg.wasm (motor compartido con Conversión) -->
+<script id="fusScript">
+(function(){
+  var $f=function(id){return document.getElementById(id);};
+  var BIG=1.5*1073741824;
+  var clips=[], working=false, cancelled=false, finished=true, outUrl="";
+  var onLog=null, onProg=null, hooked=null;
+
+  function msg(t,err){ var m=$f("fusMsg"); m.textContent=t; m.classList.toggle("err",!!err); }
+  function jmsg(t,err){ var m=$f("fusJoinMsg"); m.textContent=t; m.classList.toggle("err",!!err); }
+  // p = null oculta la barra; p = undefined la muestra animada; p = número la rellena
+  function bar(p){
+    $f("fusBar").hidden=p===null;
+    $f("fusBar").classList.toggle("indet",p===undefined);
+    $f("fusBarFill").style.width=(typeof p==="number"?Math.round(Math.min(Math.max(p,0),1)*100):0)+"%";
+  }
+  function fmtSize(b){ return b>=1073741824?(b/1073741824).toFixed(2)+" GB":(b/1048576).toFixed(1)+" MB"; }
+  function fmt(t){
+    if(!isFinite(t)||t<0) t=0;
+    var m=Math.floor(t/60), s=(t-m*60).toFixed(2);
+    return (m<10?"0":"")+m+":"+(s<10?"0":"")+s;
+  }
+  function safeName(n){ return (String(n||"").replace(/[\\\/:*?"<>|]/g,"_").trim())||"video_unido"; }
+  function isVideo(f){ return f.type.indexOf("video/")===0 || /\.(mov|avi|mkv|wmv|flv|mpe?g|m4v|3gp|mts|ts|webm|mp4)$/i.test(f.name); }
+
+  // ---------- clips ----------
+  function addFiles(files){
+    if(working) return;
+    var ok=0, skipped=0;
+    Array.prototype.forEach.call(files,function(f){
+      if(!isVideo(f)){ skipped++; return; }
+      var c={ file:f, name:f.name, size:f.size, ext:(f.name.match(/\.[a-z0-9]+$/i)||[".bin"])[0].toLowerCase(), url:URL.createObjectURL(f), dur:0, ini:0, fin:0 };
+      c.el=card(c); clips.push(c); $f("fusList").appendChild(c.el); ok++;
+    });
+    if(ok) resetResult();
+    refresh();
+    var t=ok?ok+" vídeo"+(ok>1?"s":"")+" añadido"+(ok>1?"s":"")+". Recorta si quieres y pulsa «Unir vídeos».":"";
+    if(skipped) t+=(t?" ":"")+skipped+" archivo"+(skipped>1?"s":"")+" no es"+(skipped>1?"n":"")+" un vídeo y se ha ignorado.";
+    msg(t,!ok&&skipped>0);
+    var total=clips.reduce(function(a,c){ return a+c.size; },0);
+    if(total>BIG) msg("El conjunto supera 1,5 GB y puede agotar la memoria del navegador. Si falla, une menos vídeos a la vez.",false);
+  }
+
+  function card(c){
+    var li=document.createElement("li");
+    li.className="fusClip";
+    li.innerHTML=
+      '<div class="fusHead">'+
+        '<span class="fusIdx"></span>'+
+        '<span class="fusName"></span>'+
+        '<span class="fusInfo"></span>'+
+        '<span class="fusMove">'+
+          '<button type="button" class="btn" data-act="up" aria-label="Subir en el orden">Subir</button>'+
+          '<button type="button" class="btn" data-act="down" aria-label="Bajar en el orden">Bajar</button>'+
+          '<button type="button" class="btn" data-act="del" aria-label="Quitar de la lista">Quitar</button>'+
+        '</span>'+
+      '</div>'+
+      '<video playsinline controls preload="metadata"></video>'+
+      '<div class="fusTrim">'+
+        '<label>Inicio <input type="number" min="0" step="0.01" data-k="ini"> s</label>'+
+        '<button type="button" class="btn" data-act="setIn">Marcar inicio</button>'+
+        '<label>Fin <input type="number" min="0" step="0.01" data-k="fin"> s</label>'+
+        '<button type="button" class="btn" data-act="setOut">Marcar fin</button>'+
+        '<button type="button" class="btn" data-act="play">Ver tramo</button>'+
+        '<button type="button" class="btn" data-act="reset">Quitar recorte</button>'+
+      '</div>';
+    li.querySelector(".fusName").textContent=c.name;
+    var v=li.querySelector("video");
+    v.src=c.url;
+    v.addEventListener("loadedmetadata",function(){
+      c.dur=isFinite(v.duration)&&v.duration>0?v.duration:0;
+      if(c.fin===0) c.fin=c.dur;     // 0 = hasta el final
+      setTrim(c,c.ini,c.fin);
+      refresh();
+    });
+    return li;
+  }
+
+  // Recorte: ini >= 0; fin = 0 significa «hasta el final» (duración desconocida)
+  function setTrim(c,ini,fin){
+    var d=c.dur;
+    ini=Math.max(0,Math.min(Number(ini)||0,d>0?d-0.05:0));
+    fin=Number(fin)||0;
+    if(d>0) fin=Math.max(ini+0.05,Math.min(fin||d,d));
+    else fin=0;
+    c.ini=Math.round(ini*100)/100; c.fin=Math.round(fin*100)/100;
+    if(d>0&&c.fin>=d-0.01) c.fin=d;
+    var li=c.el;
+    li.querySelector('[data-k="ini"]').value=c.ini;
+    li.querySelector('[data-k="fin"]').value=d>0?c.fin:"";
+    li.querySelector('[data-k="fin"]').max=d||"";
+    li.querySelector('[data-k="ini"]').max=d||"";
+    var len=d>0?c.fin-c.ini:0;
+    li.querySelector(".fusInfo").textContent=d>0
+      ? "Duración del tramo: "+fmt(len)+" de "+fmt(d)
+      : "Duración desconocida: se usará el vídeo completo";
+    resetResult();
+  }
+
+  function refresh(){
+    var list=$f("fusList");
+    clips.forEach(function(c,i){
+      c.el.querySelector(".fusIdx").textContent=(i+1)+".";
+      c.el.querySelector('[data-act="up"]').disabled=i===0||working;
+      c.el.querySelector('[data-act="down"]').disabled=i===clips.length-1||working;
+      c.el.querySelectorAll("button,input").forEach(function(x){ if(x.tagName==="INPUT"||x.getAttribute("data-act")!=="up"&&x.getAttribute("data-act")!=="down") x.disabled=working; });
+    });
+    var total=clips.reduce(function(a,c){ return a+(c.dur>0?(c.fin||c.dur)-c.ini:0); },0);
+    $f("fusTotal").textContent=clips.length?"Total: "+clips.length+" clip"+(clips.length>1?"s":"")+" · "+fmt(total)+" de vídeo unido":"";
+    $f("fusGo").disabled=!clips.length||working;
+    $f("fusDrop").hidden=false;
+    list.hidden=!clips.length;
+  }
+
+  function resetResult(){
+    if(!working&&$f("fusResult")) $f("fusResult").hidden=true;
+  }
+
+  $f("fusList").addEventListener("click",function(e){
+    var b=e.target.closest("button[data-act]"); if(!b||working) return;
+    var li=b.closest(".fusClip"); var i=clips.findIndex(function(c){ return c.el===li; }); if(i<0) return;
+    var c=clips[i], v=li.querySelector("video");
+    var act=b.getAttribute("data-act");
+    if(act==="up"&&i>0){ clips.splice(i-1,0,clips.splice(i,1)[0]); $f("fusList").insertBefore(li,li.previousElementSibling); }
+    else if(act==="down"&&i<clips.length-1){ clips.splice(i+1,0,clips.splice(i,1)[0]); $f("fusList").insertBefore(li,li.nextElementSibling.nextElementSibling||null); }
+    else if(act==="del"){ URL.revokeObjectURL(c.url); v.removeAttribute("src"); v.load(); li.remove(); clips.splice(i,1); }
+    else if(act==="setIn"){ setTrim(c,v.currentTime,c.fin); }
+    else if(act==="setOut"){ setTrim(c,c.ini,v.currentTime); }
+    else if(act==="reset"){ setTrim(c,0,c.dur); }
+    else if(act==="play"){
+      v.currentTime=c.ini; v.play().catch(function(){});
+      v.ontimeupdate=function(){ if(c.fin>0&&v.currentTime>=c.fin){ v.pause(); v.ontimeupdate=null; } };
+    }
+    refresh();
+  });
+
+  $f("fusList").addEventListener("change",function(e){
+    var k=e.target.getAttribute&&e.target.getAttribute("data-k"); if(!k) return;
+    var li=e.target.closest(".fusClip"); var c=clips.find(function(x){ return x.el===li; }); if(!c) return;
+    if(k==="ini") setTrim(c,e.target.value,c.fin);
+    else setTrim(c,c.ini,e.target.value);
+    refresh();
+  });
+
+  // ---------- unión ----------
+  // Comprueba si el archivo tiene pista de audio (ffmpeg lo informa en su registro)
+  function probe(inst,name){
+    var found=false;
+    onLog=function(m){ if(/Stream #\d+:\d+.*: Audio:/.test(m)) found=true; };
+    return inst.exec(["-hide_banner","-i",name]).catch(function(){ return 1; }).then(function(){ onLog=null; return found; });
+  }
+
+  function encodeOne(inst,c,i,n,vf){
+    var IN="in"+i+c.ext, OUT="seg"+i+".mp4";
+    jmsg("Procesando "+(i+1)+" de "+n+": "+c.name+"…");
+    return c.file.arrayBuffer().then(function(buf){ return inst.writeFile(IN,new Uint8Array(buf)); })
+      .then(function(){ return probe(inst,IN); })
+      .then(function(audio){
+        var a=["-ss",String(c.ini),"-i",IN];
+        if(!audio) a=a.concat(["-f","lavfi","-i","anullsrc=r=44100:cl=stereo"]);
+        if(c.fin>0&&c.dur>0) a=a.concat(["-t",String(Math.round((c.fin-c.ini)*1000)/1000)]);
+        a=a.concat(["-map","0:v:0","-map",audio?"0:a:0":"1:a:0"]);
+        if(!audio) a.push("-shortest");
+        a=a.concat(["-vf",vf,"-c:v","libx264","-preset","veryfast","-crf","23","-pix_fmt","yuv420p","-c:a","aac","-b:a","128k","-ar","44100","-ac","2","-movflags","+faststart","-y",OUT]);
+        onProg=function(p){ bar((i+p)/n); };
+        return inst.exec(a);
+      }).then(function(code){
+        onProg=null;
+        if(code!==0) throw new Error("No se pudo procesar «"+c.name+"» (código "+code+"). Comprueba que el archivo no esté dañado.");
+        inst.deleteFile(IN).catch(function(){});
+      });
+  }
+
+  function join(){
+    if(!clips.length||working) return;
+    working=true; cancelled=false; finished=false;
+    $f("fusGo").disabled=true; $f("fusCancel").hidden=false; $f("fusResult").hidden=true;
+    refresh();
+    bar(undefined); jmsg("Preparando el motor de conversión (la primera vez tarda unos segundos)…");
+    var q=$f("fusQ").value, W=q==="1080"?1920:1280, H=q==="1080"?1080:720;
+    // Todos los clips salen con el mismo tamaño, fps y códecs para poder unirlos sin recodificar
+    var vf="scale="+W+":"+H+":force_original_aspect_ratio=decrease,pad="+W+":"+H+":(ow-iw)/2:(oh-ih)/2,setsar=1,fps=30,format=yuv420p";
+    var list=clips.slice(), n=list.length, inst=null;
+    window.acfcFF.get().then(function(e){
+      inst=e;
+      if(!inst.__fusHooked){
+        inst.__fusHooked=true;
+        inst.on("log",function(ev){ if(onLog) onLog(ev.message); });
+        inst.on("progress",function(ev){ if(onProg&&isFinite(ev.progress)) onProg(Math.min(Math.max(ev.progress,0),1)); });
+      }
+      return list.reduce(function(chain,c,i){
+        return chain.then(function(){ return encodeOne(inst,c,i,n,vf); });
+      },Promise.resolve());
+    }).then(function(){
+      jmsg("Uniendo "+n+" clip"+(n>1?"s":"")+"…"); bar(undefined);
+      var txt=list.map(function(_,i){ return "file 'seg"+i+".mp4'"; }).join("\n")+"\n";
+      return inst.writeFile("lista.txt",new TextEncoder().encode(txt))
+        .then(function(){ return inst.exec(["-f","concat","-safe","0","-i","lista.txt","-c","copy","-movflags","+faststart","-y","fusion.mp4"]); })
+        .then(function(code){
+          if(code!==0) throw new Error("No se pudo unir los clips (código "+code+").");
+          return inst.readFile("fusion.mp4");
+        });
+    }).then(function(data){
+      if(outUrl) URL.revokeObjectURL(outUrl);
+      outUrl=URL.createObjectURL(new Blob([data],{type:"video/mp4"}));
+      $f("fusOut").src=outUrl;
+      $f("fusOutInfo").textContent=fmtSize(data.byteLength)+" · "+n+" clip"+(n>1?"s":"");
+      $f("fusResult").hidden=false;
+      jmsg("Listo. Revisa el resultado y exporta el MP4.");
+    }).catch(function(err){
+      jmsg(cancelled?"Unión cancelada.":(err&&err.message)||"No se pudieron unir los vídeos.",!cancelled);
+    }).then(function(){
+      if(inst&&!cancelled) cleanup(inst,n);
+      finish();
+    });
+  }
+
+  function cleanup(inst,n){
+    inst.deleteFile("lista.txt").catch(function(){});
+    inst.deleteFile("fusion.mp4").catch(function(){});
+    for(var i=0;i<n;i++){ inst.deleteFile("seg"+i+".mp4").catch(function(){}); }
+  }
+
+  function finish(){
+    if(finished) return;
+    finished=true; working=false; onLog=null; onProg=null;
+    $f("fusCancel").hidden=true; bar(null); refresh();
+  }
+
+  function cancel(){
+    if(!working) return;
+    cancelled=true;
+    window.acfcFF.reset();   // termina el motor; la próxima unión lo vuelve a cargar
+    finish();
+  }
+
+  function exportFile(){
+    if(!outUrl) return;
+    var a=document.createElement("a");
+    a.href=outUrl; a.download=safeName($f("fusName").value)+".mp4";
+    document.body.appendChild(a); a.click(); a.remove();
+  }
+
+  var dz=$f("fusDrop");
+  ["dragenter","dragover"].forEach(function(t){ dz.addEventListener(t,function(e){ e.preventDefault(); e.stopPropagation(); dz.classList.add("over"); }); });
+  ["dragleave","drop"].forEach(function(t){ dz.addEventListener(t,function(e){ e.preventDefault(); e.stopPropagation(); dz.classList.remove("over"); }); });
+  dz.addEventListener("drop",function(e){ addFiles(e.dataTransfer.files); });
+  $f("fusFile").addEventListener("change",function(e){ addFiles(e.target.files); e.target.value=""; });
+  $f("fusGo").addEventListener("click",join);
+  $f("fusCancel").addEventListener("click",cancel);
+  $f("fusExport").addEventListener("click",exportFile);
+  refresh();
 })();
 </script>
 </body>
