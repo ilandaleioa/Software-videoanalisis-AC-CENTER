@@ -1817,6 +1817,33 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
       </div>
     </div>
     <div class="list" id="list"></div>
+    <div class="expBlock" id="expBlock" style="flex:none;display:grid;gap:8px;border-top:1px solid var(--line);padding:10px 14px 14px">
+      <div class="row" style="justify-content:space-between;align-items:center;margin:0">
+        <h2 style="margin:0">Exportación</h2>
+        <button class="btn acfcLink" id="expOptsToggle" title="Ocultar/mostrar las opciones de exportación">Ocultar</button>
+      </div>
+      <div id="expOptsA" style="display:contents">
+        <div class="row" style="flex-wrap:wrap">
+          <select id="vFmt" hidden></select>
+          <label class="row" style="gap:6px"><span style="font-size:13px;color:var(--muted)">Resolución</span>
+            <select id="vRes"><option value="1080">1080p</option><option value="720" selected>720p</option><option value="480">480p</option></select></label>
+          <label class="row" style="gap:6px" title="Menos fotogramas por segundo = exportación más rápida"><span style="font-size:13px;color:var(--muted)">Fotogramas</span>
+            <select id="vFps"><option value="0" selected>30 fps</option><option value="20">20 fps (más rápido)</option><option value="15">15 fps (aún más rápido)</option></select></label>
+        </div>
+        <div class="row">
+          <button class="btn edGreen" id="plExport" disabled title="Descarga en orden los clips añadidos, unidos en un solo vídeo">Descargar lista (1 vídeo)</button>
+          <button class="btn edGreen" id="plExportSep" disabled title="Descarga cada clip de la lista como un archivo de vídeo independiente">Descargar lista (vídeos separados)</button>
+          <button class="btn" id="plClear">Vaciar lista</button>
+        </div>
+        <div class="row" style="flex-wrap:nowrap">
+          <button class="btn edGreen" style="flex:1 1 0;white-space:nowrap;padding-left:6px;padding-right:6px" id="fltExport" disabled title="Descarga en orden los eventos que se ven ahora en el registro (según el filtro «Ver»), unidos en un solo vídeo">Descargar filtrados (1 vídeo)</button>
+          <button class="btn edGreen" style="flex:1 1 0;white-space:nowrap;padding-left:6px;padding-right:6px" id="fltExportSep" disabled title="Descarga cada evento que se ve ahora en el registro (según el filtro «Ver») como un archivo de vídeo independiente">Descargar filtrados (vídeos separados)</button>
+        </div>
+        <div class="row">
+          <button class="btn edGreen" id="expCsv">Exportar CSV</button>
+        </div>
+      </div>
+    </div>
     <!-- ACFC · PINTADO DE ACCIONES · panel de herramientas de dibujo sobre el vídeo (ids y clases con prefijo pint) -->
     <div class="pintBlock" id="pintBlock">
       <div class="pbHead">
@@ -1997,33 +2024,6 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
           <strong style="font-family:var(--f-disp);text-transform:uppercase;letter-spacing:.04em">Listas</strong>
         </div>
         <div id="plOverview" style="display:grid;gap:6px;max-height:260px;overflow:auto"></div>
-      </div>
-    </div>
-    <div class="expBlock" id="expBlock" style="flex:none;display:grid;gap:8px;border-top:1px solid var(--line);padding:10px 14px 14px">
-      <div class="row" style="justify-content:space-between;align-items:center;margin:0">
-        <h2 style="margin:0">Exportación</h2>
-        <button class="btn acfcLink" id="expOptsToggle" title="Ocultar/mostrar las opciones de exportación">Ocultar</button>
-      </div>
-      <div id="expOptsA" style="display:contents">
-        <div class="row" style="flex-wrap:wrap">
-          <select id="vFmt" hidden></select>
-          <label class="row" style="gap:6px"><span style="font-size:13px;color:var(--muted)">Resolución</span>
-            <select id="vRes"><option value="1080">1080p</option><option value="720" selected>720p</option><option value="480">480p</option></select></label>
-          <label class="row" style="gap:6px" title="Menos fotogramas por segundo = exportación más rápida"><span style="font-size:13px;color:var(--muted)">Fotogramas</span>
-            <select id="vFps"><option value="0" selected>30 fps</option><option value="20">20 fps (más rápido)</option><option value="15">15 fps (aún más rápido)</option></select></label>
-        </div>
-        <div class="row">
-          <button class="btn edGreen" id="plExport" disabled title="Descarga en orden los clips añadidos, unidos en un solo vídeo">Descargar lista (1 vídeo)</button>
-          <button class="btn edGreen" id="plExportSep" disabled title="Descarga cada clip de la lista como un archivo de vídeo independiente">Descargar lista (vídeos separados)</button>
-          <button class="btn" id="plClear">Vaciar lista</button>
-        </div>
-        <div class="row" style="flex-wrap:nowrap">
-          <button class="btn edGreen" style="flex:1 1 0;white-space:nowrap;padding-left:6px;padding-right:6px" id="fltExport" disabled title="Descarga en orden los eventos que se ven ahora en el registro (según el filtro «Ver»), unidos en un solo vídeo">Descargar filtrados (1 vídeo)</button>
-          <button class="btn edGreen" style="flex:1 1 0;white-space:nowrap;padding-left:6px;padding-right:6px" id="fltExportSep" disabled title="Descarga cada evento que se ve ahora en el registro (según el filtro «Ver») como un archivo de vídeo independiente">Descargar filtrados (vídeos separados)</button>
-        </div>
-        <div class="row">
-          <button class="btn edGreen" id="expCsv">Exportar CSV</button>
-        </div>
       </div>
     </div>
     <div class="foot" id="expOptsB">
