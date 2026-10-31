@@ -846,7 +846,7 @@ html #tabEditor aside .pintBlock:has(#pintBodyEd[hidden]) .pbHead{margin-bottom:
 .pintRail{border:1px solid var(--line);border-top:3px solid var(--ink);background:var(--panel);padding:8px 10px 12px}
 /* Columna lateral (escritorio): el pintado se queda fijo al pie de la columna mientras se desplaza la lista */
 @media (min-width:1251px){
-  #tabVisor aside>.pintBlock,#tabEditor aside>.pintBlock{position:sticky;bottom:0;z-index:3;background:var(--panel);max-height:55vh;overflow-y:auto}
+  #tabEditor aside>.pintBlock{position:sticky;bottom:0;z-index:3;background:var(--panel);max-height:55vh;overflow-y:auto}
 }
 .pintGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(42px,1fr));gap:6px}
 .pintGrid4{grid-template-columns:repeat(4,1fr)}
@@ -888,6 +888,11 @@ html #tabEditor aside .pintBlock:has(#pintBodyEd[hidden]) .pbHead{margin-bottom:
 .pintTool svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 .pintTool svg .solid{fill:currentColor}
 .pintTool:disabled{opacity:.4;cursor:default}
+/* botón de dibujo: el que activa el pintado sobre el vídeo destaca sobre el resto */
+#pintMode,#pintModeEd{min-width:52px;min-height:48px;border:2px solid var(--red);color:var(--red);box-shadow:0 0 0 3px color-mix(in srgb,var(--red) 18%,transparent)}
+#pintMode svg,#pintModeEd svg{width:26px;height:26px}
+#pintMode:hover,#pintModeEd:hover{background:var(--red);color:#fff;border-color:var(--red)}
+#pintMode.is-active,#pintModeEd.is-active{background:var(--red);color:#fff;box-shadow:none}
 .pintDiv{display:flex;align-items:center;gap:7px;margin:12px 0 7px;padding-top:9px;border-top:1px solid var(--line);font-family:var(--f-disp);font-weight:700;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink)}
 .pintDiv i{width:6px;height:6px;background:var(--red);flex:none}
 .pintDivFollow span{flex:1}
@@ -938,6 +943,9 @@ html #tabEditor aside .pintBlock:has(#pintBodyEd[hidden]) .pbHead{margin-bottom:
 #pintWin .pbHead{padding-right:34px}
 #pintWin .pintWinX{position:absolute;top:6px;right:6px;z-index:1;min-height:28px;padding:2px 6px;display:inline-flex;align-items:center;justify-content:center}
 #pintWin .pintWinX svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:square}
+/* arrastrable desde la cabecera: el cursor avisa y touch-action deja arrastrar con el dedo */
+#pintWin .pbHead{cursor:move;touch-action:none;user-select:none}
+#pintWin .pbHead button{cursor:pointer}
 /* ===== fin pintado de acciones ===== */
 /* ===== Registro sin vídeo (prefijo live) ===== */
 #tabLive{padding:16px 20px 28px;max-width:1280px;margin:0 auto}
@@ -4505,17 +4513,22 @@ window.renderHalfBands = function(b1,b2,mk,d){
     tr.addEventListener("pointerup",()=>{ drag=false; }); tr.addEventListener("pointercancel",()=>{ drag=false; }); }
   ["regPintBtn","regPintBtn2"].forEach(id=>{ const b=$(id); if(b) b.addEventListener("click",()=>$("vPintGo").click()); });
   // Ventana embebida del pintado: el panel sale de la columna y flota junto al reproductor; al cerrarla vuelve a su sitio
-  const pwBlk=$("pintBlock"), pwHome={parent:pwBlk.parentNode,next:pwBlk.nextSibling};
+  // El panel del pintado vive solo dentro de esta ventana: ya no aparece en la columna derecha del registro
+  const pwBlk=$("pintBlock");
   const pwWin=document.createElement("div"), pwX=document.createElement("button");
   pwWin.id="pintWin"; pwWin.hidden=true; pwWin.setAttribute("role","dialog"); pwWin.setAttribute("aria-label","Pintado de acciones");
   pwX.type="button"; pwX.className="btn pintWinX"; pwX.title="Cerrar el pintado"; pwX.setAttribute("aria-label","Cerrar el pintado");
   pwX.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg>';
-  pwWin.append(pwX); document.body.append(pwWin);
-  function pintWinClose(){
-    if(pwWin.hidden) return;
-    pwWin.hidden=true;
-    const {parent,next}=pwHome; parent.insertBefore(pwBlk,next&&next.parentNode===parent?next:null);
+  pwWin.append(pwX,pwBlk); document.body.append(pwWin);
+  function pintWinClose(){ pwWin.hidden=true; }
+  // Mantiene la ventana dentro de la pantalla (si se ha movido o cambia el tamaño de la ventana)
+  function pwFit(){
+    const r=pwWin.getBoundingClientRect();
+    const l=Math.max(0,Math.min(innerWidth-r.width,r.left)), t=Math.max(0,Math.min(innerHeight-60,r.top));
+    pwWin.style.left=l+"px"; pwWin.style.top=t+"px";
+    pwWin.style.maxHeight=Math.max(120,innerHeight-t-8)+"px";
   }
+  let pwPos=null; // posición elegida por el usuario; se conserva al reabrir
   function pintWinOpen(anchor){
     const r=anchor&&anchor.getBoundingClientRect(), a=r&&r.width?r:v.getBoundingClientRect();
     const small=innerWidth<=640, W=small?innerWidth-16:Math.min(440,innerWidth-16);
@@ -4524,9 +4537,22 @@ window.renderHalfBands = function(b1,b2,mk,d){
     pwWin.style.left=(small?8:Math.max(8,Math.min(a.left,innerWidth-W-8)))+"px";
     pwWin.style.top=top+"px";
     pwWin.style.maxHeight=Math.max(120,innerHeight-top-8)+"px";
-    pwWin.append(pwBlk); pwWin.hidden=false;
+    pwWin.hidden=false;
+    if(pwPos){ pwWin.style.left=pwPos.left+"px"; pwWin.style.top=pwPos.top+"px"; pwFit(); }
   }
   pwX.addEventListener("click",pintWinClose);
+  // Arrastre desde la cabecera «Pintado de acciones» (ratón, lápiz y dedo); los botones y controles no arrastran
+  { let d=null;
+    pwWin.addEventListener("pointerdown",ev=>{
+      if(ev.button!==0||!ev.target.closest(".pbHead")||ev.target.closest("button,input,select,textarea,label,a")) return;
+      const r=pwWin.getBoundingClientRect(); d={id:ev.pointerId,dx:ev.clientX-r.left,dy:ev.clientY-r.top};
+      pwWin.setPointerCapture(ev.pointerId); ev.preventDefault(); });
+    pwWin.addEventListener("pointermove",ev=>{
+      if(!d||ev.pointerId!==d.id) return;
+      pwWin.style.left=(ev.clientX-d.dx)+"px"; pwWin.style.top=(ev.clientY-d.dy)+"px"; pwFit(); });
+    const pwEnd=ev=>{ if(!d||ev.pointerId!==d.id) return; const r=pwWin.getBoundingClientRect(); pwPos={left:r.left,top:r.top}; d=null; };
+    pwWin.addEventListener("pointerup",pwEnd); pwWin.addEventListener("pointercancel",pwEnd);
+    addEventListener("resize",()=>{ if(!pwWin.hidden) pwFit(); }); }
   { const b=$("vPintGo"); b.addEventListener("pointerdown",ev=>ev.stopPropagation());
     b.addEventListener("click",()=>{ v.pause();
       const body=$("pintBody"); if(body&&body.hidden&&$("pintToggle")) $("pintToggle").click();
