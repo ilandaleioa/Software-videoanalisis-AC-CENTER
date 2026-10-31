@@ -1116,6 +1116,16 @@ html.acfc-imm #tabBtnFus::after{content:"";display:block;width:20px;height:20px;
 #tabFus #fusOut{width:100%;max-height:420px;background:#000}
 @media (max-width:640px){#tabFus{padding:10px 12px 16px}#tabFus .fusHead .fusMove{margin-left:0}}
 /* ===== fin fusiona vídeos ===== */
+/* Guía paso a paso de Conversión y Fusiona vídeos (resalta los controles reales de cada pestaña) */
+.acfcTourHi{position:fixed;z-index:900;pointer-events:none;border:3px solid var(--red);box-shadow:0 0 0 9999px rgba(21,24,29,.55);transition:left .25s,top .25s,width .25s,height .25s}
+.acfcTour{position:fixed;z-index:901;left:12px;right:12px;bottom:12px;max-width:560px;margin:0 auto;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-top:3px solid var(--red);padding:12px 14px;display:grid;gap:8px;box-shadow:0 8px 24px rgba(0,0,0,.35)}
+.acfcTour[hidden],.acfcTourHi[hidden]{display:none}
+.acfcTourHd{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.acfcTourHd b{font-family:var(--f-disp);font-size:16px;text-transform:uppercase;letter-spacing:.3px;flex:1}
+.acfcTourTag{font-size:11px;font-weight:700;color:#fff;background:var(--red);padding:2px 6px;letter-spacing:.6px}
+.acfcTour p{margin:0;font-size:14px;line-height:1.45}
+.acfcTourBtns{display:flex;gap:6px;justify-content:space-between;flex-wrap:wrap}
+/* ===== fin guía de conversión y fusión ===== */
 
 /* =====================================================================
    ACFC · INTERFAZ v2 (2026-10-02) · colores de marca, jerarquía y móvil
@@ -2237,7 +2247,7 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
 
 <section id="tabConv" hidden>
   <div class="convPanel">
-    <h2>Conversión de vídeos</h2>
+    <h2>Conversión de vídeos <button type="button" class="btn acfcLink" id="convTut" style="margin-left:auto" title="Guía paso a paso de la conversión">❓ Tutorial</button></h2>
     <p class="convHelp">Convierte vídeos .mov, .avi, .mkv, .wmv y otros formatos a MP4 (H.264 + AAC). La conversión se hace en tu ordenador: el vídeo no se sube a ningún servidor.</p>
     <div class="convDrop" id="convDrop">
       <div>Arrastra aquí un vídeo o elígelo desde tu equipo.</div>
@@ -2270,7 +2280,7 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
 
 <section id="tabFus" hidden>
   <div class="fusPanel">
-    <h2>Fusiona vídeos</h2>
+    <h2>Fusiona vídeos <button type="button" class="btn acfcLink" id="fusTut" style="margin-left:auto" title="Guía paso a paso para unir vídeos">❓ Tutorial</button></h2>
     <p class="fusHelp">Sube varios vídeos, recorta cada uno y únelos en un único MP4. Todo se procesa en tu ordenador: el vídeo no se sube a ningún servidor.</p>
     <div class="fusDrop" id="fusDrop">
       <div>Arrastra aquí varios vídeos o elígelos desde tu equipo. Se unirán en el orden de la lista.</div>
@@ -2308,6 +2318,14 @@ html #expOptsToggle,html #pbToggle,html #edCtlToggle,html #edSrcToggle,html #edE
     </div>
   </div>
 </section>
+
+<!-- Guía de Conversión y Fusiona vídeos: resalta los controles reales de la pestaña -->
+<div id="acfcTourHi" class="acfcTourHi" hidden></div>
+<div id="acfcTour" class="acfcTour" hidden role="dialog" aria-live="polite" aria-label="Guía de la pestaña">
+  <div class="acfcTourHd"><span class="acfcTourTag" id="acfcTourTag"></span><b id="acfcTourT"></b><button type="button" class="btn" id="acfcTourX">✕ Cerrar</button></div>
+  <p id="acfcTourD"></p>
+  <div class="acfcTourBtns"><button type="button" class="btn" id="acfcTourPrev">◀ Anterior</button><button type="button" class="btn primary" id="acfcTourNext">Siguiente ▶</button></div>
+</div>
 
 <!-- ACFC · promoción de cursos (actualizar textos, fechas e imágenes cada edición) -->
 <footer class="acfcFoot" aria-label="Formación Athletic Club Football Center">
@@ -7338,6 +7356,60 @@ window.tutPaint=(()=>{
   D.addEventListener("keydown",e=>{ e.stopPropagation(); });
   D.addEventListener("click",e=>{ if(e.target===D) D.close(); });
   window.openTutorialLive=()=>{ document.querySelectorAll("video").forEach(v=>v.pause()); playing=true; D.showModal(); show(0); };
+})();
+</script>
+<script>
+// Guía de Conversión y Fusiona vídeos: pasos sobre los controles reales (no cambia nada de la herramienta)
+(()=>{
+  const TOURS={
+    conv:{tab:"tabBtnConv",title:"Conversión de vídeos",steps:[
+      {sel:["#convDrop"],t:"Elige el vídeo",d:"Arrastra un vídeo aquí o pulsa «Elegir vídeo». Admite .mov, .avi, .mkv, .wmv y otros formatos habituales."},
+      {sel:["#convQ"],t:"Elige la resolución",d:"1080p conserva más detalle; 720p genera un archivo más ligero. La conversión se hace en tu ordenador: el vídeo no se sube a ningún servidor."},
+      {sel:["#convGo"],t:"Convierte a MP4",d:"Pulsa «Convertir a MP4» y espera a que termine la barra de progreso. «Cancelar» detiene la conversión."},
+      {sel:["#convResult:not([hidden])","#convMsg"],t:"Revisa y descarga",d:"Al terminar aparece el vídeo convertido para revisarlo. Pulsa «Descargar MP4» para guardarlo."}
+    ]},
+    fus:{tab:"tabBtnFus",title:"Fusiona vídeos",steps:[
+      {sel:["#fusDrop"],t:"Añade los vídeos",d:"Pulsa «Añadir vídeos» o arrástralos aquí. Se unirán en el orden de la lista."},
+      {sel:["#fusList .fusClip","#fusList","#fusDrop"],t:"Ordena y recorta",d:"Cada vídeo aparece en la lista. Cámbialo de posición con sus botones y recorta el inicio y el final con la línea de tiempo."},
+      {sel:["#fusTotal"],t:"Revisa la duración",d:"La duración total se actualiza al recortar. Comprueba que el resultado tiene el tiempo que quieres."},
+      {sel:["#fusGo"],t:"Une y exporta",d:"Elige la resolución y pulsa «Unir vídeos». Revisa el resultado y pulsa «Exportar MP4» para guardarlo."}
+    ]}
+  };
+  const P=document.getElementById("acfcTour"), HI=document.getElementById("acfcTourHi");
+  if(!P||!HI) return;
+  let key=null, cur=0;
+  const pick=sels=>{ for(const s of sels){ const e=document.querySelector(s); if(e&&e.getClientRects().length&&e.getBoundingClientRect().height>0) return e; } return null; };
+  function place(){
+    if(!key) return;
+    const el=pick(TOURS[key].steps[cur].sel);
+    if(!el){ HI.hidden=true; return; }
+    const r=el.getBoundingClientRect();
+    Object.assign(HI.style,{left:(r.left-6)+"px",top:(r.top-6)+"px",width:(r.width+12)+"px",height:(r.height+12)+"px"});
+    HI.hidden=false;
+  }
+  function show(n){
+    const S=TOURS[key].steps; cur=n;
+    document.getElementById("acfcTourTag").textContent="Paso "+(cur+1)+" de "+S.length;
+    document.getElementById("acfcTourT").textContent=S[cur].t;
+    document.getElementById("acfcTourD").textContent=S[cur].d;
+    document.getElementById("acfcTourPrev").disabled=cur===0;
+    document.getElementById("acfcTourNext").textContent=cur===S.length-1?"Terminar":"Siguiente ▶";
+    const el=pick(S[cur].sel); if(el) el.scrollIntoView({block:"center"});
+    place();
+  }
+  function open(k){
+    key=k; document.getElementById(TOURS[k].tab).click();
+    P.hidden=false; show(0);
+  }
+  function close(){ key=null; P.hidden=true; HI.hidden=true; }
+  document.getElementById("convTut").onclick=()=>open("conv");
+  document.getElementById("fusTut").onclick=()=>open("fus");
+  document.getElementById("acfcTourX").onclick=close;
+  document.getElementById("acfcTourPrev").onclick=()=>{ if(cur>0) show(cur-1); };
+  document.getElementById("acfcTourNext").onclick=()=>{ if(cur<TOURS[key].steps.length-1) show(cur+1); else close(); };
+  document.addEventListener("keydown",e=>{ if(key&&e.key==="Escape") close(); if(key&&e.key==="ArrowRight"&&cur<TOURS[key].steps.length-1) show(cur+1); if(key&&e.key==="ArrowLeft"&&cur>0) show(cur-1); });
+  window.addEventListener("resize",place);
+  window.addEventListener("scroll",place,true);
 })();
 </script>
 <script>
