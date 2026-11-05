@@ -12605,5 +12605,48 @@ try{var v=localStorage.getItem(KEY);if(v==="botev"||v==="vid")set(v)}catch(e){}}
   window[fn]();
 })();
 </script>
+<!-- ACFC · VIDEOTUTORIAL · vídeo grabado sobre la app real dentro de las ventanas «Tutorial» (el vídeo se aloja en acfootballcenter.eus) -->
+<style>
+  .acfcVtBar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 10px}
+  .acfcVtBar span{font-family:var(--f-body);font-size:13px;color:var(--muted)}
+  .acfcVtPane{position:absolute;left:0;right:0;bottom:0;background:var(--panel);display:flex;flex-direction:column;gap:10px;padding:0 1em 1em;z-index:5}
+  .acfcVtPane[hidden]{display:none}
+  .acfcVtPane video{width:100%;flex:1;min-height:0;max-height:100%;background:#15181D;object-fit:contain}
+  .acfcVtPane .acfcVtRow{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .acfcVtPane .acfcVtRow span{font-size:13px;color:var(--muted)}
+  :is(#tutDlg,#tutDlgR,#tutDlgL,#tutDlgC,#tutDlgF).acfcVtOn{min-height:min(720px,92vh)}
+</style>
+<script>
+(function(){
+  var SRC="https://acfootballcenter.eus/lezama-talks/videoanalisis/media/tutorial-videoanalisis.mp4?v=2";
+  var POSTER="https://acfootballcenter.eus/lezama-talks/videoanalisis/media/tutorial-videoanalisis-portada.jpg?v=2";
+  /* id del diálogo → id de su botón Pausa/Reproducir · el de «Registro con vídeo» abre directamente el vídeo */
+  var DLGS={tutDlg:"tutPlay",tutDlgR:"tutrPlay",tutDlgL:"tutlPlay",tutDlgC:"tutcPlay",tutDlgF:"tutfPlay"}, PRIMERO="tutDlgR";
+  Object.keys(DLGS).forEach(function(id){
+    var D=document.getElementById(id); if(!D) return;
+    var head=D.querySelector(".tutHead"); if(!head) return;
+    var bar=document.createElement("div"); bar.className="acfcVtBar";
+    bar.innerHTML='<button type="button" class="btn primary">▶ Ver videotutorial</button><span>1:46 · la herramienta real, paso a paso, con voz</span>';
+    head.insertAdjacentElement("afterend",bar);
+    var pane=document.createElement("div"); pane.className="acfcVtPane"; pane.hidden=true;
+    pane.innerHTML='<video controls playsinline preload="none"></video><div class="acfcVtRow"><button type="button" class="btn">◀ Ver el tutorial animado</button><span>Con voz · activa el sonido, páusalo o míralo a pantalla completa</span></div>';
+    D.appendChild(pane);
+    var v=pane.querySelector("video"), volver=pane.querySelector("button");
+    v.poster=POSTER;
+    function pausaAnim(){ var p=document.getElementById(DLGS[id]); if(p&&/pausa/i.test(p.textContent)) p.click(); }
+    function abrir(auto){
+      if(!v.getAttribute("src")) v.src=SRC;
+      pane.style.top=(bar.offsetTop)+"px"; pane.hidden=false; bar.style.visibility="hidden"; D.classList.add("acfcVtOn");
+      pausaAnim(); setTimeout(pausaAnim,60);
+      if(!auto){ var r=v.play(); if(r&&r.catch) r.catch(function(){}); }
+    }
+    function cerrar(){ v.pause(); pane.hidden=true; bar.style.visibility=""; D.classList.remove("acfcVtOn"); }
+    bar.querySelector("button").onclick=function(){ abrir(false); };
+    volver.onclick=function(){ cerrar(); var p=document.getElementById(DLGS[id]); if(p&&!/pausa/i.test(p.textContent)) p.click(); };
+    D.addEventListener("close",cerrar);
+    if(id===PRIMERO){ new MutationObserver(function(){ if(D.open) abrir(true); }).observe(D,{attributes:true,attributeFilter:["open"]}); if(D.open) abrir(true); }
+  });
+})();
+</script>
 </body>
 </html>
